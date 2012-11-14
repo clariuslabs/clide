@@ -1,0 +1,22 @@
+﻿<Window x:Class="Clide.InputBox"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 mc:Ignorable="d" 
+			 SizeToContent="Height"
+			 WindowStyle="ToolWindow"
+			 WindowStartupLocation="CenterOwner"
+		     ShowInTaskbar="False"
+			 Title="WoVS"
+			 FocusManager.FocusedElement="{Binding ElementName=ResponseTextBox}"
+			 Width="500">
+	<StackPanel Margin="10" VerticalAlignment="Top" x:Name="LayoutRoot">
+		<TextBlock x:Name="MessageText" Text="Enter some text" TextWrapping="Wrap" />
+		<TextBox x:Name="ResponseTextBox" Margin="0,5" />
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+			<Button Content="OK" Width="60" Margin="10" IsDefault="True" Click="OkButton_Click" />
+			<Button Content="Cancel" Width="60" Margin="10" IsCancel="True" />
+		</StackPanel>
+	</StackPanel>
+</Window>
