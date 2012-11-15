@@ -124,6 +124,24 @@ namespace Clide.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hosting package &apos;{packageType}&apos; does not have the required [Guid] attribute..
+        /// </summary>
+        internal static string HostingPackage_MissingGuidAttribute {
+            get {
+                return ResourceManager.GetString("HostingPackage_MissingGuidAttribute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The hosting package for the runtime must inherit from &apos;{baseClass}&apos;..
+        /// </summary>
+        internal static string HostingPackage_PackageBaseRequired {
+            get {
+                return ResourceManager.GetString("HostingPackage_PackageBaseRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Object has already been initialized..
         /// </summary>
         internal static string Settings_AlreadyInitialized {

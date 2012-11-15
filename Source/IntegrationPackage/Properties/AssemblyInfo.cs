@@ -3,9 +3,9 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.ExtensibilityHosting;
 
-[assembly: AssemblyTitle("Clide.Shell")]
+[assembly: AssemblyTitle("Clide.IntegrationPackage")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 
-[assembly: VsCatalogName("Clide")]
-//[VsCatalogName("Microsoft.VisualStudio.Default")]
+[assembly: VsCatalogName("Clide.IntegrationTests")]
+[assembly: VsCatalogName("Microsoft.VisualStudio.Default")]

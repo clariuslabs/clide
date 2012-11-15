@@ -120,6 +120,38 @@ namespace Clide.Properties
 		///	</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
 		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		public static partial class HostingPackage
+		{
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Hosting package '{packageType}' does not have the required [Guid] attribute.
+			/// </summary>
+			public static string MissingGuidAttribute(object packageType)
+			{
+				return Resources.HostingPackage_MissingGuidAttribute.FormatWith(new 
+				{
+					packageType = packageType,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	The hosting package for the runtime must inherit from '{baseClass}'.
+			/// </summary>
+			public static string PackageBaseRequired(object baseClass)
+			{
+				return Resources.HostingPackage_PackageBaseRequired.FormatWith(new 
+				{
+					baseClass = baseClass,
+				});
+			}
+		}
+		
+		///	<summary>
+		///	Provides access to string resources.
+		///	</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
 		public static partial class SettingsManager
 		{
 			/// <summary>

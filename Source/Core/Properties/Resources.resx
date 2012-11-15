@@ -138,6 +138,12 @@
   <data name="Diagnostics_FailedToCreateOutputWindow" xml:space="preserve">
     <value>Failed to create output window for diagnostics traces.</value>
   </data>
+  <data name="HostingPackage_MissingGuidAttribute" xml:space="preserve">
+    <value>Hosting package '{packageType}' does not have the required [Guid] attribute.</value>
+  </data>
+  <data name="HostingPackage_PackageBaseRequired" xml:space="preserve">
+    <value>The hosting package for the runtime must inherit from '{baseClass}'.</value>
+  </data>
   <data name="SettingsManager_CannotSaveAsString" xml:space="preserve">
     <value>Cannot persist setting value of type '{0}' from property '{1}.{2}'. An appropriate type converter that can convert the value to a string is required.</value>
   </data>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel.Composition;
 
 namespace Clide.IntegrationPackage
 {
@@ -10,7 +11,8 @@ namespace Clide.IntegrationPackage
 	/// components can import to force the package to load
 	/// before exports are used.
 	/// </summary>
-	public interface ISamplePackage
+	public interface IPackage
 	{
+        ICompositionService Composition { get; }
 	}
 }

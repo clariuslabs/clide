@@ -10,7 +10,7 @@ namespace Clide.IntegrationPackage
 	public class ForcePackageLoadComponent
 	{
 		[ImportingConstructor]
-		public ForcePackageLoadComponent(ISamplePackage package)
+		public ForcePackageLoadComponent(IPackage package)
 		{
 			// No need to do anything special with the package here, 
 			// although we might use state from it if needed.

@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows;
 using System.ComponentModel.Composition;
 using Clide.Commands;
+using Clide.Hosting;
 
 namespace Clide.IntegrationPackage
 {
@@ -12,6 +13,9 @@ namespace Clide.IntegrationPackage
 	[Command(Constants.PackageGuid, Constants.CommandSet, Constants.CommandId)]
 	public class SampleCommand : ICommandExtension
 	{
+        [Import(Constants.PackageContract)]
+        public IHostingPackage Package { get; set; }
+
 		public string Text
 		{
 			get { return "Sample"; }

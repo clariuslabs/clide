@@ -10,6 +10,9 @@ using System.Windows.Forms;
 using Microsoft.VisualStudio.ComponentModelHost;
 using System.ComponentModel.Composition.Hosting;
 using Clide;
+using Microsoft.VisualStudio.Shell.Interop;
+using Clide.IntegrationPackage;
+using Microsoft.VisualStudio;
 
 [TestClass]
 public abstract class VsHostedSpec
@@ -26,20 +29,27 @@ public abstract class VsHostedSpec
         get { return VsIdeTestHostContext.ServiceProvider; }
     }
 
-    protected static CompositionContainer Container
+    protected CompositionContainer Container
     {
-        get { return container.Value; }
+        get { return (CompositionContainer)this.IntegrationPackage.Composition; }
     }
 
-    private static Lazy<CompositionContainer> container = new Lazy<CompositionContainer>(() => BuildContainer());
+    private Lazy<ShellPackage> integrationPackage = new Lazy<ShellPackage>(() => GetPackage());
 
-    private static CompositionContainer BuildContainer()
+    private static ShellPackage GetPackage()
     {
-        var componentModel = ServiceProvider.GetService<SComponentModel, IComponentModel>();
-        var catalog = new AssemblyCatalog(typeof(IDevEnv).Assembly);
+        var shell = ServiceProvider.GetService<SVsShell, IVsShell>();
+        IVsPackage package;
+        var guid = new Guid(Clide.IntegrationPackage.Constants.PackageGuid);
+        ErrorHandler.ThrowOnFailure(shell.IsPackageLoaded(ref guid, out package));
 
-        return new CompositionContainer(catalog, componentModel.DefaultExportProvider);
+        if (package == null)
+            ErrorHandler.ThrowOnFailure(shell.LoadPackage(ref guid, out package));
+
+        return package as ShellPackage;
     }
+
+    protected ShellPackage IntegrationPackage { get { return this.integrationPackage.Value; } }
 
     [TestInitialize]
     public virtual void TestInitialize()
