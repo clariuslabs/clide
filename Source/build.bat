@@ -1,1 +1,1 @@
-%WINDIR%\Microsoft.NET\Framework\v4.0.30319\msbuild Clide.sln /p:NuGet="true" /verbosity:normal /nr:false
+%WINDIR%\Microsoft.NET\Framework\v4.0.30319\msbuild %~dp0\Core\Core.csproj /p:NuGet="true" /verbosity:normal /nr:false
