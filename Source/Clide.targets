@@ -61,6 +61,7 @@ Log.LogMessage("Updated nuspec version in file {0} to {1}.", this.SpecFile, upda
 
     <ItemGroup>
         <SymbolSource Include="**\*.cs" />
+        <SymbolSource Include="$(IntermediateOutputPath)**\*.cs" />
     </ItemGroup>
     
     <Target Name="AfterBuild" Condition="$(NuGet) == 'true'">
