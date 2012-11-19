@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!--
+    ============================================================
+				ReadCurrentVersion
+
+    Reads the current version of the .nuspec file, either from 
+	a previously generated one in the NuGet content output dir
+	or the project source itself on first build.
+    ============================================================
+    -->
+    <UsingTask TaskName="ReadCurrentVersion"
+			   TaskFactory="CodeTaskFactory"
+			   AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+        <ParameterGroup>
+            <SpecFile Required="true" />
+            <CurrentVersion Output="true" />
+        </ParameterGroup>
+        <Task>
+            <Reference Include="System.Xml"/>
+            <Reference Include="System.Xml.Linq"/>
+            <Using Namespace="System.IO"/>
+            <Using Namespace="System.Xml"/>
+            <Using Namespace="System.Xml.Linq"/>
+            <Code Type="Fragment" Language="cs">
+                <![CDATA[
+var spec = XDocument.Load(this.SpecFile);
+this.CurrentVersion = spec.Root.Element("metadata").Element("version").Value;
+Log.LogMessage("Current nuspec version is {0}, from {1}.", this.CurrentVersion, this.SpecFile);
+]]>
+            </Code>
+        </Task>
+    </UsingTask>
+    <UsingTask TaskName="WriteNewVersion"
+			   TaskFactory="CodeTaskFactory"
+			   AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+        <ParameterGroup>
+            <SpecFile Required="true" />
+            <CurrentVersion Required="true" />
+        </ParameterGroup>
+        <Task>
+            <Reference Include="System.Xml"/>
+            <Reference Include="System.Xml.Linq"/>
+            <Using Namespace="System"/>
+            <Using Namespace="System.IO"/>
+            <Using Namespace="System.Xml"/>
+            <Using Namespace="System.Xml.Linq"/>
+            <Code Type="Fragment" Language="cs">
+                <![CDATA[
+var spec = XDocument.Load(this.SpecFile);
+var version = new Version(this.CurrentVersion);
+var updated = new Version(string.Format("{0}.{1}.{2}", version.Major, version.Minor, DateTime.Now.ToString("yyMM.ddHH")));
+
+spec.Root.Element("metadata").Element("version").Value = updated.ToString();
+spec.Save(this.SpecFile);
+Log.LogMessage("Updated nuspec version in file {0} to {1}.", this.SpecFile, updated);
+]]>
+            </Code>
+        </Task>
+    </UsingTask>
+
+    <ItemGroup>
+        <SymbolSource Include="**\*.cs" />
+    </ItemGroup>
+    
+    <Target Name="AfterBuild" Condition="$(NuGet) == 'true'">
+        <!-- Copy spec file and sources to destination as needed -->
+        <Copy SourceFiles="Clide.nuspec" DestinationFolder="nuget" ContinueOnError="false" />
+        <Copy SourceFiles="@(SymbolSource)" DestinationFiles="@(SymbolSource->'nuget\src\%(RecursiveDir)%(Filename)%(Extension)')" ContinueOnError="false" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+
+        <!-- Update package version automatically -->
+        <ReadCurrentVersion
+			SpecFile="nuget\Clide.nuspec">
+            <Output PropertyName="NuSpecCurrentVersion" TaskParameter="CurrentVersion" />
+        </ReadCurrentVersion>
+        <WriteNewVersion SpecFile="nuget\Clide.nuspec"
+						 CurrentVersion="$(NuSpecCurrentVersion)" />
+        
+        <!-- Finally build the package -->
+        <Exec Command="$(SolutionDir)\.nuget\NuGet.exe pack -NoPackageAnalysis nuget\Clide.nuspec -Symbols -OutputDirectory $(SolutionDir)\..\" ContinueOnError="false" />
+    </Target>
+</Project>
