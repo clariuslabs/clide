@@ -60,7 +60,7 @@ Log.LogMessage("Updated nuspec version in file {0} to {1}.", this.SpecFile, upda
     </UsingTask>
 
     <ItemGroup>
-        <SymbolSource Include="**\*.cs" />
+        <SymbolSource Include="**\*.cs" Exclude="nuget\**\*.cs" />
         <SymbolSource Include="$(IntermediateOutputPath)**\*.cs" />
         <GeneratedCode Include="$(IntermediateOutputPath)**\*.cs" />
     </ItemGroup>
