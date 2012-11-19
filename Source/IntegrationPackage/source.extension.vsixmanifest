@@ -19,6 +19,5 @@
 	<References />
 	<Content>
 		<MefComponent>|%CurrentProject%|</MefComponent>
-        <!--<MefComponent>Clide.dll</MefComponent>-->
     </Content>
 </Vsix>
