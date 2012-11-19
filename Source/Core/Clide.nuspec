@@ -2,13 +2,13 @@
 <package>
     <metadata>
         <id>Clide</id>
-        <version>1.0.0.0</version>
+        <version>1.0</version>
         <title>Clide</title>
         <authors>Daniel Cazzulino</authors>
         <owners>Daniel Cazzulino</owners>
-        <licenseUrl>http://wovs.com/clide/license</licenseUrl>
-        <projectUrl>http://wovs.com/clide</projectUrl>
-        <iconUrl>http://wovs.com/favicon.ico</iconUrl>
+        <licenseUrl>http://clarius.io/clide-license</licenseUrl>
+        <projectUrl>http://clarius.io/clide</projectUrl>
+        <iconUrl>http://clarius.io/clide-48x48</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Provides high-level, composable and testable APIs for working with Visual Studio.</description>
         <releaseNotes>Initial release of the APIs.</releaseNotes>
