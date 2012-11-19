@@ -61,14 +61,11 @@ Log.LogMessage("Updated nuspec version in file {0} to {1}.", this.SpecFile, upda
 
     <ItemGroup>
         <SymbolSource Include="**\*.cs" Exclude="nuget\**\*.cs" />
+        <SymbolSource Include="**\*.xaml" Exclude="nuget\**\*.xaml" />
         <SymbolSource Include="$(IntermediateOutputPath)**\*.cs" />
-        <GeneratedCode Include="$(IntermediateOutputPath)**\*.cs" />
     </ItemGroup>
     
     <Target Name="AfterBuild" Condition="$(NuGet) == 'true'">
-		<Message Text="Intermediate output path is $(IntermediateOutputPath)" Importance="High" />		
-		<Message Text="Generated code file @(GeneratedCode)" Importance="High" />
-    
         <!-- Copy spec file and sources to destination as needed -->
         <Copy SourceFiles="Clide.nuspec" DestinationFolder="nuget" ContinueOnError="false" />
         <Copy SourceFiles="@(SymbolSource)" DestinationFiles="@(SymbolSource->'nuget\src\%(RecursiveDir)%(Filename)%(Extension)')" ContinueOnError="false" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
