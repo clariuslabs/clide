@@ -29,12 +29,9 @@ ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF S
 DAMAGE.
 */
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection;
 using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
 
 /// <summary>
 /// Provides strong typed access to ComponentModel attributes by using the ComponentModel() extension method over a type, method, property, etc.

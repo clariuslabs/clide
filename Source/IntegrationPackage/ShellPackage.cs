@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition.Hosting;
 using Clide.Hosting;
 
-namespace Clide.IntegrationPackage
+namespace IntegrationPackage
 {
 	[Guid(Constants.PackageGuid)]
 	[ProvideAutoLoad(UIContextGuids.NoSolution)]

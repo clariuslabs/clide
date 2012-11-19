@@ -1,5 +1,5 @@
 ﻿
-namespace Clide.IntegrationPackage
+namespace IntegrationPackage
 {
 	public class Constants
 	{
@@ -7,6 +7,6 @@ namespace Clide.IntegrationPackage
 		public const string CommandSet = "6EFC7612-0297-481E-9358-57CC63198A08";
 		public const int CommandId = 0x100;
 
-        public const string PackageContract = "Clide.IntegrationPackage";
+        public const string PackageContract = "IntegrationPackage";
 	}
 }

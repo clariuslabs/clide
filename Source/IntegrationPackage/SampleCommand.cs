@@ -7,12 +7,17 @@ using System.ComponentModel.Composition;
 using Clide.Commands;
 using Clide.Hosting;
 
-namespace Clide.IntegrationPackage
+namespace IntegrationPackage
 {
 	[PartCreationPolicy(CreationPolicy.Shared)]
 	[Command(Constants.PackageGuid, Constants.CommandSet, Constants.CommandId)]
 	public class SampleCommand : ICommandExtension
 	{
+        public SampleCommand()
+        {
+
+        }
+
         [Import(Constants.PackageContract)]
         public IHostingPackage Package { get; set; }
 

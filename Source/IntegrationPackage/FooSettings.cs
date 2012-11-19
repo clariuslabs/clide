@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel.Composition;
+using Clide;
 
-namespace Clide.IntegrationPackage
+namespace IntegrationPackage
 {
 	[Settings]
 	public class FooSettings : Settings

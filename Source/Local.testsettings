@@ -2,6 +2,9 @@
 <TestSettings name="Local" id="c0319ab2-eb2b-48a9-834a-7605a317a5fe" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
   <Description>These are default test settings for a local test run.</Description>
   <Execution>
+    <Hosts type="VS IDE">
+      <VSSDKTestHostRunConfig name="VS IDE" HiveKind="DevEnv" HiveName="10.0Exp" xmlns="http://microsoft.com/schemas/VisualStudio/SDK/Tools/IdeHostAdapter/2006/06" />
+    </Hosts>
     <TestTypeSpecific>
       <UnitTestRunConfig testTypeId="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b">
         <AssemblyResolution>
@@ -20,20 +23,6 @@
       </WebTestRunConfiguration>
     </TestTypeSpecific>
     <AgentRule name="LocalMachineDefaultRole">
-      <DataCollectors>
-        <DataCollector uri="datacollector://microsoft/CodeCoverage/1.0" assemblyQualifiedName="Microsoft.VisualStudio.TestTools.CodeCoverage.CoveragePlugIn, Microsoft.VisualStudio.QualityTools.Plugins.CodeCoverage, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" friendlyName="Code Coverage">
-          <Configuration>
-            <CodeCoverage keyFile="Clide.snk" xmlns="">
-              <Regular>
-                <CodeCoverageItem binaryFile="Core\bin\Debug\Clide.dll" pdbFile="Core\bin\Debug\Clide.pdb" instrumentInPlace="true" />
-                <CodeCoverageItem binaryFile="IntegrationTests\bin\Debug\Clide.IntegrationTests.dll" pdbFile="IntegrationTests\bin\Debug\Clide.IntegrationTests.pdb" instrumentInPlace="true" />
-                <CodeCoverageItem binaryFile="IntegrationPackage\bin\Debug\Clide.IntegrationPackage.dll" pdbFile="IntegrationPackage\bin\Debug\Clide.IntegrationPackage.pdb" instrumentInPlace="true" />
-                <CodeCoverageItem binaryFile="UnitTests\bin\Debug\Clide.UnitTests.dll" pdbFile="UnitTests\bin\Debug\Clide.UnitTests.pdb" instrumentInPlace="true" />
-              </Regular>
-            </CodeCoverage>
-          </Configuration>
-        </DataCollector>
-      </DataCollectors>
     </AgentRule>
   </Execution>
 </TestSettings>

@@ -16,11 +16,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #endregion
 #pragma warning disable 0436
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Reflection;
 using System.Linq.Expressions;
+using System.Reflection;
 
 /// <summary>
 /// Provides strong-typed static reflection for arbitrary 

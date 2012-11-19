@@ -12,29 +12,26 @@
     <AssemblyName>Clide</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <OutputPath>nuget\lib\net40\</OutputPath>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Clide.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>full</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\Clide.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -71,7 +68,6 @@
     <Compile Include="Commands\CommandAttribute.cs" />
     <Compile Include="Commands\CommandFilterAttribute.cs" />
     <Compile Include="Commands\CommandManager.cs" />
-    <Compile Include="Commands\CommandMetadata.cs" />
     <Compile Include="Commands\ICommandExtension.cs" />
     <Compile Include="Commands\ICommandFilter.cs" />
     <Compile Include="Commands\ICommandFilterMetadata.cs" />
@@ -81,30 +77,29 @@
     <Compile Include="Commands\OleMenuCommandAdapter.cs" />
     <Compile Include="Commands\VsCommand.cs" />
     <Compile Include="Commands\VsCommandExtensionAdapter.cs" />
-    <Compile Include="ComponentModel.cs" />
     <Compile Include="Composition\ComponentModel.cs" />
     <Compile Include="Composition\ContractNames.cs" />
+    <Compile Include="Composition\DecoratingReflectionCatalog.cs" />
     <Compile Include="Composition\ExportedServices.cs" />
+    <Compile Include="Composition\SelectorEqualityComparer.cs" />
     <Compile Include="Composition\VsContractNames.cs" />
     <Compile Include="Composition\VsExportedServices.cs" />
-    <Compile Include="ContractNames.cs" />
     <Compile Include="Extensions\ComponentModelExtensions.cs" />
+    <Compile Include="Extensions\MessageBoxServiceExtensions.cs" />
+    <Compile Include="Extensions\TracingExtensions.cs" />
     <Compile Include="Hosting\HostingPackage.cs" />
     <Compile Include="Hosting\IHostingPackage.cs" />
     <Compile Include="MessageBoxService.cs" />
     <Compile Include="DevEnv.cs" />
     <Compile Include="Diagnostics\IndentingTextListener.cs" />
-    <Compile Include="Diagnostics\ITracerManager.cs" />
     <Compile Include="Diagnostics\IUserMessageService.cs" />
     <Compile Include="Diagnostics\OutputWindowTextWriter.cs" />
     <Compile Include="Diagnostics\TraceOutputWindowManager.cs" />
-    <Compile Include="Diagnostics\Tracer.cs" />
     <Compile Include="Diagnostics\UserMessageService.cs" />
     <Compile Include="DialogWindowFactory.cs" />
     <Compile Include="Events\IGlobalEvents.cs" />
     <Compile Include="Events\IShellEvents.cs" />
     <Compile Include="Events\ISolutionEvents.cs" />
-    <Compile Include="ExportedServices.cs" />
     <Compile Include="Extensions\VsUIShellExtensions.cs" />
     <Compile Include="IDevEnv.cs" />
     <Compile Include="IDevEnvExtensions.cs" />
@@ -112,7 +107,6 @@
     <Compile Include="IDialogWindowFactory.cs" />
     <Compile Include="IFluentInterface.cs" />
     <Compile Include="IMessageBoxService.cs" />
-    <Compile Include="IMonitorSelectionService.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="ISettingsManager.cs" />
     <Compile Include="ISettingsStore.cs" />
@@ -120,8 +114,6 @@
     <Compile Include="IStatusBar.cs" />
     <Compile Include="IToolWindow.cs" />
     <Compile Include="IUIThread.cs" />
-    <Compile Include="MonitorSelectionEventArgs.cs" />
-    <Compile Include="MonitorSelectionService.cs" />
     <Compile Include="netfx\System\AppDomainData.cs" />
     <Compile Include="netfx\System\Collections\Generic\DictionaryGetOrAdd.cs" />
     <Compile Include="netfx\System\ComponentModel\ComponentModelAttributes.cs" />
@@ -165,13 +157,14 @@
     <Compile Include="UI\InputBox.xaml.cs">
       <DependentUpon>InputBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="VsContractNames.cs" />
-    <Compile Include="VsExportedServices.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Clide.snk">
       <Link>Clide.snk</Link>
     </None>
+    <None Include="Clide.nuspec">
+    </None>
+    <None Include="Core.licenseheader" />
     <None Include="netfx\System\Reflection\Reflect.Overloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Reflect.Overloads.cs</LastGenOutput>
@@ -198,12 +191,13 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="netfx\System\Dynamic\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <Target Name="AfterBuild">
+    <Copy SourceFiles="Clide.nuspec" DestinationFolder="nuget" ContinueOnError="false" />
+    <Exec Command="$(SolutionDir)\.nuget\NuGet.exe pack -NoPackageAnalysis nuget\Clide.nuspec -Symbols -OutputDirectory $(SolutionDir)\..\" ContinueOnError="false" />
   </Target>
-  -->
 </Project>

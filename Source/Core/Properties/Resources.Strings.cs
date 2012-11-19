@@ -6,8 +6,6 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using System;
-using System.Globalization;
 
 namespace Clide.Properties
 {
@@ -145,6 +143,12 @@ namespace Clide.Properties
 					baseClass = baseClass,
 				});
 			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	.NET runtime changed. Please upgrade Clide.
+			/// </summary>
+			public static string UnsupportedRuntime { get { return Resources.HostingPackage_UnsupportedRuntime; } }
 		}
 		
 		///	<summary>

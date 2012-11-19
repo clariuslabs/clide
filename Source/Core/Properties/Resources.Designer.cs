@@ -8,10 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Clide.Properties {
-    using System;
-    
-    
+namespace Clide.Properties
+{
+
+
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -138,6 +138,15 @@ namespace Clide.Properties {
         internal static string HostingPackage_PackageBaseRequired {
             get {
                 return ResourceManager.GetString("HostingPackage_PackageBaseRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .NET runtime changed. Please upgrade Clide..
+        /// </summary>
+        internal static string HostingPackage_UnsupportedRuntime {
+            get {
+                return ResourceManager.GetString("HostingPackage_UnsupportedRuntime", resourceCulture);
             }
         }
         

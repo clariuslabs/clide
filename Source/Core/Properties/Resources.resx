@@ -144,6 +144,9 @@
   <data name="HostingPackage_PackageBaseRequired" xml:space="preserve">
     <value>The hosting package for the runtime must inherit from '{baseClass}'.</value>
   </data>
+  <data name="HostingPackage_UnsupportedRuntime" xml:space="preserve">
+    <value>.NET runtime changed. Please upgrade Clide.</value>
+  </data>
   <data name="SettingsManager_CannotSaveAsString" xml:space="preserve">
     <value>Cannot persist setting value of type '{0}' from property '{1}.{2}'. An appropriate type converter that can convert the value to a string is required.</value>
   </data>

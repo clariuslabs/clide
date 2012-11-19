@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package >
+    <metadata>
+        <id>Clide</id>
+        <version>1.0.0.0</version>
+        <title>Clide</title>
+        <authors>Daniel Cazzulino</authors>
+        <owners>Daniel Cazzulino</owners>
+        <licenseUrl>http://wovs.com/clide/license</licenseUrl>
+        <projectUrl>http://wovs.com/clide</projectUrl>
+        <iconUrl>http://wovs.com/favicon.ico</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Provides high-level, composable and testable APIs for working with Visual Studio.</description>
+        <releaseNotes>Initial release of the APIs.</releaseNotes>
+        <copyright>Copyright 2012</copyright>
+        <tags>visualstudio vsx extensibility</tags>
+        <dependencies />
+    </metadata>
+</package>

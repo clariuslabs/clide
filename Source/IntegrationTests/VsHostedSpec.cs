@@ -11,8 +11,8 @@ using Microsoft.VisualStudio.ComponentModelHost;
 using System.ComponentModel.Composition.Hosting;
 using Clide;
 using Microsoft.VisualStudio.Shell.Interop;
-using Clide.IntegrationPackage;
 using Microsoft.VisualStudio;
+using IntegrationPackage;
 
 [TestClass]
 public abstract class VsHostedSpec
@@ -40,7 +40,7 @@ public abstract class VsHostedSpec
     {
         var shell = ServiceProvider.GetService<SVsShell, IVsShell>();
         IVsPackage package;
-        var guid = new Guid(Clide.IntegrationPackage.Constants.PackageGuid);
+        var guid = new Guid(global::IntegrationPackage.Constants.PackageGuid);
         ErrorHandler.ThrowOnFailure(shell.IsPackageLoaded(ref guid, out package));
 
         if (package == null)

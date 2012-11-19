@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel.Composition;
 
-namespace Clide.IntegrationPackage
+namespace IntegrationPackage
 {
 	/// <summary>
 	/// Marker interface implemented by the package that 
