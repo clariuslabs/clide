@@ -97,53 +97,23 @@ namespace Clide.Hosting
 
             var composition = ((IComponentModel)this.GetService(typeof(SComponentModel)));
             var vsCatalog = composition.GetCatalog(this.CatalogName);
-            var decorated = new DecoratingReflectionCatalog(vsCatalog)
+
+            // Determine if the user added or not Clide as a MefComponent in the VSIX
+            var isClideInVsCatalog = vsCatalog.Parts.Any(part =>
+                part.ExportDefinitions.Any(export => export.ContractName == typeof(IDevEnv).FullName));
+
+            // It would be user mistake to add Clide to MEF, but we have to account for it 
+            // anyway.
+            if (!isClideInVsCatalog)
             {
-                PartMetadataDecorator = part =>
-                    part.NewMetadata["CatalogName"] = this.CatalogName,
-                ExportMetadataDecorator = export =>
-                    export.NewMetadata["CatalogName"] = this.CatalogName,
-            };
+                vsCatalog = new AggregateCatalog(
+                    // Clide is not on the manifest as MefComponent, therefore, it's not on the catalog.
+                    new AssemblyCatalog(typeof(IDevEnv).Assembly),
+                    vsCatalog);
+            }
 
-            var catalog = new AggregateCatalog(
-                // Clide is not on the manifest as MefComponent, therefore, 
-                // it's not on the catalog.
-                new DecoratingReflectionCatalog(new AssemblyCatalog(typeof(IDevEnv).Assembly))
-                {
-                    PartMetadataDecorator = part =>
-                        part.NewMetadata["CatalogName"] = this.CatalogName,
-                    ExportMetadataDecorator = export =>
-                        export.NewMetadata["CatalogName"] = this.CatalogName,
-                },
-                decorated);
-            //composition.DefaultCatalog);
+            this.container = new CompositionContainer(vsCatalog, composition.DefaultExportProvider);
 
-            //var catalog = new AggregateCatalog(
-            //    new DecoratingReflectionCatalog(new AssemblyCatalog(typeof(IDevEnv).Assembly))
-            //    {
-            //        PartMetadataDecorator = part => 
-            //            part.NewMetadata["CatalogName"] = this.CatalogName,
-            //        ExportMetadataDecorator = export => 
-            //            export.NewMetadata["CatalogName"] = this.CatalogName,
-            //    },
-            //    new DecoratingReflectionCatalog(vsCatalog)
-            //    {
-            //        PartMetadataDecorator = part =>
-            //            part.NewMetadata["CatalogName"] = this.CatalogName,
-            //        ExportMetadataDecorator = export =>
-            //            export.NewMetadata["CatalogName"] = this.CatalogName,
-            //    },
-            //    vsCatalog, 
-            //    composition.DefaultCatalog);
-
-            // Annotates all exports in our catalogs with the catalog 
-            // name. This makes it possible to hide all additional 
-            // exports that are pulled in from the global container
-            // later on by the NonClideExportProvider.
-
-            this.container = new CompositionContainer(catalog, composition.DefaultExportProvider);
-
-            //VsCompositionContainer.Create(new FilteredCatalog(catalog, this.CatalogName));
             VsCompositionContainer.Create(new LocalOnlyExportProvider(this.container));
 
             this.container.ComposeExportedValue<IHostingPackage>(this);
@@ -174,22 +144,6 @@ namespace Clide.Hosting
         /// Clide.
         /// </summary>
         public ICompositionService Composition { get; private set; }
-
-        private class CustomCompositionContainer : CompositionContainer
-        {
-            public ThreadLocal<bool> VsMefRequest { get; private set; }
-
-            public CustomCompositionContainer(ComposablePartCatalog catalog, params ExportProvider[] exportProviders)
-                : base(catalog, exportProviders)
-            {
-                this.VsMefRequest = new ThreadLocal<bool>(() => false);
-            }
-
-            protected override IEnumerable<Export> GetExportsCore(ImportDefinition definition, AtomicComposition atomicComposition)
-            {
-                return base.GetExportsCore(definition, atomicComposition);
-            }
-        }
 
         /// <summary>
         /// Avoids exposing to VS the Clide APIs, which are only for the specific 
@@ -223,7 +177,6 @@ namespace Clide.Hosting
                     // so we need to resort to invoking the actual type constructor
                     // via reflection, which we make more performant by 
                     // compiling a lambda.
-                    // ImportDefinitionFactory = Expression.Lambda<ImportDefinitionConstructor>(
                     var parameters = args
                         .Select(p => Expression.Parameter(p.ParameterType, p.Name))
                         .ToArray();
