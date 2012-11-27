@@ -74,8 +74,6 @@ namespace Clide
                 return package;
             });
 
-            InitializeContainer(catalogName);
-
             this.HostingPackage = new Lazy<TExport>(() =>
             {
                 if (initializePackage)
@@ -83,6 +81,8 @@ namespace Clide
 
                 return this.loadedPackage.Value;
             });
+
+            InitializeContainer(catalogName);
         }
 
         /// <summary>

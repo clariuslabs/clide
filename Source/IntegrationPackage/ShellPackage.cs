@@ -14,7 +14,7 @@
     using Clide;
 
     [Guid(Constants.PackageGuid)]
-	[ProvideAutoLoad(UIContextGuids.SolutionExists)]
+	[ProvideAutoLoad(UIContextGuids.NoSolution)]
 	[PackageRegistration(UseManagedResourcesOnly = true)]
 	public class ShellPackage : Package, IShellPackage
 	{
@@ -29,7 +29,11 @@
         {
             base.Initialize();
             this.host.Initialize(this);
+            //this.MessageBox.ShowInformation("Clide Integration Package Loaded!");
         }
+
+        //[Import]
+        //public IMessageBoxService MessageBox { get; set; }
 
         public ICompositionService Composition
         {

@@ -70,10 +70,10 @@ File.WriteAllText(this.AssemblyInfo, info);
     <Target Name="Build">
         <UpdateFileVersion AssemblyInfo="Properties\AssemblyInfo.cs" />
 
-        <MSBuild Projects="Core.csproj"
+        <MSBuild Projects="Clide.csproj"
                  Properties="VisualStudioVersion=10.0;NuGet=true"
                  />
-        <MSBuild Projects="Core.csproj"
+        <MSBuild Projects="Clide.csproj"
                  Properties="VisualStudioVersion=11.0;NuGet=true"
                  />                 
 
@@ -81,7 +81,7 @@ File.WriteAllText(this.AssemblyInfo, info);
         <UpdateSpecVersion SpecFile="nuget\Clide.nuspec" />
 
         <!-- Finally build the package -->
-        <Exec Command="$(MSBuildThisFileDirectory)..\.nuget\NuGet.exe pack -NoPackageAnalysis nuget\Clide.nuspec -Symbols -OutputDirectory $(MSBuildThisFileDirectory)..\"
+        <Exec Command="$(MSBuildThisFileDirectory)..\.nuget\NuGet.exe pack -NoPackageAnalysis nuget\Clide.nuspec -Symbols -OutputDirectory $(MSBuildThisFileDirectory)..\..\"
               ContinueOnError="false" />
     </Target>
 

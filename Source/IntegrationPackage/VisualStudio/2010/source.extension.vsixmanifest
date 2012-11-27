@@ -4,8 +4,8 @@
       Version="1.0.0"
       xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
     <Identifier Id="IntegrationPackage">
-        <Name>IntegrationPackage-2010</Name>
-        <Author>Clarius Consulting</Author>
+        <Name>IntegrationPackage</Name>
+        <Author>Clarius</Author>
         <Version>1.0</Version>
         <Description xml:space="preserve">Sample package for testing out Clide stuff.</Description>
         <Locale>1033</Locale>

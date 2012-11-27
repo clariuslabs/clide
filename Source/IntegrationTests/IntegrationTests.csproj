@@ -85,9 +85,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj">
+    <ProjectReference Include="..\Core\Clide.csproj">
       <Project>{EAF59C6D-A973-48E6-A90A-5E894ECEC3F6}</Project>
-      <Name>Core</Name>
+      <Name>Clide</Name>
     </ProjectReference>
     <ProjectReference Include="..\IntegrationPackage\IntegrationPackage.csproj">
       <Project>{98518A57-A58F-4403-B4ED-8EEF8293D3AA}</Project>
