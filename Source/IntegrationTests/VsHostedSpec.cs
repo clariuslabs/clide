@@ -41,7 +41,7 @@ public abstract class VsHostedSpec
         var shell = ServiceProvider.GetService<SVsShell, IVsShell>();
         IVsPackage package;
         var guid = new Guid(global::IntegrationPackage.Constants.PackageGuid);
-        ErrorHandler.ThrowOnFailure(shell.IsPackageLoaded(ref guid, out package));
+        shell.IsPackageLoaded(ref guid, out package);
 
         if (package == null)
             ErrorHandler.ThrowOnFailure(shell.LoadPackage(ref guid, out package));

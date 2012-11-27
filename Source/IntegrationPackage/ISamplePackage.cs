@@ -11,7 +11,7 @@ namespace IntegrationPackage
 	/// components can import to force the package to load
 	/// before exports are used.
 	/// </summary>
-	public interface IPackage
+	public interface IShellPackage
 	{
         ICompositionService Composition { get; }
 	}

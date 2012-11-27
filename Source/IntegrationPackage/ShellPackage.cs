@@ -1,26 +1,39 @@
-﻿using System;
-using System.ComponentModel.Design;
-using System.Runtime.InteropServices;
-using System.Linq;
-using Microsoft.VisualStudio.ComponentModelHost;
-using Microsoft.VisualStudio.Shell;
-using System.ComponentModel.Composition;
-using Microsoft.VisualStudio.Shell.Interop;
-using System.ComponentModel;
-using System.Collections.Generic;
-using System.ComponentModel.Composition.Hosting;
-using Clide.Hosting;
-
-namespace IntegrationPackage
+﻿namespace IntegrationPackage
 {
-	[Guid(Constants.PackageGuid)]
-	[ProvideAutoLoad(UIContextGuids.NoSolution)]
-	[PackageRegistration(UseManagedResourcesOnly = true)]
-	public class ShellPackage : HostingPackage
-	{
-        protected override string CatalogName { get { return "Clide.IntegrationTests"; } }
+    using System;
+    using System.ComponentModel.Design;
+    using System.Runtime.InteropServices;
+    using System.Linq;
+    using Microsoft.VisualStudio.ComponentModelHost;
+    using Microsoft.VisualStudio.Shell;
+    using System.ComponentModel.Composition;
+    using Microsoft.VisualStudio.Shell.Interop;
+    using System.ComponentModel;
+    using System.Collections.Generic;
+    using System.ComponentModel.Composition.Hosting;
+    using Clide;
 
-        [Export(Constants.PackageContract)]
-        public IHostingPackage Package { get { return this.LoadedPackage.Value; } }
+    [Guid(Constants.PackageGuid)]
+	[ProvideAutoLoad(UIContextGuids.SolutionExists)]
+	[PackageRegistration(UseManagedResourcesOnly = true)]
+	public class ShellPackage : Package, IShellPackage
+	{
+        private IHost<ShellPackage, IShellPackage> host;
+
+        public ShellPackage()
+        {
+            this.host = HostFactory.CreateHost<ShellPackage, IShellPackage>(ServiceProvider.GlobalProvider, "Clide.IntegrationTests");
+        }
+
+        protected override void Initialize()
+        {
+            base.Initialize();
+            this.host.Initialize(this);
+        }
+
+        public ICompositionService Composition
+        {
+            get { return this.host.Composition; }
+        }
     }
 }

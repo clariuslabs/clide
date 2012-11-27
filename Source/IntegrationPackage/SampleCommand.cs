@@ -5,7 +5,6 @@ using System.Text;
 using System.Windows;
 using System.ComponentModel.Composition;
 using Clide.Commands;
-using Clide.Hosting;
 
 namespace IntegrationPackage
 {
@@ -13,13 +12,18 @@ namespace IntegrationPackage
 	[Command(Constants.PackageGuid, Constants.CommandSet, Constants.CommandId)]
 	public class SampleCommand : ICommandExtension
 	{
+        private IShellPackage package;
+
         public SampleCommand()
         {
 
         }
 
-        [Import(Constants.PackageContract)]
-        public IHostingPackage Package { get; set; }
+        [Import]
+        public Lazy<IShellPackage> Package 
+        {
+            set { this.package = value.Value; } 
+        }
 
 		public string Text
 		{
