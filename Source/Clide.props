@@ -3,7 +3,7 @@
     <PropertyGroup>
         <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildThisFileDirectory)</SolutionDir>
         <SignAssembly>true</SignAssembly>
-        <AssemblyOriginatorKeyFile>$(SolutionDir)Clide.snk</AssemblyOriginatorKeyFile>
+        <AssemblyOriginatorKeyFile>$(SolutionDir)ClariusLabs.snk</AssemblyOriginatorKeyFile>
         <OutputPath>bin\$(VisualStudioVersion)\$(Configuration)\</OutputPath>
         <RestorePackages>true</RestorePackages>
     </PropertyGroup>

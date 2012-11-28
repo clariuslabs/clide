@@ -222,5 +222,4 @@
     <Copy SourceFiles="@(SymbolSource)" DestinationFiles="@(SymbolSource->'nuget\src\%(RecursiveDir)%(Filename)%(Extension)')" ContinueOnError="false" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
     <Copy SourceFiles="$(OutDir)$(TargetName).*" DestinationFolder="nuget\lib\$(NugetTarget)\" />
   </Target>
-  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 </Project>
