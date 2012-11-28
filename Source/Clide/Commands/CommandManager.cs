@@ -180,11 +180,12 @@ namespace Clide.Commands
             if (commandPackage == null)
                 ErrorHandler.ThrowOnFailure(vsShell.LoadPackage(ref commandPackageGuid, out commandPackage));
 
-            var mpf = commandPackage as Package;
-            if (mpf == null)
+            // TODO: trace all these failure conditions.
+            var serviceProvider = commandPackage as IServiceProvider;
+            if (serviceProvider == null)
                 return;
 
-            var mcs = mpf.GetService<IMenuCommandService>();
+            var mcs = serviceProvider.GetService<IMenuCommandService>();
             if (mcs != null)
             {
                 var command = mcs.FindCommand(new CommandID(new Guid(metadata.GroupId), metadata.CommandId)) as OleMenuCommand;
