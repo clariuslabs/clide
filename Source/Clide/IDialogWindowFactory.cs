@@ -19,7 +19,7 @@ namespace Clide
 	/// <summary>
 	/// Provides dialog windows creation functionality, properly setting the 
 	/// window owner, and optionally setting the dialog data context for
-	/// data binding.
+	/// data binding from an exported object.
 	/// </summary>
 	public interface IDialogWindowFactory : IFluentInterface
 	{
@@ -30,8 +30,8 @@ namespace Clide
 		/// </summary>
 		/// <param name="dynamicContextValues">Optional objects to make available for the <typeparamref name="TDataContext"/> creation via MEF.</param>
 		/// <typeparam name="TView">The type of the window to create.</typeparam>
-		/// <typeparam name="TDataContext">The type of the data context to create or retrieve from <see cref="IComponentModel.GetService"/>, 
-		/// so it needs to be exported in the environment.</typeparam>
+		/// <typeparam name="TDataContext">The type of the data context to retrieve from MEF (would be created or shared depending on its 
+        /// configured part creation policy).</typeparam>
 		/// <returns>
 		/// The created <see cref="Window"/> dialog.
 		/// </returns>
@@ -46,6 +46,6 @@ namespace Clide
 		/// <returns>
 		/// The created <see cref="Window"/> dialog.
 		/// </returns>
-		T CreateDialog<T>() where T : IDialogWindow, new();
+		TView CreateDialog<TView>() where TView : IDialogWindow, new();
 	}
 }
