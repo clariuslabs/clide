@@ -49,8 +49,8 @@
     <None Include="..\Clide.snk">
       <Link>Clide.snk</Link>
     </None>
-    <None Include="..\Core\Core.licenseheader">
-      <Link>Core.licenseheader</Link>
+    <None Include="..\Clide\Clide.licenseheader">
+      <Link>Clide.licenseheader</Link>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -104,7 +104,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Clide.csproj">
+    <ProjectReference Include="..\Clide\Clide.csproj">
       <Project>{EAF59C6D-A973-48E6-A90A-5E894ECEC3F6}</Project>
       <Name>Clide</Name>
     </ProjectReference>

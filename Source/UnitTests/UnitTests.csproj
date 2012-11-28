@@ -58,8 +58,8 @@
     <None Include="..\Clide.snk">
       <Link>Clide.snk</Link>
     </None>
-    <None Include="..\Core\Core.licenseheader">
-      <Link>Core.licenseheader</Link>
+    <None Include="..\Clide\Clide.licenseheader">
+      <Link>Clide.licenseheader</Link>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

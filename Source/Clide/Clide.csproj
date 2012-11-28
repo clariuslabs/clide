@@ -167,7 +167,7 @@
     </None>
     <None Include="Clide.nuspec">
     </None>
-    <None Include="Core.licenseheader" />
+    <None Include="Clide.licenseheader" />
     <None Include="netfx\System\Reflection\Reflect.Overloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Reflect.Overloads.cs</LastGenOutput>
