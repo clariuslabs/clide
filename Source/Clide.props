@@ -11,10 +11,14 @@
         <DefineConstants>$(DefineConstants);v11</DefineConstants>
         <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
         <NugetTarget>net45</NugetTarget>
+        <Vs11>True</Vs11>
+        <Vs10>False</Vs10>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(VisualStudioVersion)' == '10.0'">
+    <PropertyGroup Condition="'$(VisualStudioVersion)' != '11.0'">
         <DefineConstants>$(DefineConstants);v10</DefineConstants>
         <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
         <NugetTarget>net40</NugetTarget>
+        <Vs11>False</Vs11>
+        <Vs10>True</Vs10>
     </PropertyGroup>
 </Project>

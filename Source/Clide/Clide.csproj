@@ -40,8 +40,11 @@
       <HintPath>C:\Program Files (x86)\Microsoft Visual Studio $(VisualStudioVersion)\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.ExtensibilityHosting.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.Settings, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.Shell.$(VisualStudioVersion), Version=$(VisualStudioVersion).0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <!-- Shell.11 already contains the Settings assembly -->
+    <Reference Condition="$(Vs10)" Include="Microsoft.VisualStudio.Settings, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <Visible>$(Vs10)</Visible>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -121,6 +124,10 @@
     <Compile Include="netfx\System\Collections\Generic\DictionaryGetOrAdd.cs" />
     <Compile Include="netfx\System\ComponentModel\ComponentModelAttributes.cs" />
     <Compile Include="netfx\System\ComponentModel\IComponentModelAttributes.cs" />
+    <Compile Include="netfx\System\Dynamic\DynamicReflection.cs" />
+    <Compile Include="netfx\System\Dynamic\OutValue.cs" />
+    <Compile Include="netfx\System\Dynamic\RefValue.cs" />
+    <Compile Include="netfx\System\Dynamic\TypeParameter.cs" />
     <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="netfx\System\Reflection\GetCustomAttribute.cs" />
     <Compile Include="netfx\System\Reflection\Reflect.cs" />
@@ -215,4 +222,5 @@
     <Copy SourceFiles="@(SymbolSource)" DestinationFiles="@(SymbolSource->'nuget\src\%(RecursiveDir)%(Filename)%(Extension)')" ContinueOnError="false" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
     <Copy SourceFiles="$(OutDir)$(TargetName).*" DestinationFolder="nuget\lib\$(NugetTarget)\" />
   </Target>
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 </Project>

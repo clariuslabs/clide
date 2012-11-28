@@ -20,6 +20,7 @@ namespace Clide.Commands
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Design;
+    using System.Dynamic;
     using System.Linq;
     using System.Reflection;
     using System.Runtime.InteropServices;
@@ -28,6 +29,7 @@ namespace Clide.Commands
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
+    using Microsoft.CSharp.RuntimeBinder;
 
     /// <summary>
     /// Implements the command registration mechanism.
@@ -188,10 +190,23 @@ namespace Clide.Commands
             var mcs = serviceProvider.GetService<IMenuCommandService>();
             if (mcs != null)
             {
-                var command = mcs.FindCommand(new CommandID(new Guid(metadata.GroupId), metadata.CommandId)) as OleMenuCommand;
+                var command = mcs.FindCommand(new CommandID(new Guid(metadata.GroupId), metadata.CommandId));
+                // \o/: for some reason this cast never works on VS2012, even with the proper assembly references :(.
+                // So we resort to dynamic.
+                // var command =  as OleMenuCommand;
                 if (command != null)
                 {
-                    command.BeforeQueryStatus += (sender, args) => filter.QueryStatus(new OleMenuCommandAdapter((OleMenuCommand)sender));
+                    dynamic dynCommand = command.AsDynamicReflection();
+                    try
+                    {
+                        dynCommand.add_BeforeQueryStatus(new EventHandler((sender, args) =>
+                            filter.QueryStatus(new OleMenuCommandAdapter((OleMenuCommand)sender))));
+                    }
+                    catch (RuntimeBinderException)
+                    {
+                        // The command may not be an OleMenuCommand and therefore it wouldn't have the BeforeQueryStatus.
+                        // TODO: should trace. 
+                    }
                 }
             }
         }
@@ -205,7 +220,7 @@ namespace Clide.Commands
         {
             Guard.NotNull(() => owningPackage, owningPackage);
 
-            var owningPackageGuid = GetPackageGuidOrThrow(owningPackage);                        
+            var owningPackageGuid = GetPackageGuidOrThrow(owningPackage);
             var packageFilters = this.allFilters
                 .Where(filter => new Guid(filter.Metadata.OwningPackageId) == owningPackageGuid);
 
