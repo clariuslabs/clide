@@ -55,9 +55,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Clide.snk">
-      <Link>Clide.snk</Link>
-    </None>
     <None Include="..\Clide\Clide.licenseheader">
       <Link>Clide.licenseheader</Link>
     </None>

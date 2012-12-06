@@ -169,9 +169,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Clide.snk">
-      <Link>Clide.snk</Link>
-    </None>
     <None Include="Clide.nuspec">
     </None>
     <None Include="Clide.licenseheader" />
