@@ -147,6 +147,9 @@
   <data name="HostingPackage_UnsupportedRuntime" xml:space="preserve">
     <value>.NET runtime changed. Please upgrade Clide.</value>
   </data>
+  <data name="OutputPaneTitle" xml:space="preserve">
+    <value>Clide</value>
+  </data>
   <data name="SettingsManager_CannotSaveAsString" xml:space="preserve">
     <value>Cannot persist setting value of type '{0}' from property '{1}.{2}'. An appropriate type converter that can convert the value to a string is required.</value>
   </data>
@@ -164,6 +167,9 @@
   </data>
   <data name="Settings_EndInitWithoutBeginInit" xml:space="preserve">
     <value>EndInit invoked without corresponding BeginInit.</value>
+  </data>
+  <data name="SolutionNode_InvalidSolutionFile" xml:space="preserve">
+    <value>The solution file is invalid.</value>
   </data>
   <data name="VsCommandExtensionAdapter_CannotExecute" xml:space="preserve">
     <value>Attempted to execute command '{commandText}' ({commandType}) but current command status does not allow it.</value>

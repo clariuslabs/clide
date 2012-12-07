@@ -20,6 +20,13 @@ namespace Clide
     {
         [HostType("VS IDE")]
         [TestMethod]
+        public void WhenDiagnosingMef_ThenCanGetLog()
+        {
+
+        }
+
+        [HostType("VS IDE")]
+        [TestMethod]
         public void WhenLoadingVs_ThenCanExportFilteredContainer()
         {
             var components = ServiceProvider.GetService<SComponentModel, IComponentModel>();
@@ -73,85 +80,85 @@ namespace Clide
             }
         }
 
-        [HostType("VS IDE")]
-        [TestMethod]
-        [Ignore]
-        public void WhenLoadingVs_ThenCanExportNewCatalog()
-        {
-            // NONE OF THIS CRAP WORKS
+        //[HostType("VS IDE")]
+        //[TestMethod]
+        //[Ignore]
+        //public void WhenLoadingVs_ThenCanExportNewCatalog()
+        //{
+        //    // NONE OF THIS CRAP WORKS
 
-            var components = ServiceProvider.GetService<SComponentModel, IComponentModel>();
-            var globalContainer = (CompositionContainer)components.DefaultExportProvider;
+        //    var components = ServiceProvider.GetService<SComponentModel, IComponentModel>();
+        //    var globalContainer = (CompositionContainer)components.DefaultExportProvider;
 
-            var id = Guid.NewGuid();
-            //globalContainer.ComposeExportedValue<IClideStuff>(fooGlobal);
+        //    var id = Guid.NewGuid();
+        //    //globalContainer.ComposeExportedValue<IClideStuff>(fooGlobal);
 
-            var innerScope = new VsExportProvisionScope(id);
+        //    var innerScope = new VsExportProvisionScope(id);
 
-            var clideContainer = VsCompositionContainer.Create(
-                new TypeCatalog(typeof(ClideStuff)),
-                new VsExportProviderSettings(
-                    innerScope,
-                    VsExportProvidingPreference.Default,
-                    VsExportSharingPolicy.ShareEverything,
-                    VsContainerHostingPolicy.DoNotAllowReuse));
+        //    var clideContainer = VsCompositionContainer.Create(
+        //        new TypeCatalog(typeof(ClideStuff)),
+        //        new VsExportProviderSettings(
+        //            innerScope,
+        //            VsExportProvidingPreference.Default,
+        //            VsExportSharingPolicy.ShareEverything,
+        //            VsContainerHostingPolicy.DoNotAllowReuse));
 
-            var outerScope = new VsExportProvisionOuterScope(id, innerScope);
+        //    var outerScope = new VsExportProvisionOuterScope(id, innerScope);
 
-            var vsixContainer = VsCompositionContainer.Create(
-                new TypeCatalog(typeof(AdornmentStuff)),
-                new VsExportProviderSettings(
-                    outerScope,
-                    VsExportProvidingPreference.Default,
-                    VsExportSharingPolicy.ShareEverything,
-                    VsContainerHostingPolicy.DoNotAllowReuse));
+        //    var vsixContainer = VsCompositionContainer.Create(
+        //        new TypeCatalog(typeof(AdornmentStuff)),
+        //        new VsExportProviderSettings(
+        //            outerScope,
+        //            VsExportProvidingPreference.Default,
+        //            VsExportSharingPolicy.ShareEverything,
+        //            VsContainerHostingPolicy.DoNotAllowReuse));
 
-            var exportingContainer = VsCompositionContainer.Create(
-                vsixContainer,
-                new VsExportProviderSettings(
-                    VsExportProvidingPreference.Default,
-                    VsExportSharingPolicy.ShareEverything,
-                    VsContainerHostingPolicy.DoNotAllowReuse));
+        //    var exportingContainer = VsCompositionContainer.Create(
+        //        vsixContainer,
+        //        new VsExportProviderSettings(
+        //            VsExportProvidingPreference.Default,
+        //            VsExportSharingPolicy.ShareEverything,
+        //            VsContainerHostingPolicy.DoNotAllowReuse));
 
-            try
-            {
-                var c1 = clideContainer.GetExportedValue<IClideStuff>();
-                Assert.IsNotNull(c1);
-            }
-            catch (ImportCardinalityMismatchException)
-            {
-                Assert.Fail("Did not find IClideStuff on inner clide container.");
-            }
+        //    try
+        //    {
+        //        var c1 = clideContainer.GetExportedValue<IClideStuff>();
+        //        Assert.IsNotNull(c1);
+        //    }
+        //    catch (ImportCardinalityMismatchException)
+        //    {
+        //        Assert.Fail("Did not find IClideStuff on inner clide container.");
+        //    }
 
-            try
-            {
-                var a1 = vsixContainer.GetExportedValue<IAdornmentStuff>();
-                Assert.IsNotNull(a1);
-            }
-            catch (ImportCardinalityMismatchException)
-            {
-                Assert.Fail("Did not find IAdornmentStuff on outer vsix extension container.");
-            }
+        //    try
+        //    {
+        //        var a1 = vsixContainer.GetExportedValue<IAdornmentStuff>();
+        //        Assert.IsNotNull(a1);
+        //    }
+        //    catch (ImportCardinalityMismatchException)
+        //    {
+        //        Assert.Fail("Did not find IAdornmentStuff on outer vsix extension container.");
+        //    }
 
-            try
-            {
-                var ga1 = globalContainer.GetExportedValue<IAdornmentStuff>();
-                Assert.IsNotNull(ga1);
-            }
-            catch (ImportCardinalityMismatchException)
-            {
-                Assert.Fail("Did not find IAdornmentStuff on global VS container.");
-            }
+        //    try
+        //    {
+        //        var ga1 = globalContainer.GetExportedValue<IAdornmentStuff>();
+        //        Assert.IsNotNull(ga1);
+        //    }
+        //    catch (ImportCardinalityMismatchException)
+        //    {
+        //        Assert.Fail("Did not find IAdornmentStuff on global VS container.");
+        //    }
 
-            try
-            {
-                globalContainer.GetExportedValue<IClideStuff>();
-                Assert.Fail("Should not find IClideStuff on global container.");
-            }
-            catch (ImportCardinalityMismatchException)
-            {
-            }
-        }
+        //    try
+        //    {
+        //        globalContainer.GetExportedValue<IClideStuff>();
+        //        Assert.Fail("Should not find IClideStuff on global container.");
+        //    }
+        //    catch (ImportCardinalityMismatchException)
+        //    {
+        //    }
+        //}
     }
 
     public interface IClideStuff { }

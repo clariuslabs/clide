@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{42EA0564-1023-4C45-8E4E-A180B3F06B1F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder1", "SolutionFolder1", "{4A15F174-0E0B-43DD-8B86-2A4592B9EAEB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder2", "SolutionFolder2", "{8EE2CC26-95F6-4885-8768-23CFED371813}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassLibrary", "ClassLibrary\ClassLibrary.csproj", "{883173CE-9FDE-4436-96F5-128EA8A471BE}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "VBClassLibrary", "VBClassLibrary\VBClassLibrary.vbproj", "{02B97D52-38C9-4772-B730-2D7F2C3F368F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{883173CE-9FDE-4436-96F5-128EA8A471BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{883173CE-9FDE-4436-96F5-128EA8A471BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{883173CE-9FDE-4436-96F5-128EA8A471BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{883173CE-9FDE-4436-96F5-128EA8A471BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02B97D52-38C9-4772-B730-2D7F2C3F368F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02B97D52-38C9-4772-B730-2D7F2C3F368F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02B97D52-38C9-4772-B730-2D7F2C3F368F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02B97D52-38C9-4772-B730-2D7F2C3F368F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8EE2CC26-95F6-4885-8768-23CFED371813} = {4A15F174-0E0B-43DD-8B86-2A4592B9EAEB}
+		{02B97D52-38C9-4772-B730-2D7F2C3F368F} = {4A15F174-0E0B-43DD-8B86-2A4592B9EAEB}
+		{883173CE-9FDE-4436-96F5-128EA8A471BE} = {8EE2CC26-95F6-4885-8768-23CFED371813}
+	EndGlobalSection
+EndGlobal

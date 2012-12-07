@@ -29,11 +29,17 @@
         {
             base.Initialize();
             this.host.Initialize(this);
+
             //this.MessageBox.ShowInformation("Clide Integration Package Loaded!");
+
+            //((CompositionContainer)host.Composition).GetExportedValue<IDevEnv>();
         }
 
         //[Import]
         //public IMessageBoxService MessageBox { get; set; }
+
+        [Import]
+        public IDevEnv DevEnv { get; set; }
 
         public ICompositionService Composition
         {

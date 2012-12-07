@@ -27,18 +27,5 @@ namespace UnitTests
     [TestClass]
     public class Misc
     {
-        [TestMethod]
-        public void when_replacing_info_then_succeeds()
-        {
-            var info = File.ReadAllText(@"..\..\..\Clide\Properties\AssemblyInfo.cs");
-            var reg = new Regex(@"AssemblyFileVersion\(""(?<major>\d+)\.(?<minor>\d+)\.\d+\.\d+""\)");
-
-            info = reg.Replace(info, match => 
-                "AssemblyFileVersion(" + 
-                match.Groups["major"].Value + "." +
-                match.Groups["minor"].Value + "." + DateTime.Now.ToString("yyMM.ddHH"));
-
-            Console.WriteLine(info);
-        }
     }
 }

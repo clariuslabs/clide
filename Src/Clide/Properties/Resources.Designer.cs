@@ -8,10 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Clide.Properties
-{
-
-
+namespace Clide.Properties {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -151,6 +151,15 @@ namespace Clide.Properties
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clide.
+        /// </summary>
+        internal static string OutputPaneTitle {
+            get {
+                return ResourceManager.GetString("OutputPaneTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Object has already been initialized..
         /// </summary>
         internal static string Settings_AlreadyInitialized {
@@ -201,6 +210,15 @@ namespace Clide.Properties
         internal static string SettingsManager_InvalidValue {
             get {
                 return ResourceManager.GetString("SettingsManager_InvalidValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The solution file is invalid..
+        /// </summary>
+        internal static string SolutionNode_InvalidSolutionFile {
+            get {
+                return ResourceManager.GetString("SolutionNode_InvalidSolutionFile", resourceCulture);
             }
         }
         

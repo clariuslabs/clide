@@ -14,12 +14,27 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #endregion
+
 namespace Clide
 {
+    /// <summary>
+    /// Common interface for tool windows.
+    /// </summary>
 	public interface IToolWindow : IFluentInterface
 	{
-		bool IsOpen { get; }
-		void Open();
+        /// <summary>
+        /// Whether the tool window is currently visible.
+        /// </summary>
+		bool IsVisible { get; }
+
+        /// <summary>
+        /// Makes the tool window visible if it was closed or hidden.
+        /// </summary>
+		void Show();
+
+        /// <summary>
+        /// Closes the tool window.
+        /// </summary>
 		void Close();
 	}
 }

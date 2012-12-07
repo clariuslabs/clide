@@ -6,6 +6,8 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+using System;
+using System.Globalization;
 
 namespace Clide.Properties
 {
@@ -16,6 +18,12 @@ namespace Clide.Properties
 	[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
 	static partial class Strings
 	{
+		/// <summary>
+		/// Looks up a localized string similar to: 
+		///	Clide
+		/// </summary>
+		public static string OutputPaneTitle { get { return Resources.OutputPaneTitle; } }
+		
 		///	<summary>
 		///	Provides access to string resources.
 		///	</summary>
@@ -224,6 +232,20 @@ namespace Clide.Properties
 			///	EndInit invoked without corresponding BeginInit.
 			/// </summary>
 			public static string EndInitWithoutBeginInit { get { return Resources.Settings_EndInitWithoutBeginInit; } }
+		}
+		
+		///	<summary>
+		///	Provides access to string resources.
+		///	</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		public static partial class SolutionNode
+		{
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	The solution file is invalid.
+			/// </summary>
+			public static string InvalidSolutionFile { get { return Resources.SolutionNode_InvalidSolutionFile; } }
 		}
 		
 		///	<summary>

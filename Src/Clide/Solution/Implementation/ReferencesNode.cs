@@ -1,0 +1,50 @@
+﻿#region BSD License
+/* 
+Copyright (c) 2012, Clarius Consulting
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+* Neither the name of Clarius Consulting nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+#endregion
+
+namespace Clide.Solution
+{
+    using Clide.Patterns.Adapter;
+    using System;
+
+    internal class ReferencesNode : SolutionTreeNode, IReferenceNode
+	{
+		//private Lazy<VSLangProj.References> references;
+
+		public ReferencesNode(
+			Enum nodeKind,
+			IVsSolutionHierarchyNode hierarchyNode,
+			Lazy<ITreeNode> parentNode,
+			ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
+			IAdapterService adapter)
+			: base(nodeKind, hierarchyNode, parentNode, nodeFactory, adapter)
+		{
+			//var project = hierarchyNode.VsHierarchy.Properties().ExtenderObject as EnvDTE.Project;
+			//if (project != null)
+			//{
+			//    var vsProject = project.Object as VSLangProj.VSProject;
+			//    if (vsProject != null)
+			//    {
+			//        var refs = vsProject.References;
+
+			//    }
+			//}
+
+			//this.references = new Lazy<VSLangProj.References>(
+			//    () => ((VSLangProj.VSProject)((EnvDTE.Project)hierarchyNode.VsHierarchy.Properties().ExtenderObject).Object).References);
+		}
+	}
+}

@@ -1,28 +1,33 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clide", "Clide\Clide.csproj", "{EAF59C6D-A973-48E6-A90A-5E894ECEC3F6}"
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clide", "Src\Clide\Clide.csproj", "{EAF59C6D-A973-48E6-A90A-5E894ECEC3F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{DA6BC069-580E-4248-9E38-F20BDE688271}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "Src\IntegrationTests\IntegrationTests.csproj", "{DA6BC069-580E-4248-9E38-F20BDE688271}"
 	ProjectSection(ProjectDependencies) = postProject
 		{98518A57-A58F-4403-B4ED-8EEF8293D3AA} = {98518A57-A58F-4403-B4ED-8EEF8293D3AA}
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{779AC312-94DE-4CCA-BEF6-22F568107B98}"
 	ProjectSection(SolutionItems) = preProject
-		..\build.bat = ..\build.bat
-		Clide.props = Clide.props
-		Clide.targets = Clide.targets
-		Local.testsettings = Local.testsettings
+		build.bat = build.bat
+		Common\ClariusLabs.props = Common\ClariusLabs.props
+		Common\ClariusLabs.targets = Common\ClariusLabs.targets
+		Common\ClariusLabs.tasks = Common\ClariusLabs.tasks
+		Src\Clide.props = Src\Clide.props
+		Src\Clide.targets = Src\Clide.targets
+		Src\Local.testsettings = Src\Local.testsettings
+		Common\nuspec.xsd = Common\nuspec.xsd
+		README.md = README.md
 		ReleaseNotes.md = ReleaseNotes.md
-		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+		Src\TraceAndTestImpact.testsettings = Src\TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{3B640876-2510-4EED-8157-1ACB417C758D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "Src\UnitTests\UnitTests.csproj", "{3B640876-2510-4EED-8157-1ACB417C758D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationPackage", "IntegrationPackage\IntegrationPackage.csproj", "{98518A57-A58F-4403-B4ED-8EEF8293D3AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationPackage", "Src\IntegrationPackage\IntegrationPackage.csproj", "{98518A57-A58F-4403-B4ED-8EEF8293D3AA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E7AADC60-911A-43AE-B16C-0134D72D085C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7E86060C-D118-46F5-8731-06C4B67AC195}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 		.nuget\NuGet.exe = .nuget\NuGet.exe

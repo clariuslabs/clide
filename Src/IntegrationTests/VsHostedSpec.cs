@@ -17,14 +17,19 @@ using IntegrationPackage;
 [TestClass]
 public abstract class VsHostedSpec
 {
+    protected VsHostedSpec()
+    {
+        this.integrationPackage = new Lazy<ShellPackage>(() => GetPackage());
+    }
+
     public TestContext TestContext { get; set; }
 
-    protected static EnvDTE.DTE Dte
+    protected EnvDTE.DTE Dte
     {
         get { return VsIdeTestHostContext.Dte; }
     }
 
-    protected static IServiceProvider ServiceProvider
+    protected IServiceProvider ServiceProvider
     {
         get { return VsIdeTestHostContext.ServiceProvider; }
     }
@@ -34,11 +39,11 @@ public abstract class VsHostedSpec
         get { return (CompositionContainer)this.IntegrationPackage.Composition; }
     }
 
-    private Lazy<ShellPackage> integrationPackage = new Lazy<ShellPackage>(() => GetPackage());
+    private Lazy<ShellPackage> integrationPackage;
 
-    private static ShellPackage GetPackage()
+    private ShellPackage GetPackage()
     {
-        var shell = ServiceProvider.GetService<SVsShell, IVsShell>();
+        var shell = this.ServiceProvider.GetService<SVsShell, IVsShell>();
         IVsPackage package;
         var guid = new Guid(global::IntegrationPackage.Constants.PackageGuid);
         shell.IsPackageLoaded(ref guid, out package);
@@ -70,11 +75,23 @@ public abstract class VsHostedSpec
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "None")]
     protected void OpenSolution(string solutionFile)
     {
+        if (!Path.IsPathRooted(solutionFile))
+            solutionFile = GetFullPath(solutionFile);
+
         VsHostedSpec.DoActionWithWaitAndRetry(
             () => Dte.Solution.Open(solutionFile),
             2000,
             3,
             () => !Dte.Solution.IsOpen);
+    }
+
+    protected void CloseSolution()
+    {
+        VsHostedSpec.DoActionWithWaitAndRetry(
+            () => Dte.Solution.Close(),
+            2000,
+            3,
+            () => Dte.Solution.IsOpen);
     }
 
     protected string GetFullPath(string relativePath)

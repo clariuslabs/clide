@@ -14,6 +14,7 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #endregion
+
 namespace Clide
 {
     using Clide.Properties;
@@ -28,20 +29,36 @@ namespace Clide
     using System.ComponentModel.Composition.Hosting;
     using System.Diagnostics;
     using System.Runtime.InteropServices;
+    using Microsoft.ComponentModel.Composition.Diagnostics;
+    using System.IO;
+    using Clide.Diagnostics;
 
     internal class Host<TPackage, TExport> : IHost<TPackage, TExport>
         where TPackage : Package, TExport
     {
-        private static readonly ITracer tracer = Tracer.Get<TPackage>();
+        private static readonly ITracer tracer;
+        private static readonly Guid OutputPaneId = new Guid("{9F85C038-88BE-4DE3-B2FB-D49BDFC33E8D}");
 
         private CompositionContainer container;
         private IServiceProvider serviceProvider;
         private Lazy<TExport> loadedPackage;
+        private TraceOutputWindowManager outputWindowManager;
         private bool initializePackage = true;
 
         [Import]
         public IDevEnv DevEnv { get; set; }
         public ICompositionService Composition { get { return this.container; } }
+
+        static Host()
+        {
+            Tracer.Initialize(new TracerManager());
+            tracer = Tracer.Get<TPackage>();
+#if DEBUG
+            Tracer.Manager.SetTracingLevel(TracerManager.DefaultSourceName, SourceLevels.All);
+#else
+            Tracer.Manager.SetTracingLevel(TracerManager.DefaultSourceName, SourceLevels.Warning);
+#endif
+        }
 
         public Host(IServiceProvider serviceProvider, string catalogName)
         {
@@ -146,7 +163,29 @@ namespace Clide
             this.container = new CompositionContainer(vsCatalog, composition.DefaultExportProvider);
             VsCompositionContainer.Create(new LocalOnlyExportProvider(this.container));
 
-            //this.container.ComposeExportedValue(this);
+            this.outputWindowManager = new TraceOutputWindowManager(
+                this.serviceProvider,
+                this.container.GetExportedValue<IShellEvents>(),
+                Tracer.Manager,
+                OutputPaneId,
+                Strings.OutputPaneTitle);
+
+            var info = new CompositionInfo(vsCatalog, container);
+            var rejected = info.PartDefinitions.Where(part => part.IsPrimaryRejection).ToList();
+            if (rejected.Count > 0)
+            {
+                var writer = new StringWriter();
+                rejected.ForEach(part => PartDefinitionInfoTextFormatter.Write(part, writer));
+                tracer.Error(writer.ToString());
+            }
+
+#if DEBUG
+            // Log information about the composition container in debug mode.
+            var infoWriter = new StringWriter();
+            CompositionInfoTextFormatter.Write(info, infoWriter);
+            tracer.Info(infoWriter.ToString());
+#endif
+
             this.container.ComposeExportedValue(this.HostingPackage);
 
             var e = this.container.GetExport<TExport>();
