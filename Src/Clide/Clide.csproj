@@ -39,6 +39,7 @@
     <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.ComponentModel.Composition.Diagnostics">
       <HintPath>..\..\Lib\Microsoft.ComponentModel.Composition.Diagnostics.dll</HintPath>
     </Reference>
@@ -103,6 +104,19 @@
     <Compile Include="Extensions\ComponentModelExtensions.cs" />
     <Compile Include="IMessageBoxServiceExtensions.cs" />
     <Compile Include="Extensions\TracingExtensions.cs" />
+    <Compile Include="Patterns\Adapter\AdapterAttribute.cs" />
+    <Compile Include="Patterns\Adapter\Adapters.cs" />
+    <Compile Include="Patterns\Adapter\AdapterService.cs" />
+    <Compile Include="Patterns\Adapter\AdaptersInitializer.cs" />
+    <Compile Include="Patterns\Adapter\ComposedAdapterService.cs" />
+    <Compile Include="Patterns\Adapter\Constants.cs" />
+    <Compile Include="Patterns\Adapter\IAdapter.cs" />
+    <Compile Include="Patterns\Adapter\IAdapterService.cs" />
+    <Compile Include="Solution\Adapters\VsSolutionHierarchyAdapter.cs" />
+    <Compile Include="Solution\Adapters\IVsSolutionAdapter.cs" />
+    <Compile Include="Solution\Adapters\MsBuildAdapter.cs" />
+    <Compile Include="Solution\Adapters\VsHierarchyAdapter.cs" />
+    <Compile Include="Solution\Adapters\DteAdapter.cs" />
     <Compile Include="VisualStudio\VsHierarchyExtensions.cs" />
     <Compile Include="Hosting\Host.cs" />
     <Compile Include="Hosting\HostFactory.cs" />
@@ -115,14 +129,6 @@
     <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="netfx\System\TypeInheritance.cs" />
     <Compile Include="netfx\System\TypeInheritanceExtension.cs" />
-    <Compile Include="Patterns\Adapter\AdapterAttribute.cs" />
-    <Compile Include="Patterns\Adapter\Adapters.cs" />
-    <Compile Include="Patterns\Adapter\AdapterService.cs" />
-    <Compile Include="Patterns\Adapter\AdaptersInitializer.cs" />
-    <Compile Include="Patterns\Adapter\ComposedAdapterService.cs" />
-    <Compile Include="Patterns\Adapter\Constants.cs" />
-    <Compile Include="Patterns\Adapter\IAdapter.cs" />
-    <Compile Include="Patterns\Adapter\IAdapterService.cs" />
     <Compile Include="Composition\CompositionTarget.cs" />
     <Compile Include="Solution\Factories\AggregateHierarchyFactory.cs" />
     <Compile Include="Solution\Factories\DefaultHierarchyFactory.cs" />
@@ -251,6 +257,7 @@
     <None Include="netfx\System\Reflection\TargetFramework.ttinclude" />
     <None Include="NuGet.proj" />
     <None Include="packages.config" />
+    <Compile Include="Patterns\Adapter\AdapterService.Custom.cs" />
     <None Include="Properties\Resources.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Resources.Strings.cs</LastGenOutput>

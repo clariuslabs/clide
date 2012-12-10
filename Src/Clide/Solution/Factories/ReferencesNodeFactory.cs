@@ -21,6 +21,7 @@ namespace Clide.Solution
     using System;
     using Microsoft.VisualStudio;
     using Clide.Patterns.Adapter;
+    using Clide.VisualStudio;
 
     [FallbackFactory]
     internal class ReferencesNodeFactory : ITreeNodeFactory<IVsSolutionHierarchyNode>
@@ -39,17 +40,14 @@ namespace Clide.Solution
 
 		public bool Supports(IVsSolutionHierarchyNode hierarchy)
 		{
-			// We tried every other approach to detect the References node, without success.
-			// So we fallback to plain node name comparison.
-			return hierarchy.DisplayName == "References";
+            var project = hierarchy.VsHierarchy.Properties().ExtenderObject as EnvDTE.Project;
+            return project != null && project.Object is VSLangProj.VSProject;
 		}
 
 		public ITreeNode CreateNode(Lazy<ITreeNode> parent, IVsSolutionHierarchyNode hierarchy)
 		{
-			// For now we don't expose any References-specific behavior, so we don't even have an interface 
-			// or class specific to it.
 			return Supports(hierarchy) ?
-				new SolutionTreeNode(SolutionNodeKind.ReferencesFolder, hierarchy, parent, this.nodeFactory.Value, this.adapter) : null;
+				new ReferencesNode(hierarchy, parent, this.nodeFactory.Value, this.adapter) : null;
 		}
 	}
 }

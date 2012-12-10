@@ -17,7 +17,7 @@ namespace Clide.Patterns.Adapter
     /// <summary>
     /// Shared constants across implementation and interface.
     /// </summary>
-    internal static class Constants
+    internal static partial class Constants
     {
         /// <summary>
         /// The identifier for the global state that lives in the AppDomain and provides 

@@ -21,28 +21,29 @@ namespace Clide.Solution
     using System;
     using System.Linq;
     using Clide.VisualStudio;
+    using EnvDTE80;
+    using EnvDTE;
 
     internal class SolutionFolderNode : SolutionTreeNode, ISolutionFolderNode
 	{
-		private Lazy<EnvDTE80.SolutionFolder> solutionFolder;
-
 		public SolutionFolderNode(
-			SolutionNodeKind nodeKind,
 			IVsSolutionHierarchyNode hierarchyNode,
 			Lazy<ITreeNode> parentNode,
 			ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
 			IAdapterService adapter)
-			: base(nodeKind, hierarchyNode, parentNode, nodeFactory, adapter)
+            : base(SolutionNodeKind.SolutionFolder, hierarchyNode, parentNode, nodeFactory, adapter)
 		{
-			this.solutionFolder = new Lazy<EnvDTE80.SolutionFolder>(
-                () => (EnvDTE80.SolutionFolder)((EnvDTE.Project)hierarchyNode.VsHierarchy.Properties(hierarchyNode.ItemId).ExtenderObject).Object);
+			this.SolutionFolder = new Lazy<SolutionFolder>(
+                () => (SolutionFolder)((Project)hierarchyNode.VsHierarchy.Properties(hierarchyNode.ItemId).ExtenderObject).Object);
 		}
+
+        public Lazy<SolutionFolder> SolutionFolder { get; private set; }
 
 		public ISolutionFolderNode CreateSolutionFolder(string name)
 		{
 			Guard.NotNullOrEmpty(() => name, name);
 
-			this.solutionFolder.Value.AddSolutionFolder(name);
+			this.SolutionFolder.Value.AddSolutionFolder(name);
 
 			var solutionfolder =
 				this.HierarchyNode.Children.Single(child => child.VsHierarchy.Properties(child.ItemId).DisplayName == name);

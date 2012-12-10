@@ -32,7 +32,7 @@ namespace Clide.Patterns.Adapter
     /// duration of the call, including spanned threads or tasks.
     /// </para>
     /// </remarks>
-    public static class AdaptersInitializer
+    public static partial class AdaptersInitializer
     {
         private static readonly AmbientSingleton<IAdapterService> transientService = new AmbientSingleton<IAdapterService>(new Guid(Constants.TransientStateIdenfier));
 

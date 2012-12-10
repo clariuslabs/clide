@@ -1,4 +1,4 @@
-#region BSD License
+﻿#region BSD License
 /* 
 Copyright (c) 2012, Clarius Consulting
 All rights reserved.
@@ -12,27 +12,17 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
-namespace Clide.Patterns.Adapter
+namespace Clide.Solution.Adapters
 {
-	/// <summary>
-	/// Marker interface for all adapters.
-	/// </summary>
-    public partial interface IAdapter
-	{
-	}
+    using Clide.Patterns.Adapter;
+    using Microsoft.VisualStudio.Shell.Interop;
 
-	/// <summary>
-	/// Interface implemented by adapters that know how to expose a 
-	/// type as a different interface.
-	/// </summary>
-	/// <typeparam name="TFrom">The type that this adapter supports adapting from.</typeparam>
-	/// <typeparam name="TTo">The type that this adapter adapts to.</typeparam>
-    public partial interface IAdapter<in TFrom, out TTo> : IAdapter
-	{
-		/// <summary>
-		/// Adapts the specified object from the <typeparamref name="TFrom"/> type to the 
-        /// target <typeparamref name="TTo"/> type.
-		/// </summary>
-		TTo Adapt(TFrom from);
-	}
+    [Adapter]
+    internal class VsHierarchyAdapter : IAdapter<SolutionTreeNode, IVsHierarchy>
+    {
+        public IVsHierarchy Adapt(SolutionTreeNode from)
+        {
+            return from.HierarchyNode.VsHierarchy;
+        }
+    }
 }

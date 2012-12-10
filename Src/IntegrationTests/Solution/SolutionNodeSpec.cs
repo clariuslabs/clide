@@ -39,7 +39,6 @@ namespace Clide.Solution
 				var hierarchy = solution as IVsHierarchy;
 
 				var solutionNode = new SolutionNode(
-					SolutionNodeKind.Solution,
 					new VsSolutionHierarchyNode(hierarchy),
 					null,
 					Mock.Of<IAdapterService>(),
@@ -58,7 +57,6 @@ namespace Clide.Solution
 				var hierarchy = solution as IVsHierarchy;
 
 				var solutionNode = new SolutionNode(
-					SolutionNodeKind.Solution,
 					new VsSolutionHierarchyNode(hierarchy),
 					null,
 					Mock.Of<IAdapterService>(),
@@ -75,7 +73,6 @@ namespace Clide.Solution
 				var hierarchy = solution as IVsHierarchy;
 
 				var solutionNode = new SolutionNode(
-					SolutionNodeKind.Solution,
 					new VsSolutionHierarchyNode(hierarchy),
 					null,
 					Mock.Of<IAdapterService>(),

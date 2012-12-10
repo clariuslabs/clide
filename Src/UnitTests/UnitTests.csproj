@@ -57,8 +57,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Clide\Clide.licenseheader">
-      <Link>Clide.licenseheader</Link>
+    <None Include="..\..\Common\ClariusLabs.licenseheader">
+      <Link>ClariusLabs.licenseheader</Link>
     </None>
     <None Include="packages.config" />
   </ItemGroup>

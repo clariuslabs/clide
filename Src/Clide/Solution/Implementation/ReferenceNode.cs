@@ -20,21 +20,21 @@ namespace Clide.Solution
     using Clide.Patterns.Adapter;
     using Clide.VisualStudio;
     using System;
+    using VSLangProj;
 
     internal class ReferenceNode : SolutionTreeNode, IReferenceNode
 	{
-		private Lazy<VSLangProj.Reference> reference;
-
         public ReferenceNode(
-			SolutionNodeKind nodeKind,
 			IVsSolutionHierarchyNode hierarchyNode,
 			Lazy<ITreeNode> parentNode,
 			ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
 			IAdapterService adapter)
-			: base(nodeKind, hierarchyNode, parentNode, nodeFactory, adapter)
+            : base(SolutionNodeKind.Reference, hierarchyNode, parentNode, nodeFactory, adapter)
 		{
-			this.reference = new Lazy<VSLangProj.Reference>(
-				() => (VSLangProj.Reference)((EnvDTE.ProjectItem)hierarchyNode.VsHierarchy.Properties(hierarchyNode.ItemId).ExtenderObject).Object);
+			this.Reference = new Lazy<VSLangProj.Reference>(
+				() => (VSLangProj.Reference)hierarchyNode.VsHierarchy.Properties(hierarchyNode.ItemId).ExtenderObject);
 		}
+
+        public Lazy<Reference> Reference { get; private set; }
 	}
 }

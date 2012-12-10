@@ -21,7 +21,7 @@ namespace Clide.Patterns.Adapter
     /// <see cref="IAdapterService"/> as well as the <see cref="As"/> 
     /// extension method for consumers.
     /// </summary>
-    public static class Adapters
+    public static partial class Adapters
     {
         // AppDomain-wise global static service instance that is set with the same GUID from the AdapterService implementation.
         private static Lazy<IAdapterService> service = new Lazy<IAdapterService>(() => (IAdapterService)AppDomain.CurrentDomain.GetData(Constants.GlobalStateIdentifier));

@@ -25,7 +25,7 @@ namespace Clide.Patterns.Adapter
     /// <summary>
     /// Default implementation of the <see cref="IAdapterService"/>.
     /// </summary>
-	public class AdapterService : IAdapterService
+	public partial class AdapterService : IAdapterService
 	{
 		private static readonly MethodInfo AdaptExpressionGenerator = typeof(AdapterService).GetMethod("GetAdaptExpression", BindingFlags.NonPublic | BindingFlags.Static);
 

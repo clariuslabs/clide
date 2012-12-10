@@ -28,20 +28,20 @@ namespace Clide.Solution
 
     internal class SolutionNode : SolutionTreeNode, ISolutionNode
 	{
-		private Lazy<EnvDTE.Solution> solution;
 		private ISolutionEvents events;
 
 		public SolutionNode(
-			SolutionNodeKind nodeKind,
 			IVsSolutionHierarchyNode hierarchyNode,
 			ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
 			IAdapterService adapter,
 			ISolutionEvents solutionEvents)
-			: base(nodeKind, hierarchyNode, new Lazy<ITreeNode>(() => null), nodeFactory, adapter)
+            : base(SolutionNodeKind.Solution, hierarchyNode, new Lazy<ITreeNode>(() => null), nodeFactory, adapter)
 		{
-			this.solution = new Lazy<EnvDTE.Solution>(() => hierarchyNode.ServiceProvider.GetService<EnvDTE.DTE>().Solution);
+			this.Solution = new Lazy<EnvDTE.Solution>(() => hierarchyNode.ServiceProvider.GetService<EnvDTE.DTE>().Solution);
 			this.events = solutionEvents;
 		}
+
+        public Lazy<EnvDTE.Solution> Solution { get; private set; }
 
 		public dynamic Data
 		{
@@ -51,14 +51,14 @@ namespace Clide.Solution
 
 		public bool IsOpen
 		{
-			get { return this.solution.Value.IsOpen; }
+			get { return this.Solution.Value.IsOpen; }
 		}
 
 		public void Open(string solutionFile)
 		{
 			Guard.NotNullOrEmpty(() => solutionFile, solutionFile);
 
-			this.solution.Value.Open(solutionFile);
+			this.Solution.Value.Open(solutionFile);
 		}
 
 		public void Create(string solutionFile)
@@ -70,19 +70,19 @@ namespace Clide.Solution
 				s => Path.IsPathRooted(s),
 				Strings.SolutionNode.InvalidSolutionFile);
 
-			((EnvDTE80.Solution2)this.solution.Value).Create(Path.GetDirectoryName(solutionFile), Path.GetFileNameWithoutExtension(solutionFile));
+			((EnvDTE80.Solution2)this.Solution.Value).Create(Path.GetDirectoryName(solutionFile), Path.GetFileNameWithoutExtension(solutionFile));
 		}
 
 		public void Close(bool saveFirst = true)
 		{
-			this.solution.Value.Close(saveFirst);
+			this.Solution.Value.Close(saveFirst);
 		}
 
 		public ISolutionFolderNode CreateSolutionFolder(string name)
 		{
 			Guard.NotNullOrEmpty(() => name, name);
 
-			((EnvDTE80.Solution2)this.solution.Value).AddSolutionFolder(name);
+			((EnvDTE80.Solution2)this.Solution.Value).AddSolutionFolder(name);
 
 			var solutionfolder =
 				this.HierarchyNode.Children.Single(child => child.VsHierarchy.Properties(child.ItemId).DisplayName == name);

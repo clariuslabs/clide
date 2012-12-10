@@ -70,9 +70,11 @@
 
             Assert.IsNotNull(item);
 
-            dynamic dynItem = new VsItemDynamicProperties(item.As<IVsSolutionHierarchyNode>());
-
             Debug.Fail("Attach");
+
+            var tostring = item.ToString();
+
+            dynamic dynItem = new VsItemDynamicProperties(item.As<IVsSolutionHierarchyNode>());
 
             dynItem.Foo = "bar";
 

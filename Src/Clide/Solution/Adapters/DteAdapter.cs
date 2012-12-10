@@ -1,4 +1,4 @@
-#region BSD License
+﻿#region BSD License
 /* 
 Copyright (c) 2012, Clarius Consulting
 All rights reserved.
@@ -12,18 +12,56 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
-namespace Clide.Patterns.Adapter
+namespace Clide.Solution.Adapters
 {
-    using System.Collections.Generic;
-    using System.ComponentModel.Composition;
+    using Clide.Patterns.Adapter;
+    using EnvDTE;
+    using EnvDTE80;
+    using VSLangProj;
 
-    [Export(typeof(IAdapterService))]
-    public partial class ComposedAdapterService : AdapterService
+    [Adapter]
+    internal class DteAdapter :
+        IAdapter<SolutionNode, EnvDTE.Solution>,
+        IAdapter<SolutionFolderNode, SolutionFolder>,
+        IAdapter<ProjectNode, Project>,
+        IAdapter<FolderNode, ProjectItem>,
+        IAdapter<ItemNode, ProjectItem>,
+        IAdapter<ReferenceNode, Reference>,
+        IAdapter<ReferencesNode, References>
     {
-		[ImportingConstructor]
-		public ComposedAdapterService([ImportMany] IEnumerable<IAdapter> adapters)
-            : base(adapters)
+        public Solution Adapt(SolutionNode from)
         {
+            return from.Solution.Value;
+        }
+
+        public SolutionFolder Adapt(SolutionFolderNode from)
+        {
+            return from.SolutionFolder.Value;
+        }
+
+        public Project Adapt(ProjectNode from)
+        {
+            return from.Project.Value;
+        }
+
+        public ProjectItem Adapt(FolderNode from)
+        {
+            return from.Folder.Value;
+        }
+
+        public ProjectItem Adapt(ItemNode from)
+        {
+            return from.Item.Value;
+        }
+
+        public Reference Adapt(ReferenceNode from)
+        {
+            return from.Reference.Value;
+        }
+
+        public References Adapt(ReferencesNode from)
+        {
+            return from.References.Value;
         }
     }
 }

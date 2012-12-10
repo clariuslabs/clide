@@ -41,6 +41,7 @@ namespace System.Diagnostics
     public static partial class Tracer { }
 
     // Further customizations here.
+    public static partial class StartActivityExtension { }
 
     /// <devdoc>
     /// Exposes the trace manager internally.

@@ -24,158 +24,181 @@ namespace Clide.Solution
     using Microsoft.VisualStudio.Shell.Interop;
     using Clide.Patterns.Adapter;
     using Clide.VisualStudio;
+    using System.Text;
+    using System.Diagnostics;
+    using Microsoft.VisualStudio.Shell;
 
+    [DebuggerDisplay("{debuggerDisplay,nq}")]
     internal class SolutionTreeNode : ITreeNode
-	{
-		private IVsSolutionHierarchyNode hierarchyNode;
-		private ITreeNodeFactory<IVsSolutionHierarchyNode> factory;
-		private IAdapterService adapter;
-		private Lazy<IVsUIHierarchyWindow> window;
-		private Lazy<ITreeNode> parent;
+    {
+        private string debuggerDisplay;
+        private IVsSolutionHierarchyNode hierarchyNode;
+        private ITreeNodeFactory<IVsSolutionHierarchyNode> factory;
+        private IAdapterService adapter;
+        private Lazy<IVsUIHierarchyWindow> window;
+        private Lazy<ITreeNode> parent;
 
-		public SolutionTreeNode(
-			SolutionNodeKind nodeKind,
-			IVsSolutionHierarchyNode hierarchyNode,
-			Lazy<ITreeNode> parentNode,
-			ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
-			IAdapterService adapter)
-		{
-			this.hierarchyNode = hierarchyNode;
-			this.factory = nodeFactory;
-			this.adapter = adapter;
-			this.window = new Lazy<IVsUIHierarchyWindow>(() => GetWindow(this.hierarchyNode.ServiceProvider));
-			this.parent = parentNode ?? new Lazy<ITreeNode>(() => null);
-			this.DisplayName = this.hierarchyNode.VsHierarchy.Properties(hierarchyNode.ItemId).DisplayName;
+        public SolutionTreeNode(
+            SolutionNodeKind nodeKind,
+            IVsSolutionHierarchyNode hierarchyNode,
+            Lazy<ITreeNode> parentNode,
+            ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
+            IAdapterService adapter)
+        {
+            this.hierarchyNode = hierarchyNode;
+            this.factory = nodeFactory;
+            this.adapter = adapter;
+            this.window = new Lazy<IVsUIHierarchyWindow>(() => GetWindow(this.hierarchyNode.ServiceProvider));
+            this.parent = parentNode ?? new Lazy<ITreeNode>(() => null);
+            this.DisplayName = this.hierarchyNode.VsHierarchy.Properties(hierarchyNode.ItemId).DisplayName;
             this.Kind = nodeKind;
-		}
 
-		protected internal IVsSolutionHierarchyNode HierarchyNode { get { return this.hierarchyNode; } }
+            if (Debugger.IsAttached)
+                this.debuggerDisplay = BuildDebuggerDisplay();
+        }
 
-		public ITreeNode Parent { get { return this.parent.Value; } }
+        protected internal IVsSolutionHierarchyNode HierarchyNode { get { return this.hierarchyNode; } }
 
-		public string DisplayName { get; private set; }
+        public ITreeNode Parent { get { return this.parent.Value; } }
 
-		public virtual bool IsVisible
-		{
-			get
-			{
-				if (this.Parent == null)
-					return true;
+        public string DisplayName { get; private set; }
 
-				return this.Parent == null ||
-					(this.Parent.IsVisible && this.Parent.IsExpanded);
-			}
-		}
+        public virtual bool IsVisible
+        {
+            get
+            {
+                if (this.Parent == null)
+                    return true;
 
-		public virtual bool IsSelected
-		{
-			get
-			{
-				uint state;
-				ErrorHandler.ThrowOnFailure(this.window.Value.GetItemState(
-					this.hierarchyNode.VsHierarchy as IVsUIHierarchy, this.hierarchyNode.ItemId, (uint)__VSHIERARCHYITEMSTATE.HIS_Selected, out state));
+                return this.Parent == null ||
+                    (this.Parent.IsVisible && this.Parent.IsExpanded);
+            }
+        }
 
-				return state == (uint)__VSHIERARCHYITEMSTATE.HIS_Selected;
-			}
-		}
+        public virtual bool IsSelected
+        {
+            get
+            {
+                uint state;
+                ErrorHandler.ThrowOnFailure(this.window.Value.GetItemState(
+                    this.hierarchyNode.VsHierarchy as IVsUIHierarchy, this.hierarchyNode.ItemId, (uint)__VSHIERARCHYITEMSTATE.HIS_Selected, out state));
 
-		public virtual bool IsExpanded
-		{
-			get
-			{
-				// The solution node itself is always expanded.
-				if (this.Parent == null)
-					return true;
+                return state == (uint)__VSHIERARCHYITEMSTATE.HIS_Selected;
+            }
+        }
 
-				uint state;
-				ErrorHandler.ThrowOnFailure(this.window.Value.GetItemState(
-					this.hierarchyNode.VsHierarchy as IVsUIHierarchy, this.hierarchyNode.ItemId, (uint)__VSHIERARCHYITEMSTATE.HIS_Expanded, out state));
+        public virtual bool IsExpanded
+        {
+            get
+            {
+                // The solution node itself is always expanded.
+                if (this.Parent == null)
+                    return true;
 
-				return state == (uint)__VSHIERARCHYITEMSTATE.HIS_Expanded;
-			}
-		}
+                uint state;
+                ErrorHandler.ThrowOnFailure(this.window.Value.GetItemState(
+                    this.hierarchyNode.VsHierarchy as IVsUIHierarchy, this.hierarchyNode.ItemId, (uint)__VSHIERARCHYITEMSTATE.HIS_Expanded, out state));
+
+                return state == (uint)__VSHIERARCHYITEMSTATE.HIS_Expanded;
+            }
+        }
 
         public virtual SolutionNodeKind Kind { get; private set; }
 
-		public virtual IEnumerable<ITreeNode> Nodes
-		{
-			get
-			{
-				return this.hierarchyNode.Children
-					.Select(node => CreateNode(node))
-					// Skip null nodes which is what the factory may return if the hierarchy 
-					// node is unsupported.
-					.Where(n => n != null);
-			}
-		}
+        public virtual IEnumerable<ITreeNode> Nodes
+        {
+            get
+            {
+                return this.hierarchyNode.Children
+                    .Select(node => CreateNode(node))
+                    // Skip null nodes which is what the factory may return if the hierarchy 
+                    // node is unsupported.
+                    .Where(n => n != null);
+            }
+        }
 
-		protected virtual ITreeNode CreateNode(IVsSolutionHierarchyNode hierarchyNode)
-		{
-			return this.factory.CreateNode(new Lazy<ITreeNode>(() => this), hierarchyNode);
-		}
+        protected virtual ITreeNode CreateNode(IVsSolutionHierarchyNode hierarchyNode)
+        {
+            return this.factory.CreateNode(new Lazy<ITreeNode>(() => this), hierarchyNode);
+        }
 
-		public virtual T As<T>() where T : class
-		{
-            if (typeof(T) == typeof(IVsHierarchy))
-                return (T)this.hierarchyNode.VsHierarchy;
-            else if (typeof(T) == typeof(IVsSolutionHierarchyNode))
-                return (T)this.hierarchyNode;
-
-			return this.adapter.As<T>(this);
-		}
+        public virtual T As<T>() where T : class
+        {
+            return this.adapter.As<T>(this);
+        }
 
         public virtual void Collapse()
-		{
-			foreach (var child in this.Nodes)
-			{
-				child.Collapse();
-			}
-
-			ErrorHandler.ThrowOnFailure(this.window.Value.ExpandItem(
-				this.hierarchyNode.VsHierarchy as IVsUIHierarchy, this.hierarchyNode.ItemId, EXPANDFLAGS.EXPF_CollapseFolder));
-		}
-
-		public virtual void Expand()
-		{
-			ErrorHandler.ThrowOnFailure(this.window.Value.ExpandItem(
-				this.hierarchyNode.VsHierarchy as IVsUIHierarchy, this.hierarchyNode.ItemId, EXPANDFLAGS.EXPF_ExpandParentsToShowItem));
-
-			ErrorHandler.ThrowOnFailure(this.window.Value.ExpandItem(
-				this.hierarchyNode.VsHierarchy as IVsUIHierarchy, this.hierarchyNode.ItemId, EXPANDFLAGS.EXPF_ExpandFolder));
-		}
-
-		public virtual void Select(bool allowMultiple = false)
-		{
-			var flags = allowMultiple ? EXPANDFLAGS.EXPF_ExtendSelectItem : EXPANDFLAGS.EXPF_SelectItem;
-
-			ErrorHandler.ThrowOnFailure(this.window.Value.ExpandItem(
-				this.hierarchyNode.VsHierarchy as IVsUIHierarchy, this.hierarchyNode.ItemId, flags));
-		}
-
-        public override string ToString()
         {
-            var display = this.DisplayName;
-            var current = this.parent.Value;
-            while (current !=  null)
+            foreach (var child in this.Nodes)
             {
-                if (current != null)
-                    display = current.DisplayName + "\\" + display;
-
-                current = current.Parent;
+                child.Collapse();
             }
 
-            return display;
+            ErrorHandler.ThrowOnFailure(this.window.Value.ExpandItem(
+                this.hierarchyNode.VsHierarchy as IVsUIHierarchy, this.hierarchyNode.ItemId, EXPANDFLAGS.EXPF_CollapseFolder));
         }
-		
+
+        public virtual void Expand()
+        {
+            ErrorHandler.ThrowOnFailure(this.window.Value.ExpandItem(
+                this.hierarchyNode.VsHierarchy as IVsUIHierarchy, this.hierarchyNode.ItemId, EXPANDFLAGS.EXPF_ExpandParentsToShowItem));
+
+            ErrorHandler.ThrowOnFailure(this.window.Value.ExpandItem(
+                this.hierarchyNode.VsHierarchy as IVsUIHierarchy, this.hierarchyNode.ItemId, EXPANDFLAGS.EXPF_ExpandFolder));
+        }
+
+        public virtual void Select(bool allowMultiple = false)
+        {
+            var flags = allowMultiple ? EXPANDFLAGS.EXPF_ExtendSelectItem : EXPANDFLAGS.EXPF_SelectItem;
+
+            ErrorHandler.ThrowOnFailure(this.window.Value.ExpandItem(
+                this.hierarchyNode.VsHierarchy as IVsUIHierarchy, this.hierarchyNode.ItemId, flags));
+        }
+
         private IVsUIHierarchyWindow GetWindow(IServiceProvider serviceProvider)
-		{
-			IVsWindowFrame frame;
-			object obj2;
-			IVsUIShell service = serviceProvider.GetService(typeof(SVsUIShell)) as IVsUIShell;
-			Guid rguidPersistenceSlot = new Guid("{3AE79031-E1BC-11D0-8F78-00A0C9110057}");
-			ErrorHandler.ThrowOnFailure(service.FindToolWindow(0x80000, ref rguidPersistenceSlot, out frame));
-			ErrorHandler.ThrowOnFailure(frame.GetProperty(-3001, out obj2));
-			return obj2 as IVsUIHierarchyWindow;
-		}
-	}
+        {
+            IVsWindowFrame frame;
+            object obj2;
+            IVsUIShell service = serviceProvider.GetService(typeof(SVsUIShell)) as IVsUIShell;
+            Guid rguidPersistenceSlot = new Guid("{3AE79031-E1BC-11D0-8F78-00A0C9110057}");
+            ErrorHandler.ThrowOnFailure(service.FindToolWindow(0x80000, ref rguidPersistenceSlot, out frame));
+            ErrorHandler.ThrowOnFailure(frame.GetProperty(-3001, out obj2));
+            return obj2 as IVsUIHierarchyWindow;
+        }
+
+        private string BuildDebuggerDisplay()
+        {
+            return ThreadHelper.Generic.Invoke<string>(() =>
+            {
+                var display = this.DisplayName ;
+                var current = this.parent.Value;
+                while (current != null)
+                {
+                    if (current != null)
+                        display = current.DisplayName + "\\" + display;
+
+                    current = current.Parent;
+                }
+
+                display = "DisplayName = " + display;
+
+                var service = this.adapter as AdapterService;
+                if (service != null)
+                {
+                    var conversions = service.GetSupportedConversions(this.GetType())
+                        .Select(type => type.FullName)
+                        .Distinct()
+                        .OrderBy(s => s)
+                        .ToList();
+
+                    if (conversions.Count > 0)
+                    {
+                        display += ", As<T> = " + string.Join("|", conversions);
+                    }
+                }
+
+                return "{ " + display + " }";
+            });
+        }
+    }
 }

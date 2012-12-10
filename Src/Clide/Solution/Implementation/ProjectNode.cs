@@ -26,12 +26,11 @@ namespace Clide.Solution
     internal class ProjectNode : SolutionTreeNode, IProjectNode
 	{
 		public ProjectNode(
-			SolutionNodeKind nodeKind,
 			IVsSolutionHierarchyNode hierarchyNode,
 			Lazy<ITreeNode> parentNode,
 			ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
 			IAdapterService adapter)
-			: base(nodeKind, hierarchyNode, parentNode, nodeFactory, adapter)
+            : base(SolutionNodeKind.Project, hierarchyNode, parentNode, nodeFactory, adapter)
 		{
 		    this.Project = new Lazy<EnvDTE.Project>(() => (EnvDTE.Project)hierarchyNode.VsHierarchy.Properties(hierarchyNode.ItemId).ExtenderObject);
 		}

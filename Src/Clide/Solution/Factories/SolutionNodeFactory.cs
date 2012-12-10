@@ -49,7 +49,7 @@ namespace Clide.Solution
 		public ITreeNode CreateNode(Lazy<ITreeNode> parent, IVsSolutionHierarchyNode hierarchy)
 		{
 			return Supports(hierarchy) ?
-				new SolutionNode(SolutionNodeKind.Solution, hierarchy, this.nodeFactory.Value, this.adapter, this.solutionEvents) : null;
+				new SolutionNode(hierarchy, this.nodeFactory.Value, this.adapter, this.solutionEvents) : null;
 		}
 	}
 }

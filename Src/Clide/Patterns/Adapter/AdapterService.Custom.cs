@@ -1,4 +1,4 @@
-#region BSD License
+﻿#region BSD License
 /* 
 Copyright (c) 2012, Clarius Consulting
 All rights reserved.
@@ -14,25 +14,30 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Patterns.Adapter
 {
-	/// <summary>
-	/// Marker interface for all adapters.
-	/// </summary>
-    public partial interface IAdapter
-	{
-	}
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
-	/// <summary>
-	/// Interface implemented by adapters that know how to expose a 
-	/// type as a different interface.
-	/// </summary>
-	/// <typeparam name="TFrom">The type that this adapter supports adapting from.</typeparam>
-	/// <typeparam name="TTo">The type that this adapter adapts to.</typeparam>
-    public partial interface IAdapter<in TFrom, out TTo> : IAdapter
-	{
-		/// <summary>
-		/// Adapts the specified object from the <typeparamref name="TFrom"/> type to the 
-        /// target <typeparamref name="TTo"/> type.
-		/// </summary>
-		TTo Adapt(TFrom from);
-	}
+    partial class AdapterService
+    {
+        /// <summary>
+        /// This method is used only for diagnostics purposes.
+        /// </summary>
+        internal IEnumerable<Type> GetSupportedConversions(Type fromType)
+        {
+            var fromInheritance = GetInheritance(fromType);
+
+            return this.allAdapters
+                // Filter out those that are compatible both for the source and the target.
+                .Where(info => info.From.IsAssignableFrom(fromType))
+                .Select(info => new
+                {
+                    // Gets the distance between the requested From type to the adapter From type.
+                    FromInheritance = fromInheritance.FirstOrDefault(x => x.Type == info.From),
+                    // Gets the distance between the requested To type to the adapter To type.
+                    ToInheritance = GetInheritance(info.To)
+                })
+                .SelectMany(info => info.ToInheritance.Select(h => h.Type));
+        }
+    }
 }

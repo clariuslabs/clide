@@ -19,32 +19,23 @@ namespace Clide.Solution
 {
     using Clide.Patterns.Adapter;
     using System;
+    using VSLangProj;
+    using Clide.VisualStudio;
+    using EnvDTE;
 
-    internal class ReferencesNode : SolutionTreeNode, IReferenceNode
+    internal class ReferencesNode : SolutionTreeNode, IReferencesNode
 	{
-		//private Lazy<VSLangProj.References> references;
-
 		public ReferencesNode(
-			SolutionNodeKind nodeKind,
 			IVsSolutionHierarchyNode hierarchyNode,
 			Lazy<ITreeNode> parentNode,
 			ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
 			IAdapterService adapter)
-			: base(nodeKind, hierarchyNode, parentNode, nodeFactory, adapter)
+			: base(SolutionNodeKind.ReferencesFolder, hierarchyNode, parentNode, nodeFactory, adapter)
 		{
-			//var project = hierarchyNode.VsHierarchy.Properties().ExtenderObject as EnvDTE.Project;
-			//if (project != null)
-			//{
-			//    var vsProject = project.Object as VSLangProj.VSProject;
-			//    if (vsProject != null)
-			//    {
-			//        var refs = vsProject.References;
+            this.References = new Lazy<References>(() => 
+                ((VSProject)((Project)hierarchyNode.VsHierarchy.Properties().ExtenderObject).Object).References);
+        }
 
-			//    }
-			//}
-
-			//this.references = new Lazy<VSLangProj.References>(
-			//    () => ((VSLangProj.VSProject)((EnvDTE.Project)hierarchyNode.VsHierarchy.Properties().ExtenderObject).Object).References);
-		}
+        public Lazy<References> References { get; private set; }
 	}
 }

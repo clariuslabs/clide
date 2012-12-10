@@ -17,7 +17,7 @@ namespace Clide.Patterns.Adapter
 	/// <summary>
 	/// Service that provides pluggable adaptation of types.
 	/// </summary>
-	public interface IAdapterService
+    public partial interface IAdapterService
 	{
 		/// <summary>
 		/// Tries to adapt the given <paramref name="source"/> to the requested <typeparamref name="T"/>.

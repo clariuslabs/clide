@@ -21,40 +21,32 @@ namespace Clide.Solution
     using System;
     using System.Dynamic;
     using Clide.VisualStudio;
+    using EnvDTE;
 
     internal class ItemNode : SolutionTreeNode, IItemNode
-	{
-		private Lazy<EnvDTE.ProjectItem> projectItem;
+    {
+        public ItemNode(
+            IVsSolutionHierarchyNode hierarchyNode,
+            Lazy<ITreeNode> parentNode,
+            ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
+            IAdapterService adapter)
+            : base(SolutionNodeKind.Item, hierarchyNode, parentNode, nodeFactory, adapter)
+        {
+            this.Item = new Lazy<EnvDTE.ProjectItem>(
+                () => (EnvDTE.ProjectItem)hierarchyNode.VsHierarchy.Properties(hierarchyNode.ItemId).ExtenderObject);
+        }
 
-		public ItemNode(
-			SolutionNodeKind nodeKind,
-			IVsSolutionHierarchyNode hierarchyNode,
-			Lazy<ITreeNode> parentNode,
-			ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
-			IAdapterService adapter)
-			: base(nodeKind, hierarchyNode, parentNode, nodeFactory, adapter)
-		{
-			this.projectItem = new Lazy<EnvDTE.ProjectItem>(
-				() => (EnvDTE.ProjectItem)hierarchyNode.VsHierarchy.Properties(hierarchyNode.ItemId).ExtenderObject);
-		}
+        public Lazy<ProjectItem> Item { get; private set; }
 
-		public string PhysicalPath
-		{
-			get
-			{
-				var item = this.As<EnvDTE.ProjectItem>();
+        public string PhysicalPath
+        {
+            get { return this.Item.Value.get_FileNames(1); }
+        }
 
-				if (item == null)
-					return null;
-				else
-					return item.get_FileNames(1);
-			}
-		}
-
-		public dynamic Data
-		{
-			// TODO: implement
-			get { return new ExpandoObject(); }
-		}
-	}
+        public dynamic Data
+        {
+            // TODO: implement
+            get { return new ExpandoObject(); }
+        }
+    }
 }
