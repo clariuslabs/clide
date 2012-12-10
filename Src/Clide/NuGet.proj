@@ -81,7 +81,7 @@ File.WriteAllText(this.AssemblyInfo, info);
         <UpdateSpecVersion SpecFile="nuget\Clide.nuspec" />
 
         <!-- Finally build the package -->
-        <Exec Command="$(MSBuildThisFileDirectory)..\.nuget\NuGet.exe pack -NoPackageAnalysis nuget\Clide.nuspec -Symbols -OutputDirectory $(MSBuildThisFileDirectory)..\..\"
+        <Exec Command="$(MSBuildThisFileDirectory)..\..\.nuget\NuGet.exe pack -NoPackageAnalysis nuget\Clide.nuspec -Symbols -OutputDirectory $(MSBuildThisFileDirectory)..\..\"
               ContinueOnError="false" />
     </Target>
 
