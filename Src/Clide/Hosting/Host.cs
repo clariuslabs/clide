@@ -181,10 +181,20 @@ namespace Clide
 
 #if DEBUG
             // Log information about the composition container in debug mode.
-            var infoWriter = new StringWriter();
-            CompositionInfoTextFormatter.Write(info, infoWriter);
-            tracer.Info(infoWriter.ToString());
+            {
+                var infoWriter = new StringWriter();
+                CompositionInfoTextFormatter.Write(info, infoWriter);
+                tracer.Info(infoWriter.ToString());
+            }
 #endif
+
+            if (Debugger.IsAttached)
+            {
+                // Log information about the composition container when debugger is attached too.
+                var infoWriter = new StringWriter();
+                CompositionInfoTextFormatter.Write(info, infoWriter);
+                tracer.Info(infoWriter.ToString());
+            }
 
             this.container.ComposeExportedValue(this.HostingPackage);
 
