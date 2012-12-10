@@ -20,6 +20,7 @@ namespace Clide.Solution
     using System.ComponentModel.Composition;
     using System;
     using Clide.Patterns.Adapter;
+    using Clide.VisualStudio;
 
     [FallbackFactory]
     internal class ProjectNodeFactory : ITreeNodeFactory<IVsSolutionHierarchyNode>
@@ -38,7 +39,7 @@ namespace Clide.Solution
 
 		public bool Supports(IVsSolutionHierarchyNode hierarchy)
 		{
-			var extenderObject = hierarchy.Properties().ExtenderObject;
+            var extenderObject = hierarchy.VsHierarchy.Properties(hierarchy.ItemId).ExtenderObject;
 			var project = extenderObject as EnvDTE.Project;
 
 			return

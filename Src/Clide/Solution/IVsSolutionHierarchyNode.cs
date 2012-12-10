@@ -21,10 +21,15 @@ namespace Clide
     using System.Collections.Generic;
     using Microsoft.VisualStudio.Shell.Interop;
 
+    /// <summary>
+    /// Low-level primitive that exposes the underlying 
+    /// Visual Studio hierarchy nodes.
+    /// </summary>
     public interface IVsSolutionHierarchyNode
 	{
 		IServiceProvider ServiceProvider { get; }
 		IVsHierarchy VsHierarchy { get; }
+        object ExtensibilityObject { get; }
 		uint ItemId { get; }
 		string DisplayName { get; }
 		IVsSolutionHierarchyNode Parent { get; }

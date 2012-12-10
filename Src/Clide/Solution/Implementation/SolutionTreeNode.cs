@@ -23,6 +23,7 @@ namespace Clide.Solution
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
     using Clide.Patterns.Adapter;
+    using Clide.VisualStudio;
 
     internal class SolutionTreeNode : ITreeNode
 	{
@@ -33,7 +34,7 @@ namespace Clide.Solution
 		private Lazy<ITreeNode> parent;
 
 		public SolutionTreeNode(
-			Enum nodeKind,
+			SolutionNodeKind nodeKind,
 			IVsSolutionHierarchyNode hierarchyNode,
 			Lazy<ITreeNode> parentNode,
 			ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
@@ -44,7 +45,8 @@ namespace Clide.Solution
 			this.adapter = adapter;
 			this.window = new Lazy<IVsUIHierarchyWindow>(() => GetWindow(this.hierarchyNode.ServiceProvider));
 			this.parent = parentNode ?? new Lazy<ITreeNode>(() => null);
-			this.DisplayName = this.hierarchyNode.Properties().DisplayName;
+			this.DisplayName = this.hierarchyNode.VsHierarchy.Properties(hierarchyNode.ItemId).DisplayName;
+            this.Kind = nodeKind;
 		}
 
 		protected internal IVsSolutionHierarchyNode HierarchyNode { get { return this.hierarchyNode; } }
@@ -93,6 +95,8 @@ namespace Clide.Solution
 			}
 		}
 
+        public virtual SolutionNodeKind Kind { get; private set; }
+
 		public virtual IEnumerable<ITreeNode> Nodes
 		{
 			get
@@ -112,6 +116,11 @@ namespace Clide.Solution
 
 		public virtual T As<T>() where T : class
 		{
+            if (typeof(T) == typeof(IVsHierarchy))
+                return (T)this.hierarchyNode.VsHierarchy;
+            else if (typeof(T) == typeof(IVsSolutionHierarchyNode))
+                return (T)this.hierarchyNode;
+
 			return this.adapter.As<T>(this);
 		}
 
@@ -143,7 +152,22 @@ namespace Clide.Solution
 				this.hierarchyNode.VsHierarchy as IVsUIHierarchy, this.hierarchyNode.ItemId, flags));
 		}
 
-		private IVsUIHierarchyWindow GetWindow(IServiceProvider serviceProvider)
+        public override string ToString()
+        {
+            var display = this.DisplayName;
+            var current = this.parent.Value;
+            while (current !=  null)
+            {
+                if (current != null)
+                    display = current.DisplayName + "\\" + display;
+
+                current = current.Parent;
+            }
+
+            return display;
+        }
+		
+        private IVsUIHierarchyWindow GetWindow(IServiceProvider serviceProvider)
 		{
 			IVsWindowFrame frame;
 			object obj2;

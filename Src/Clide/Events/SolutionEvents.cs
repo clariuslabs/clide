@@ -145,7 +145,7 @@ namespace Clide.Events
 
 			var project = extObject as Project;
 
-			//This event is also fired when a solution folder is added/loaded
+			// This event is also fired when a solution folder is added/loaded
 			if (project != null && !(project.Object is SolutionFolder))
 			{
 				var node = new VsSolutionHierarchyNode(pHierarchy);

@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>full</DebugType>
@@ -100,11 +101,9 @@
     <Compile Include="Events\ShellEvents.cs" />
     <Compile Include="Events\SolutionEvents.cs" />
     <Compile Include="Extensions\ComponentModelExtensions.cs" />
-    <Compile Include="Extensions\IVsHierarchyProperties.cs" />
     <Compile Include="IMessageBoxServiceExtensions.cs" />
     <Compile Include="Extensions\TracingExtensions.cs" />
-    <Compile Include="Extensions\VsHierarchyExtensions.cs" />
-    <Compile Include="Extensions\VsSolutionHierarchyNodeExtensions.cs" />
+    <Compile Include="VisualStudio\VsHierarchyExtensions.cs" />
     <Compile Include="Hosting\Host.cs" />
     <Compile Include="Hosting\HostFactory.cs" />
     <Compile Include="Hosting\IHost.cs" />
@@ -235,6 +234,7 @@
     <Compile Include="UI\InputBox.xaml.cs">
       <DependentUpon>InputBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VisualStudio\VsHierarchyProperties.cs" />
     <Compile Include="VisualStudio\VsServiceProviderExtensions.cs" />
     <Compile Include="VisualStudio\VsToolWindow.cs" />
   </ItemGroup>

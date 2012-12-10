@@ -15,21 +15,50 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
-namespace Clide
+namespace Clide.VisualStudio
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
+    using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.Shell.Interop;
 
-    internal static class VsSolutionHierarchyNodeExtensions
+    /// <summary>
+	/// Provides extensions for Visual Studio low-level <see cref="IVsHierarchy"/> API.
+	/// </summary>
+	internal static class VsHierarchyExtensions
 	{
-		public static IVsHierarchyProperties Properties(this IVsSolutionHierarchyNode node)
+		/// <summary>
+		/// Provides access to the hierarchy properties for a specific child item.
+		/// </summary>
+		public static VsHierarchyProperties Properties(this IVsHierarchy hierarchy, uint itemId)
 		{
-			Guard.NotNull(() => node, node);
-			Guard.NotNull(() => node.VsHierarchy, node.VsHierarchy);
+            return new VsHierarchyProperties(hierarchy, itemId);
+		}
 
-			return node.VsHierarchy.Properties(node.ItemId);
+		/// <summary>
+		/// Provides access to the properties of the hierarchy root itself (i.e. the solution, a project, etc.).
+		/// </summary>
+        public static VsHierarchyProperties Properties(this IVsHierarchy hierarchy)
+		{
+			return new VsHierarchyProperties(hierarchy, GetItemId(hierarchy));
+		}
+
+		private static uint GetItemId(IVsHierarchy hierarchy)
+		{
+			object extObject;
+			uint itemId = 0;
+			IVsHierarchy tempHierarchy;
+
+			ErrorHandler.ThrowOnFailure(
+				hierarchy.GetProperty(
+					VSConstants.VSITEMID_ROOT,
+					(int)__VSHPROPID.VSHPROPID_BrowseObject,
+					out extObject));
+
+			var browseObject = extObject as IVsBrowseObject;
+			if (browseObject != null)
+				browseObject.GetProjectItem(out tempHierarchy, out itemId);
+
+			return itemId;
 		}
 	}
 }

@@ -21,6 +21,7 @@ namespace Clide.Solution
     using System;
     using Microsoft.VisualStudio;
     using Clide.Patterns.Adapter;
+    using Clide.VisualStudio;
 
     [FallbackFactory]
     internal class ReferenceNodeFactory : ITreeNodeFactory<IVsSolutionHierarchyNode>
@@ -39,7 +40,7 @@ namespace Clide.Solution
 
 		public bool Supports(IVsSolutionHierarchyNode hierarchy)
 		{
-			return hierarchy.Properties().ExtenderObject is VSLangProj.Reference;
+            return hierarchy.VsHierarchy.Properties(hierarchy.ItemId).ExtenderObject is VSLangProj.Reference;
 		}
 
 		public ITreeNode CreateNode(Lazy<ITreeNode> parent, IVsSolutionHierarchyNode hierarchy)

@@ -20,6 +20,7 @@ namespace Clide.Extensions
     using System;
     using System.Linq;
     using Clide.Solution;
+    using Clide.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

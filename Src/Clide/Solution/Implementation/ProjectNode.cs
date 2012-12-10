@@ -21,19 +21,19 @@ namespace Clide.Solution
     using System.Linq;
     using System.Dynamic;
     using Clide.Patterns.Adapter;
+    using Clide.VisualStudio;
 
     internal class ProjectNode : SolutionTreeNode, IProjectNode
 	{
 		public ProjectNode(
-			Enum nodeKind,
+			SolutionNodeKind nodeKind,
 			IVsSolutionHierarchyNode hierarchyNode,
 			Lazy<ITreeNode> parentNode,
 			ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
 			IAdapterService adapter)
 			: base(nodeKind, hierarchyNode, parentNode, nodeFactory, adapter)
 		{
-			this.Project = new Lazy<EnvDTE.Project>(
-				() => (EnvDTE.Project)hierarchyNode.VsHierarchy.Properties().ExtenderObject);
+		    this.Project = new Lazy<EnvDTE.Project>(() => (EnvDTE.Project)hierarchyNode.VsHierarchy.Properties(hierarchyNode.ItemId).ExtenderObject);
 		}
 
 		public Lazy<EnvDTE.Project> Project { get; private set; }

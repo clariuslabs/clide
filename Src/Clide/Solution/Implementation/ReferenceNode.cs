@@ -18,6 +18,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide.Solution
 {
     using Clide.Patterns.Adapter;
+    using Clide.VisualStudio;
     using System;
 
     internal class ReferenceNode : SolutionTreeNode, IReferenceNode
@@ -25,7 +26,7 @@ namespace Clide.Solution
 		private Lazy<VSLangProj.Reference> reference;
 
         public ReferenceNode(
-			Enum nodeKind,
+			SolutionNodeKind nodeKind,
 			IVsSolutionHierarchyNode hierarchyNode,
 			Lazy<ITreeNode> parentNode,
 			ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
@@ -33,7 +34,7 @@ namespace Clide.Solution
 			: base(nodeKind, hierarchyNode, parentNode, nodeFactory, adapter)
 		{
 			this.reference = new Lazy<VSLangProj.Reference>(
-				() => (VSLangProj.Reference)((EnvDTE.ProjectItem)hierarchyNode.VsHierarchy.Properties().ExtenderObject).Object);
+				() => (VSLangProj.Reference)((EnvDTE.ProjectItem)hierarchyNode.VsHierarchy.Properties(hierarchyNode.ItemId).ExtenderObject).Object);
 		}
 	}
 }

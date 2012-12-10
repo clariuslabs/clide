@@ -17,6 +17,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
+    using Clide.VisualStudio;
     using System;
     using System.Linq;
     using Microsoft.VisualStudio.Shell.Interop;

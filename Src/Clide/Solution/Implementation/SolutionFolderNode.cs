@@ -20,13 +20,14 @@ namespace Clide.Solution
     using Clide.Patterns.Adapter;
     using System;
     using System.Linq;
+    using Clide.VisualStudio;
 
     internal class SolutionFolderNode : SolutionTreeNode, ISolutionFolderNode
 	{
 		private Lazy<EnvDTE80.SolutionFolder> solutionFolder;
 
 		public SolutionFolderNode(
-			Enum nodeKind,
+			SolutionNodeKind nodeKind,
 			IVsSolutionHierarchyNode hierarchyNode,
 			Lazy<ITreeNode> parentNode,
 			ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
@@ -34,7 +35,7 @@ namespace Clide.Solution
 			: base(nodeKind, hierarchyNode, parentNode, nodeFactory, adapter)
 		{
 			this.solutionFolder = new Lazy<EnvDTE80.SolutionFolder>(
-				() => (EnvDTE80.SolutionFolder)((EnvDTE.Project)hierarchyNode.VsHierarchy.Properties().ExtenderObject).Object);
+                () => (EnvDTE80.SolutionFolder)((EnvDTE.Project)hierarchyNode.VsHierarchy.Properties(hierarchyNode.ItemId).ExtenderObject).Object);
 		}
 
 		public ISolutionFolderNode CreateSolutionFolder(string name)
@@ -44,7 +45,7 @@ namespace Clide.Solution
 			this.solutionFolder.Value.AddSolutionFolder(name);
 
 			var solutionfolder =
-				this.HierarchyNode.Children.Single(child => child.VsHierarchy.Properties().DisplayName == name);
+				this.HierarchyNode.Children.Single(child => child.VsHierarchy.Properties(child.ItemId).DisplayName == name);
 
 			return this.CreateNode(solutionfolder) as ISolutionFolderNode;
 		}

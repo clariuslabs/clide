@@ -26,6 +26,7 @@ namespace Clide.Solution
 		void Create(string solutionFile);
 		void Close(bool saveFirst = true);
 		dynamic Data { get; }
+        SolutionNodeKind Kind { get; }
 
 		ISolutionFolderNode CreateSolutionFolder(string name);
 	}

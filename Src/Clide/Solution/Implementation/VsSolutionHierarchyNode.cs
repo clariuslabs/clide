@@ -24,6 +24,7 @@ namespace Clide.Solution
     using Microsoft.VisualStudio.Shell.Interop;
     using System.Diagnostics;
     using Microsoft.VisualStudio.Shell;
+    using Clide.VisualStudio;
 
     /// <summary>
 	/// A general-purpose <see cref="SolutionExplorerNode"/> that relies on 
@@ -64,7 +65,7 @@ namespace Clide.Solution
 				}
 			}
 
-			this.extensibilityObject = new Lazy<object>(() => this.VsHierarchy.Properties().ExtenderObject);
+			this.extensibilityObject = new Lazy<object>(() => this.VsHierarchy.Properties(this.ItemId).ExtenderObject);
             this.serviceProvider = new Lazy<IServiceProvider>(() =>
             {
                 Microsoft.VisualStudio.OLE.Interop.IServiceProvider oleSp;

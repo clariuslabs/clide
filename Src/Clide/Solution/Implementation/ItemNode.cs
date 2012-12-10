@@ -20,13 +20,14 @@ namespace Clide.Solution
     using Clide.Patterns.Adapter;
     using System;
     using System.Dynamic;
+    using Clide.VisualStudio;
 
     internal class ItemNode : SolutionTreeNode, IItemNode
 	{
 		private Lazy<EnvDTE.ProjectItem> projectItem;
 
 		public ItemNode(
-			Enum nodeKind,
+			SolutionNodeKind nodeKind,
 			IVsSolutionHierarchyNode hierarchyNode,
 			Lazy<ITreeNode> parentNode,
 			ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
@@ -34,7 +35,7 @@ namespace Clide.Solution
 			: base(nodeKind, hierarchyNode, parentNode, nodeFactory, adapter)
 		{
 			this.projectItem = new Lazy<EnvDTE.ProjectItem>(
-				() => (EnvDTE.ProjectItem)hierarchyNode.VsHierarchy.Properties().ExtenderObject);
+				() => (EnvDTE.ProjectItem)hierarchyNode.VsHierarchy.Properties(hierarchyNode.ItemId).ExtenderObject);
 		}
 
 		public string PhysicalPath

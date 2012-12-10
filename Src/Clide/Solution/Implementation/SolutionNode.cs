@@ -24,6 +24,7 @@ namespace Clide.Solution
     using System.Dynamic;
     using Clide.Patterns.Adapter;
     using Clide.Properties;
+    using Clide.VisualStudio;
 
     internal class SolutionNode : SolutionTreeNode, ISolutionNode
 	{
@@ -31,7 +32,7 @@ namespace Clide.Solution
 		private ISolutionEvents events;
 
 		public SolutionNode(
-			Enum nodeKind,
+			SolutionNodeKind nodeKind,
 			IVsSolutionHierarchyNode hierarchyNode,
 			ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
 			IAdapterService adapter,
@@ -84,7 +85,7 @@ namespace Clide.Solution
 			((EnvDTE80.Solution2)this.solution.Value).AddSolutionFolder(name);
 
 			var solutionfolder =
-				this.HierarchyNode.Children.Single(child => child.VsHierarchy.Properties().DisplayName == name);
+				this.HierarchyNode.Children.Single(child => child.VsHierarchy.Properties(child.ItemId).DisplayName == name);
 
 			return this.CreateNode(solutionfolder) as ISolutionFolderNode;
 		}

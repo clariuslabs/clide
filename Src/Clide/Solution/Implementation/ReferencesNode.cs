@@ -25,7 +25,7 @@ namespace Clide.Solution
 		//private Lazy<VSLangProj.References> references;
 
 		public ReferencesNode(
-			Enum nodeKind,
+			SolutionNodeKind nodeKind,
 			IVsSolutionHierarchyNode hierarchyNode,
 			Lazy<ITreeNode> parentNode,
 			ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
