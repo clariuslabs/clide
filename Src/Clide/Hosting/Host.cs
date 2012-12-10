@@ -58,6 +58,9 @@ namespace Clide
 #else
             Tracer.Manager.SetTracingLevel(TracerManager.DefaultSourceName, SourceLevels.Warning);
 #endif
+
+            if (Debugger.IsAttached)
+                Tracer.Manager.SetTracingLevel(TracerManager.DefaultSourceName, SourceLevels.All);
         }
 
         public Host(IServiceProvider serviceProvider, string catalogName)
