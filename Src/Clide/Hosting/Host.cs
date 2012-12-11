@@ -32,6 +32,7 @@ namespace Clide
     using Microsoft.ComponentModel.Composition.Diagnostics;
     using System.IO;
     using Clide.Diagnostics;
+    using Clide.Composition;
 
     internal class Host<TPackage, TExport> : IHost<TPackage, TExport>
         where TPackage : Package, TExport
@@ -47,6 +48,7 @@ namespace Clide
 
         [Import]
         public IDevEnv DevEnv { get; set; }
+
         public ICompositionService Composition { get { return this.container; } }
 
         static Host()
@@ -76,7 +78,7 @@ namespace Clide
                     .FirstOrDefault();
 
                 if (guidString == null)
-                    throw new InvalidOperationException(Strings.HostingPackage.MissingGuidAttribute(this.GetType()));
+                    throw new InvalidOperationException(Strings.Host.MissingGuidAttribute(this.GetType()));
 
                 var guid = new Guid(guidString);
                 var vsPackage = default(IVsPackage);
@@ -87,11 +89,7 @@ namespace Clide
                 if (vsPackage == null)
                     ErrorHandler.ThrowOnFailure(vsShell.LoadPackage(ref guid, out vsPackage));
 
-                var package = vsPackage as TPackage;
-                if (package == null)
-                    throw new InvalidOperationException(Strings.HostingPackage.PackageBaseRequired(typeof(TPackage)));
-
-                return package;
+                return (TPackage)vsPackage;
             });
 
             this.HostingPackage = new Lazy<TExport>(() =>
@@ -110,22 +108,31 @@ namespace Clide
         /// </summary>
         public void Initialize(TPackage package)
         {
-            initializePackage = false;
-            // Causes the lazy export to be initialized.
-            tracer.Info("Initialized package {0}", this.HostingPackage.Value);
+            try
+            {
+                initializePackage = false;
+                // Causes the lazy export to be initialized.
+                tracer.Info("Initialized package {0}", this.HostingPackage.Value);
 
-            // The instance of both the export and the currently initializing package 
-            // is the same.
-            Debug.Assert(object.ReferenceEquals(this.HostingPackage.Value, package), "Package instance is not the same");
+                // The instance of both the export and the currently initializing package 
+                // is the same.
+                Debug.Assert(object.ReferenceEquals(this.HostingPackage.Value, package), "Package instance is not the same");
 
-            // Brings in IDevEnv
-            this.Composition.SatisfyImportsOnce(this);
+                // Brings in IDevEnv
+                this.Composition.SatisfyImportsOnce(this);
 
-            this.DevEnv.Commands.AddCommands(package);
-            this.DevEnv.Commands.AddFilters(package);
+                this.DevEnv.Commands.AddCommands(package);
+                this.DevEnv.Commands.AddFilters(package);
+                this.DevEnv.OptionsPages.AddPages(package);
 
-            // Brings in imports that the package itself might need.
-            this.Composition.SatisfyImportsOnce(package);
+                // Brings in imports that the package itself might need.
+                this.Composition.SatisfyImportsOnce(package);
+            }
+            catch (Exception ex)
+            {
+                tracer.Error(ex, Strings.Host.FailedToInitialize);
+                throw;
+            }
         }
 
         /// <summary>
@@ -151,6 +158,9 @@ namespace Clide
                     // This allows components to cause the package to load automatically 
                     // whenver they are used.
                     SingletonCatalog.Create<TExport>(this.HostingPackage),
+                    // We always expose our own composition service and export provider.
+                    SingletonCatalog.Create<ICompositionService>(ContractNames.ICompositionService, new Lazy<ICompositionService>(() => this.Composition)),
+                    SingletonCatalog.Create<ExportProvider>(ContractNames.ExportProvider, new Lazy<ExportProvider>(() => this.container)),
                     vsCatalog);
             }
             else
@@ -160,6 +170,9 @@ namespace Clide
                     // This allows components to cause the package to load automatically 
                     // whenver they are used.
                     SingletonCatalog.Create<TExport>(this.HostingPackage),
+                    // We always expose our own composition service and export provider.
+                    SingletonCatalog.Create<ICompositionService>(ContractNames.ICompositionService, new Lazy<ICompositionService>(() => this.Composition)),
+                    SingletonCatalog.Create<ExportProvider>(ContractNames.ExportProvider, new Lazy<ExportProvider>(() => this.container)),
                     vsCatalog);
             }
 

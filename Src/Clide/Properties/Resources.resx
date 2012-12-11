@@ -138,14 +138,35 @@
   <data name="Diagnostics_FailedToCreateOutputWindow" xml:space="preserve">
     <value>Failed to create output window for diagnostics traces.</value>
   </data>
-  <data name="HostingPackage_MissingGuidAttribute" xml:space="preserve">
-    <value>Hosting package '{packageType}' does not have the required [Guid] attribute.</value>
+  <data name="Hosting_UnsupportedRuntime" xml:space="preserve">
+    <value>Unsupported Visual Studio version. Please update Clide.</value>
   </data>
-  <data name="HostingPackage_PackageBaseRequired" xml:space="preserve">
-    <value>The hosting package for the runtime must inherit from '{baseClass}'.</value>
+  <data name="Host_FailedToInitialize" xml:space="preserve">
+    <value>Failed to initialize host.</value>
   </data>
-  <data name="HostingPackage_UnsupportedRuntime" xml:space="preserve">
-    <value>.NET runtime changed. Please upgrade Clide.</value>
+  <data name="Host_MissingGuidAttribute" xml:space="preserve">
+    <value>Hosting package '{0}' does not have the required [Guid] attribute.</value>
+  </data>
+  <data name="OptionsManager_FailedToRegisterPage" xml:space="preserve">
+    <value>Failed to register page '{pageType}'.</value>
+  </data>
+  <data name="OptionsManager_ManagedPackageRequired" xml:space="preserve">
+    <value>The owning package of a page must be a managed package, inheriting from '{managedPackageBaseType}'.</value>
+  </data>
+  <data name="OptionsManager_OwningPackageNotFound" xml:space="preserve">
+    <value>Options page specified package owner with Guid '{owningPackageGuid}', but the package could not be found or loaded.</value>
+  </data>
+  <data name="OptionsManager_OwningPackageRequired" xml:space="preserve">
+    <value>Options page of type '{pageType}' does not provide the required '{owningPackageAttributeType}' attribute.</value>
+  </data>
+  <data name="OptionsManager_PageCategoryRequired" xml:space="preserve">
+    <value>Options page '{pageType}' must have a Category attribute that specifies the name of the root category node this page shows under in the Tools | Options dialog.</value>
+  </data>
+  <data name="OptionsManager_PageDisplayNameRequired" xml:space="preserve">
+    <value>Options page '{pageType}' must have a DisplayName attribute that determines the name of the node under the specified category in the Tools | Options dialog tree.</value>
+  </data>
+  <data name="OptionsManager_Unsupported" xml:space="preserve">
+    <value>Tools options pages are not supported in this version of Visual Studio.</value>
   </data>
   <data name="OutputPaneTitle" xml:space="preserve">
     <value>Clide</value>
@@ -167,6 +188,12 @@
   </data>
   <data name="Settings_EndInitWithoutBeginInit" xml:space="preserve">
     <value>EndInit invoked without corresponding BeginInit.</value>
+  </data>
+  <data name="Settings_FailedToRestore" xml:space="preserve">
+    <value>Failed to restore original state when editing was cancelled.</value>
+  </data>
+  <data name="Settings_TraceSaved" xml:space="preserve">
+    <value>Settings successfully saved.</value>
   </data>
   <data name="SolutionNode_InvalidSolutionFile" xml:space="preserve">
     <value>The solution file is invalid.</value>

@@ -82,8 +82,8 @@ namespace Clide
             }
             else
             {
-                tracer.Error(Strings.HostingPackage.UnsupportedRuntime);
-                throw new NotSupportedException(Strings.HostingPackage.UnsupportedRuntime);
+                tracer.Error(Strings.Hosting.UnsupportedRuntime);
+                throw new NotSupportedException(Strings.Hosting.UnsupportedRuntime);
             }
         }
 
@@ -99,8 +99,8 @@ namespace Clide
             var importSource = typeof(ImportAttribute).Assembly.GetType("System.ComponentModel.Composition.ImportSource");
             if (importSource == null)
             {
-                tracer.Error(Strings.HostingPackage.UnsupportedRuntime);
-                throw new NotSupportedException(Strings.HostingPackage.UnsupportedRuntime);
+                tracer.Error(Strings.Hosting.UnsupportedRuntime);
+                throw new NotSupportedException(Strings.Hosting.UnsupportedRuntime);
             }
 
             // This special kind of metadata is checked y the base ExportProvider 

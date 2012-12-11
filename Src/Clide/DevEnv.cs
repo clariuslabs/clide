@@ -34,18 +34,21 @@ namespace Clide
 		private Lazy<IDialogWindowFactory> dialogFactory;
 		private IEnumerable<Lazy<IToolWindow>> toolWindows;
 		private Lazy<IUIThread> uiThread;
+        private Lazy<IOptionsManager> optionsManager;
 
 		[ImportingConstructor]
 		public DevEnv(
 			[Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider,
 			[ImportMany] IEnumerable<Lazy<IToolWindow>> toolWindows,
 			Lazy<ICommandManager> commandManager,
+            Lazy<IOptionsManager> optionsManager,
 			Lazy<IDialogWindowFactory> dialogFactory,
 			Lazy<IUIThread> uiThread,
 			IShellEvents shellEvents)
 		{
 			this.ServiceProvider = serviceProvider;
 			this.commands = commandManager;
+            this.optionsManager = optionsManager;
 			this.dialogFactory = dialogFactory;
 			this.toolWindows = toolWindows;
 			this.shellEvents = shellEvents;
@@ -69,6 +72,11 @@ namespace Clide
 		{
 			get { return this.commands.Value; }
 		}
+
+        public IOptionsManager OptionsPages
+        {
+            get { return this.optionsManager.Value; }
+        }
 
 		public IDialogWindowFactory Dialogs
 		{

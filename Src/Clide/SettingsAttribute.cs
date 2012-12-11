@@ -28,7 +28,6 @@ namespace Clide
 	{
 		public SettingsAttribute()
 		{
-
 		}
 
 		public SettingsAttribute(Type settingsType)

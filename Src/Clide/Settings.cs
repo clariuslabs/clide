@@ -22,113 +22,137 @@ namespace Clide
     using System.Linq;
     using System.Linq.Expressions;
     using Clide.Properties;
+    using System.Diagnostics;
 
     /// <summary>
-	/// Helper base class that can be used to provide transparent loading and saving of settings. 
-	/// This class is already annotated with the <see cref="SettingsAttribute"/> so 
-	/// derived classes don't need to.
-	/// </summary>
-	/// <remarks>
-	/// Derived classes typically expose an interface that is exported to the composition container, 
-	/// and declares an importing constructor that receives the settings manager, which is already 
-	/// exported in the environment by the runtime.
-	/// </remarks>
-	public abstract class Settings : ISettings, INotifyPropertyChanged, ISupportInitialize, ISupportInitializeNotification
-	{
-		public event EventHandler Initialized = (sender, args) => { };
-		public event PropertyChangedEventHandler PropertyChanged = (sender, args) => { };
+    /// Helper base class that can be used to provide transparent loading and saving of settings. 
+    /// </summary>
+    /// <remarks>
+    /// Derived classes typically expose an interface that is exported to the composition container, 
+    /// and declares an importing constructor that receives the settings manager, which is already 
+    /// exported in the environment by the runtime.
+    /// </remarks>
+    /// <example>
+    /// The following is an example of a settings class:
+    /// <code>
+    /// [Settings(typeof(IServerSettings))]
+    /// public class ServerSettings : Settings, IServerSettings
+    /// {
+    ///     [ImportingConstructor]
+    ///     public FooSettings(ISettingsManager manager)
+    ///         : base(manager)
+    ///     {
+    ///     }
+    ///     
+    ///     public string Name { get; set; }
+    ///     public int Port { get; set; }
+    /// }
+    /// </code>
+    /// Note how the class specifies what is the exported settings interface 
+    /// for other consuming code. Also, the imported settings manager is passed 
+    /// to the base class which takes care of reading and saving the state as 
+    /// necessary.
+    /// </example>
+    public abstract class Settings : ISettings, INotifyPropertyChanged, ISupportInitialize, ISupportInitializeNotification
+    {
+        private ITracer tracer;
+        public event EventHandler Initialized = (sender, args) => { };
+        public event PropertyChangedEventHandler PropertyChanged = (sender, args) => { };
 
-		private bool editing;
-		private bool initializing;
-		private ISettingsManager manager;
+        private bool editing;
+        private bool initializing;
+        private ISettingsManager manager;
 
-		public Settings(ISettingsManager manager)
-		{
-			this.manager = manager;
-			this.manager.Read(this);
-			this.IsInitialized = false;
-		}
+        public Settings(ISettingsManager manager)
+        {
+            this.tracer = Tracer.Get(this.GetType());
+            this.manager = manager;
+            this.manager.Read(this);
+            this.IsInitialized = false;
+        }
 
-		public bool IsInitialized { get; private set; }
+        public bool IsInitialized { get; private set; }
 
-		public virtual void BeginEdit()
-		{
-			this.editing = true;
-		}
+        public virtual void BeginEdit()
+        {
+            tracer.Verbose("BeginEdit");
+            this.editing = true;
+        }
 
-		public virtual void CancelEdit()
-		{
-			if (this.editing)
-			{
-				this.editing = false;
-				// Restore a clean copy of the object, as if it was brand-new created.
-				try
-				{
-					var clean = Activator.CreateInstance(this.GetType(), this.manager);
-					foreach (var property in TypeDescriptor.GetProperties(this).Cast<PropertyDescriptor>())
-					{
-						property.SetValue(this, property.GetValue(clean));
-						this.PropertyChanged(this, new PropertyChangedEventArgs(property.Name));
-					}
-				}
-				catch (Exception)
-				{
-					// TODO: failed to restore some properties. Leave current object state as-is?
-				}
-			}
-		}
+        public virtual void CancelEdit()
+        {
+            tracer.Verbose("CancelEdit");
 
-		public virtual void EndEdit()
-		{
-			if (!this.editing)
-				throw new InvalidOperationException(Strings.Settings.EndEditWithoutBeginEdit);
+            if (this.editing)
+            {
+                this.editing = false;
+                // Restore a clean copy of the object, as if it was brand-new created.
+                try
+                {
+                    var clean = Activator.CreateInstance(this.GetType(), this.manager);
+                    foreach (var property in TypeDescriptor.GetProperties(this).Cast<PropertyDescriptor>())
+                    {
+                        property.SetValue(this, property.GetValue(clean));
+                    }
 
-			if (!this.initializing)
-				this.SaveChanges();
+                    this.IsInitialized = false;
+                    this.manager.Read(this);
+                }
+                catch (Exception ex)
+                {
+                    tracer.Error(ex, Strings.Settings.FailedToRestore);
+                    // TODO: failed to restore some properties. Leave current object state as-is?
+                }
+            }
+        }
 
-			this.editing = false;
-		}
+        public virtual void EndEdit()
+        {
+            tracer.Verbose("EndEdit");
 
-		public virtual void BeginInit()
-		{
-			if (this.IsInitialized)
-				throw new InvalidOperationException(Strings.Settings.AlreadyInitialized);
+            if (!this.editing)
+                throw new InvalidOperationException(Strings.Settings.EndEditWithoutBeginEdit);
 
-			this.initializing = true;
-		}
+            if (!this.initializing)
+                this.Save();
 
-		public virtual void EndInit()
-		{
-			if (!this.initializing)
-				throw new InvalidOperationException(Strings.Settings.EndInitWithoutBeginInit);
+            this.editing = false;
+        }
 
-			this.IsInitialized = true;
-			this.initializing = false;
+        public virtual void BeginInit()
+        {
+            if (this.IsInitialized)
+                throw new InvalidOperationException(Strings.Settings.AlreadyInitialized);
 
-			this.Initialized(this, EventArgs.Empty);
-		}
+            this.initializing = true;
+        }
 
-		protected virtual void SaveChanges()
-		{
-			this.manager.Save(this);
-			OnSaveChanges();
-		}
+        public virtual void EndInit()
+        {
+            if (!this.initializing)
+                throw new InvalidOperationException(Strings.Settings.EndInitWithoutBeginInit);
 
-		protected virtual void OnSaveChanges()
-		{
-		}
+            this.IsInitialized = true;
+            this.initializing = false;
 
-		protected static void RaiseChanged<TSource, TProperty>(TSource @this, Expression<Func<TSource, TProperty>> property)
-			where TSource : Settings
-		{
-			@this.RaiseChangedImpl(property);
-		}
+            this.Initialized(this, EventArgs.Empty);
+        }
 
-		private void RaiseChangedImpl<TSource, TProperty>(Expression<Func<TSource, TProperty>> property)
-		{
-			this.PropertyChanged(this, new PropertyChangedEventArgs(Reflect<TSource>.GetPropertyName(property)));
-			if (!this.editing && !this.initializing)
-				this.SaveChanges();
-		}
-	}
+        public virtual void Save()
+        {
+            OnSaving();
+            this.manager.Save(this);
+            OnSaved();
+
+            tracer.Info(Strings.Settings.TraceSaved);
+        }
+
+        protected virtual void OnSaving()
+        {
+        }
+
+        protected virtual void OnSaved()
+        {
+        }
+    }
 }

@@ -21,7 +21,7 @@ namespace Clide
     using System.ComponentModel.Composition;
 
     /// <summary>
-	/// Used to specify the package that owns a given component, such as a <see cref="ToolsOptionsPage{TControl, TSettings}"/> 
+	/// Used to specify the package that owns a given component, such as a <see cref="OptionsPage{TControl, TSettings}"/> 
 	/// derived class.
 	/// </summary>
 	[MetadataAttribute]

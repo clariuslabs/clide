@@ -126,37 +126,126 @@ namespace Clide.Properties
 		///	</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
 		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-		public static partial class HostingPackage
+		public static partial class Hosting
 		{
 			/// <summary>
 			/// Looks up a localized string similar to: 
-			///	Hosting package '{packageType}' does not have the required [Guid] attribute.
+			///	Unsupported Visual Studio version. Please update Clide.
 			/// </summary>
-			public static string MissingGuidAttribute(object packageType)
+			public static string UnsupportedRuntime { get { return Resources.Hosting_UnsupportedRuntime; } }
+		}
+		
+		///	<summary>
+		///	Provides access to string resources.
+		///	</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		public static partial class Host
+		{
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Failed to initialize host.
+			/// </summary>
+			public static string FailedToInitialize { get { return Resources.Host_FailedToInitialize; } }
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Hosting package '{0}' does not have the required [Guid] attribute.
+			/// </summary>
+			public static string MissingGuidAttribute(object arg0)
 			{
-				return Resources.HostingPackage_MissingGuidAttribute.FormatWith(new 
+				return Resources.Host_MissingGuidAttribute.FormatWith(new 
 				{
-					packageType = packageType,
+					arg0 = arg0,
+				});
+			}
+		}
+		
+		///	<summary>
+		///	Provides access to string resources.
+		///	</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		public static partial class OptionsManager
+		{
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Failed to register page '{pageType}'.
+			/// </summary>
+			public static string FailedToRegisterPage(object pageType)
+			{
+				return Resources.OptionsManager_FailedToRegisterPage.FormatWith(new 
+				{
+					pageType = pageType,
 				});
 			}
 		
 			/// <summary>
 			/// Looks up a localized string similar to: 
-			///	The hosting package for the runtime must inherit from '{baseClass}'.
+			///	The owning package of a page must be a managed package, inheriting from '{managedPackageBaseType}'.
 			/// </summary>
-			public static string PackageBaseRequired(object baseClass)
+			public static string ManagedPackageRequired(object managedPackageBaseType)
 			{
-				return Resources.HostingPackage_PackageBaseRequired.FormatWith(new 
+				return Resources.OptionsManager_ManagedPackageRequired.FormatWith(new 
 				{
-					baseClass = baseClass,
+					managedPackageBaseType = managedPackageBaseType,
 				});
 			}
 		
 			/// <summary>
 			/// Looks up a localized string similar to: 
-			///	.NET runtime changed. Please upgrade Clide.
+			///	Options page specified package owner with Guid '{owningPackageGuid}', but the package could not be found or loaded.
 			/// </summary>
-			public static string UnsupportedRuntime { get { return Resources.HostingPackage_UnsupportedRuntime; } }
+			public static string OwningPackageNotFound(object owningPackageGuid)
+			{
+				return Resources.OptionsManager_OwningPackageNotFound.FormatWith(new 
+				{
+					owningPackageGuid = owningPackageGuid,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Options page of type '{pageType}' does not provide the required '{owningPackageAttributeType}' attribute.
+			/// </summary>
+			public static string OwningPackageRequired(object pageType, object owningPackageAttributeType)
+			{
+				return Resources.OptionsManager_OwningPackageRequired.FormatWith(new 
+				{
+					pageType = pageType,
+					owningPackageAttributeType = owningPackageAttributeType,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Options page '{pageType}' must have a Category attribute that specifies the name of the root category node this page shows under in the Tools | Options dialog.
+			/// </summary>
+			public static string PageCategoryRequired(object pageType)
+			{
+				return Resources.OptionsManager_PageCategoryRequired.FormatWith(new 
+				{
+					pageType = pageType,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Options page '{pageType}' must have a DisplayName attribute that determines the name of the node under the specified category in the Tools | Options dialog tree.
+			/// </summary>
+			public static string PageDisplayNameRequired(object pageType)
+			{
+				return Resources.OptionsManager_PageDisplayNameRequired.FormatWith(new 
+				{
+					pageType = pageType,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Tools options pages are not supported in this version of Visual Studio.
+			/// </summary>
+			public static string Unsupported { get { return Resources.OptionsManager_Unsupported; } }
 		}
 		
 		///	<summary>
@@ -232,6 +321,18 @@ namespace Clide.Properties
 			///	EndInit invoked without corresponding BeginInit.
 			/// </summary>
 			public static string EndInitWithoutBeginInit { get { return Resources.Settings_EndInitWithoutBeginInit; } }
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Failed to restore original state when editing was cancelled.
+			/// </summary>
+			public static string FailedToRestore { get { return Resources.Settings_FailedToRestore; } }
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Settings successfully saved.
+			/// </summary>
+			public static string TraceSaved { get { return Resources.Settings_TraceSaved; } }
 		}
 		
 		///	<summary>

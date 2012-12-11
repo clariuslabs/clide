@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel.Composition;
 using Clide;
+using System.ComponentModel.DataAnnotations;
 
 namespace IntegrationPackage
 {
+    [PartCreationPolicy(CreationPolicy.Shared)]
 	[Settings]
 	public class FooSettings : Settings
 	{
@@ -16,11 +18,9 @@ namespace IntegrationPackage
 		{
 		}
 
+        [Required]
 		public string DisplayName { get; set; }
-
-		protected override void OnSaveChanges()
-		{
-			base.OnSaveChanges();
-		}
+        public Uri Address { get; set; }
+        public int Port { get; set; }
 	}
 }

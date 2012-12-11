@@ -1,0 +1,233 @@
+﻿#region BSD License
+/* 
+Copyright (c) 2012, Clarius Consulting
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+* Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+#endregion
+
+namespace Clide
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.ComponentModel.Composition;
+    using System.Windows.Controls;
+    using Microsoft.VisualStudio.Shell;
+    using System.Runtime.InteropServices;
+    using Microsoft.VisualStudio.Shell.Interop;
+    using Clide.Properties;
+    using System.Diagnostics;
+    using Microsoft.Win32;
+    using System.ComponentModel;
+    using System.Linq.Expressions;
+    using System.Reflection;
+    using Microsoft.VisualStudio;
+    using Clide.Composition;
+
+    [PartCreationPolicy(CreationPolicy.Shared)]
+    [Export(typeof(IOptionsManager))]
+    internal class OptionsManager : IOptionsManager
+    {
+        private static readonly ITracer tracer = Tracer.Get<OptionsManager>();
+        private static readonly FieldInfo pagesField = typeof(Package).GetField("_pagesAndProfiles", BindingFlags.Instance | BindingFlags.NonPublic);
+        private static readonly MethodInfo getDialogPage = typeof(Package).GetMethod("GetDialogPage", BindingFlags.Instance | BindingFlags.NonPublic);
+
+        private IVsShell vsShell;
+        private string registryRoot;
+        private IEnumerable<Lazy<IOptionsPage, IOptionsPageMetadata>> optionPages;
+        private Lazy<ICompositionService> composition;
+
+        [ImportingConstructor]
+        public OptionsManager(
+            [Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider,
+            [Import(VsContractNames.IVsShell)] IVsShell vsShell,
+            [Import(ContractNames.ICompositionService)] Lazy<ICompositionService> composition,
+            [ImportMany] IEnumerable<Lazy<IOptionsPage, IOptionsPageMetadata>> optionPages)
+        {
+            this.ServiceProvider = serviceProvider;
+            this.vsShell = vsShell;
+            this.composition = composition;
+            this.optionPages = optionPages;
+
+            // This is the same as shellPackage.ApplicationRegistryRoot
+            this.registryRoot = VSRegistry.RegistryRoot(serviceProvider, __VsLocalRegistryType.RegType_Configuration, false).Name;
+        }
+
+        internal IServiceProvider ServiceProvider { get; set; }
+
+        /// <summary>
+        /// Adds the page of the given type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the page, which
+        /// must implement the <see cref="IOptionsPage"/> interface and be annotated with
+        /// the <see cref="OptionsPageAttribute"/> attribute.</typeparam>
+        public void AddPage<TPage>()
+            where TPage : IOptionsPage, new()
+        {
+            var page = new TPage();
+            this.composition.Value.SatisfyImportsOnce(page);
+
+            AddPage(page);
+        }
+
+        /// <summary>
+        /// Adds the page to the manager, and retrieves the owning package 
+        /// identifier from the instance type <see cref="OptionsPageAttribute"/> attribute.
+        /// </summary>
+        public void AddPage(IOptionsPage page)
+        {
+            var pageType = page.GetType();
+            var pageAttribute = pageType.GetCustomAttribute<OptionsPageAttribute>();
+            if (pageAttribute == null)
+                throw new ArgumentException();
+
+            var packageGuid = new Guid(pageAttribute.PackageId);
+
+            AddPage(page, packageGuid);
+        }
+
+        /// <summary>
+        /// Adds the page to the manager using the given owning package identifier.
+        /// </summary>
+        public void AddPage(IOptionsPage page, Guid owningPackage)
+        {
+            var pageType = page.GetType();
+            var package = GetOwningPackageOrThrow(owningPackage);
+            var categoryName = pageType.ComponentModel().Category ?? "";
+            var displayName = pageType.ComponentModel().DisplayName ?? "";
+
+            if (string.IsNullOrEmpty(categoryName))
+                throw new ArgumentException(Strings.OptionsManager.PageCategoryRequired(page.GetType()));
+
+            if (string.IsNullOrEmpty(categoryName))
+                throw new ArgumentException(Strings.OptionsManager.PageDisplayNameRequired(page.GetType()));
+
+            //TODO: validate attributes on the type, write to registry, etc.
+            RegisterOptionsPage(this.registryRoot, owningPackage, categoryName, displayName, pageType);
+
+            // Need to load the page into the collection for the owning package.
+            AddPageToPackage(page, package);
+        }
+
+        public void AddPages(IServiceProvider owningPackage)
+        {
+            var packageGuid = GetPackageGuidOrThrow(owningPackage);
+            var packagePages = this.optionPages
+                .Where(page => new Guid(page.Metadata.PackageId) == packageGuid);
+
+            foreach (var page in packagePages)
+            {
+                AddPage(page.Value, packageGuid);
+            }
+        }
+
+        private static Guid GetPackageGuidOrThrow(IServiceProvider owningPackage)
+        {
+            var guid = owningPackage.GetType().GetCustomAttribute<GuidAttribute>(true);
+            if (guid == null)
+                throw new ArgumentException(Strings.CommandManager.PackageGuidMissing(owningPackage.GetType()));
+
+            return new Guid(guid.Value);
+        }
+
+        private void AddPageToPackage(IOptionsPage page, Package package)
+        {
+            // In either case, we need a managed package owner.
+            if (pagesField != null)
+            {
+                var container = default(Container);
+                // If we have access to the container field, we can add any kind of page.
+                container = (Container)pagesField.GetValue(package);
+
+                if (container == null)
+                {
+                    // Calling GetDialogPage with a dummy page type will cause the 
+                    // container to be initialized and the given page to be cached. This 
+                    // is harmless since there is no accompanying registry information 
+                    // for a page with this dummy guid, and hence it never shows up
+                    // on the UI.
+                    getDialogPage.Invoke(package, new object[] { typeof(DummyPage) });
+
+                    // Get the value again. It would be non-null this time.
+                    container = (Container)pagesField.GetValue(package);
+
+                    Debug.Assert(container != null, "Failed to initialize internal container for dialog pages in the package.");
+                }
+
+                if (container != null)
+                    container.Add(page);
+            }
+            else
+            {
+                throw new NotSupportedException(Strings.OptionsManager.Unsupported);
+            }
+        }
+
+        private Package GetOwningPackageOrThrow(Guid packageGuid)
+        {
+            var guid = packageGuid;
+            var package = default(IVsPackage);
+
+            this.vsShell.IsPackageLoaded(ref guid, out package);
+
+            if (package == null)
+                ErrorHandler.ThrowOnFailure(this.vsShell.LoadPackage(ref guid, out package));
+
+            if (package == null)
+                throw new InvalidOperationException(Strings.OptionsManager.OwningPackageNotFound(packageGuid));
+
+            var mpf = package as Package;
+
+            if (mpf == null)
+                throw new InvalidOperationException(Strings.OptionsManager.ManagedPackageRequired(typeof(Package)));
+
+            return mpf;
+        }
+
+        private void RegisterOptionsPage(string registryRoot, Guid packageGuid, string categoryName, string pageName, Type pageType, int categoryNameId = 0, int pageNameId = 0)
+        {
+            try
+            {
+                using (var rootKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Default))
+                {
+                    var vsPath = registryRoot.Substring(@"HKEY_CURRENT_USER\".Length);
+                    using (var categoryKey = rootKey.CreateSubKey(vsPath + @"\ToolsOptionsPages\" + categoryName + @"\", RegistryKeyPermissionCheck.ReadWriteSubTree))
+                    {
+                        if (categoryKey.GetValueNames().Length == 0)
+                        {
+                            categoryKey.SetValue("", string.Format("#{0}", categoryNameId), RegistryValueKind.String);
+                            categoryKey.SetValue("Package", packageGuid.ToString("B"), RegistryValueKind.String);
+                        }
+
+                        using (var pageKey = categoryKey.CreateSubKey(pageName))
+                        {
+                            if (pageKey.GetValueNames().Length == 0)
+                            {
+                                pageKey.SetValue("", string.Format("#{0}", pageNameId), RegistryValueKind.String);
+                                pageKey.SetValue("Package", packageGuid.ToString("B"), RegistryValueKind.String);
+                                pageKey.SetValue("Page", pageType.GUID.ToString("B"), RegistryValueKind.String);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                tracer.Error(ex, Strings.OptionsManager.FailedToRegisterPage(pageType));
+            }
+        }
+
+        [ComVisible(true)]
+        private class DummyPage : DialogPage
+        {
+        }
+    }
+}

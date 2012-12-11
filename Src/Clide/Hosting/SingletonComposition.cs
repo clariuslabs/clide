@@ -28,7 +28,12 @@ namespace Clide
     {
         public static SingletonCatalog<T> Create<T>(Lazy<T> value)
         {
-            return new SingletonCatalog<T>(value);
+            return new SingletonCatalog<T>(AttributedModelServices.GetContractName(typeof(T)), value);
+        }
+
+        public static SingletonCatalog<T> Create<T>(string contractName, Lazy<T> value)
+        {
+            return new SingletonCatalog<T>(contractName, value);
         }
     }
 
@@ -36,9 +41,9 @@ namespace Clide
     {
         private IQueryable<ComposablePartDefinition> parts;
 
-        public SingletonCatalog(Lazy<T> value)
+        public SingletonCatalog(string contractName, Lazy<T> value)
         {
-            this.parts = new[] { new SingletonPartDefinition(value) }.AsQueryable();
+            this.parts = new[] { new SingletonPartDefinition(contractName, value) }.AsQueryable();
         }
 
         public override IQueryable<ComposablePartDefinition> Parts
@@ -50,9 +55,9 @@ namespace Clide
         {
             private SingletonPart part;
 
-            public SingletonPartDefinition(Lazy<T> value)
+            public SingletonPartDefinition(string contractName, Lazy<T> value)
             {
-                this.part = new SingletonPart(value);
+                this.part = new SingletonPart(contractName, value);
             }
 
             public override ComposablePart CreatePart()
@@ -76,11 +81,11 @@ namespace Clide
             private Lazy<T> value;
             private ExportDefinition export;
 
-            public SingletonPart(Lazy<T> value)
+            public SingletonPart(string contractName, Lazy<T> value)
             {
                 this.value = value;
                 this.export = new ExportDefinition(
-                    AttributedModelServices.GetContractName(typeof(T)),
+                    contractName,
                     new Dictionary<string, object>()
                    {
                        { 

@@ -94,7 +94,6 @@
     <Compile Include="Composition\ComponentModel.cs" />
     <Compile Include="Composition\ContractNames.cs" />
     <Compile Include="Composition\DecoratingReflectionCatalog.cs" />
-    <Compile Include="Composition\ExportedServices.cs" />
     <Compile Include="Composition\SelectorEqualityComparer.cs" />
     <Compile Include="Composition\VsContractNames.cs" />
     <Compile Include="Composition\VsExportedServices.cs" />
@@ -102,8 +101,11 @@
     <Compile Include="Events\ShellEvents.cs" />
     <Compile Include="Events\SolutionEvents.cs" />
     <Compile Include="Extensions\ComponentModelExtensions.cs" />
+    <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="IMessageBoxServiceExtensions.cs" />
     <Compile Include="Extensions\TracingExtensions.cs" />
+    <Compile Include="IOptionsManager.cs" />
+    <Compile Include="IOptionsPage.cs" />
     <Compile Include="Patterns\Adapter\AdapterAttribute.cs" />
     <Compile Include="Patterns\Adapter\Adapters.cs" />
     <Compile Include="Patterns\Adapter\AdapterService.cs" />
@@ -117,6 +119,13 @@
     <Compile Include="Solution\Adapters\MsBuildAdapter.cs" />
     <Compile Include="Solution\Adapters\VsHierarchyAdapter.cs" />
     <Compile Include="Solution\Adapters\DteAdapter.cs" />
+    <Compile Include="OptionsManager.cs" />
+    <Compile Include="OptionsPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="OptionsPageAttribute.cs" />
+    <Compile Include="IOptionsPageMetadata.cs" />
+    <Compile Include="OptionsPageWindowFactory.cs" />
     <Compile Include="VisualStudio\VsHierarchyExtensions.cs" />
     <Compile Include="Hosting\Host.cs" />
     <Compile Include="Hosting\HostFactory.cs" />

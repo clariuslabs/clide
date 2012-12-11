@@ -124,29 +124,92 @@ namespace Clide.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hosting package &apos;{packageType}&apos; does not have the required [Guid] attribute..
+        ///   Looks up a localized string similar to Failed to initialize host..
         /// </summary>
-        internal static string HostingPackage_MissingGuidAttribute {
+        internal static string Host_FailedToInitialize {
             get {
-                return ResourceManager.GetString("HostingPackage_MissingGuidAttribute", resourceCulture);
+                return ResourceManager.GetString("Host_FailedToInitialize", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The hosting package for the runtime must inherit from &apos;{baseClass}&apos;..
+        ///   Looks up a localized string similar to Hosting package &apos;{0}&apos; does not have the required [Guid] attribute..
         /// </summary>
-        internal static string HostingPackage_PackageBaseRequired {
+        internal static string Host_MissingGuidAttribute {
             get {
-                return ResourceManager.GetString("HostingPackage_PackageBaseRequired", resourceCulture);
+                return ResourceManager.GetString("Host_MissingGuidAttribute", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .NET runtime changed. Please upgrade Clide..
+        ///   Looks up a localized string similar to Unsupported Visual Studio version. Please update Clide..
         /// </summary>
-        internal static string HostingPackage_UnsupportedRuntime {
+        internal static string Hosting_UnsupportedRuntime {
             get {
-                return ResourceManager.GetString("HostingPackage_UnsupportedRuntime", resourceCulture);
+                return ResourceManager.GetString("Hosting_UnsupportedRuntime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to register page &apos;{pageType}&apos;..
+        /// </summary>
+        internal static string OptionsManager_FailedToRegisterPage {
+            get {
+                return ResourceManager.GetString("OptionsManager_FailedToRegisterPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The owning package of a page must be a managed package, inheriting from &apos;{managedPackageBaseType}&apos;..
+        /// </summary>
+        internal static string OptionsManager_ManagedPackageRequired {
+            get {
+                return ResourceManager.GetString("OptionsManager_ManagedPackageRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Options page specified package owner with Guid &apos;{owningPackageGuid}&apos;, but the package could not be found or loaded..
+        /// </summary>
+        internal static string OptionsManager_OwningPackageNotFound {
+            get {
+                return ResourceManager.GetString("OptionsManager_OwningPackageNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Options page of type &apos;{pageType}&apos; does not provide the required &apos;{owningPackageAttributeType}&apos; attribute..
+        /// </summary>
+        internal static string OptionsManager_OwningPackageRequired {
+            get {
+                return ResourceManager.GetString("OptionsManager_OwningPackageRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Options page &apos;{pageType}&apos; must have a Category attribute that specifies the name of the root category node this page shows under in the Tools | Options dialog..
+        /// </summary>
+        internal static string OptionsManager_PageCategoryRequired {
+            get {
+                return ResourceManager.GetString("OptionsManager_PageCategoryRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Options page &apos;{pageType}&apos; must have a DisplayName attribute that determines the name of the node under the specified category in the Tools | Options dialog tree..
+        /// </summary>
+        internal static string OptionsManager_PageDisplayNameRequired {
+            get {
+                return ResourceManager.GetString("OptionsManager_PageDisplayNameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tools options pages are not supported in this version of Visual Studio..
+        /// </summary>
+        internal static string OptionsManager_Unsupported {
+            get {
+                return ResourceManager.GetString("OptionsManager_Unsupported", resourceCulture);
             }
         }
         
@@ -183,6 +246,24 @@ namespace Clide.Properties {
         internal static string Settings_EndInitWithoutBeginInit {
             get {
                 return ResourceManager.GetString("Settings_EndInitWithoutBeginInit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to restore original state when editing was cancelled..
+        /// </summary>
+        internal static string Settings_FailedToRestore {
+            get {
+                return ResourceManager.GetString("Settings_FailedToRestore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings successfully saved..
+        /// </summary>
+        internal static string Settings_TraceSaved {
+            get {
+                return ResourceManager.GetString("Settings_TraceSaved", resourceCulture);
             }
         }
         

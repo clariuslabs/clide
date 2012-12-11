@@ -24,6 +24,7 @@ namespace Clide
 	{
 		ICommandManager Commands { get; }
 		IDialogWindowFactory Dialogs { get; }
+        IOptionsManager OptionsPages { get; }
 		IStatusBar Status { get; }
 		IEnumerable<IToolWindow> ToolWindows { get; }
 		IUIThread UIThread { get; }
