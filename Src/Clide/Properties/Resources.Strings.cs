@@ -394,6 +394,26 @@ namespace Clide.Properties
 			/// </summary>
 			public static string QueryStatusShieldMessage { get { return Resources.VsCommandExtensionAdapter_QueryStatusShieldMessage; } }
 		}
+		
+		///	<summary>
+		///	Provides access to string resources.
+		///	</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		public static partial class ConfigProjectProperties
+		{
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Project '{projectFile}' must be based on MSBuild in order to support dynamic properties.
+			/// </summary>
+			public static string UnsupportedProject(object projectFile)
+			{
+				return Resources.ConfigProjectProperties_UnsupportedProject.FormatWith(new 
+				{
+					projectFile = projectFile,
+				});
+			}
+		}
 	}
 }
 

@@ -25,6 +25,8 @@ namespace Clide.Solution
 
     internal class ItemNode : SolutionTreeNode, IItemNode
     {
+        private Lazy<ItemProperties> properties;
+
         public ItemNode(
             IVsSolutionHierarchyNode hierarchyNode,
             Lazy<ITreeNode> parentNode,
@@ -34,6 +36,7 @@ namespace Clide.Solution
         {
             this.Item = new Lazy<EnvDTE.ProjectItem>(
                 () => (EnvDTE.ProjectItem)hierarchyNode.VsHierarchy.Properties(hierarchyNode.ItemId).ExtenderObject);
+            this.properties = new Lazy<ItemProperties>(() => new ItemProperties(this));
         }
 
         public Lazy<ProjectItem> Item { get; private set; }
@@ -43,10 +46,9 @@ namespace Clide.Solution
             get { return this.Item.Value.get_FileNames(1); }
         }
 
-        public dynamic Data
+        public dynamic Properties
         {
-            // TODO: implement
-            get { return new ExpandoObject(); }
+            get { return this.properties.Value; }
         }
     }
 }

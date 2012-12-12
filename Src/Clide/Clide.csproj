@@ -126,6 +126,9 @@
     <Compile Include="OptionsPageAttribute.cs" />
     <Compile Include="IOptionsPageMetadata.cs" />
     <Compile Include="OptionsPageWindowFactory.cs" />
+    <Compile Include="Solution\Implementation\ConfigProjectProperties.cs" />
+    <Compile Include="Solution\Implementation\ItemProperties.cs" />
+    <Compile Include="Solution\Implementation\GlobalProjectProperties.cs" />
     <Compile Include="VisualStudio\VsHierarchyExtensions.cs" />
     <Compile Include="Hosting\Host.cs" />
     <Compile Include="Hosting\HostFactory.cs" />

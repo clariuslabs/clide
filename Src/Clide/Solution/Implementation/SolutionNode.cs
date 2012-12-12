@@ -25,6 +25,8 @@ namespace Clide.Solution
     using Clide.Patterns.Adapter;
     using Clide.Properties;
     using Clide.VisualStudio;
+    using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.Shell.Interop;
 
     internal class SolutionNode : SolutionTreeNode, ISolutionNode
 	{
@@ -47,7 +49,7 @@ namespace Clide.Solution
 		{
 			// TODO: implement
 			get { return new ExpandoObject(); }
-		}
+	}
 
 		public bool IsOpen
 		{
@@ -71,12 +73,34 @@ namespace Clide.Solution
 				Strings.SolutionNode.InvalidSolutionFile);
 
 			((EnvDTE80.Solution2)this.Solution.Value).Create(Path.GetDirectoryName(solutionFile), Path.GetFileNameWithoutExtension(solutionFile));
+            this.Save();
 		}
 
 		public void Close(bool saveFirst = true)
 		{
+            if (saveFirst)
+                Save();
+
 			this.Solution.Value.Close(saveFirst);
 		}
+
+        public void Save()
+        {
+            ErrorHandler.ThrowOnFailure(this
+                .HierarchyNode
+                .ServiceProvider
+                .GetService<SVsSolution, IVsSolution>()
+                .SaveSolutionElement(
+                    (uint)__VSSLNSAVEOPTIONS.SLNSAVEOPT_ForceSave,
+                    null,
+                    0));
+        }
+
+        public void SaveAs(string solutionFile)
+        {
+            this.Solution.Value.SaveAs(solutionFile);
+            this.Save();
+        }
 
 		public ISolutionFolderNode CreateSolutionFolder(string name)
 		{

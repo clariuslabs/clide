@@ -22,9 +22,13 @@ namespace Clide.Solution
     using System.Dynamic;
     using Clide.Patterns.Adapter;
     using Clide.VisualStudio;
+    using Microsoft.VisualStudio.Shell.Interop;
+    using Microsoft.VisualStudio;
 
     internal class ProjectNode : SolutionTreeNode, IProjectNode
 	{
+        private Lazy<GlobalProjectProperties> properties;
+
 		public ProjectNode(
 			IVsSolutionHierarchyNode hierarchyNode,
 			Lazy<ITreeNode> parentNode,
@@ -33,6 +37,7 @@ namespace Clide.Solution
             : base(SolutionNodeKind.Project, hierarchyNode, parentNode, nodeFactory, adapter)
 		{
 		    this.Project = new Lazy<EnvDTE.Project>(() => (EnvDTE.Project)hierarchyNode.VsHierarchy.Properties(hierarchyNode.ItemId).ExtenderObject);
+            this.properties = new Lazy<GlobalProjectProperties>(() => new GlobalProjectProperties(this));
 		}
 
 		public Lazy<EnvDTE.Project> Project { get; private set; }
@@ -49,6 +54,18 @@ namespace Clide.Solution
 			return this.CreateNode(folder) as IFolderNode;
 		}
 
+        public void Save()
+        {
+            ErrorHandler.ThrowOnFailure(this
+                .HierarchyNode
+                .ServiceProvider
+                .GetService<SVsSolution, IVsSolution>()
+                .SaveSolutionElement(
+                    (uint)__VSSLNSAVEOPTIONS.SLNSAVEOPT_ForceSave, 
+                    this.HierarchyNode.VsHierarchy, 
+                    0));
+        }
+
 		public string PhysicalPath
 		{
 			get
@@ -61,16 +78,14 @@ namespace Clide.Solution
 			}
 		}
 
-		public dynamic Data
+		public dynamic Properties
 		{
-			// TODO: implement
-			get { return new ExpandoObject(); }
+			get { return this.properties.Value; }
 		}
 
-		public dynamic UserData
-		{
-			// TODO: implement
-			get { return new ExpandoObject(); }
-		}
+        public dynamic PropertiesFor(string configurationAndPlatform)
+        {
+            return new ConfigProjectProperties(this, configurationAndPlatform);
+        }
 	}
 }

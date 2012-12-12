@@ -21,7 +21,9 @@ namespace Clide.Solution
 	{
 		IFolderNode CreateFolder(string name);
 		string PhysicalPath { get; }
-		dynamic Data { get; }
-		dynamic UserData { get; }
+
+        void Save();
+
+		dynamic Properties { get; }
 	}
 }

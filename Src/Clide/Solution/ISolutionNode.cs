@@ -21,12 +21,15 @@ namespace Clide.Solution
     
     public interface ISolutionNode : ITreeNode, ISolutionEvents
 	{
-		bool IsOpen { get; }
-		void Open(string solutionFile);
-		void Create(string solutionFile);
-		void Close(bool saveFirst = true);
-		dynamic Data { get; }
+        dynamic Data { get; }
+        bool IsOpen { get; }
         SolutionNodeKind Kind { get; }
+
+        void Close(bool saveFirst = true);
+        void Create(string solutionFile);
+        void Open(string solutionFile);
+        void Save();
+        void SaveAs(string solutionFile);
 
 		ISolutionFolderNode CreateSolutionFolder(string name);
 	}

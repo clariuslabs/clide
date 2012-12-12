@@ -20,6 +20,6 @@ namespace Clide.Solution
 	public interface IItemNode : ITreeNode
 	{
 		string PhysicalPath { get; }
-		dynamic Data { get; }
+		dynamic Properties { get; }
 	}
 }

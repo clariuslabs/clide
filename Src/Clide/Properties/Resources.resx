@@ -210,4 +210,7 @@
   <data name="VsCommandExtensionAdapter_QueryStatusShieldMessage" xml:space="preserve">
     <value>Command could not determine its current status due to an unexpected exception. Please check the output window for additional information.</value>
   </data>
+  <data name="ConfigProjectProperties_UnsupportedProject" xml:space="preserve">
+    <value>Project '{projectFile}' must be based on MSBuild in order to support dynamic properties.</value>
+  </data>
 </root>

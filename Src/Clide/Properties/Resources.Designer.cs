@@ -115,6 +115,15 @@ namespace Clide.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Project &apos;{projectFile}&apos; must be based on MSBuild in order to support dynamic properties..
+        /// </summary>
+        internal static string ConfigProjectProperties_UnsupportedProject {
+            get {
+                return ResourceManager.GetString("ConfigProjectProperties_UnsupportedProject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to create output window for diagnostics traces..
         /// </summary>
         internal static string Diagnostics_FailedToCreateOutputWindow {
