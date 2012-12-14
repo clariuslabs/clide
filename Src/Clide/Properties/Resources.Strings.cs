@@ -414,6 +414,26 @@ namespace Clide.Properties
 				});
 			}
 		}
+		
+		///	<summary>
+		///	Provides access to string resources.
+		///	</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		public static partial class SolutionTreeNode
+		{
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Selecting element '{itemPath}' is not supported by the underlying project type.
+			/// </summary>
+			public static string SelectionUnsupported(object itemPath)
+			{
+				return Resources.SolutionTreeNode_SelectionUnsupported.FormatWith(new 
+				{
+					itemPath = itemPath,
+				});
+			}
+		}
 	}
 }
 

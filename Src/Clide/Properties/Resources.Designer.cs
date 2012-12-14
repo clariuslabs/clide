@@ -313,6 +313,15 @@ namespace Clide.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Selecting element &apos;{itemPath}&apos; is not supported by the underlying project type..
+        /// </summary>
+        internal static string SolutionTreeNode_SelectionUnsupported {
+            get {
+                return ResourceManager.GetString("SolutionTreeNode_SelectionUnsupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attempted to execute command &apos;{commandText}&apos; ({commandType}) but current command status does not allow it..
         /// </summary>
         internal static string VsCommandExtensionAdapter_CannotExecute {

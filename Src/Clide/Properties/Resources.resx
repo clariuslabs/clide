@@ -213,4 +213,7 @@
   <data name="ConfigProjectProperties_UnsupportedProject" xml:space="preserve">
     <value>Project '{projectFile}' must be based on MSBuild in order to support dynamic properties.</value>
   </data>
+  <data name="SolutionTreeNode_SelectionUnsupported" xml:space="preserve">
+    <value>Selecting element '{itemPath}' is not supported by the underlying project type.</value>
+  </data>
 </root>

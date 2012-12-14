@@ -29,6 +29,7 @@ namespace Clide.Solution
     using Microsoft.VisualStudio.Shell;
     using EnvDTE;
     using System.IO;
+    using Clide.Properties;
 
     [DebuggerDisplay("{debuggerDisplay,nq}")]
     internal class SolutionTreeNode : ISolutionExplorerNode
@@ -178,8 +179,6 @@ namespace Clide.Solution
             var hr = this.window.Value.ExpandItem(
                 this.hierarchyNode.VsHierarchy as IVsUIHierarchy, this.hierarchyNode.ItemId, flags);
 
-            //ErrorHandler.ThrowOnFailure(hr);
-
             if (!ErrorHandler.Succeeded(hr))
             {
                 // Workaround for virtual nodes.
@@ -195,9 +194,16 @@ namespace Clide.Solution
                     current = current.Parent;
                 }
 
-                var item = window.GetItem(path);
-                if (item != null)
-                    item.Select(selectionType);
+                try
+                {
+                    var item = window.GetItem(path);
+                    if (item != null)
+                        item.Select(selectionType);
+                }
+                catch (Exception)
+                {
+                    throw new NotSupportedException(Strings.SolutionTreeNode.SelectionUnsupported(path));
+                }
             }
         }
 
