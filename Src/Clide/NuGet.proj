@@ -2,74 +2,17 @@
 <Project ToolsVersion="4.0"
          DefaultTargets="Build"
          xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <!--
-    ============================================================
-				ReadCurrentVersion
+    <Import Project="$(MSBuildThisFileDirectory)..\..\Common\ClariusLabs.tasks" />
 
-    Reads the current version of the .nuspec file, either from 
-	a previously generated one in the NuGet content output dir
-	or the project source itself on first build.
-    ============================================================
-    -->
-    <!-- AssemblyFileVersion\("\d+\.\d+\.\d+\.\d+"\) -->
-    <UsingTask TaskName="UpdateSpecVersion"
-               TaskFactory="CodeTaskFactory"
-               AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
-        <ParameterGroup>
-            <SpecFile Required="true" />
-        </ParameterGroup>
-        <Task>
-            <Reference Include="System.Xml"/>
-            <Reference Include="System.Xml.Linq"/>
-            <Using Namespace="System.IO"/>
-            <Using Namespace="System.Xml"/>
-            <Using Namespace="System.Xml.Linq"/>
-            <Code Type="Fragment"
-                  Language="cs">
-                <![CDATA[
-var spec = XDocument.Load(this.SpecFile);
-var version = new Version(spec.Root.Element("metadata").Element("version").Value);
-Log.LogMessage("Current nuspec version is {0}, from {1}.", version, this.SpecFile);
-var updated = new Version(string.Format("{0}.{1}.{2}", version.Major, version.Minor, DateTime.Now.ToString("yyMM.ddHH")));
+    <PropertyGroup>
+        <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+        <BuildRoot>$(MSBuildThisFileDirectory)</BuildRoot>
+        <DropDirectory>$(BuildRoot)..\..\</DropDirectory>
+        <NuGetExe>$(BuildRoot)..\..\.nuget\NuGet.exe</NuGetExe>
+        <ReleaseNotes>$([System.IO.File]::ReadAllText('$(BuildRoot)..\..\ReleaseNotes.md'))</ReleaseNotes>
+    </PropertyGroup>
 
-spec.Root.Element("metadata").Element("version").Value = updated.ToString();
-spec.Save(this.SpecFile);
-Log.LogMessage("Updated nuspec version in file {0} to {1}.", this.SpecFile, updated);
-]]>
-            </Code>
-        </Task>
-    </UsingTask>
-
-    <UsingTask TaskName="UpdateFileVersion"
-               TaskFactory="CodeTaskFactory"
-               AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
-        <ParameterGroup>
-            <AssemblyInfo Required="true" />
-        </ParameterGroup>
-        <Task>
-            <Using Namespace="System.Text.RegularExpressions"/>
-            <Using Namespace="System.IO"/>
-            <Code Type="Fragment"
-                  Language="cs">
-                <![CDATA[
-var info = File.ReadAllText(this.AssemblyInfo);
-var reg = new Regex(@"AssemblyFileVersion\(""(?<major>\d+)\.(?<minor>\d+)\.\d+\.\d+""\)");
-
-info = reg.Replace(info, match => 
-    "AssemblyFileVersion(\"" + 
-    match.Groups["major"].Value + "." +
-    match.Groups["minor"].Value + "." + DateTime.Now.ToString("yyMM.ddHH") + 
-    "\")");
-
-File.WriteAllText(this.AssemblyInfo, info);
-]]>
-            </Code>
-        </Task>
-    </UsingTask>
-
-    <Target Name="Build">
-        <UpdateFileVersion AssemblyInfo="Properties\AssemblyInfo.cs" />
-
+    <Target Name="Build" DependsOnTargets="ReplaceCurrentVersions">
         <MSBuild Projects="Clide.csproj"
                  Properties="VisualStudioVersion=10.0;NuGet=true"
                  />
@@ -77,12 +20,48 @@ File.WriteAllText(this.AssemblyInfo, info);
                  Properties="VisualStudioVersion=11.0;NuGet=true"
                  />                 
 
-        <!-- Update package version automatically -->
-        <UpdateSpecVersion SpecFile="nuget\Clide.nuspec" />
-
         <!-- Finally build the package -->
-        <Exec Command="$(MSBuildThisFileDirectory)..\..\.nuget\NuGet.exe pack -NoPackageAnalysis nuget\Clide.nuspec -Symbols -OutputDirectory $(MSBuildThisFileDirectory)..\..\"
+        <Exec Command="$(NuGetExe) pack -NoPackageAnalysis nuget\Clide.nuspec -Symbols -OutputDirectory $(DropDirectory) -Version $(PackageVersion)"
               ContinueOnError="false" />
+    </Target>
+
+    <Target Name="ReplaceCurrentVersions">
+        <ReadAssemblyVersion File="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs">
+            <Output PropertyName="Major"
+                    TaskParameter="Major"/>
+            <Output PropertyName="Minor"
+                    TaskParameter="Minor"/>
+        </ReadAssemblyVersion>
+
+        <PropertyGroup>
+            <!-- Build number is of the format (2 digit year)(2 digit month) -->
+            <Build>$([System.DateTime]::Now.ToString("yyMM"))</Build>
+            <!-- Revision number is of the format (2 digit hour)(2 digit minutes) -->
+            <Revision>$([System.DateTime]::Now.ToString("ddHH"))</Revision>
+            <FileVersion>$(Major).$(Minor).$(Build).$(Revision)</FileVersion>
+            <!-- TODO: maybe we should have two builds, one that builds the public simplified version
+                 and one with the full build/revision -->
+            <PackageVersion>$(FileVersion)</PackageVersion>
+        </PropertyGroup>
+
+        <ItemGroup>
+            <_VersionRegexTransform Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs">
+                <Find>AssemblyFileVersion\(".*?"\)</Find>
+                <ReplaceWith>AssemblyFileVersion("$(FileVersion)")</ReplaceWith>
+            </_VersionRegexTransform>
+            <_VersionRegexTransform Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs">
+                <Find>AssemblyVersion\(".*?"\)</Find>
+                <ReplaceWith>AssemblyVersion("$(FileVersion)")</ReplaceWith>
+            </_VersionRegexTransform>
+            <_VersionRegexTransform Include="$(BuildRoot)**\*.nuspec"
+                            Condition="'$(ReleaseNotes)' != ''">
+                <Find><![CDATA[<releaseNotes />|<releaseNotes/>|<releaseNotes>.*</releaseNotes>]]></Find>
+                <ReplaceWith><![CDATA[<releaseNotes>$(ReleaseNotes)</releaseNotes>]]></ReplaceWith>
+                <Options>Singleline</Options>
+            </_VersionRegexTransform>
+        </ItemGroup>
+
+        <RegexTransform Items="@(_VersionRegexTransform)" />
     </Target>
 
 </Project>
