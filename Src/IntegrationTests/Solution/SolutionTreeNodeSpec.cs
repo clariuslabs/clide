@@ -23,6 +23,7 @@ namespace Clide.Solution
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
     using Clide.Patterns.Adapter;
+    using Microsoft.VisualStudio;
 
     internal class SolutionTreeNodeSpec
 	{
@@ -58,7 +59,7 @@ namespace Clide.Solution
 
 				this.node = new SolutionTreeNode(
 					SolutionNodeKind.Custom,
-					new VsSolutionHierarchyNode(hierarchy), null,
+                    new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT), null,
 					factory.Object,
 					Mock.Of<IAdapterService>());
 			}

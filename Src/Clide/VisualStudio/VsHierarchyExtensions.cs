@@ -34,13 +34,13 @@ namespace Clide.VisualStudio
             return new VsHierarchyProperties(hierarchy, itemId);
 		}
 
-		/// <summary>
-		/// Provides access to the properties of the hierarchy root itself (i.e. the solution, a project, etc.).
-		/// </summary>
-        public static VsHierarchyProperties Properties(this IVsHierarchy hierarchy)
-		{
-			return new VsHierarchyProperties(hierarchy, GetItemId(hierarchy));
-		}
+        ///// <summary>
+        ///// Provides access to the properties of the hierarchy root itself (i.e. the solution, a project, etc.).
+        ///// </summary>
+        //public static VsHierarchyProperties Properties(this IVsHierarchy hierarchy)
+        //{
+        //    return new VsHierarchyProperties(hierarchy, GetItemId(hierarchy));
+        //}
 
 		private static uint GetItemId(IVsHierarchy hierarchy)
 		{

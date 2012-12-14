@@ -22,6 +22,7 @@ namespace Clide.Solution
     using System.Linq;
     using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Microsoft.VisualStudio;
 
     public class VsSolutionHierarchyNodeIteratorSpec
 	{
@@ -34,9 +35,15 @@ namespace Clide.Solution
 			public override void TestInitialize()
 			{
 				base.TestInitialize();
-
-				base.OpenSolution(GetFullPath("SampleSolution\\SampleSolution.sln"));
+				base.OpenSolution("SampleSolution\\SampleSolution.sln");
 			}
+
+            [TestCleanup]
+            public override void TestCleanup()
+            {
+                base.TestCleanup();
+                base.CloseSolution();
+            }
 
 			[HostType("VS IDE")]
 			[TestMethod]
@@ -45,7 +52,8 @@ namespace Clide.Solution
 				var solution = ServiceProvider.GetService<IVsSolution>();
 				var hierarchy = solution as IVsHierarchy;
 
-				var nodes = new VsSolutionHierarchyNode(hierarchy).Children.Select(n => n.VsHierarchy.Properties(n.ItemId).DisplayName).ToList();
+				var nodes = new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT).Children.Select(n => 
+                    n.VsHierarchy.Properties(n.ItemId).DisplayName).ToList();
 
 				Assert.Equal(2, nodes.Count);
 			}
@@ -57,7 +65,8 @@ namespace Clide.Solution
 				var solution = ServiceProvider.GetService<IVsSolution>();
 				var hierarchy = solution as IVsHierarchy;
 
-				var solutionFolder1 = new VsSolutionHierarchyNode(hierarchy).Children.FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "SolutionFolder1");
+                var solutionFolder1 = new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT).Children
+                    .FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "SolutionFolder1");
 
 				Assert.Equal(2, solutionFolder1.Children.Count());
 			}
@@ -69,9 +78,12 @@ namespace Clide.Solution
 				var solution = ServiceProvider.GetService<IVsSolution>();
 				var hierarchy = solution as IVsHierarchy;
 
-				var solutionFolder1 = new VsSolutionHierarchyNode(hierarchy).Children.FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "SolutionFolder1");
-				var solutionFolder2 = solutionFolder1.Children.FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "SolutionFolder2");
-				var project = solutionFolder2.Children.FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "ClassLibrary");
+                var solutionFolder1 = new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT).Children
+                    .FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "SolutionFolder1");
+				var solutionFolder2 = solutionFolder1.Children
+                    .FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "SolutionFolder2");
+				var project = solutionFolder2.Children
+                    .FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "ClassLibrary");
 
 				Assert.Equal(4, project.Children.Count());
 			}
@@ -83,7 +95,7 @@ namespace Clide.Solution
 				var solution = ServiceProvider.GetService<IVsSolution>();
 				var hierarchy = solution as IVsHierarchy;
 
-				var solutionFolder1 = new VsSolutionHierarchyNode(hierarchy).Children.FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "SolutionFolder1");
+                var solutionFolder1 = new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT).Children.FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "SolutionFolder1");
 				var solutionFolder2 = solutionFolder1.Children.FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "SolutionFolder2");
 				var project = solutionFolder2.Children.FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "ClassLibrary");
 
@@ -99,9 +111,12 @@ namespace Clide.Solution
 				var solution = ServiceProvider.GetService<IVsSolution>();
 				var hierarchy = solution as IVsHierarchy;
 
-				var solutionFolder1 = new VsSolutionHierarchyNode(hierarchy).Children.FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "SolutionFolder1");
-				var solutionFolder2 = solutionFolder1.Children.FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "SolutionFolder2");
-				var project = solutionFolder2.Children.FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "ClassLibrary");
+                var solutionFolder1 = new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT).Children
+                    .FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "SolutionFolder1");
+				var solutionFolder2 = solutionFolder1.Children
+                    .FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "SolutionFolder2");
+				var project = solutionFolder2.Children
+                    .FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "ClassLibrary");
 
 				var folder = project.Children.FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "Folder");
 

@@ -21,6 +21,7 @@ namespace Clide.VisualStudio
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using Clide.Solution;
 
     internal class VsHierarchyProperties 
     {
@@ -44,9 +45,29 @@ namespace Clide.VisualStudio
             get { return GetProperty<object>(hierarchy, __VSHPROPID.VSHPROPID_ExtObject, this.ItemId); }
         }
 
-        public IVsHierarchy Parent
+        public VsHierarchyItem Parent
         {
-            get { return GetProperty<IVsHierarchy>(hierarchy, __VSHPROPID.VSHPROPID_ParentHierarchy, VSConstants.VSITEMID_ROOT); }
+            get
+            {
+                var rootHierarchy = GetProperty<IVsHierarchy>(hierarchy, __VSHPROPID.VSHPROPID_ParentHierarchy, VSConstants.VSITEMID_ROOT);
+                if (rootHierarchy == null)
+                    return null;
+
+                var rootNode = new VsSolutionHierarchyNode(rootHierarchy, VSConstants.VSITEMID_ROOT);
+                var parentNode = new IVsSolutionHierarchyNode[] { rootNode }
+                    .Concat(rootNode.Children.Traverse(TraverseKind.BreadthFirst, node => node.Children))
+                    // This is expensive, but we only do it when the node was not created from traversal.
+                    // TODO: Unfortunately, this is the case for SelectedNodes :(
+                    .FirstOrDefault(node => node.Children.Any(child => child.ItemId == this.ItemId));
+
+                // This should never happen.
+                if (parentNode == null)
+                    return null;
+
+                return new VsHierarchyItem(
+                    parentNode.VsHierarchy,
+                    parentNode.ItemId);
+            }
         }
 
         private static T GetProperty<T>(IVsHierarchy hierarchy, __VSHPROPID propId, uint itemid)
@@ -58,22 +79,6 @@ namespace Clide.VisualStudio
                 return default(T);
             }
             return (T)value;
-        }
-
-        private static T GetProperty<T>(IVsHierarchy hierarchy, __VSHPROPID propId)
-        {
-            return GetProperty<T>(hierarchy, propId, GetItemId(hierarchy));
-        }
-
-        private static uint GetItemId(object pvar)
-        {
-            if (pvar == null) return VSConstants.VSITEMID_NIL;
-            if (pvar is int) return (uint)(int)pvar;
-            if (pvar is uint) return (uint)pvar;
-            if (pvar is short) return (uint)(short)pvar;
-            if (pvar is ushort) return (uint)(ushort)pvar;
-            if (pvar is long) return (uint)(long)pvar;
-            return VSConstants.VSITEMID_NIL;
         }
     }
 }

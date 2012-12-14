@@ -129,6 +129,7 @@
     <Compile Include="Solution\Implementation\ConfigProjectProperties.cs" />
     <Compile Include="Solution\Implementation\ItemProperties.cs" />
     <Compile Include="Solution\Implementation\GlobalProjectProperties.cs" />
+    <Compile Include="Solution\ISolutionExplorerNode.cs" />
     <Compile Include="VisualStudio\VsHierarchyExtensions.cs" />
     <Compile Include="Hosting\Host.cs" />
     <Compile Include="Hosting\HostFactory.cs" />
@@ -252,7 +253,9 @@
     <Compile Include="UI\InputBox.xaml.cs">
       <DependentUpon>InputBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VisualStudio\VsHierarchyItem.cs" />
     <Compile Include="VisualStudio\VsHierarchyProperties.cs" />
+    <Compile Include="VisualStudio\VsMonitorSelectionExtensions.cs" />
     <Compile Include="VisualStudio\VsServiceProviderExtensions.cs" />
     <Compile Include="VisualStudio\VsToolWindow.cs" />
   </ItemGroup>

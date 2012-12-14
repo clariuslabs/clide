@@ -36,6 +36,8 @@ namespace Clide.Solution
 			IAdapterService adapter)
             : base(SolutionNodeKind.Project, hierarchyNode, parentNode, nodeFactory, adapter)
 		{
+            Guard.NotNull(() => parentNode, parentNode);
+
 		    this.Project = new Lazy<EnvDTE.Project>(() => (EnvDTE.Project)hierarchyNode.VsHierarchy.Properties(hierarchyNode.ItemId).ExtenderObject);
             this.properties = new Lazy<GlobalProjectProperties>(() => new GlobalProjectProperties(this));
 		}
@@ -49,7 +51,7 @@ namespace Clide.Solution
 			this.Project.Value.ProjectItems.AddFolder(name);
 
 			var folder = this.HierarchyNode.Children
-				.Single(child => child.VsHierarchy.Properties().DisplayName == name);
+				.Single(child => child.VsHierarchy.Properties(child.ItemId).DisplayName == name);
 
 			return this.CreateNode(folder) as IFolderNode;
 		}

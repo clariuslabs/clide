@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clide", "Src\Clide\Clide.csproj", "{EAF59C6D-A973-48E6-A90A-5E894ECEC3F6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "Src\IntegrationTests\IntegrationTests.csproj", "{DA6BC069-580E-4248-9E38-F20BDE688271}"
@@ -16,11 +16,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Common\ClariusLabs.tasks = Common\ClariusLabs.tasks
 		Src\Clide.props = Src\Clide.props
 		Src\Clide.targets = Src\Clide.targets
-		Src\Local.testsettings = Src\Local.testsettings
+		Clide.vsmdi = Clide.vsmdi
+		Src\Local.2010.testsettings = Src\Local.2010.testsettings
+		Src\Local.2012.testsettings = Src\Local.2012.testsettings
 		Common\nuspec.xsd = Common\nuspec.xsd
 		README.md = README.md
 		ReleaseNotes.md = ReleaseNotes.md
-		Src\TraceAndTestImpact.testsettings = Src\TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "Src\UnitTests\UnitTests.csproj", "{3B640876-2510-4EED-8157-1ACB417C758D}"
@@ -35,6 +36,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7E8606
 	EndProjectSection
 EndProject
 Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Clide.vsmdi
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
 		Release|x86 = Release|x86

@@ -33,6 +33,8 @@ namespace Clide.Solution
 	{
 		private Lazy<ISolutionNode> solution;
         private VsToolWindow toolWindow;
+        private IVsMonitorSelection selection;
+        private Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory;
 
 		[ImportingConstructor]
 		public SolutionExplorer(
@@ -44,16 +46,16 @@ namespace Clide.Solution
             Guard.NotNull(() => nodeFactories, nodeFactories);
 
             this.toolWindow = serviceProvider.ToolWindow(StandardToolWindows.ProjectExplorer);
-            this.solution = new Lazy<ISolutionNode>(() =>
-            {
-                var factory = new FallbackNodeFactory<IVsSolutionHierarchyNode>(
-					new AggregateNodeFactory<IVsSolutionHierarchyNode>(nodeFactories.Where(n => !n.Metadata.IsFallback).Select(f => f.Value)),
-					new AggregateNodeFactory<IVsSolutionHierarchyNode>(nodeFactories.Where(n => n.Metadata.IsFallback).Select(f => f.Value)));
+            this.selection = serviceProvider.GetService<SVsShellMonitorSelection, IVsMonitorSelection>();
+            this.nodeFactory = new Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>>(() =>
+                new FallbackNodeFactory<IVsSolutionHierarchyNode>(
+                    new AggregateNodeFactory<IVsSolutionHierarchyNode>(nodeFactories.Where(n => !n.Metadata.IsFallback).Select(f => f.Value)),
+                    new AggregateNodeFactory<IVsSolutionHierarchyNode>(nodeFactories.Where(n => n.Metadata.IsFallback).Select(f => f.Value))));
 
-                return factory.CreateNode(null, 
-                    new VsSolutionHierarchyNode(serviceProvider.GetService<IVsSolution>() as IVsHierarchy))
-                    .As<ISolutionNode>();
-            });
+            this.solution = new Lazy<ISolutionNode>(() =>
+                this.nodeFactory.Value.CreateNode(null, 
+                    new VsSolutionHierarchyNode(serviceProvider.GetService<IVsSolution>() as IVsHierarchy, VSConstants.VSITEMID_ROOT))
+                    .As<ISolutionNode>());
 		}
 
 		public ISolutionNode Solution { get { return this.solution.Value; } }
@@ -72,5 +74,24 @@ namespace Clide.Solution
 		{
             this.toolWindow.Close();
 		}
-	}
+
+        public IEnumerable<ISolutionExplorerNode> SelectedNodes
+        {
+            get 
+            {
+                Func<IVsSolutionHierarchyNode, Lazy<ITreeNode>> getParent = null;
+                Func<IVsSolutionHierarchyNode, ITreeNode> getNode = null;
+
+                getNode = hierarchy => hierarchy == null ? null :
+                    this.nodeFactory.Value.CreateNode(getParent(hierarchy), hierarchy);
+
+                getParent = hierarchy => hierarchy.Parent == null ? null :
+                    new Lazy<ITreeNode>(() => this.nodeFactory.Value.CreateNode(getParent(hierarchy.Parent), hierarchy.Parent));
+
+                return this.selection.GetSelection()
+                    .Select(sel => getNode(new VsSolutionHierarchyNode(sel.Item1, sel.Item2)))
+                    .OfType<ISolutionExplorerNode>();
+            }
+        }
+    }
 }

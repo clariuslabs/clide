@@ -19,11 +19,10 @@ namespace Clide.Solution
 {
     using Clide.Events;
     
-    public interface ISolutionNode : ITreeNode, ISolutionEvents
+    public interface ISolutionNode : ISolutionExplorerNode, ISolutionEvents
 	{
         dynamic Data { get; }
         bool IsOpen { get; }
-        SolutionNodeKind Kind { get; }
 
         void Close(bool saveFirst = true);
         void Create(string solutionFile);

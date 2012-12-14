@@ -40,8 +40,10 @@ namespace Clide.Solution
 
 		public bool Supports(IVsSolutionHierarchyNode hierarchy)
 		{
-            var project = hierarchy.VsHierarchy.Properties().ExtenderObject as EnvDTE.Project;
-            return project != null && project.Object is VSLangProj.VSProject;
+            // \o/: heuristics, no extender object and "References" display name :S
+            var extObj = hierarchy.VsHierarchy.Properties(hierarchy.ItemId).ExtenderObject;
+
+            return extObj == null && hierarchy.DisplayName == "References";
 		}
 
 		public ITreeNode CreateNode(Lazy<ITreeNode> parent, IVsSolutionHierarchyNode hierarchy)

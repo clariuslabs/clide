@@ -19,7 +19,7 @@
 	public class ShellPackage : Package, IShellPackage
 	{
         private IHost<ShellPackage, IShellPackage> host;
-
+        
         public ShellPackage()
         {
             this.host = HostFactory.CreateHost<ShellPackage, IShellPackage>(ServiceProvider.GlobalProvider, "Clide.IntegrationTests");
@@ -29,14 +29,7 @@
         {
             base.Initialize();
             this.host.Initialize(this);
-
-            //this.MessageBox.ShowInformation("Clide Integration Package Loaded!");
-
-            //((CompositionContainer)host.Composition).GetExportedValue<IDevEnv>();
         }
-
-        //[Import]
-        //public IMessageBoxService MessageBox { get; set; }
 
         [Import]
         public IDevEnv DevEnv { get; set; }

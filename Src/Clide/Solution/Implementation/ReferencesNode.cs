@@ -22,6 +22,7 @@ namespace Clide.Solution
     using VSLangProj;
     using Clide.VisualStudio;
     using EnvDTE;
+    using Microsoft.VisualStudio;
 
     internal class ReferencesNode : SolutionTreeNode, IReferencesNode
 	{
@@ -32,8 +33,10 @@ namespace Clide.Solution
 			IAdapterService adapter)
 			: base(SolutionNodeKind.ReferencesFolder, hierarchyNode, parentNode, nodeFactory, adapter)
 		{
-            this.References = new Lazy<References>(() => 
-                ((VSProject)((Project)hierarchyNode.VsHierarchy.Properties().ExtenderObject).Object).References);
+            Guard.NotNull(() => parentNode, parentNode);
+
+            this.References = new Lazy<References>(() =>
+                ((VSProject)((Project)hierarchyNode.VsHierarchy.Properties(VSConstants.VSITEMID_ROOT).ExtenderObject).Object).References);
         }
 
         public Lazy<References> References { get; private set; }

@@ -22,6 +22,7 @@ namespace Clide.Solution
     using System.Linq;
     using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Microsoft.VisualStudio;
 
     public class VsSolutionHierarchyNodeSpec
 	{
@@ -45,7 +46,7 @@ namespace Clide.Solution
 				var solution = ServiceProvider.GetService<IVsSolution>();
 				var hierarchy = solution as IVsHierarchy;
 
-				var node = new VsSolutionHierarchyNode(hierarchy);
+                var node = new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT);
 
 				Assert.Null(node.Parent);
 			}
@@ -57,10 +58,11 @@ namespace Clide.Solution
 				var solution = ServiceProvider.GetService<IVsSolution>();
 				var hierarchy = solution as IVsHierarchy;
 
-				var solutionFolder1 = new VsSolutionHierarchyNode(hierarchy).Children.FirstOrDefault(n => n.VsHierarchy.Properties().DisplayName == "SolutionFolder1");
+                var solutionFolder1 = new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT).Children
+                    .FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "SolutionFolder1");
 
 				Assert.NotNull(solutionFolder1.Parent);
-				Assert.True(solutionFolder1.Parent.VsHierarchy.Properties().DisplayName == "SampleSolution");
+				Assert.Equal("SampleSolution", solutionFolder1.Parent.VsHierarchy.Properties(solutionFolder1.ItemId).DisplayName);
 			}
 
 			[HostType("VS IDE")]
@@ -70,11 +72,13 @@ namespace Clide.Solution
 				var solution = ServiceProvider.GetService<IVsSolution>();
 				var hierarchy = solution as IVsHierarchy;
 
-				var solutionFolder1 = new VsSolutionHierarchyNode(hierarchy).Children.FirstOrDefault(n => n.VsHierarchy.Properties().DisplayName == "SolutionFolder1");
-				var solutionFolder2 = solutionFolder1.Children.FirstOrDefault(n => n.VsHierarchy.Properties().DisplayName == "SolutionFolder2");
+                var solutionFolder1 = new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT).Children
+                    .FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "SolutionFolder1");
+				var solutionFolder2 = solutionFolder1.Children
+                    .FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "SolutionFolder2");
 
 				Assert.NotNull(solutionFolder2.Parent);
-				Assert.True(solutionFolder2.Parent.VsHierarchy.Properties().DisplayName == "SolutionFolder1");
+				Assert.True(solutionFolder2.Parent.VsHierarchy.Properties(solutionFolder2.ItemId).DisplayName == "SolutionFolder1");
 			}
 
 			[HostType("VS IDE")]
@@ -84,8 +88,10 @@ namespace Clide.Solution
 				var solution = ServiceProvider.GetService<IVsSolution>();
 				var hierarchy = solution as IVsHierarchy;
 
-				var solutionFolder1 = new VsSolutionHierarchyNode(hierarchy).Children.FirstOrDefault(n => n.VsHierarchy.Properties().DisplayName == "SolutionFolder1");
-				var solutionFolder2 = solutionFolder1.Children.FirstOrDefault(n => n.VsHierarchy.Properties().DisplayName == "SolutionFolder2");
+                var solutionFolder1 = new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT).Children
+                    .FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "SolutionFolder1");
+				var solutionFolder2 = solutionFolder1.Children
+                    .FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "SolutionFolder2");
 
 				Assert.Null(solutionFolder2.Parent.Parent.Parent);
 			}

@@ -19,7 +19,7 @@
     </Identifier>
     <References>
         <Reference Id="Microsoft.VisualStudio.MPF"
-                   MinVersion="10.0">
+                   MinVersion="11.0">
             <Name>Visual Studio MPF</Name>
         </Reference>
     </References>

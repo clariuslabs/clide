@@ -23,85 +23,74 @@ namespace Clide.Solution
     using Microsoft.VisualStudio.Shell.Interop;
 
     internal class VsSolutionHierarchyNodeIterator : IEnumerable<IVsSolutionHierarchyNode>
-	{
-		private IVsHierarchy hierarchy;
-		private uint itemId;
+    {
+        private VsSolutionHierarchyNode parent;
 
-		public VsSolutionHierarchyNodeIterator(IVsHierarchy hierarchy, uint itemId = 0)
-		{
-			Guard.NotNull(() => hierarchy, hierarchy);
+        public VsSolutionHierarchyNodeIterator(VsSolutionHierarchyNode parent)
+        {
+            this.parent = parent;
+        }
 
-			this.hierarchy = hierarchy;
+        public bool IsSolution
+        {
+            get { return this.parent.VsHierarchy is IVsSolution; }
+        }
 
-			if (itemId != 0)
-			{
-				this.itemId = itemId;
-			}
-		}
+        public IEnumerator<IVsSolutionHierarchyNode> GetEnumerator()
+        {
+            foreach (var node in Enumerate(this.parent, this.IsSolution))
+            {
+                yield return node;
+            }
+        }
 
-		public bool IsSolution
-		{
-			get
-			{
-				return this.hierarchy as IVsSolution != null;
-			}
-		}
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
 
-		public IEnumerator<IVsSolutionHierarchyNode> GetEnumerator()
-		{
-			foreach (var node in Enumerate(this.hierarchy, this.itemId, this.IsSolution))
-			{
-				yield return node;
-			}
-		}
+        /// <summary>
+        /// Performs the actual enumeration and factory invocation.
+        /// </summary>
+        private static IEnumerable<IVsSolutionHierarchyNode> Enumerate(VsSolutionHierarchyNode parent, bool isSolution)
+        {
+            int hr;
+            object pVar;
 
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return GetEnumerator();
-		}
+            hr = parent.VsHierarchy.GetProperty(parent.ItemId, (int)(isSolution ? __VSHPROPID.VSHPROPID_FirstVisibleChild : __VSHPROPID.VSHPROPID_FirstChild), out pVar);
+            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(hr);
 
-		/// <summary>
-		/// Performs the actual enumeration and factory invocation.
-		/// </summary>
-		private static IEnumerable<IVsSolutionHierarchyNode> Enumerate(IVsHierarchy hierarchy, uint itemid, bool isSolution)
-		{
-			int hr;
-			object pVar;
+            if (VSConstants.S_OK == hr)
+            {
+                uint siblingId = GetItemId(pVar);
+                while (siblingId != VSConstants.VSITEMID_NIL)
+                {
+                    yield return new VsSolutionHierarchyNode(parent.VsHierarchy, siblingId, new System.Lazy<VsSolutionHierarchyNode>(() => parent));
 
-			hr = hierarchy.GetProperty(itemid, (int)(isSolution ? __VSHPROPID.VSHPROPID_FirstVisibleChild : __VSHPROPID.VSHPROPID_FirstChild), out pVar);
-			Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(hr);
+                    hr = parent.VsHierarchy.GetProperty(siblingId, (int)(isSolution ? __VSHPROPID.VSHPROPID_NextVisibleSibling : __VSHPROPID.VSHPROPID_NextSibling), out pVar);
 
-			if (VSConstants.S_OK == hr)
-			{
-				uint siblingId = GetItemId(pVar);
-				while (siblingId != VSConstants.VSITEMID_NIL)
-				{
-					yield return new VsSolutionHierarchyNode(hierarchy, siblingId);
+                    if (VSConstants.S_OK == hr)
+                    {
+                        siblingId = GetItemId(pVar);
+                    }
+                    else
+                    {
+                        Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(hr);
+                        break;
+                    }
+                }
+            }
+        }
 
-					hr = hierarchy.GetProperty(siblingId, (int)(isSolution ? __VSHPROPID.VSHPROPID_NextVisibleSibling : __VSHPROPID.VSHPROPID_NextSibling), out pVar);
-
-					if (VSConstants.S_OK == hr)
-					{
-						siblingId = GetItemId(pVar);
-					}
-					else
-					{
-						Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(hr);
-						break;
-					}
-				}
-			}
-		}
-
-		private static uint GetItemId(object pvar)
-		{
-			if (pvar == null) return VSConstants.VSITEMID_NIL;
-			if (pvar is int) return (uint)(int)pvar;
-			if (pvar is uint) return (uint)pvar;
-			if (pvar is short) return (uint)(short)pvar;
-			if (pvar is ushort) return (uint)(ushort)pvar;
-			if (pvar is long) return (uint)(long)pvar;
-			return VSConstants.VSITEMID_NIL;
-		}
-	}
+        private static uint GetItemId(object pvar)
+        {
+            if (pvar == null) return VSConstants.VSITEMID_NIL;
+            if (pvar is int) return (uint)(int)pvar;
+            if (pvar is uint) return (uint)pvar;
+            if (pvar is short) return (uint)(short)pvar;
+            if (pvar is ushort) return (uint)(ushort)pvar;
+            if (pvar is long) return (uint)(long)pvar;
+            return VSConstants.VSITEMID_NIL;
+        }
+    }
 }

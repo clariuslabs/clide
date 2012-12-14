@@ -31,6 +31,8 @@ namespace Clide.Solution
 			IAdapterService adapter)
             : base(SolutionNodeKind.Reference, hierarchyNode, parentNode, nodeFactory, adapter)
 		{
+            Guard.NotNull(() => parentNode, parentNode);
+
 			this.Reference = new Lazy<VSLangProj.Reference>(
 				() => (VSLangProj.Reference)hierarchyNode.VsHierarchy.Properties(hierarchyNode.ItemId).ExtenderObject);
 		}

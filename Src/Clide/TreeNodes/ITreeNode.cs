@@ -23,6 +23,7 @@ namespace Clide
 	{
 		string DisplayName { get; }
 
+        bool IsHidden { get; }
 		bool IsVisible { get; }
 		bool IsSelected { get; }
 		bool IsExpanded { get; }
@@ -33,7 +34,7 @@ namespace Clide
 		T As<T>() where T : class;
 
 		void Collapse();
-		void Expand();
+		void Expand(bool recursively = false);
 		void Select(bool allowMultiple = false);
 	}
 }

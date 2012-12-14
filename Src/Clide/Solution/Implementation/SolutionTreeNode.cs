@@ -27,9 +27,11 @@ namespace Clide.Solution
     using System.Text;
     using System.Diagnostics;
     using Microsoft.VisualStudio.Shell;
+    using EnvDTE;
+    using System.IO;
 
     [DebuggerDisplay("{debuggerDisplay,nq}")]
-    internal class SolutionTreeNode : ITreeNode
+    internal class SolutionTreeNode : ISolutionExplorerNode
     {
         private string debuggerDisplay;
         private IVsSolutionHierarchyNode hierarchyNode;
@@ -37,6 +39,7 @@ namespace Clide.Solution
         private IAdapterService adapter;
         private Lazy<IVsUIHierarchyWindow> window;
         private Lazy<ITreeNode> parent;
+        private Lazy<bool> isHidden;
 
         public SolutionTreeNode(
             SolutionNodeKind nodeKind,
@@ -45,6 +48,10 @@ namespace Clide.Solution
             ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
             IAdapterService adapter)
         {
+            Guard.NotNull(() => hierarchyNode, hierarchyNode);
+            Guard.NotNull(() => nodeFactory, nodeFactory);
+            Guard.NotNull(() => adapter, adapter);
+
             this.hierarchyNode = hierarchyNode;
             this.factory = nodeFactory;
             this.adapter = adapter;
@@ -53,7 +60,16 @@ namespace Clide.Solution
             this.DisplayName = this.hierarchyNode.VsHierarchy.Properties(hierarchyNode.ItemId).DisplayName;
             this.Kind = nodeKind;
 
-            if (Debugger.IsAttached)
+            Func<bool> getHiddenProperty = () => GetProperty<bool?>(
+                this.hierarchyNode.VsHierarchy,
+                __VSHPROPID.VSHPROPID_IsHiddenItem,
+                this.hierarchyNode.ItemId).GetValueOrDefault();
+
+            this.isHidden = parentNode != null ?
+                new Lazy<bool>(() => getHiddenProperty() || parentNode.Value.IsHidden) :
+                new Lazy<bool>(() => getHiddenProperty());
+
+            if (System.Diagnostics.Debugger.IsAttached)
                 this.debuggerDisplay = BuildDebuggerDisplay();
         }
 
@@ -63,15 +79,19 @@ namespace Clide.Solution
 
         public string DisplayName { get; private set; }
 
+        public virtual bool IsHidden
+        {
+            get { return this.isHidden.Value; }
+        }
+
         public virtual bool IsVisible
         {
             get
             {
-                if (this.Parent == null)
-                    return true;
-
-                return this.Parent == null ||
-                    (this.Parent.IsVisible && this.Parent.IsExpanded);
+                // If node is not null
+                return !this.IsHidden && 
+                    // And either parent is null or it's visible and expanded
+                    (this.Parent == null || (this.Parent.IsVisible && this.Parent.IsExpanded));
             }
         }
 
@@ -138,39 +158,77 @@ namespace Clide.Solution
                 this.hierarchyNode.VsHierarchy as IVsUIHierarchy, this.hierarchyNode.ItemId, EXPANDFLAGS.EXPF_CollapseFolder));
         }
 
-        public virtual void Expand()
+        public virtual void Expand(bool recursively = false)
         {
             ErrorHandler.ThrowOnFailure(this.window.Value.ExpandItem(
                 this.hierarchyNode.VsHierarchy as IVsUIHierarchy, this.hierarchyNode.ItemId, EXPANDFLAGS.EXPF_ExpandParentsToShowItem));
 
-            ErrorHandler.ThrowOnFailure(this.window.Value.ExpandItem(
-                this.hierarchyNode.VsHierarchy as IVsUIHierarchy, this.hierarchyNode.ItemId, EXPANDFLAGS.EXPF_ExpandFolder));
-        }
-
-        public virtual void Select(bool allowMultiple = false)
-        {
-            var flags = allowMultiple ? EXPANDFLAGS.EXPF_ExtendSelectItem : EXPANDFLAGS.EXPF_SelectItem;
+            var flags = EXPANDFLAGS.EXPF_ExpandFolder;
+            if (recursively)
+                flags |= EXPANDFLAGS.EXPF_ExpandFolderRecursively;
 
             ErrorHandler.ThrowOnFailure(this.window.Value.ExpandItem(
                 this.hierarchyNode.VsHierarchy as IVsUIHierarchy, this.hierarchyNode.ItemId, flags));
         }
 
+        public virtual void Select(bool allowMultiple = false)
+        {
+            var flags = allowMultiple ? EXPANDFLAGS.EXPF_AddSelectItem : EXPANDFLAGS.EXPF_SelectItem;
+
+            var hr = this.window.Value.ExpandItem(
+                this.hierarchyNode.VsHierarchy as IVsUIHierarchy, this.hierarchyNode.ItemId, flags);
+
+            //ErrorHandler.ThrowOnFailure(hr);
+
+            if (!ErrorHandler.Succeeded(hr))
+            {
+                // Workaround for virtual nodes.
+                var dte = this.hierarchyNode.ServiceProvider.GetService<DTE>();
+                dynamic window = dte.Windows.Item(EnvDTE.Constants.vsWindowKindSolutionExplorer).Object;
+                var selectionType = allowMultiple ? vsUISelectionType.vsUISelectionTypeToggle : vsUISelectionType.vsUISelectionTypeSelect;
+
+                var path = this.DisplayName;
+                var current = this.Parent;
+                while (current != null)
+                {
+                    path = Path.Combine(current.DisplayName, path);
+                    current = current.Parent;
+                }
+
+                var item = window.GetItem(path);
+                if (item != null)
+                    item.Select(selectionType);
+            }
+        }
+
+        private static T GetProperty<T>(IVsHierarchy hierarchy, __VSHPROPID propId, uint itemid)
+        {
+            object value = null;
+            int hr = hierarchy.GetProperty(itemid, (int)propId, out value);
+            if (hr != VSConstants.S_OK || value == null)
+            {
+                return default(T);
+            }
+            return (T)value;
+        }
+
         private IVsUIHierarchyWindow GetWindow(IServiceProvider serviceProvider)
         {
+            var uiShell = serviceProvider.GetService<SVsUIShell, IVsUIShell>();
+            object pvar = null;
             IVsWindowFrame frame;
-            object obj2;
-            IVsUIShell service = serviceProvider.GetService(typeof(SVsUIShell)) as IVsUIShell;
-            Guid rguidPersistenceSlot = new Guid("{3AE79031-E1BC-11D0-8F78-00A0C9110057}");
-            ErrorHandler.ThrowOnFailure(service.FindToolWindow(0x80000, ref rguidPersistenceSlot, out frame));
-            ErrorHandler.ThrowOnFailure(frame.GetProperty(-3001, out obj2));
-            return obj2 as IVsUIHierarchyWindow;
+            var persistenceSlot = new Guid(EnvDTE.Constants.vsWindowKindSolutionExplorer);
+            if (ErrorHandler.Succeeded(uiShell.FindToolWindow((uint)__VSFINDTOOLWIN.FTW_fForceCreate, ref persistenceSlot, out frame)))
+                ErrorHandler.ThrowOnFailure(frame.GetProperty((int)__VSFPROPID.VSFPROPID_DocView, out pvar));
+
+            return (IVsUIHierarchyWindow)pvar;
         }
 
         private string BuildDebuggerDisplay()
         {
             return ThreadHelper.Generic.Invoke<string>(() =>
             {
-                var display = this.DisplayName ;
+                var display = this.DisplayName;
                 var current = this.parent.Value;
                 while (current != null)
                 {
@@ -193,7 +251,7 @@ namespace Clide.Solution
 
                     if (conversions.Count > 0)
                     {
-                        display += ", As<T> = " + string.Join("|", conversions);
+                        display += ", As<T> = " + string.Join(" | ", conversions);
                     }
                 }
 

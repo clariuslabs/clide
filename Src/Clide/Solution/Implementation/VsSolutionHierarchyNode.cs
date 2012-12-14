@@ -36,67 +36,72 @@ namespace Clide.Solution
 	{
 		private Lazy<object> extensibilityObject;
 		private Lazy<IServiceProvider> serviceProvider;
+        private Lazy<VsSolutionHierarchyNode> parent;
 
-		internal VsSolutionHierarchyNode(IVsHierarchy hierarchy)
-			: this(hierarchy, hierarchy.Properties().ItemId)
+        internal VsSolutionHierarchyNode(IVsHierarchy hierarchy, uint itemId)
+            : this(hierarchy, itemId, null)
 		{
 		}
 
-		internal VsSolutionHierarchyNode(IVsHierarchy hierarchy, uint itemId)
-		{
-			Guard.NotNull(() => hierarchy, hierarchy);
+        internal VsSolutionHierarchyNode(IVsHierarchy hierarchy, uint itemId, Lazy<VsSolutionHierarchyNode> parent)
+        {
+            Guard.NotNull(() => hierarchy, hierarchy);
 
-			this.VsHierarchy = hierarchy;
-			this.ItemId = itemId;
+            this.VsHierarchy = hierarchy;
+            this.ItemId = itemId;
 
-			IntPtr nestedHierarchyObj;
-			uint nestedItemId;
-			Guid hierGuid = typeof(IVsHierarchy).GUID;
+            IntPtr nestedHierarchyObj;
+            uint nestedItemId;
+            Guid hierGuid = typeof(IVsHierarchy).GUID;
 
-			int hr = hierarchy.GetNestedHierarchy(this.ItemId, ref hierGuid, out nestedHierarchyObj, out nestedItemId);
-			if (VSConstants.S_OK == hr && IntPtr.Zero != nestedHierarchyObj)
-			{
-				IVsHierarchy nestedHierarchy = Marshal.GetObjectForIUnknown(nestedHierarchyObj) as IVsHierarchy;
-				Marshal.Release(nestedHierarchyObj);
-				if (nestedHierarchy != null)
-				{
-					this.VsHierarchy = nestedHierarchy;
-					this.ItemId = nestedItemId;
-				}
-			}
+            int hr = hierarchy.GetNestedHierarchy(this.ItemId, ref hierGuid, out nestedHierarchyObj, out nestedItemId);
+            if (hr == VSConstants.S_OK && nestedHierarchyObj != IntPtr.Zero)
+            {
+                IVsHierarchy nestedHierarchy = Marshal.GetObjectForIUnknown(nestedHierarchyObj) as IVsHierarchy;
+                Marshal.Release(nestedHierarchyObj);
+                if (nestedHierarchy != null)
+                {
+                    this.VsHierarchy = nestedHierarchy;
+                    this.ItemId = nestedItemId;
+                }
+            }
 
-			this.extensibilityObject = new Lazy<object>(() => this.VsHierarchy.Properties(this.ItemId).ExtenderObject);
+            this.extensibilityObject = new Lazy<object>(() => this.VsHierarchy.Properties(this.ItemId).ExtenderObject);
             this.serviceProvider = new Lazy<IServiceProvider>(() =>
             {
                 Microsoft.VisualStudio.OLE.Interop.IServiceProvider oleSp;
                 hierarchy.GetSite(out oleSp);
-                return oleSp != null ? 
-                    new ServiceProvider(oleSp) : 
+                return oleSp != null ?
+                    new ServiceProvider(oleSp) :
                     Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider;
             });
 
-			this.DisplayName = this.VsHierarchy.Properties(this.ItemId).DisplayName;
-		}
+            this.DisplayName = this.VsHierarchy.Properties(this.ItemId).DisplayName;
+            this.parent = parent ?? new Lazy<VsSolutionHierarchyNode>(() =>
+            {
+                if (this.VsHierarchy is IVsSolution)
+                    return null;
+
+                // Implement this property so that it iterates each and every node finding 
+                // the parent.
+				var parentItem = this.VsHierarchy.Properties(this.ItemId).Parent;
+				if (parentItem == null)
+					return null;
+
+				return new VsSolutionHierarchyNode(parentItem.Hierarchy, parentItem.ItemId);
+            });
+        }
 
 		public string DisplayName { get; private set; }
 
 		public IVsSolutionHierarchyNode Parent
 		{
-			get
-			{
-				var parentHierarchy = this.VsHierarchy.Properties().Parent;
-				if (parentHierarchy == null)
-				{
-					return null;
-				}
-
-				return new VsSolutionHierarchyNode(parentHierarchy);
-			}
+			get { return this.parent.Value; }
 		}
 
 		public IEnumerable<IVsSolutionHierarchyNode> Children
 		{
-			get { return new VsSolutionHierarchyNodeIterator(this.VsHierarchy, this.ItemId); }
+			get { return new VsSolutionHierarchyNodeIterator(this); }
 		}
 
 		public IVsHierarchy VsHierarchy { get; private set; }
@@ -111,5 +116,10 @@ namespace Clide.Solution
 		{
 			get { return this.serviceProvider.Value; }
 		}
+
+        public override string ToString()
+        {
+            return this.DisplayName;
+        }
 	}
 }

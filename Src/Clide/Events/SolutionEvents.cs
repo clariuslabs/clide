@@ -89,29 +89,6 @@ namespace Clide.Events
 			}
 		}
 
-		private ITreeNode GetParentNode(IVsHierarchy hierarchy)
-		{
-			if (hierarchy is IVsSolution)
-				return null;
-
-			object parent;
-			ErrorHandler.ThrowOnFailure(
-				hierarchy.GetProperty(VSConstants.VSITEMID_ROOT, (int)__VSHPROPID.VSHPROPID_Parent, out parent));
-
-			var parentHierarchy = parent as IVsHierarchy;
-			var parentNode = new VsSolutionHierarchyNode(parentHierarchy);
-
-			if (this.nodeFactory.Value.Supports(parentNode))
-				return GetNode(parentHierarchy, parentNode);
-
-			return null;
-		}
-
-		private ITreeNode GetNode(IVsHierarchy hierarchy, IVsSolutionHierarchyNode node)
-		{
-			return this.nodeFactory.Value.CreateNode(new Lazy<ITreeNode>(() => GetParentNode(hierarchy)), node);
-		}
-
 		int IVsSolutionEvents.OnBeforeCloseSolution(object pUnkReserved)
 		{
 			this.SolutionClosing(this, EventArgs.Empty);
@@ -139,21 +116,17 @@ namespace Clide.Events
 			if (this.ProjectOpened == null)
 				return VSConstants.S_OK;
 
-			object extObject;
-			ErrorHandler.ThrowOnFailure(
-				pHierarchy.GetProperty(VSConstants.VSITEMID_ROOT, (int)__VSHPROPID.VSHPROPID_ExtObject, out extObject));
-
-			var project = extObject as Project;
+            var project = GetProject(pHierarchy);
 
 			// This event is also fired when a solution folder is added/loaded
 			if (project != null && !(project.Object is SolutionFolder))
 			{
-				var node = new VsSolutionHierarchyNode(pHierarchy);
+                var node = new VsSolutionHierarchyNode(pHierarchy, VSConstants.VSITEMID_ROOT);
 				if (this.nodeFactory.Value.Supports(node))
 				{
 					this.ProjectOpened(this,
 						new ProjectEventArgs(new Lazy<IProjectNode>(() =>
-							GetNode(pHierarchy, node).As<IProjectNode>())));
+							GetNode(node).As<IProjectNode>())));
 				}
 			}
 
@@ -166,21 +139,17 @@ namespace Clide.Events
 			if (this.ProjectClosing == null)
 				return VSConstants.S_OK;
 
-			object extObject;
-			ErrorHandler.ThrowOnFailure(
-				pHierarchy.GetProperty(VSConstants.VSITEMID_ROOT, (int)__VSHPROPID.VSHPROPID_ExtObject, out extObject));
-
-			var project = extObject as Project;
+            var project = GetProject(pHierarchy);
 
 			//This event is also fired when a solution folder is added/loaded
 			if (project != null && !(project.Object is SolutionFolder))
 			{
-				var node = new VsSolutionHierarchyNode(pHierarchy);
+                var node = new VsSolutionHierarchyNode(pHierarchy, VSConstants.VSITEMID_ROOT);
 				if (this.nodeFactory.Value.Supports(node))
 				{
 					this.ProjectClosing(this,
 						new ProjectEventArgs(new Lazy<IProjectNode>(() =>
-							GetNode(pHierarchy, node).As<IProjectNode>())));
+							GetNode(node).As<IProjectNode>())));
 				}
 			}
 
@@ -211,5 +180,27 @@ namespace Clide.Events
 		{
 			return VSConstants.S_OK;
 		}
+
+        private static Project GetProject(IVsHierarchy pHierarchy)
+        {
+            object extObject;
+            ErrorHandler.ThrowOnFailure(
+                pHierarchy.GetProperty(VSConstants.VSITEMID_ROOT, (int)__VSHPROPID.VSHPROPID_ExtObject, out extObject));
+
+            var project = extObject as Project;
+            return project;
+        }
+
+        private Lazy<ITreeNode> GetParent(IVsSolutionHierarchyNode hierarchy)
+        {
+            return hierarchy.Parent == null ? null :
+               new Lazy<ITreeNode>(() => this.nodeFactory.Value.CreateNode(GetParent(hierarchy.Parent), hierarchy.Parent));
+        }
+
+        private ITreeNode GetNode(IVsSolutionHierarchyNode hierarchy)
+        {
+            return hierarchy == null ? null :
+                this.nodeFactory.Value.CreateNode(GetParent(hierarchy), hierarchy);
+        }
 	}
 }

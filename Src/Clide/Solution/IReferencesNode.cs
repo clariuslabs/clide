@@ -17,7 +17,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-	public interface IReferencesNode : ITreeNode
+    public interface IReferencesNode : ISolutionExplorerNode
 	{
 	}
 }

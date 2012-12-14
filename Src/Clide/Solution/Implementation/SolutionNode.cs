@@ -37,7 +37,7 @@ namespace Clide.Solution
 			ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
 			IAdapterService adapter,
 			ISolutionEvents solutionEvents)
-            : base(SolutionNodeKind.Solution, hierarchyNode, new Lazy<ITreeNode>(() => null), nodeFactory, adapter)
+            : base(SolutionNodeKind.Solution, hierarchyNode, null, nodeFactory, adapter)
 		{
 			this.Solution = new Lazy<EnvDTE.Solution>(() => hierarchyNode.ServiceProvider.GetService<EnvDTE.DTE>().Solution);
 			this.events = solutionEvents;

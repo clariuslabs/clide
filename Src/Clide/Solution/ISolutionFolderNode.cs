@@ -17,7 +17,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-	public interface ISolutionFolderNode : ITreeNode
+    public interface ISolutionFolderNode : ISolutionExplorerNode
 	{
 		ISolutionFolderNode CreateSolutionFolder(string name);
 	}

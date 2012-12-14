@@ -17,6 +17,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Exposes the solution explorer toolwindow.
     /// </summary>
@@ -27,5 +29,10 @@ namespace Clide.Solution
         /// empty one if no solution is open.
         /// </summary>
 		ISolutionNode Solution { get; }
+
+        /// <summary>
+        /// Gets the currently selected nodes in the solution explorer tree.
+        /// </summary>
+        IEnumerable<ISolutionExplorerNode> SelectedNodes { get; }
 	}
 }

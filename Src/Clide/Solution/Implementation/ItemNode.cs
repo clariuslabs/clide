@@ -34,6 +34,8 @@ namespace Clide.Solution
             IAdapterService adapter)
             : base(SolutionNodeKind.Item, hierarchyNode, parentNode, nodeFactory, adapter)
         {
+            Guard.NotNull(() => parentNode, parentNode);
+
             this.Item = new Lazy<EnvDTE.ProjectItem>(
                 () => (EnvDTE.ProjectItem)hierarchyNode.VsHierarchy.Properties(hierarchyNode.ItemId).ExtenderObject);
             this.properties = new Lazy<ItemProperties>(() => new ItemProperties(this));

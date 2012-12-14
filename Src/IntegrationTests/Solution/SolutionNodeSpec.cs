@@ -23,6 +23,7 @@ namespace Clide.Solution
     using Clide.Events;
     using Clide.Patterns.Adapter;
     using Moq;
+    using Microsoft.VisualStudio;
 
     public class SolutionNodeSpec
 	{
@@ -39,9 +40,9 @@ namespace Clide.Solution
 				var hierarchy = solution as IVsHierarchy;
 
 				var solutionNode = new SolutionNode(
-					new VsSolutionHierarchyNode(hierarchy),
-					null,
-					Mock.Of<IAdapterService>(),
+					new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT),
+                    Mock.Of<ITreeNodeFactory<IVsSolutionHierarchyNode>>(),
+                    Mock.Of<IAdapterService>(),
 					Mock.Of<ISolutionEvents>());
 
 				solutionNode.Create(GetFullPath("foo.sln"));
@@ -57,8 +58,8 @@ namespace Clide.Solution
 				var hierarchy = solution as IVsHierarchy;
 
 				var solutionNode = new SolutionNode(
-					new VsSolutionHierarchyNode(hierarchy),
-					null,
+                    new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT),
+					Mock.Of<ITreeNodeFactory<IVsSolutionHierarchyNode>>(),
 					Mock.Of<IAdapterService>(),
 					Mock.Of<ISolutionEvents>());
 
@@ -73,15 +74,21 @@ namespace Clide.Solution
 				var hierarchy = solution as IVsHierarchy;
 
 				var solutionNode = new SolutionNode(
-					new VsSolutionHierarchyNode(hierarchy),
-					null,
-					Mock.Of<IAdapterService>(),
+                    new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT),
+                    Mock.Of<ITreeNodeFactory<IVsSolutionHierarchyNode>>(),
+                    Mock.Of<IAdapterService>(),
 					Mock.Of<ISolutionEvents>());
 
 				solutionNode.Open(GetFullPath("SampleSolution\\SampleSolution.sln"));
 
 				Assert.True(solutionNode.IsOpen);
 			}
+
+            [TestMethod]
+            public void WhenGettingParent_ThenReturnsNull()
+            {
+
+            }
 		}
 	}
 }

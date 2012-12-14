@@ -27,5 +27,19 @@ namespace UnitTests
     [TestClass]
     public class Misc
     {
+        [TestMethod]
+        public void WhenAction_ThenAssert()
+        {
+            string foo = null;
+            var lazy = new Lazy<string>(() => foo);
+
+            foo = "foo";
+
+            Console.WriteLine(lazy.Value);
+
+            foo = "bar";
+
+            Console.WriteLine(lazy.Value);
+        }
     }
 }
