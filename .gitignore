@@ -1,5 +1,5 @@
 # Core NuGet temporary location
-Src/Clide/nuget
+Src/Clide/nuget/
 
 # Build Folders (you can keep bin if you'd like, to store dlls and pdbs)
 [Bb]in/
