@@ -28,8 +28,6 @@
 
             var solution = this.ServiceProvider.GetService<SVsSolution, IVsSolution>();
 
-            var solutionHashCode = solution.GetHashCode();
-
             IVsHierarchy hierarchy1;
             IVsHierarchy hierarchy2;
 
@@ -49,13 +47,27 @@
 
             solution = this.ServiceProvider.GetService<SVsSolution, IVsSolution>();
 
-            Assert.AreEqual(solutionHashCode, solution.GetHashCode());
-
             ErrorHandler.ThrowOnFailure(solution.GetProjectOfGuid(ref projectId, out hierarchy2));
 
             Assert.AreNotSame(hierarchy1, hierarchy2);
 
             Assert.IsFalse(hashCodes.Contains(hierarchy2.GetHashCode()));
+        }
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void WhenClosingAndReopeningSolution_ThenSolutionInstanceIsDifferent()
+        {
+            this.OpenSolution("SampleSolution\\SampleSolution.sln");
+            var solution = this.ServiceProvider.GetService<SVsSolution, IVsSolution>();
+            var solutionHashCode = solution.GetHashCode();
+
+            this.CloseSolution();
+            this.OpenSolution("SampleSolution\\SampleSolution.sln");
+
+            solution = this.ServiceProvider.GetService<SVsSolution, IVsSolution>();
+
+            Assert.AreNotEqual(solutionHashCode, solution.GetHashCode());
         }
     }
 }

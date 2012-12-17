@@ -28,56 +28,60 @@ namespace Clide.Solution
     using Clide.VisualStudio;
 
     [Export(typeof(IToolWindow))]
-	[Export(typeof(ISolutionExplorer))]
-	internal class SolutionExplorer : ISolutionExplorer
-	{
-		private Lazy<ISolutionNode> solution;
+    [Export(typeof(ISolutionExplorer))]
+    internal class SolutionExplorer : ISolutionExplorer
+    {
         private VsToolWindow toolWindow;
-        private IVsMonitorSelection selection;
         private Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory;
+        private IServiceProvider serviceProvider;
 
-		[ImportingConstructor]
-		public SolutionExplorer(
-			[Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider,
+        [ImportingConstructor]
+        public SolutionExplorer(
+            [Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider,
             [ImportMany(CompositionTarget.SolutionExplorer)] 
             IEnumerable<Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>, ITreeNodeFactoryMetadata>> nodeFactories)
-		{
-			Guard.NotNull(() => serviceProvider, serviceProvider);
+        {
+            Guard.NotNull(() => serviceProvider, serviceProvider);
             Guard.NotNull(() => nodeFactories, nodeFactories);
 
+            this.serviceProvider = serviceProvider;
             this.toolWindow = serviceProvider.ToolWindow(StandardToolWindows.ProjectExplorer);
-            this.selection = serviceProvider.GetService<SVsShellMonitorSelection, IVsMonitorSelection>();
             this.nodeFactory = new Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>>(() =>
                 new FallbackNodeFactory<IVsSolutionHierarchyNode>(
                     new AggregateNodeFactory<IVsSolutionHierarchyNode>(nodeFactories.Where(n => !n.Metadata.IsFallback).Select(f => f.Value)),
                     new AggregateNodeFactory<IVsSolutionHierarchyNode>(nodeFactories.Where(n => n.Metadata.IsFallback).Select(f => f.Value))));
+        }
 
-            this.solution = new Lazy<ISolutionNode>(() =>
-                this.nodeFactory.Value.CreateNode(null, 
-                    new VsSolutionHierarchyNode(serviceProvider.GetService<IVsSolution>() as IVsHierarchy, VSConstants.VSITEMID_ROOT))
-                    .As<ISolutionNode>());
-		}
+        public ISolutionNode Solution
+        {
+            get
+            {
+                return this.nodeFactory.Value.CreateNode(null,
+                        new VsSolutionHierarchyNode(
+                            this.serviceProvider.GetService<IVsSolution>() as IVsHierarchy, 
+                            VSConstants.VSITEMID_ROOT))
+                        .As<ISolutionNode>();
+            }
+        }
 
-		public ISolutionNode Solution { get { return this.solution.Value; } }
-
-		public bool IsVisible
-		{
+        public bool IsVisible
+        {
             get { return this.toolWindow.IsVisible; }
-		}
+        }
 
-		public void Show()
-		{
+        public void Show()
+        {
             this.toolWindow.Show();
-		}
+        }
 
-		public void Close()
-		{
+        public void Close()
+        {
             this.toolWindow.Close();
-		}
+        }
 
         public IEnumerable<ISolutionExplorerNode> SelectedNodes
         {
-            get 
+            get
             {
                 Func<IVsSolutionHierarchyNode, Lazy<ITreeNode>> getParent = null;
                 Func<IVsSolutionHierarchyNode, ITreeNode> getNode = null;
@@ -88,7 +92,8 @@ namespace Clide.Solution
                 getParent = hierarchy => hierarchy.Parent == null ? null :
                     new Lazy<ITreeNode>(() => this.nodeFactory.Value.CreateNode(getParent(hierarchy.Parent), hierarchy.Parent));
 
-                return this.selection.GetSelection()
+
+                return this.serviceProvider.GetSelection()
                     .Select(sel => getNode(new VsSolutionHierarchyNode(sel.Item1, sel.Item2)))
                     .OfType<ISolutionExplorerNode>();
             }

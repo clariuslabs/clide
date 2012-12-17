@@ -87,3 +87,14 @@ namespace Clide
         }
     }
 }
+
+namespace System.Diagnostics
+{
+    partial class Tracer
+    {
+        public static string NameFor<T>()
+        {
+            return NameFor(typeof(T));
+        }
+    }
+}

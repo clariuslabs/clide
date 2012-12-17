@@ -255,7 +255,6 @@
     </Compile>
     <Compile Include="VisualStudio\VsHierarchyItem.cs" />
     <Compile Include="VisualStudio\VsHierarchyProperties.cs" />
-    <Compile Include="VisualStudio\VsMonitorSelectionExtensions.cs" />
     <Compile Include="VisualStudio\VsServiceProviderExtensions.cs" />
     <Compile Include="VisualStudio\VsToolWindow.cs" />
   </ItemGroup>

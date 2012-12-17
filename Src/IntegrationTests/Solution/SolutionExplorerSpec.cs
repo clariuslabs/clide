@@ -120,7 +120,8 @@ namespace Clide.Solution
                 var vbLib = folder1.Nodes.FirstOrDefault(n => n.DisplayName == "VBClassLibrary") as IProjectNode;
                 Assert.NotNull(vbLib);
                 var vbRefs = vbLib.Nodes.FirstOrDefault(n => n.DisplayName == "References");
-                //Assert.NotNull(vbRefs);
+                Assert.NotNull(vbRefs);
+                Assert.True(vbRefs.IsHidden);
 
                 var folder2 = folder1.Nodes.FirstOrDefault(n => n.DisplayName == "SolutionFolder2") as ISolutionFolderNode;
                 Assert.NotNull(folder2);
@@ -131,16 +132,13 @@ namespace Clide.Solution
                 var nodes = csLib.Nodes.Select(n => n.DisplayName).ToList();
 
                 var folder = csLib.Nodes.FirstOrDefault(n => n.DisplayName == "Folder") as IFolderNode;
-
-                Assert.NotNull(folder);
-
                 Assert.NotNull(folder.Nodes.FirstOrDefault(n => n.DisplayName == "TextFile1.txt") as IItemNode);
                 Assert.NotNull(csLib.Nodes.FirstOrDefault(n => n.DisplayName == "Class1.cs") as IItemNode);
 
-                var references = csLib.Nodes.FirstOrDefault(n => n.DisplayName == "References");
+                var references = csLib.Nodes.FirstOrDefault(n => n.DisplayName == "References") as IReferencesNode;
                 Assert.NotNull(references, "No References node was exposed in the tree.");
+                Assert.False(references.IsHidden);
 
-                //Assert.True(references.Is(SolutionNodeKind.ReferencesFolder));
                 Assert.NotEqual(0, references.Nodes.Count());
 
                 references.Nodes.ToList().ForEach(t => System.Console.WriteLine(t.DisplayName));

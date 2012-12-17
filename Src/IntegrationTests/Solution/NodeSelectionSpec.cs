@@ -99,7 +99,6 @@ namespace Clide.Solution
             EnsureSelected<ISolutionFolderNode>("SolutionFolder1");
         }
 
-        [Ignore]
         [HostType("VS IDE")]
         [TestMethod]
         public void WhenSelectingSolution_ThenSucceeds()
@@ -111,7 +110,7 @@ namespace Clide.Solution
         [TestMethod]
         public void WhenSelectingReferences_ThenSucceeds()
         {
-            EnsureSelected<IReferencesNode>("Referenes");
+            EnsureSelected<IReferencesNode>("References");
         }
 
         [HostType("VS IDE")]
@@ -124,6 +123,7 @@ namespace Clide.Solution
         private void EnsureSelected<TNode>(string displayName)
             where TNode : ISolutionExplorerNode
         {
+            explorer.Solution.Expand(true);
             var target = new ITreeNode[] { explorer.Solution }.Concat(explorer.Solution.Nodes
                 .Traverse(TraverseKind.DepthFirst, node => node.Nodes))
                 .OfType<TNode>()

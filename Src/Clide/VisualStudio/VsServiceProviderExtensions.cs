@@ -14,9 +14,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.VisualStudio
 {
+    using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.Shell;
+    using Microsoft.VisualStudio.Shell.Interop;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Text;
     using System.Threading.Tasks;
 
@@ -25,6 +29,71 @@ namespace Clide.VisualStudio
         public static VsToolWindow ToolWindow(this IServiceProvider serviceProvider, Guid toolWindowId)
         {
             return new VsToolWindow(serviceProvider, toolWindowId);
+        }
+
+        public static IEnumerable<Tuple<IVsHierarchy, uint>> GetSelection(this IServiceProvider serviceProvider)
+        {
+            var monitorSelection = serviceProvider.GetService<SVsShellMonitorSelection, IVsMonitorSelection>();
+
+            var hierarchyPtr = IntPtr.Zero;
+            var selectionContainer = IntPtr.Zero;
+
+            return ThreadHelper.Generic.Invoke<IEnumerable<Tuple<IVsHierarchy, uint>>>(() =>
+            {
+                try
+                {
+                    // Get the current project hierarchy, project item, and selection container for the current selection
+                    // If the selection spans multiple hierarchies, hierarchyPtr is Zero
+                    uint itemid;
+                    IVsMultiItemSelect multiItemSelect = null;
+                    ErrorHandler.ThrowOnFailure(monitorSelection.GetCurrentSelection(out hierarchyPtr, out itemid, out multiItemSelect, out selectionContainer));
+
+                    if (itemid == VSConstants.VSITEMID_NIL)
+                        return Enumerable.Empty<Tuple<IVsHierarchy, uint>>();
+
+                    if (itemid == VSConstants.VSITEMID_ROOT)
+                    {
+                        if (hierarchyPtr == IntPtr.Zero)
+                            return new[] { Tuple.Create(
+                                (IVsHierarchy)serviceProvider.GetService<SVsSolution, IVsSolution>(), 
+                                VSConstants.VSITEMID_ROOT) };
+                        else
+                            return new[] { Tuple.Create(
+                                (IVsHierarchy)Marshal.GetTypedObjectForIUnknown(hierarchyPtr, typeof(IVsHierarchy)), 
+                                VSConstants.VSITEMID_ROOT) };
+                    }
+
+                    if (itemid != VSConstants.VSITEMID_SELECTION)
+                        return new[] { Tuple.Create(
+                        (IVsHierarchy)Marshal.GetTypedObjectForIUnknown(hierarchyPtr, typeof(IVsHierarchy)), 
+                        itemid) };
+
+                    // This is a multiple item selection.
+
+                    uint numberOfSelectedItems;
+                    int isSingleHierarchyInt;
+                    ErrorHandler.ThrowOnFailure(multiItemSelect.GetSelectionInfo(out numberOfSelectedItems, out isSingleHierarchyInt));
+                    var isSingleHierarchy = (isSingleHierarchyInt != 0);
+
+                    var vsItemSelections = new VSITEMSELECTION[numberOfSelectedItems];
+                    var flags = (isSingleHierarchy) ? (uint)__VSGSIFLAGS.GSI_fOmitHierPtrs : 0;
+                    ErrorHandler.ThrowOnFailure(multiItemSelect.GetSelectedItems(flags, numberOfSelectedItems, vsItemSelections));
+
+                    return vsItemSelections.Where(sel => sel.pHier != null)
+                        .Select(sel => Tuple.Create(sel.pHier, sel.itemid));
+                }
+                finally
+                {
+                    if (hierarchyPtr != IntPtr.Zero)
+                    {
+                        Marshal.Release(hierarchyPtr);
+                    }
+                    if (selectionContainer != IntPtr.Zero)
+                    {
+                        Marshal.Release(selectionContainer);
+                    }
+                }
+            });
         }
     }
 }

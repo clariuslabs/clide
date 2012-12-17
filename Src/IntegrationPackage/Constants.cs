@@ -3,10 +3,14 @@ namespace IntegrationPackage
 {
 	public class Constants
 	{
-        public const string PackageGuid = "115B3136-52F3-415C-B4D7-7C5D0CD5F61F";
-		public const string CommandSet = "6EFC7612-0297-481E-9358-57CC63198A08";
-		public const int CommandId = 0x100;
+        public const string PackageGuid = "3d82a22f-5ca1-422f-8c64-fe5fd60efc60";
+        public const string CommandSet = "e4690092-05a9-4d36-9ac2-14182fc1cece";
 
-        public const string PackageContract = "IntegrationPackage";
-	}
+        public const int cmdHelloClide = 0x100;
+        public const uint cmdHelloClideWindow = 0x101;
+
+        public const string ToolWindowGuid = "d8a7b26d-f11f-482a-954d-8799fdaa01f0";
+
+        public const string CatalogName = "Clide.IntegrationPackage";
+    }
 }

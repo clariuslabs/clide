@@ -16,13 +16,15 @@
     [Guid(Constants.PackageGuid)]
 	[ProvideAutoLoad(UIContextGuids.NoSolution)]
 	[PackageRegistration(UseManagedResourcesOnly = true)]
-	public class ShellPackage : Package, IShellPackage
+    [ProvideMenuResource("Menus.ctmenu", 1)]
+    [ProvideToolWindow(typeof(MyToolWindow))]
+    public class ShellPackage : Package, IShellPackage
 	{
         private IHost<ShellPackage, IShellPackage> host;
         
         public ShellPackage()
         {
-            this.host = HostFactory.CreateHost<ShellPackage, IShellPackage>(ServiceProvider.GlobalProvider, "Clide.IntegrationTests");
+            this.host = HostFactory.CreateHost<ShellPackage, IShellPackage>(ServiceProvider.GlobalProvider, Constants.CatalogName);
         }
 
         protected override void Initialize()
@@ -33,6 +35,9 @@
 
         [Import]
         public IDevEnv DevEnv { get; set; }
+
+        [Import]
+        public IMessageBoxService Messages { get; set; }
 
         public ICompositionService Composition
         {
