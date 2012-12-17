@@ -19,6 +19,7 @@ namespace Clide.Solution
 {
     public interface IFolderNode : ISolutionExplorerNode
 	{
-		IFolderNode CreateFolder(string name);
+        IProjectNode OwningProject { get; }
+        IFolderNode CreateFolder(string name);
 	}
 }

@@ -42,7 +42,8 @@ namespace Clide.Solution
 			var projectItem = hierarchy.VsHierarchy.Properties(hierarchy.ItemId).ExtenderObject as EnvDTE.ProjectItem;
 
 			return projectItem != null &&
-				projectItem.Kind == EnvDTE.Constants.vsProjectItemKindPhysicalFile;
+				projectItem.Kind == EnvDTE.Constants.vsProjectItemKindPhysicalFile && 
+                !(projectItem.ContainingProject.Object is EnvDTE80.SolutionFolder);
 		}
 
 		public ITreeNode CreateNode(Lazy<ITreeNode> parent, IVsSolutionHierarchyNode hierarchy)

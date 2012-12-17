@@ -126,7 +126,11 @@
     <Compile Include="OptionsPageAttribute.cs" />
     <Compile Include="IOptionsPageMetadata.cs" />
     <Compile Include="OptionsPageWindowFactory.cs" />
+    <Compile Include="Solution\Factories\SolutionItemNodeFactory.cs" />
+    <Compile Include="Solution\Implementation\SolutionItemNode.cs" />
+    <Compile Include="Solution\ISolutionItemNode.cs" />
     <Compile Include="Solution\Implementation\ConfigProjectProperties.cs" />
+    <Compile Include="Solution\Implementation\ProjectItemNode.cs" />
     <Compile Include="Solution\Implementation\ItemProperties.cs" />
     <Compile Include="Solution\Implementation\GlobalProjectProperties.cs" />
     <Compile Include="Solution\ISolutionExplorerNode.cs" />

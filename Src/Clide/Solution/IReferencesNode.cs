@@ -19,5 +19,6 @@ namespace Clide.Solution
 {
     public interface IReferencesNode : ISolutionExplorerNode
 	{
-	}
+        IProjectNode OwningProject { get; }
+    }
 }

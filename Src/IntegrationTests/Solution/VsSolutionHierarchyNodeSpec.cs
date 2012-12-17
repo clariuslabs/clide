@@ -95,6 +95,28 @@ namespace Clide.Solution
 
 				Assert.Null(solutionFolder2.Parent.Parent.Parent);
 			}
+
+            [HostType("VS IDE")]
+            [TestMethod]
+            public void WhenGettingOwningHierarchyForItem_ThenReturnsProject()
+            {
+                var solution = ServiceProvider.GetService<IVsSolution>();
+                var hierarchy = solution as IVsHierarchy;
+
+                var item = new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT)
+                    .Children
+                    .Traverse(TraverseKind.DepthFirst, node => node.Children)
+                    .First(node => node.DisplayName == "SolutionItem.txt");
+
+                Assert.NotNull(item);
+
+                Console.WriteLine("Owning hierarchy is project? {0}", (item.VsHierarchy is IVsProject));
+                Console.WriteLine("Parent display name: {0}", item.Parent.DisplayName);
+                Console.WriteLine("Owning hierarchy project kind: {0}", ((EnvDTE.Project)item.Parent.ExtensibilityObject).Kind);
+
+                Console.WriteLine("Owning hierarchy is solution folder? {0}", 
+                    ((EnvDTE.Project)item.Parent.ExtensibilityObject).Kind.Equals(EnvDTE80.ProjectKinds.vsProjectKindSolutionFolder, StringComparison.OrdinalIgnoreCase));
+            }
 		}
 	}
 }

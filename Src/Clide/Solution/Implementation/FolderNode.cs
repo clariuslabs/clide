@@ -23,7 +23,7 @@ namespace Clide.Solution
     using Clide.VisualStudio;
     using EnvDTE;
 
-    internal class FolderNode : SolutionTreeNode, IFolderNode
+    internal class FolderNode : ProjectItemNode, IFolderNode
 	{
 		public FolderNode(
 			IVsSolutionHierarchyNode hierarchyNode,

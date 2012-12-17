@@ -135,15 +135,24 @@ namespace Clide.Solution
                 Assert.NotNull(folder.Nodes.FirstOrDefault(n => n.DisplayName == "TextFile1.txt") as IItemNode);
                 Assert.NotNull(csLib.Nodes.FirstOrDefault(n => n.DisplayName == "Class1.cs") as IItemNode);
 
+                Assert.Equal("ClassLibrary", ((IItemNode)folder.Nodes.FirstOrDefault(n => n.DisplayName == "TextFile1.txt")).OwningProject.DisplayName);
+                Assert.Equal("ClassLibrary", ((IItemNode)csLib.Nodes.FirstOrDefault(n => n.DisplayName == "Class1.cs")).OwningProject.DisplayName);
+
                 var references = csLib.Nodes.FirstOrDefault(n => n.DisplayName == "References") as IReferencesNode;
                 Assert.NotNull(references, "No References node was exposed in the tree.");
                 Assert.False(references.IsHidden);
 
                 Assert.NotEqual(0, references.Nodes.Count());
 
-                references.Nodes.ToList().ForEach(t => System.Console.WriteLine(t.DisplayName));
+                Assert.Equal("ClassLibrary", ((IReferencesNode)csLib.Nodes.FirstOrDefault(n => n.DisplayName == "References")).OwningProject.DisplayName);
 
                 Assert.NotNull(references.Nodes.First() as IReferenceNode);
+
+                var item = explorer.Solution
+                    .Nodes.First(node => node.DisplayName == "Solution Items")
+                    .Nodes.First(node => node.DisplayName == "SolutionItem.txt");
+
+                Assert.True(item is ISolutionItemNode);                
             }
 
             [HostType("VS IDE")]
@@ -175,6 +184,74 @@ namespace Clide.Solution
 
                 Assert.True(reference.IsHidden);
                 Assert.False(reference.IsVisible);
+            }
+
+            [HostType("VS IDE")]
+            [TestMethod]
+            public void WhenItemFound_ThenOwningProjectIsValid()
+            {
+                var item = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+                    .OfType<IItemNode>()
+                    .FirstOrDefault(node => node.DisplayName == "TextFile1.txt");
+
+                Assert.NotNull(item);
+                Assert.Equal("ClassLibrary", item.OwningProject.DisplayName);
+            }
+
+            [HostType("VS IDE")]
+            [TestMethod]
+            public void WhenFolderFound_ThenOwningProjectIsValid()
+            {
+                var target = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+                    .OfType<IFolderNode>()
+                    .FirstOrDefault(node => node.DisplayName == "Folder");
+
+                Assert.NotNull(target);
+                Assert.Equal("ClassLibrary", target.OwningProject.DisplayName);
+            }
+
+            [HostType("VS IDE")]
+            [TestMethod]
+            public void WhenReferencesNode_ThenOwningProjectIsValid()
+            {
+                var target = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+                    .OfType<IReferencesNode>()
+                    .FirstOrDefault(node => !node.IsHidden);
+
+                Assert.NotNull(target);
+                Assert.Equal("ClassLibrary", target.OwningProject.DisplayName);
+            }
+
+            [HostType("VS IDE")]
+            [TestMethod]
+            public void WhenReferenceFound_ThenOwningProjectIsValid()
+            {
+                var target = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+                    .OfType<IReferenceNode>()
+                    .FirstOrDefault(node => !node.IsHidden && node.DisplayName == "System.Xml.Linq");
+
+                Assert.NotNull(target);
+                Assert.Equal("ClassLibrary", target.OwningProject.DisplayName);
+            }
+
+            [HostType("VS IDE")]
+            [TestMethod]
+            public void WhenSolutionItemFound_ThenOwningSolutionFolderIsValid()
+            {
+                explorer.Solution.Nodes
+                    .Traverse(TraverseKind.BreadthFirst, node => node.Nodes)
+                    .ToList()
+                    .ForEach(node => Console.WriteLine("{0} ({1})", node.DisplayName, node.GetType().Name));
+
+                var target = explorer.Solution.Nodes
+                    .OfType<ISolutionFolderNode>()
+                    .First()
+                    .Nodes
+                    .OfType<ISolutionItemNode>()
+                    .FirstOrDefault();
+
+                Assert.NotNull(target);
+                Assert.Equal("Solution Items", target.OwningSolutionFolder.DisplayName);
             }
         }
 	}

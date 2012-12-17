@@ -24,7 +24,7 @@ namespace Clide.Solution
     using EnvDTE;
     using Microsoft.VisualStudio;
 
-    internal class ReferencesNode : SolutionTreeNode, IReferencesNode
+    internal class ReferencesNode : ProjectItemNode, IReferencesNode
 	{
 		public ReferencesNode(
 			IVsSolutionHierarchyNode hierarchyNode,

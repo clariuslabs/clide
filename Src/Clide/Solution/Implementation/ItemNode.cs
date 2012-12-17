@@ -22,8 +22,9 @@ namespace Clide.Solution
     using System.Dynamic;
     using Clide.VisualStudio;
     using EnvDTE;
+    using Microsoft.VisualStudio;
 
-    internal class ItemNode : SolutionTreeNode, IItemNode
+    internal class ItemNode : ProjectItemNode, IItemNode
     {
         private Lazy<ItemProperties> properties;
 
@@ -36,9 +37,10 @@ namespace Clide.Solution
         {
             Guard.NotNull(() => parentNode, parentNode);
 
+            this.properties = new Lazy<ItemProperties>(() => new ItemProperties(this));
+
             this.Item = new Lazy<EnvDTE.ProjectItem>(
                 () => (EnvDTE.ProjectItem)hierarchyNode.VsHierarchy.Properties(hierarchyNode.ItemId).ExtenderObject);
-            this.properties = new Lazy<ItemProperties>(() => new ItemProperties(this));
         }
 
         public Lazy<ProjectItem> Item { get; private set; }

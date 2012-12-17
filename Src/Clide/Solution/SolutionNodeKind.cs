@@ -21,9 +21,10 @@ namespace Clide.Solution
 	{
 		Solution,
 		SolutionFolder,
-		Project,
+        SolutionItem,
+        Project,
 		Folder,
-		Item,
+        Item,
 		Reference,
 		ReferencesFolder,
 		Custom,

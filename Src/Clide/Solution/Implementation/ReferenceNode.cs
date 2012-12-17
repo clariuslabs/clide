@@ -22,7 +22,7 @@ namespace Clide.Solution
     using System;
     using VSLangProj;
 
-    internal class ReferenceNode : SolutionTreeNode, IReferenceNode
+    internal class ReferenceNode : ProjectItemNode, IReferenceNode
 	{
         public ReferenceNode(
 			IVsSolutionHierarchyNode hierarchyNode,

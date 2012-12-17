@@ -19,6 +19,7 @@ namespace Clide.Solution
 {
     public interface IItemNode : ISolutionExplorerNode
 	{
+        IProjectNode OwningProject { get; }
 		string PhysicalPath { get; }
 		dynamic Properties { get; }
 	}

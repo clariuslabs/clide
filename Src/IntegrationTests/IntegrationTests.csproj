@@ -117,6 +117,7 @@
     <Compile Include="VsHostedSpec.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\SampleSolution\SolutionItem.txt" />
     <Content Include="Content\SampleSolution\VBClassLibrary\My Project\Settings.settings">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
