@@ -30,6 +30,8 @@ namespace Clide.Solution
     [TestClass]
     public class ProjectDataSpec : VsHostedSpec
     {
+        internal static readonly IAssertion Assert = new Assertion();
+
         [TestMethod]
         public void WhenRetrievingPropertyNames_ThenFindsDteAndMsBuild()
         {
@@ -43,9 +45,9 @@ namespace Clide.Solution
             var names = ((DynamicObject)project.Properties).GetDynamicMemberNames().ToList();
             Console.WriteLine(string.Join(Environment.NewLine, names));
 
-            Assert.IsTrue(names.Contains("OfflineURL"));
-            Assert.IsTrue(names.Contains("StartupObject"));
-            Assert.IsTrue(names.Contains("BuildingInsideVisualStudio"));
+            Assert.True(names.Contains("OfflineURL"));
+            Assert.True(names.Contains("StartupObject"));
+            Assert.True(names.Contains("BuildingInsideVisualStudio"));
         }
 
         [TestMethod]
@@ -69,7 +71,7 @@ namespace Clide.Solution
                 .OfType<ProjectNode>()
                 .First(node => node.DisplayName == "ClassLibrary");
 
-            Assert.AreEqual("ClassLibrary.Program", (string)project.Properties.StartupObject);
+            Assert.Equal("ClassLibrary.Program", (string)project.Properties.StartupObject);
         }
 
         [TestMethod]
@@ -93,7 +95,7 @@ namespace Clide.Solution
                 .OfType<ProjectNode>()
                 .First(node => node.DisplayName == "ClassLibrary");
 
-            Assert.AreEqual("256", project.Properties.FileAlignment);
+            Assert.Equal("256", (string)project.Properties.FileAlignment);
         }
 
         [TestMethod]
@@ -117,7 +119,7 @@ namespace Clide.Solution
                 .OfType<ProjectNode>()
                 .First(node => node.DisplayName == "ClassLibrary");
 
-            Assert.AreEqual("kzu", project.Properties.Author);
+            Assert.Equal("kzu", (string)project.Properties.Author);
             File.WriteAllText("C:\\Temp\\project.txt", File.ReadAllText(project.PhysicalPath));
         }
 
@@ -142,7 +144,7 @@ namespace Clide.Solution
                 .OfType<ProjectNode>()
                 .First(node => node.DisplayName == "ClassLibrary");
 
-            Assert.AreEqual("5", project.PropertiesFor("Debug|AnyCPU").WarningLevel);
+            Assert.Equal("5", (string)project.PropertiesFor("Debug|AnyCPU").WarningLevel);
         }
 
         [TestMethod]
@@ -156,7 +158,7 @@ namespace Clide.Solution
                 .OfType<ProjectNode>()
                 .FirstOrDefault(node => node.DisplayName == "ClassLibrary");
 
-            Assert.IsNotNull(project);
+            Assert.NotNull(project);
 
             //Debug.Fail("Attach");
             var vsBuild = (IVsBuildPropertyStorage)project.HierarchyNode.VsHierarchy;
@@ -230,6 +232,28 @@ namespace Clide.Solution
 
             //project.Properties.AllConfigurations.Foo = "bar";
             //Assert.AreEqual("bar", project.Properties.AllConfigurations.Foo);
+        }
+
+        [TestMethod]
+        public void WhenGettingGlobalProperty_ThenRetrievesActiveConfigurationValue()
+        {
+            this.OpenSolution("SampleSolution\\SampleSolution.sln");
+
+            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+
+            var project = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+                .OfType<ProjectNode>()
+                .FirstOrDefault(node => node.DisplayName == "ClassLibrary");
+
+            var fileName = (string)project.Properties.TargetFileName;
+            var outDir = (string)project.Properties.TargetDir;
+
+            // Both properties are set via MSBuild for the current configuration.
+
+            Assert.NotNull(fileName);
+            Assert.NotNull(outDir);
+            Assert.NotEqual("", fileName);
+            Assert.NotEqual("", outDir);
         }
     }
 }

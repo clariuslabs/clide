@@ -25,5 +25,6 @@ namespace Clide.Solution
         void Save();
 
 		dynamic Properties { get; }
+        dynamic PropertiesFor(string configurationAndPlatform);
 	}
 }

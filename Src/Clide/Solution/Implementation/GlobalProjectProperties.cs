@@ -76,6 +76,17 @@ namespace Clide.Solution
             
             if (msBuildProject != null)
             {
+                string value = "";
+                var configName = this.dteProject.ConfigurationManager.ActiveConfiguration.ConfigurationName + "|" +
+                    this.dteProject.ConfigurationManager.ActiveConfiguration.PlatformName;
+
+                if (ErrorHandler.Succeeded(vsBuild.GetPropertyValue(
+                    binder.Name, configName, (uint)_PersistStorageType.PST_PROJECT_FILE, out value)))
+                {
+                    result = value;
+                    return true;
+                }
+
                 var prop = msBuildProject.GetProperty(binder.Name);
                 if (prop != null)
                 {

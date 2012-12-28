@@ -22,9 +22,7 @@ namespace Clide
 
     public interface IDevEnv : IShellEvents, IFluentInterface
 	{
-		ICommandManager Commands { get; }
-		IDialogWindowFactory Dialogs { get; }
-        IOptionsManager OptionsPages { get; }
+		IDialogWindowFactory DialogFactory { get; }
 		IStatusBar Status { get; }
 		IEnumerable<IToolWindow> ToolWindows { get; }
 		IUIThread UIThread { get; }

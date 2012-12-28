@@ -33,6 +33,7 @@ namespace Clide
     using System.IO;
     using Clide.Diagnostics;
     using Clide.Composition;
+    using Clide.Commands;
 
     internal class Host<TPackage, TExport> : IHost<TPackage, TExport>
         where TPackage : Package, TExport
@@ -47,7 +48,10 @@ namespace Clide
         private bool initializePackage = true;
 
         [Import]
-        public IDevEnv DevEnv { get; set; }
+        public ICommandManager Commands { get; set; }
+
+        [Import]
+        public IOptionsManager Options { get; set; }
 
         public ICompositionService Composition { get { return this.container; } }
 
@@ -129,11 +133,11 @@ namespace Clide
                     this.Composition.SatisfyImportsOnce(this);
 
                     tracer.Info("Registering package commands");
-                    this.DevEnv.Commands.AddCommands(package);
+                    this.Commands.AddCommands(package);
                     tracer.Info("Registering package command filters");
-                    this.DevEnv.Commands.AddFilters(package);
+                    this.Commands.AddFilters(package);
                     tracer.Info("Registering package options pages");
-                    this.DevEnv.OptionsPages.AddPages(package);
+                    this.Options.AddPages(package);
 
                     // Brings in imports that the package itself might need.
                     this.Composition.SatisfyImportsOnce(package);

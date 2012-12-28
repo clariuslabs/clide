@@ -18,14 +18,30 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide
 {
     using System.Linq;
+using Clide.Solution;
 
+    /// <summary>
+    /// Usability extensions for <see cref="IDevEnv"/>.
+    /// </summary>
     public static class IDevEnvExtensions
 	{
+        /// <summary>
+        /// Gets the tool window of the given type from the environment, if any.
+        /// </summary>
+        /// <returns>The tool window or <see langword="null"/> if it does not exist.</returns>
 		public static T ToolWindow<T>(this IDevEnv environment) where T : IToolWindow
 		{
 			Guard.NotNull(() => environment, environment);
 
 			return environment.ToolWindows.OfType<T>().FirstOrDefault();
 		}
+
+        /// <summary>
+        /// Gets the solution explorer tool window.
+        /// </summary>
+        public static ISolutionExplorer SolutionExplorer(this IDevEnv environment)
+        {
+            return ToolWindow<ISolutionExplorer>(environment);
+        }
 	}
 }

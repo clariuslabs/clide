@@ -14,15 +14,39 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution.Adapters
 {
+    using System;
     using Clide.Patterns.Adapter;
+    using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
+    using Microsoft.VisualStudio;
+    using Ole = Microsoft.VisualStudio.OLE.Interop;
 
     [Adapter]
-    internal class VsHierarchyAdapter : IAdapter<SolutionTreeNode, IVsHierarchy>
+    internal class IServiceProviderAdapter : 
+        IAdapter<ISolutionNode, IServiceProvider>, 
+        IAdapter<IProjectNode, IServiceProvider>, 
+        IAdapter<ProjectItemNode, IServiceProvider>
     {
-        public IVsHierarchy Adapt(SolutionTreeNode from)
+        public IServiceProvider Adapt(ISolutionNode from)
         {
-            return from.HierarchyNode.VsHierarchy;
+            return ServiceProvider.GlobalProvider;
+        }
+
+        public IServiceProvider Adapt(IProjectNode from)
+        {
+            var vsProject = from.As<IVsProject>();
+            Ole.IServiceProvider oleSp;
+
+            // local service provider for the project
+            if (vsProject != null && vsProject.GetItemContext(VSConstants.VSITEMID_ROOT, out oleSp) == VSConstants.S_OK)
+                return new ServiceProvider(oleSp);
+
+            return ServiceProvider.GlobalProvider;
+        }
+
+        public IServiceProvider Adapt(ProjectItemNode from)
+        {
+            return Adapt(from.OwningProject);
         }
     }
 }

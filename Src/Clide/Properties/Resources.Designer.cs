@@ -160,6 +160,60 @@ namespace Clide.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified project &apos;{0}&apos; does not have a valid owning solution..
+        /// </summary>
+        internal static string IProjectNodeExtensions_BuildNoSolution {
+            get {
+                return ResourceManager.GetString("IProjectNodeExtensions_BuildNoSolution", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to load assemly reference &apos;{reference}&apos; from path &apos;{path}&apos;..
+        /// </summary>
+        internal static string IProjectNodeExtensions_FailedToLoadAssembly {
+            get {
+                return ResourceManager.GetString("IProjectNodeExtensions_FailedToLoadAssembly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not retrieve the required type discovery services from the project..
+        /// </summary>
+        internal static string IProjectNodeExtensions_InvalidTypeContext {
+            get {
+                return ResourceManager.GetString("IProjectNodeExtensions_InvalidTypeContext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot retrieve project types. Project is not a valid Visual Studio project, or the service provider cannot be retrieved from it..
+        /// </summary>
+        internal static string IProjectNodeExtensions_InvalidVsContext {
+            get {
+                return ResourceManager.GetString("IProjectNodeExtensions_InvalidVsContext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Building project &apos;{projectName}&apos; did not generate the expected output assembly &apos;{assemblyFile}&apos;..
+        /// </summary>
+        internal static string IProjectNodeExtensions_NoBuildOutput {
+            get {
+                return ResourceManager.GetString("IProjectNodeExtensions_NoBuildOutput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not determine the target assembly name for project &apos;{projectName}&apos;. The project TargetFileName and/or TargetDir properties are empty..
+        /// </summary>
+        internal static string IProjectNodeExtensions_NoTargetAssemblyName {
+            get {
+                return ResourceManager.GetString("IProjectNodeExtensions_NoTargetAssemblyName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to register page &apos;{pageType}&apos;..
         /// </summary>
         internal static string OptionsManager_FailedToRegisterPage {

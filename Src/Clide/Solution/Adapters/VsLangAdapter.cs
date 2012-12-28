@@ -12,11 +12,26 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
-namespace Clide.Solution
+namespace Clide.Solution.Adapters
 {
-    public interface ISolutionExplorerNode : ITreeNode
+    using Clide.Patterns.Adapter;
+    using EnvDTE;
+    using EnvDTE80;
+    using VSLangProj;
+
+    [Adapter]
+    internal class VsLangAdapter : 
+        IAdapter<ProjectNode, VSProject>,
+        IAdapter<ItemNode, VSProjectItem> 
     {
-        SolutionNodeKind Kind { get; }
-        ISolutionNode OwningSolution { get; }
+        public VSProject Adapt(ProjectNode from)
+        {
+            return from.Project.Value.Object as VSProject;
+        }
+
+        public VSProjectItem Adapt(ItemNode from)
+        {
+            return from.Item.Value.Object as VSProjectItem;
+        }
     }
 }

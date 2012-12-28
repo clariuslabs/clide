@@ -116,12 +116,16 @@ namespace Clide.Solution
             {
                 var folder1 = explorer.Solution.Nodes.FirstOrDefault(n => n.DisplayName == "SolutionFolder1") as ISolutionFolderNode;
                 Assert.NotNull(folder1);
+                Assert.NotNull(folder1.OwningSolution);
 
                 var vbLib = folder1.Nodes.FirstOrDefault(n => n.DisplayName == "VBClassLibrary") as IProjectNode;
                 Assert.NotNull(vbLib);
+                Assert.NotNull(vbLib.OwningSolution);
+
                 var vbRefs = vbLib.Nodes.FirstOrDefault(n => n.DisplayName == "References");
                 Assert.NotNull(vbRefs);
                 Assert.True(vbRefs.IsHidden);
+                Assert.NotNull(vbLib.OwningSolution);
 
                 var folder2 = folder1.Nodes.FirstOrDefault(n => n.DisplayName == "SolutionFolder2") as ISolutionFolderNode;
                 Assert.NotNull(folder2);
@@ -134,6 +138,7 @@ namespace Clide.Solution
                 var folder = csLib.Nodes.FirstOrDefault(n => n.DisplayName == "Folder") as IFolderNode;
                 Assert.NotNull(folder.Nodes.FirstOrDefault(n => n.DisplayName == "TextFile1.txt") as IItemNode);
                 Assert.NotNull(csLib.Nodes.FirstOrDefault(n => n.DisplayName == "Class1.cs") as IItemNode);
+                Assert.NotNull(folder.OwningSolution);
 
                 Assert.Equal("ClassLibrary", ((IItemNode)folder.Nodes.FirstOrDefault(n => n.DisplayName == "TextFile1.txt")).OwningProject.DisplayName);
                 Assert.Equal("ClassLibrary", ((IItemNode)csLib.Nodes.FirstOrDefault(n => n.DisplayName == "Class1.cs")).OwningProject.DisplayName);
@@ -152,7 +157,8 @@ namespace Clide.Solution
                     .Nodes.First(node => node.DisplayName == "Solution Items")
                     .Nodes.First(node => node.DisplayName == "SolutionItem.txt");
 
-                Assert.True(item is ISolutionItemNode);                
+                Assert.True(item is ISolutionItemNode);
+                Assert.NotNull(((ISolutionItemNode)item).OwningSolution);
             }
 
             [HostType("VS IDE")]

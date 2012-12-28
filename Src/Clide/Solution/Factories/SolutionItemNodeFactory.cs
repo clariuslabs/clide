@@ -37,9 +37,16 @@ namespace Clide.Solution
 
 		public bool Supports(IVsSolutionHierarchyNode hierarchy)
 		{
+            if (hierarchy.Parent == null)
+                return false;
+
+            var item = hierarchy.ExtensibilityObject as ProjectItem;
             var project = hierarchy.Parent.ExtensibilityObject as Project;
 
-            return project != null && project.Object is EnvDTE80.SolutionFolder;
+            return 
+                project != null && 
+                item != null && 
+                project.Object is EnvDTE80.SolutionFolder;
         }
 
 		public ITreeNode CreateNode(Lazy<ITreeNode> parent, IVsSolutionHierarchyNode hierarchy)

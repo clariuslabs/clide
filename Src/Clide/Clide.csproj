@@ -53,6 +53,7 @@
     <Reference Condition="$(Vs10)" Include="Microsoft.VisualStudio.Settings, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Visible>$(Vs10)</Visible>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Design, Version=$(VisualStudioVersion).0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -69,6 +70,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
@@ -114,10 +116,11 @@
     <Compile Include="Patterns\Adapter\Constants.cs" />
     <Compile Include="Patterns\Adapter\IAdapter.cs" />
     <Compile Include="Patterns\Adapter\IAdapterService.cs" />
+    <Compile Include="Solution\Adapters\IServiceProviderAdapter.cs" />
+    <Compile Include="Solution\Adapters\VsLangAdapter.cs" />
     <Compile Include="Solution\Adapters\VsSolutionHierarchyAdapter.cs" />
-    <Compile Include="Solution\Adapters\IVsSolutionAdapter.cs" />
+    <Compile Include="Solution\Adapters\IVsAdapter.cs" />
     <Compile Include="Solution\Adapters\MsBuildAdapter.cs" />
-    <Compile Include="Solution\Adapters\VsHierarchyAdapter.cs" />
     <Compile Include="Solution\Adapters\DteAdapter.cs" />
     <Compile Include="OptionsManager.cs" />
     <Compile Include="OptionsPage.cs">
@@ -126,6 +129,7 @@
     <Compile Include="OptionsPageAttribute.cs" />
     <Compile Include="IOptionsPageMetadata.cs" />
     <Compile Include="OptionsPageWindowFactory.cs" />
+    <Compile Include="Solution\Extensions\IProjectNodeExtensions.cs" />
     <Compile Include="Solution\Factories\SolutionItemNodeFactory.cs" />
     <Compile Include="Solution\Implementation\SolutionItemNode.cs" />
     <Compile Include="Solution\ISolutionItemNode.cs" />
@@ -150,7 +154,7 @@
     <Compile Include="Solution\Factories\AggregateHierarchyFactory.cs" />
     <Compile Include="Solution\Factories\DefaultHierarchyFactory.cs" />
     <Compile Include="Solution\Factories\FallbackFactoryAttribute.cs" />
-    <Compile Include="Solution\IVsHierarchyItem.cs" />
+    <Compile Include="Solution\VsHierarchyItem.cs" />
     <Compile Include="Solution\IVsSolutionHierarchyNode.cs" />
     <Compile Include="Solution\SolutionExplorerNodeFactoryAttribute.cs" />
     <Compile Include="TreeNodes\AggregateNodeFactory.cs" />
@@ -267,13 +271,16 @@
       <Link>ClariusLabs.licenseheader</Link>
     </None>
     <None Include="Clide.nuspec">
+      <SubType>Designer</SubType>
     </None>
     <None Include="netfx\System\Reflection\Reflect.Overloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Reflect.Overloads.cs</LastGenOutput>
     </None>
     <None Include="netfx\System\Reflection\TargetFramework.ttinclude" />
-    <None Include="NuGet.proj" />
+    <None Include="NuGet.proj">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <Compile Include="Patterns\Adapter\AdapterService.Custom.cs" />
     <None Include="Properties\Resources.tt">

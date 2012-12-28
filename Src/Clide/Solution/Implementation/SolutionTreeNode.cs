@@ -41,6 +41,7 @@ namespace Clide.Solution
         private Lazy<IVsUIHierarchyWindow> window;
         private Lazy<ITreeNode> parent;
         private Lazy<bool> isHidden;
+        private Lazy<ISolutionNode> solutionNode;
 
         public SolutionTreeNode(
             SolutionNodeKind nodeKind,
@@ -72,11 +73,21 @@ namespace Clide.Solution
 
             if (System.Diagnostics.Debugger.IsAttached)
                 this.debuggerDisplay = BuildDebuggerDisplay();
+
+            this.solutionNode = new Lazy<ISolutionNode>(() => 
+            {
+                var solutionHierarchy = new VsSolutionHierarchyNode(
+                    (IVsHierarchy)this.hierarchyNode.ServiceProvider.GetService<SVsSolution, IVsSolution>(),
+                    VSConstants.VSITEMID_ROOT);
+                
+                return (ISolutionNode)this.factory.CreateNode(null, solutionHierarchy);
+            });
         }
 
         protected internal IVsSolutionHierarchyNode HierarchyNode { get { return this.hierarchyNode; } }
 
         public ITreeNode Parent { get { return this.parent.Value; } }
+        public ISolutionNode OwningSolution { get { return this.solutionNode.Value; } }
 
         public string DisplayName { get; private set; }
 

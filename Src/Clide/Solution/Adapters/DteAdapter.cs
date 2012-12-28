@@ -21,7 +21,7 @@ namespace Clide.Solution.Adapters
 
     [Adapter]
     internal class DteAdapter :
-        IAdapter<SolutionNode, EnvDTE.Solution>,
+        IAdapter<SolutionNode, Solution>,
         IAdapter<SolutionFolderNode, SolutionFolder>,
         IAdapter<ProjectNode, Project>,
         IAdapter<FolderNode, ProjectItem>,

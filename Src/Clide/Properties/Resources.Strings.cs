@@ -434,6 +434,76 @@ namespace Clide.Properties
 				});
 			}
 		}
+		
+		///	<summary>
+		///	Provides access to string resources.
+		///	</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		public static partial class IProjectNodeExtensions
+		{
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	The specified project '{0}' does not have a valid owning solution.
+			/// </summary>
+			public static string BuildNoSolution(object arg0)
+			{
+				return Resources.IProjectNodeExtensions_BuildNoSolution.FormatWith(new 
+				{
+					arg0 = arg0,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Failed to load assemly reference '{reference}' from path '{path}'.
+			/// </summary>
+			public static string FailedToLoadAssembly(object reference, object path)
+			{
+				return Resources.IProjectNodeExtensions_FailedToLoadAssembly.FormatWith(new 
+				{
+					reference = reference,
+					path = path,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Could not retrieve the required type discovery services from the project.
+			/// </summary>
+			public static string InvalidTypeContext { get { return Resources.IProjectNodeExtensions_InvalidTypeContext; } }
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Cannot retrieve project types. Project is not a valid Visual Studio project, or the service provider cannot be retrieved from it.
+			/// </summary>
+			public static string InvalidVsContext { get { return Resources.IProjectNodeExtensions_InvalidVsContext; } }
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Building project '{projectName}' did not generate the expected output assembly '{assemblyFile}'.
+			/// </summary>
+			public static string NoBuildOutput(object projectName, object assemblyFile)
+			{
+				return Resources.IProjectNodeExtensions_NoBuildOutput.FormatWith(new 
+				{
+					projectName = projectName,
+					assemblyFile = assemblyFile,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Could not determine the target assembly name for project '{projectName}'. The project TargetFileName and/or TargetDir properties are empty.
+			/// </summary>
+			public static string NoTargetAssemblyName(object projectName)
+			{
+				return Resources.IProjectNodeExtensions_NoTargetAssemblyName.FormatWith(new 
+				{
+					projectName = projectName,
+				});
+			}
+		}
 	}
 }
 

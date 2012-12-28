@@ -216,4 +216,22 @@
   <data name="SolutionTreeNode_SelectionUnsupported" xml:space="preserve">
     <value>Selecting element '{itemPath}' is not supported by the underlying project type.</value>
   </data>
+  <data name="IProjectNodeExtensions_BuildNoSolution" xml:space="preserve">
+    <value>The specified project '{0}' does not have a valid owning solution.</value>
+  </data>
+  <data name="IProjectNodeExtensions_FailedToLoadAssembly" xml:space="preserve">
+    <value>Failed to load assemly reference '{reference}' from path '{path}'.</value>
+  </data>
+  <data name="IProjectNodeExtensions_InvalidTypeContext" xml:space="preserve">
+    <value>Could not retrieve the required type discovery services from the project.</value>
+  </data>
+  <data name="IProjectNodeExtensions_InvalidVsContext" xml:space="preserve">
+    <value>Cannot retrieve project types. Project is not a valid Visual Studio project, or the service provider cannot be retrieved from it.</value>
+  </data>
+  <data name="IProjectNodeExtensions_NoBuildOutput" xml:space="preserve">
+    <value>Building project '{projectName}' did not generate the expected output assembly '{assemblyFile}'.</value>
+  </data>
+  <data name="IProjectNodeExtensions_NoTargetAssemblyName" xml:space="preserve">
+    <value>Could not determine the target assembly name for project '{projectName}'. The project TargetFileName and/or TargetDir properties are empty.</value>
+  </data>
 </root>

@@ -19,11 +19,30 @@ namespace Clide.Solution.Adapters
     using Microsoft.VisualStudio.Shell.Interop;
 
     [Adapter]
-    internal class IVsSolutionAdapter : IAdapter<SolutionNode, IVsSolution>
+    internal class IVsSolutionAdapter : 
+        IAdapter<SolutionTreeNode, VsHierarchyItem>,
+        IAdapter<SolutionTreeNode, IVsHierarchy>,
+        IAdapter<SolutionNode, IVsSolution>,
+        IAdapter<ProjectNode, IVsProject>
     {
+        IVsHierarchy IAdapter<SolutionTreeNode, IVsHierarchy>.Adapt(SolutionTreeNode from)
+        {
+            return from.HierarchyNode.VsHierarchy;
+        }
+
+        VsHierarchyItem IAdapter<SolutionTreeNode, VsHierarchyItem>.Adapt(SolutionTreeNode from)
+        {
+            return new VsHierarchyItem(from.HierarchyNode.VsHierarchy, from.HierarchyNode.ItemId);
+        }
+
         public IVsSolution Adapt(SolutionNode from)
         {
             return from.HierarchyNode.ServiceProvider.GetService<SVsSolution, IVsSolution>();
+        }
+
+        public IVsProject Adapt(ProjectNode from)
+        {
+            return from.HierarchyNode.VsHierarchy as IVsProject;
         }
     }
 }

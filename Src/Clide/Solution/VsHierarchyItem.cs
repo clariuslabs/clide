@@ -29,17 +29,23 @@ namespace Clide
 	/// Any solution item should be able to smart-cast to this interface using 
 	/// the As&lt;T&gt; method.
 	/// </summary>
-	public interface IVsHierarchyItem
+	public class VsHierarchyItem
 	{
+        public VsHierarchyItem(IVsHierarchy hierarchy, uint itemId)
+        {
+            this.VsHierarchy = hierarchy;
+            this.ItemId = itemId;
+        }
+
 		/// <summary>
 		/// Gets the hierarchy that contains the item.
 		/// </summary>
-		IVsHierarchy VsHierarchy { get; }
+        public IVsHierarchy VsHierarchy { get; private set; }
 
 		/// <summary>
 		/// Gets the item id. Can be the special value <see cref="VSConstants.VSITEMID_ROOT"/> 
 		/// if the item is a root hierarchy itself, such as a project.
 		/// </summary>
-		uint ItemId { get; }
+        public uint ItemId { get; private set; }
 	}
 }

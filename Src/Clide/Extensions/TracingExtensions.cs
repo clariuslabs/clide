@@ -46,15 +46,15 @@ namespace System.Diagnostics
 
         /// <summary>
         /// Executes the given <paramref name="action"/> shielding any non-critical exceptions 
-        /// and logging them to the <paramref name="tracer"/> with the given <paramref name="format"/> message.
+        /// and logging them to the <paramref name="tracer"/> with the given <paramref name="errorMessageFormat"/> message.
         /// </summary>
         [DebuggerStepThrough]
-        public static Exception ShieldUI(this ITracer tracer, Action action, string format, params string[] args)
+        public static Exception ShieldUI(this ITracer tracer, Action action, string errorMessageFormat, params string[] errorArgs)
         {
             Guard.NotNull(() => tracer, tracer);
             Guard.NotNull(() => action, action);
-            Guard.NotNullOrEmpty(() => format, format);
-            Guard.NotNull(() => args, args);
+            Guard.NotNullOrEmpty(() => errorMessageFormat, errorMessageFormat);
+            Guard.NotNull(() => errorArgs, errorArgs);
 
             try
             {
@@ -68,9 +68,9 @@ namespace System.Diagnostics
                 }
                 else
                 {
-                    tracer.Error(ex, format, args);
+                    tracer.Error(ex, errorMessageFormat, errorArgs);
 
-                    ShowExceptionAction(ex, format, args);
+                    ShowExceptionAction(ex, errorMessageFormat, errorArgs);
 
                     return ex;
                 }
