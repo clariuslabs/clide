@@ -17,25 +17,24 @@ namespace Clide.Solution
     using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
-    using System.Xml.Linq;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Xml.Linq;
     using System.Text;
     using System.Threading.Tasks;
 
     [TestClass]
-    public class IProjectNodeExtensionsSpec : VsHostedSpec
+    public class ProjectNodeSpec : VsHostedSpec
     {
         internal static readonly IAssertion Assert = new Assertion();
 
         [HostType("VS IDE")]
         [TestMethod]
-        public void WhenSolutionIsOpened_ThenCanGetProjectOutputAssembly()
+        public void WhenSolutionIsOpened_ThenCanGetProjectConfigurations()
         {
             base.OpenSolution("SampleSolution\\SampleSolution.sln");
 
-            //Debug.Fail("Attach");
             var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
 
             var lib = new ITreeNode[] {explorer.Solution }.Traverse(TraverseKind.BreadthFirst, node => node.Nodes)
@@ -43,10 +42,6 @@ namespace Clide.Solution
                 .FirstOrDefault(node => node.DisplayName == "ClassLibrary");
 
             Assert.NotNull(lib);
-
-            var asm = lib.GetOutputAssembly();
-
-            Assert.NotNull(asm);
         }
 
         [HostType("VS IDE")]
@@ -60,7 +55,6 @@ namespace Clide.Solution
                 .Select(e => e.Attribute("Include").Value)
                 .ToList();
             
-            //Debug.Fail("Attach");
             var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
 
             var lib = new ITreeNode[] { explorer.Solution }.Traverse(TraverseKind.BreadthFirst, node => node.Nodes)
@@ -71,11 +65,54 @@ namespace Clide.Solution
 
             var asm = lib.GetReferencedAssemblies().ToList();
 
-            //asm.ForEach(a => Console.WriteLine(a.FullName));
-
             // 7 actual references + mscorlib which is always added automatically.
             Assert.Equal(1 + refs.Count, asm.Count);
             Assert.True(refs.All(r => asm.Any(a => a.GetName().Name == r)));
+        }
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void WhenGettingConfigurations_ThenRetrievesDebugAndRelease()
+        {
+            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var lib = new ITreeNode[] { explorer.Solution }.Traverse(TraverseKind.BreadthFirst, node => node.Nodes)
+                .OfType<IProjectNode>()
+                .FirstOrDefault(node => node.DisplayName == "ClassLibrary");
+
+            var configs = lib.Configuration.Configurations.ToList();
+
+            Assert.True(configs.Contains("Debug"));
+            Assert.True(configs.Contains("Release"));
+        }
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void WhenGettingPlatforms_ThenRetrievesAnyCPU()
+        {
+            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var lib = new ITreeNode[] { explorer.Solution }.Traverse(TraverseKind.BreadthFirst, node => node.Nodes)
+                .OfType<IProjectNode>()
+                .FirstOrDefault(node => node.DisplayName == "ClassLibrary");
+
+            var platforms = lib.Configuration.Platforms.ToList();
+
+            Assert.Equal(1, platforms.Count);
+            Assert.True(platforms.Contains("AnyCPU"));
+        }
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void WhenGettingActiveConfigurationName_ThenRetrievesDebugAnyCPU()
+        {
+            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var lib = new ITreeNode[] { explorer.Solution }.Traverse(TraverseKind.BreadthFirst, node => node.Nodes)
+                .OfType<IProjectNode>()
+                .FirstOrDefault(node => node.DisplayName == "ClassLibrary");
+
+            Assert.Equal("Debug|AnyCPU", lib.Configuration.ActiveConfigurationName);
         }
     }
 }

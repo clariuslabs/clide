@@ -79,24 +79,6 @@ namespace Clide.Solution
             this.toolWindow.Close();
         }
 
-        public IEnumerable<ISolutionExplorerNode> SelectedNodes
-        {
-            get
-            {
-                Func<IVsSolutionHierarchyNode, Lazy<ITreeNode>> getParent = null;
-                Func<IVsSolutionHierarchyNode, ITreeNode> getNode = null;
-
-                getNode = hierarchy => hierarchy == null ? null :
-                    this.nodeFactory.Value.CreateNode(getParent(hierarchy), hierarchy);
-
-                getParent = hierarchy => hierarchy.Parent == null ? null :
-                    new Lazy<ITreeNode>(() => this.nodeFactory.Value.CreateNode(getParent(hierarchy.Parent), hierarchy.Parent));
-
-
-                return this.serviceProvider.GetSelection()
-                    .Select(sel => getNode(new VsSolutionHierarchyNode(sel.Item1, sel.Item2)))
-                    .OfType<ISolutionExplorerNode>();
-            }
-        }
+        public IEnumerable<ISolutionExplorerNode> SelectedNodes { get { return this.Solution.SelectedNodes; } }
     }
 }

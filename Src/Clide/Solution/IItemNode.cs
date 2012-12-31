@@ -17,10 +17,24 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
+    /// <summary>
+    /// Represents an item inside a project or a project folder.
+    /// </summary>
     public interface IItemNode : ISolutionExplorerNode
 	{
+        /// <summary>
+        /// Gets the owning project.
+        /// </summary>
         IProjectNode OwningProject { get; }
-		string PhysicalPath { get; }
+
+        /// <summary>
+        /// Gets the physical path of the item.
+        /// </summary>
+        string PhysicalPath { get; }
+
+        /// <summary>
+        /// Gets the dynamic properties of the item.
+        /// </summary>
 		dynamic Properties { get; }
 	}
 }

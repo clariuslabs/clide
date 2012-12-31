@@ -17,9 +17,19 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
+    /// <summary>
+    /// Represents a folder inside a project or another folder.
+    /// </summary>
     public interface IFolderNode : ISolutionExplorerNode
 	{
+        /// <summary>
+        /// Gets the owning project.
+        /// </summary>
         IProjectNode OwningProject { get; }
+
+        /// <summary>
+        /// Creates a nested folder.
+        /// </summary>
         IFolderNode CreateFolder(string name);
 	}
 }

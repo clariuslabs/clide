@@ -42,6 +42,7 @@ namespace Clide.Solution
 				var solutionNode = new SolutionNode(
 					new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT),
                     Mock.Of<ITreeNodeFactory<IVsSolutionHierarchyNode>>(),
+                    Mock.Of<IServiceProvider>(),
                     Mock.Of<IAdapterService>(),
 					Mock.Of<ISolutionEvents>());
 
@@ -60,7 +61,8 @@ namespace Clide.Solution
 				var solutionNode = new SolutionNode(
                     new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT),
 					Mock.Of<ITreeNodeFactory<IVsSolutionHierarchyNode>>(),
-					Mock.Of<IAdapterService>(),
+                    Mock.Of<IServiceProvider>(),
+                    Mock.Of<IAdapterService>(),
 					Mock.Of<ISolutionEvents>());
 
 				Assert.Throws<ArgumentException>(() => solutionNode.Create("foo"));
@@ -76,6 +78,7 @@ namespace Clide.Solution
 				var solutionNode = new SolutionNode(
                     new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT),
                     Mock.Of<ITreeNodeFactory<IVsSolutionHierarchyNode>>(),
+                    Mock.Of<IServiceProvider>(),
                     Mock.Of<IAdapterService>(),
 					Mock.Of<ISolutionEvents>());
 
@@ -87,7 +90,17 @@ namespace Clide.Solution
             [TestMethod]
             public void WhenGettingParent_ThenReturnsNull()
             {
+                var solution = ServiceProvider.GetService<IVsSolution>();
+                var hierarchy = solution as IVsHierarchy;
 
+                var solutionNode = new SolutionNode(
+                    new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT),
+                    Mock.Of<ITreeNodeFactory<IVsSolutionHierarchyNode>>(),
+                    Mock.Of<IServiceProvider>(),
+                    Mock.Of<IAdapterService>(),
+                    Mock.Of<ISolutionEvents>());
+
+                Assert.Null(solutionNode.Parent);
             }
 		}
 	}

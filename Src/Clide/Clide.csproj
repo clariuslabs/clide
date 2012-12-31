@@ -131,6 +131,7 @@
     <Compile Include="OptionsPageWindowFactory.cs" />
     <Compile Include="Solution\Extensions\IProjectNodeExtensions.cs" />
     <Compile Include="Solution\Factories\SolutionItemNodeFactory.cs" />
+    <Compile Include="Solution\Implementation\ProjectConfiguration.cs" />
     <Compile Include="Solution\Implementation\SolutionItemNode.cs" />
     <Compile Include="Solution\ISolutionItemNode.cs" />
     <Compile Include="Solution\Implementation\ConfigProjectProperties.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="Solution\Implementation\ItemProperties.cs" />
     <Compile Include="Solution\Implementation\GlobalProjectProperties.cs" />
     <Compile Include="Solution\ISolutionExplorerNode.cs" />
+    <Compile Include="Solution\IProjectConfiguration.cs" />
     <Compile Include="VisualStudio\VsHierarchyExtensions.cs" />
     <Compile Include="Hosting\Host.cs" />
     <Compile Include="Hosting\HostFactory.cs" />

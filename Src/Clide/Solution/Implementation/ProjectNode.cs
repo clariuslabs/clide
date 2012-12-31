@@ -24,6 +24,8 @@ namespace Clide.Solution
     using Clide.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.VisualStudio;
+    using System.Collections.Generic;
+    using System.Collections;
 
     internal class ProjectNode : SolutionTreeNode, IProjectNode
 	{
@@ -40,7 +42,11 @@ namespace Clide.Solution
 
 		    this.Project = new Lazy<EnvDTE.Project>(() => (EnvDTE.Project)hierarchyNode.VsHierarchy.Properties(hierarchyNode.ItemId).ExtenderObject);
             this.properties = new Lazy<GlobalProjectProperties>(() => new GlobalProjectProperties(this));
+            this.Configuration = new ProjectConfiguration(this);
 		}
+
+        public IProjectConfiguration Configuration { get; private set; }
+        public string ActiveConfigurationName { get { return this.Configuration.ActiveConfiguration + "|" + this.Configuration.ActivePlatform; } }
 
 		public Lazy<EnvDTE.Project> Project { get; private set; }
 

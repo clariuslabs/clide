@@ -54,6 +54,9 @@
             Assert.IsFalse(hashCodes.Contains(hierarchy2.GetHashCode()));
         }
 
+        // This test only passes on VS2012, meaning they changed the behavior 
+        // of the IVsSolution service...
+        [Ignore]
         [HostType("VS IDE")]
         [TestMethod]
         public void WhenClosingAndReopeningSolution_ThenSolutionInstanceIsDifferent()

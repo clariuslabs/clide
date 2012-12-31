@@ -31,7 +31,9 @@ namespace Clide.Solution
 		ISolutionNode Solution { get; }
 
         /// <summary>
-        /// Gets the currently selected nodes in the solution explorer tree.
+        /// Gets the currently selected nodes in the solution explorer tree, 
+        /// which is retrieved from the <see cref="Solution"/> property 
+        /// <see cref="ISolutionNode.SelectedNodes"/>.
         /// </summary>
         IEnumerable<ISolutionExplorerNode> SelectedNodes { get; }
 	}

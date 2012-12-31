@@ -17,14 +17,43 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
+    using System.Collections.Generic;
+
+    /// <summary>
+    /// Represents a project in the solution explorer tree.
+    /// </summary>
     public interface IProjectNode : ISolutionExplorerNode
 	{
+        /// <summary>
+        /// Gets the project configuration information.
+        /// </summary>
+        IProjectConfiguration Configuration { get; }
+
+        /// <summary>
+        /// Creates a folder inside the project.
+        /// </summary>
 		IFolderNode CreateFolder(string name);
+
+        /// <summary>
+        /// Gets the physical path of the project.
+        /// </summary>
 		string PhysicalPath { get; }
 
+        /// <summary>
+        /// Saves pending changes to the project file.
+        /// </summary>
         void Save();
 
+        /// <summary>
+        /// Gets the global properties of the project.
+        /// </summary>
 		dynamic Properties { get; }
-        dynamic PropertiesFor(string configurationAndPlatform);
+
+        /// <summary>
+        /// Gets the configuration-specific properties for the project.
+        /// </summary>
+        /// <param name="configurationName">Configuration names are the combination 
+        /// of a project configuration and the platform, like "Debug|AnyCPU".</param>
+        dynamic PropertiesFor(string configurationName);
 	}
 }
