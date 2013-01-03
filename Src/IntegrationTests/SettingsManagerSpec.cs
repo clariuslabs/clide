@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.ComponentModel;
-using Microsoft.VSSDK.Tools.VsIdeTesting;
 using Microsoft.VisualStudio.Shell.Settings;
 using Microsoft.VisualStudio.Settings;
 using System.ComponentModel.DataAnnotations;
@@ -23,7 +22,7 @@ namespace Clide
 			[TestInitialize]
 			public void Initialize()
 			{
-				var shellManager = new ShellSettingsManager(VsIdeTestHostContext.ServiceProvider);
+				var shellManager = new ShellSettingsManager(Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider);
 				this.settingsStore = shellManager.GetWritableSettingsStore(SettingsScope.UserSettings);
 
 				var collection = SettingsManager.GetSettingsCollectionName(typeof(Foo));
@@ -35,7 +34,7 @@ namespace Clide
 			[TestMethod]
 			public void WhenReadingSettingsAndNoExistingOne_ThenReadsDefaultValues()
 			{
-				var manager = new SettingsManager(VsIdeTestHostContext.ServiceProvider);
+                var manager = new SettingsManager(Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider);
 
 				var foo = new Foo();
 				manager.Read(foo);
@@ -55,7 +54,7 @@ namespace Clide
 			[TestMethod]
 			public void WhenSavingSettings_ThenCanReadThem()
 			{
-				var manager = new SettingsManager(VsIdeTestHostContext.ServiceProvider);
+                var manager = new SettingsManager(Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider);
 
 				var foo = new Foo
 				{
@@ -90,7 +89,7 @@ namespace Clide
 			[TestMethod]
 			public void WhenSavingInvalidSettings_ThenThrowsValidationException()
 			{
-				var manager = new SettingsManager(VsIdeTestHostContext.ServiceProvider);
+                var manager = new SettingsManager(Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider);
 
 				var foo = new Foo
 				{
@@ -104,7 +103,7 @@ namespace Clide
 			[TestMethod]
 			public void WhenSavingValueTypeSetting_ThenAlwaysSaveIfDifferentThanDefaultValue()
 			{
-				var manager = new SettingsManager(VsIdeTestHostContext.ServiceProvider);
+                var manager = new SettingsManager(Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider);
 
 				var before = new Foo
 				{

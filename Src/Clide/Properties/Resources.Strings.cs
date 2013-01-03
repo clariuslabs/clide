@@ -18,12 +18,6 @@ namespace Clide.Properties
 	[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
 	static partial class Strings
 	{
-		/// <summary>
-		/// Looks up a localized string similar to: 
-		///	Clide
-		/// </summary>
-		public static string OutputPaneTitle { get { return Resources.OutputPaneTitle; } }
-		
 		///	<summary>
 		///	Provides access to string resources.
 		///	</summary>
@@ -246,6 +240,20 @@ namespace Clide.Properties
 			///	Tools options pages are not supported in this version of Visual Studio.
 			/// </summary>
 			public static string Unsupported { get { return Resources.OptionsManager_Unsupported; } }
+		}
+		
+		///	<summary>
+		///	Provides access to string resources.
+		///	</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		public static partial class DevEnv
+		{
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Clide
+			/// </summary>
+			public static string OutputPaneTitle { get { return Resources.DevEnv_OutputPaneTitle; } }
 		}
 		
 		///	<summary>
@@ -501,6 +509,52 @@ namespace Clide.Properties
 				return Resources.IProjectNodeExtensions_NoTargetAssemblyName.FormatWith(new 
 				{
 					projectName = projectName,
+				});
+			}
+		}
+		
+		///	<summary>
+		///	Provides access to string resources.
+		///	</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		public static partial class DevEnvFactory
+		{
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Composition errors prevented the successfull creation of the development environment API. All {primaryRejectionCount} primary rejection errors will be logged.
+			/// </summary>
+			public static string CompositionErrors(object primaryRejectionCount)
+			{
+				return Resources.DevEnvFactory_CompositionErrors.FormatWith(new 
+				{
+					primaryRejectionCount = primaryRejectionCount,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Initializing development environment composition.
+			/// </summary>
+			public static string CreatingComposition { get { return Resources.DevEnvFactory_CreatingComposition; } }
+		}
+		
+		///	<summary>
+		///	Provides access to string resources.
+		///	</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		public static partial class IServiceProviderExtensions
+		{
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Specified package type '{packageType}' does not have the required [Guid] attribute.
+			/// </summary>
+			public static string MissingGuidAttribute(object packageType)
+			{
+				return Resources.IServiceProviderExtensions_MissingGuidAttribute.FormatWith(new 
+				{
+					packageType = packageType,
 				});
 			}
 		}

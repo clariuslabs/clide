@@ -12,36 +12,33 @@
     using System.Collections.Generic;
     using System.ComponentModel.Composition.Hosting;
     using Clide;
+    using Microsoft.VisualStudio.ExtensibilityHosting;
 
     [Guid(Constants.PackageGuid)]
-	[ProvideAutoLoad(UIContextGuids.NoSolution)]
-	[PackageRegistration(UseManagedResourcesOnly = true)]
+    [ProvideAutoLoad(UIContextGuids.NoSolution)]
+    [PackageRegistration(UseManagedResourcesOnly = true)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(MyToolWindow))]
     public class ShellPackage : Package, IShellPackage
-	{
-        private IHost<ShellPackage, IShellPackage> host;
-        
-        public ShellPackage()
-        {
-            this.host = HostFactory.CreateHost<ShellPackage, IShellPackage>(ServiceProvider.GlobalProvider, Constants.CatalogName);
-        }
+    {
+        private static readonly Guid OutputPaneId = new Guid("{05AF71DD-4245-40E1-A36E-265549CCD9C1}");
+        private static readonly string OutputPaneTitle = "Clide Integration Test Package";
+
+        private IDisposable host;
 
         protected override void Initialize()
         {
             base.Initialize();
-            this.host.Initialize(this);
+            this.host = Host.Initialize(this, OutputPaneId, OutputPaneTitle);
+            Console.WriteLine("Shell package initialized");
         }
 
-        [Import]
-        public IDevEnv DevEnv { get; set; }
-
-        [Import]
-        public IMessageBoxService Messages { get; set; }
-
-        public ICompositionService Composition
+        [Export]
+        public IShellPackage Shell
         {
-            get { return this.host.Composition; }
+            get { return ServiceProvider.GlobalProvider.GetLoadedPackage<ShellPackage>(); }
         }
+
+        public IDevEnv DevEnv { get { return Clide.DevEnv.Get(this); } }
     }
 }

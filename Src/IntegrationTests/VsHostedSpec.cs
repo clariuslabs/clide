@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.VSSDK.Tools.VsIdeTesting;
 using System.Threading;
 using System.IO;
 using System.Windows.Forms;
@@ -13,6 +12,7 @@ using Clide;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio;
 using IntegrationPackage;
+using EnvDTE;
 
 [TestClass]
 public abstract class VsHostedSpec
@@ -26,32 +26,24 @@ public abstract class VsHostedSpec
 
     protected EnvDTE.DTE Dte
     {
-        get { return VsIdeTestHostContext.Dte; }
+        get { return ServiceProvider.GetService<DTE>(); }
     }
 
     protected IServiceProvider ServiceProvider
     {
-        get { return VsIdeTestHostContext.ServiceProvider; }
+        get { return Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider; }
     }
 
     protected CompositionContainer Container
     {
-        get { return (CompositionContainer)this.IntegrationPackage.Composition; }
+        get { return (CompositionContainer)this.IntegrationPackage.DevEnv.CompositionService; }
     }
 
     private Lazy<ShellPackage> integrationPackage;
 
     private ShellPackage GetPackage()
     {
-        var shell = this.ServiceProvider.GetService<SVsShell, IVsShell>();
-        IVsPackage package;
-        var guid = new Guid(global::IntegrationPackage.Constants.PackageGuid);
-        shell.IsPackageLoaded(ref guid, out package);
-
-        if (package == null)
-            ErrorHandler.ThrowOnFailure(shell.LoadPackage(ref guid, out package));
-
-        return package as ShellPackage;
+        return (ShellPackage)this.ServiceProvider.GetExportedValue<IShellPackage>();
     }
 
     protected ShellPackage IntegrationPackage { get { return this.integrationPackage.Value; } }
@@ -64,6 +56,14 @@ public abstract class VsHostedSpec
             Dte.SuppressUI = false;
             Dte.MainWindow.Visible = true;
             Dte.MainWindow.WindowState = EnvDTE.vsWindowState.vsWindowStateMaximize;
+            GetPackage();
+        }
+
+        var shellEvents = new ShellEvents(ServiceProvider);
+        var initialized = shellEvents.IsInitialized;
+        while (!initialized)
+        {
+            System.Threading.Thread.Sleep(10);
         }
     }
 
@@ -113,7 +113,7 @@ public abstract class VsHostedSpec
             action();
             if (retryCondition())
             {
-                Thread.Sleep(millisecondsToWait);
+                System.Threading.Thread.Sleep(millisecondsToWait);
                 Application.DoEvents();
                 retry++;
             }

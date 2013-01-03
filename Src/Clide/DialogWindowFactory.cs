@@ -36,75 +36,24 @@ namespace Clide
 	[Export(typeof(IDialogWindowFactory))]
 	internal class DialogWindowFactory : IDialogWindowFactory
 	{
-		private static readonly MethodInfo ComposeExportedValueMethod = Reflect<CompositionContainer>.GetMethod(x => x.ComposeExportedValue<string>(null)).GetGenericMethodDefinition();
-
-		private IComponentModel components;
 		private IVsUIShell uiShell;
 		private IUIThread uiThread;
 
 		[ImportingConstructor]
 		public DialogWindowFactory(
-			[Import(VsContractNames.IComponentModel)] IComponentModel components,
 			[Import(VsContractNames.IVsUIShell)] IVsUIShell uiShell,
 			IUIThread uiThread)
 		{
-			Guard.NotNull(() => components, components);
 			Guard.NotNull(() => uiShell, uiShell);
 			Guard.NotNull(() => uiThread, uiThread);
 
-			this.components = components;
 			this.uiShell = uiShell;
 			this.uiThread = uiThread;
 		}
 
-		public TView CreateDialog<TView, TDataContext>(params object[] dynamicContextValues)
-			where TView : IDialogWindow, new()
-			where TDataContext : class
-		{
-			TView view = default(TView);
-			Action action = () =>
-			{
-				view = CreateDialogImpl<TView>();
-
-				// Optimize code path if no dynamic context was deceived.
-				if (dynamicContextValues == null || dynamicContextValues.Length == 0)
-				{ 
-					 view.DataContext = this.components.GetService<TDataContext>();
-				}
-				else
-				{
-					var container = new CompositionContainer(this.components.DefaultExportProvider);
-					foreach (var dynamicValue in dynamicContextValues.Where(value => value != null))
-					{
-						var composeValue = ComposeExportedValueMethod.MakeGenericMethod(dynamicValue.GetType());
-						composeValue.Invoke(container, new object[] { dynamicValue });
-
-						foreach (var iface in dynamicValue.GetType().GetInterfaces())
-						{
-							composeValue = ComposeExportedValueMethod.MakeGenericMethod(iface);
-							composeValue.Invoke(container, new object[] { dynamicValue });
-						}
-					}
-				}
-			};
-
-			this.uiThread.Invoke(action);
-
-			return view;
-		}
-
 		public TView CreateDialog<TView>() where TView : IDialogWindow, new()
 		{
-			TView view = default(TView);
-
-			Action action = () =>
-			{
-				view = CreateDialogImpl<TView>();
-			};
-
-			this.uiThread.Invoke(action);
-
-			return view;
+            return this.uiThread.Invoke<TView>(CreateDialogImpl<TView>);
 		}
 
 		private TView CreateDialogImpl<TView>() where TView : IDialogWindow, new()

@@ -17,8 +17,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
+    using Microsoft.VisualStudio.ExtensibilityHosting;
     using Microsoft.VisualStudio.Shell;
     using System;
+    using System.ComponentModel.Composition;
+    using System.Linq;
 
     /// <summary>
     /// Initializes the clide host.
@@ -39,6 +42,26 @@ namespace Clide
             where TPackage : Package, TExport
         {
             return new Host<TPackage, TExport>(globalServiceProvider, catalogName);
+        }
+
+        internal static VsExportProviderSettings CreateExportSettings()
+        {
+            var settings = new VsExportProviderSettings(
+                VsExportProvidingPreference.AfterExportsFromOtherContainers,
+                VsExportSharingPolicy.ShareEverything | 
+                VsExportSharingPolicy.IncludeExportsFromOthers | 
+                VsExportSharingPolicy.IncludeExportsFromOthersInInnerScopes | 
+                VsExportSharingPolicy.ProvideExportsToOthers,
+                VsContainerHostingPolicy.Default);
+
+            typeof(HostFactory).Assembly
+                .GetExportedTypes()
+                .Where(t => t.IsInterface)
+                .Select(t => AttributedModelServices.GetContractName(t))
+                .ToList()
+                .ForEach(name => settings.AddPolicy(name, VsExportSharingPolicy.ShareNothing));
+
+            return settings;
         }
     }
 }

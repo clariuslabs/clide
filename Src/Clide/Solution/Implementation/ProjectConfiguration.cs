@@ -40,7 +40,7 @@ namespace Clide.Solution
 
         public string ActivePlatform
         {
-            get { return this.project.Project.Value.ConfigurationManager.ActiveConfiguration.PlatformName; }
+            get { return this.project.Project.Value.ConfigurationManager.ActiveConfiguration.PlatformName.Replace(" ", "").Trim(); }
         }
 
         public IEnumerable<string> Configurations

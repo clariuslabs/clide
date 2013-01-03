@@ -199,7 +199,9 @@ namespace Clide
                 }
 
                 this.container = new CompositionContainer(vsCatalog, composition.DefaultExportProvider);
-                VsCompositionContainer.Create(new LocalOnlyExportProvider(this.container));
+                var vsContainer = VsCompositionContainer.Create(new LocalOnlyExportProvider(this.container));//, HostFactory.CreateExportSettings());
+                //var vsContainer = VsCompositionContainer.Create(this.container, HostFactory.CreateExportSettings());
+
                 tracer.Info("Composition container created successfully");
 
                 this.outputWindowManager = new TraceOutputWindowManager(

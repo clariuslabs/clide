@@ -52,8 +52,11 @@ namespace Clide.Solution
 
         public static Assembly GetOutputAssembly(this IProjectNode project)
         {
-            var fileName = project.Properties.TargetFileName;
-            var outDir = project.Properties.TargetDir;
+            var fileName = (string)project.Properties.TargetFileName;
+            var outDir = (string)Path.Combine(
+                project.Properties.MSBuildProjectDirectory,
+                project.Properties.BaseIntermediateOutputPath,
+                project.Configuration.ActiveConfiguration);
 
             if (string.IsNullOrEmpty(fileName) || string.IsNullOrEmpty(outDir))
             {
@@ -61,7 +64,7 @@ namespace Clide.Solution
                 return null;
             }
 
-            var assemblyFile = (string)Path.Combine(outDir, fileName);
+            var assemblyFile = Path.Combine(outDir, fileName);
 
             if (!File.Exists(assemblyFile))
             {
@@ -155,7 +158,7 @@ namespace Clide.Solution
             }
             catch (Exception e)
             {
-                tracer.Warn(Strings.IProjectNodeExtensions.FailedToLoadAssembly(reference.Name, reference.Path));
+                tracer.Warn(e, Strings.IProjectNodeExtensions.FailedToLoadAssembly(reference.Name, reference.Path));
                 return null;
             }
         }

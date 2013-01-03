@@ -124,6 +124,33 @@ namespace Clide.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clide.
+        /// </summary>
+        internal static string DevEnv_OutputPaneTitle {
+            get {
+                return ResourceManager.GetString("DevEnv_OutputPaneTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Composition errors prevented the successfull creation of the development environment API. All {primaryRejectionCount} primary rejection errors will be logged..
+        /// </summary>
+        internal static string DevEnvFactory_CompositionErrors {
+            get {
+                return ResourceManager.GetString("DevEnvFactory_CompositionErrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Initializing development environment composition..
+        /// </summary>
+        internal static string DevEnvFactory_CreatingComposition {
+            get {
+                return ResourceManager.GetString("DevEnvFactory_CreatingComposition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to create output window for diagnostics traces..
         /// </summary>
         internal static string Diagnostics_FailedToCreateOutputWindow {
@@ -214,6 +241,15 @@ namespace Clide.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Specified package type &apos;{packageType}&apos; does not have the required [Guid] attribute..
+        /// </summary>
+        internal static string IServiceProviderExtensions_MissingGuidAttribute {
+            get {
+                return ResourceManager.GetString("IServiceProviderExtensions_MissingGuidAttribute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to register page &apos;{pageType}&apos;..
         /// </summary>
         internal static string OptionsManager_FailedToRegisterPage {
@@ -273,15 +309,6 @@ namespace Clide.Properties {
         internal static string OptionsManager_Unsupported {
             get {
                 return ResourceManager.GetString("OptionsManager_Unsupported", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Clide.
-        /// </summary>
-        internal static string OutputPaneTitle {
-            get {
-                return ResourceManager.GetString("OutputPaneTitle", resourceCulture);
             }
         }
         

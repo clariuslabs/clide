@@ -4,7 +4,7 @@
   <Import Project="$(MSBuildThisFileDirectory)..\Clide.props" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{53810C4A-FAB5-41E8-AF54-39742A7D1435}</ProjectGuid>
     <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -14,6 +14,8 @@
     <AssemblyName>IntegrationPackage</AssemblyName>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\Common\ClariusLabs.snk</AssemblyOriginatorKeyFile>
+    <TargetVsixContainerName>Clide.IntegrationPackage.vsix</TargetVsixContainerName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,22 +36,12 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=$(VisualStudioVersion).0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.ExtensibilityHosting, Version=$(VisualStudioVersion).0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio $(VisualStudioVersion)\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.ExtensibilityHosting.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.ExtensibilityHosting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.Shell.$(VisualStudioVersion), Version=$(VisualStudioVersion).0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.Shell.Immutable.$(VisualStudioVersion), Version=$(VisualStudioVersion).0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio 2010 SDK\VisualStudioIntegration\Common\Assemblies\v4.0\Microsoft.VisualStudio.Shell.Immutable.10.0.dll</HintPath>
-    </Reference>
-    <Reference Condition="$(Vs11)" Include="Microsoft.VisualStudio.Shell.Interop.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
@@ -133,7 +125,7 @@
       <DependentUpon>FooView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ForcePackageLoadComponent.cs" />
-    <Compile Include="ISamplePackage.cs" />
+    <Compile Include="IShellPackage.cs" />
     <Compile Include="MyControl.xaml.cs">
       <DependentUpon>MyControl.xaml</DependentUpon>
     </Compile>
@@ -147,7 +139,6 @@
     <None Include="..\..\Common\ClariusLabs.snk">
       <Link>ClariusLabs.snk</Link>
     </None>
-    <None Include="IntegrationPackagePackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SampleCommand.cs" />
     <Compile Include="ShellPackage.cs" />
@@ -186,52 +177,37 @@
     <ProjectReference Include="..\Clide\Clide.csproj">
       <Project>{eaf59c6d-a973-48e6-a90a-5e894ecec3f6}</Project>
       <Name>Clide</Name>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
-  <!-- Begin VS 2010 / 2012 support -->
   <PropertyGroup Condition="'$(VisualStudioVersion)' == '11.0'">
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
-    <TargetVsixContainerName>Clide.IntegrationPackage-vs2012.vsix</TargetVsixContainerName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(VisualStudioVersion)' == '10.0'">
-    <TargetVsixContainerName>Clide.IntegrationPackage-vs2010.vsix</TargetVsixContainerName>
-  </PropertyGroup>
-  <ItemGroup Condition="'$(VisualStudioVersion)' == '10.0'">
-    <!-- This brings in the appropriate manifest according to the VS version to target -->
-    <None Include="VisualStudio\2010\source.extension.vsixmanifest">
-      <Link>source.extension.vsixmanifest</Link>
-    </None>
-  </ItemGroup>
-  <ItemGroup Condition="'$(VisualStudioVersion)' == '11.0'">
-    <None Include="VisualStudio\2012\source.extension.vsixmanifest">
-      <Link>source.extension.vsixmanifest</Link>
-    </None>
-  </ItemGroup>
   <ItemGroup>
-    <Content Include="VisualStudio\2010\source.extension.vsixmanifest">
+    <Content Include="ShellPackage.pkgdef">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <None Include="source.extension.vsixmanifest">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-    </Content>
-    <Content Include="VisualStudio\2012\source.extension.vsixmanifest">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Content>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Common\ClariusLabs.licenseheader">
       <Link>ClariusLabs.licenseheader</Link>
     </None>
   </ItemGroup>
-  <!-- End VS 2010 / 2012 support -->
   <PropertyGroup>
     <RegisterOutputPackage>true</RegisterOutputPackage>
     <RegisterWithCodebase>true</RegisterWithCodebase>
     <StartAction>Program</StartAction>
     <StartProgram>C:\Program Files (x86)\Microsoft Visual Studio $(VisualStudioVersion)\Common7\IDE\devenv.exe</StartProgram>
+    <!--<StartProgram>C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\devenv.exe</StartProgram>-->
     <StartArguments>/rootSuffix Exp /log</StartArguments>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

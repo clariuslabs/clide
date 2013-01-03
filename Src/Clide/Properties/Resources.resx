@@ -168,7 +168,7 @@
   <data name="OptionsManager_Unsupported" xml:space="preserve">
     <value>Tools options pages are not supported in this version of Visual Studio.</value>
   </data>
-  <data name="OutputPaneTitle" xml:space="preserve">
+  <data name="DevEnv_OutputPaneTitle" xml:space="preserve">
     <value>Clide</value>
   </data>
   <data name="SettingsManager_CannotSaveAsString" xml:space="preserve">
@@ -233,5 +233,14 @@
   </data>
   <data name="IProjectNodeExtensions_NoTargetAssemblyName" xml:space="preserve">
     <value>Could not determine the target assembly name for project '{projectName}'. The project TargetFileName and/or TargetDir properties are empty.</value>
+  </data>
+  <data name="DevEnvFactory_CompositionErrors" xml:space="preserve">
+    <value>Composition errors prevented the successfull creation of the development environment API. All {primaryRejectionCount} primary rejection errors will be logged.</value>
+  </data>
+  <data name="DevEnvFactory_CreatingComposition" xml:space="preserve">
+    <value>Initializing development environment composition.</value>
+  </data>
+  <data name="IServiceProviderExtensions_MissingGuidAttribute" xml:space="preserve">
+    <value>Specified package type '{packageType}' does not have the required [Guid] attribute.</value>
   </data>
 </root>

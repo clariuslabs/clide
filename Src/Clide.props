@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <OutputPath>bin\$(VisualStudioVersion)\$(Configuration)\</OutputPath>
+        <OutputPath>bin\$(Configuration)\</OutputPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(VisualStudioVersion)' == '11.0'">
         <DefineConstants>$(DefineConstants);v11</DefineConstants>
-        <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-        <NugetTarget>net45</NugetTarget>
+        <NugetTarget>net40</NugetTarget>
         <Vs11>True</Vs11>
         <Vs10>False</Vs10>
     </PropertyGroup>
     <PropertyGroup Condition="'$(VisualStudioVersion)' != '11.0'">
         <DefineConstants>$(DefineConstants);v10</DefineConstants>
-        <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
         <NugetTarget>net40</NugetTarget>
         <Vs11>False</Vs11>
         <Vs10>True</Vs10>

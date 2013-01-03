@@ -8,7 +8,7 @@ using IntegrationPackage;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 
-[assembly: VsCatalogName(Constants.CatalogName)]
+//[assembly: VsCatalogName(Constants.CatalogName)]
 
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]

@@ -19,11 +19,14 @@ namespace Clide
 {
     using System.Collections.Generic;
     using Clide.Commands;
+    using System.ComponentModel.Composition;
 
     public interface IDevEnv : IShellEvents, IFluentInterface
 	{
-		IDialogWindowFactory DialogFactory { get; }
-		IStatusBar Status { get; }
+        ICompositionService CompositionService { get; }
+		IDialogWindowFactory DialogWindowFactory { get; }
+        IMessageBoxService MessageBoxService { get; }
+		IStatusBar StatusBar { get; }
 		IEnumerable<IToolWindow> ToolWindows { get; }
 		IUIThread UIThread { get; }
 	}

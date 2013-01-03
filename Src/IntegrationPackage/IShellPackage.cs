@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel.Composition;
+using Clide;
 
 namespace IntegrationPackage
 {
@@ -13,6 +14,6 @@ namespace IntegrationPackage
 	/// </summary>
 	public interface IShellPackage
 	{
-        ICompositionService Composition { get; }
+        IDevEnv DevEnv { get; }
 	}
 }

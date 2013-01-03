@@ -15,6 +15,7 @@
     <FileAlignment>512</FileAlignment>
     <OutputPath>nuget\lib\$(NugetTarget)\</OutputPath>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -43,24 +44,15 @@
     <Reference Include="Microsoft.ComponentModel.Composition.Diagnostics">
       <HintPath>..\..\Lib\Microsoft.ComponentModel.Composition.Diagnostics.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=$(VisualStudioVersion).0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.ExtensibilityHosting, Version=$(VisualStudioVersion).0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio $(VisualStudioVersion)\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.ExtensibilityHosting.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.ExtensibilityHosting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.Shell.$(VisualStudioVersion), Version=$(VisualStudioVersion).0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <!-- Shell.11 already contains the Settings assembly -->
-    <Reference Condition="$(Vs10)" Include="Microsoft.VisualStudio.Settings, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <Visible>$(Vs10)</Visible>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.Shell.Design, Version=$(VisualStudioVersion).0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.Settings, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Design, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio $(VisualStudioVersion)\VSSDK\VisualStudioIntegration\Common\Assemblies\v2.0\Microsoft.VisualStudio.Shell.Interop.10.0.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="PresentationCore" />
@@ -95,10 +87,13 @@
     <Compile Include="Commands\VsCommandExtensionAdapter.cs" />
     <Compile Include="Composition\ComponentModel.cs" />
     <Compile Include="Composition\ContractNames.cs" />
-    <Compile Include="Composition\DecoratingReflectionCatalog.cs" />
-    <Compile Include="Composition\SelectorEqualityComparer.cs" />
+    <Compile Include="Composition\SingletonCatalog.cs" />
     <Compile Include="Composition\VsContractNames.cs" />
     <Compile Include="Composition\VsExportedServices.cs" />
+    <Compile Include="DevEnv.cs" />
+    <Compile Include="Extensions\IServiceProviderExtensions.cs" />
+    <Compile Include="Host.cs" />
+    <Compile Include="DevEnvLocator.cs" />
     <Compile Include="Events\ProjectEventArgs.cs" />
     <Compile Include="Events\ShellEvents.cs" />
     <Compile Include="Events\SolutionEvents.cs" />
@@ -141,11 +136,6 @@
     <Compile Include="Solution\ISolutionExplorerNode.cs" />
     <Compile Include="Solution\IProjectConfiguration.cs" />
     <Compile Include="VisualStudio\VsHierarchyExtensions.cs" />
-    <Compile Include="Hosting\Host.cs" />
-    <Compile Include="Hosting\HostFactory.cs" />
-    <Compile Include="Hosting\IHost.cs" />
-    <Compile Include="Hosting\LocalOnlyExportProvider.cs" />
-    <Compile Include="Hosting\SingletonComposition.cs" />
     <Compile Include="netfx\System\AmbientSingleton.cs" />
     <Compile Include="netfx\System\Collections\Generic\IEnumerable\TraverseKind.cs" />
     <Compile Include="netfx\System\Collections\Generic\IEnumerable\Traverser.cs" />
@@ -159,11 +149,11 @@
     <Compile Include="Solution\VsHierarchyItem.cs" />
     <Compile Include="Solution\IVsSolutionHierarchyNode.cs" />
     <Compile Include="Solution\SolutionExplorerNodeFactoryAttribute.cs" />
-    <Compile Include="TreeNodes\AggregateNodeFactory.cs" />
-    <Compile Include="TreeNodes\FallbackNodeFactory.cs" />
-    <Compile Include="TreeNodes\ITreeNode.cs" />
+    <Compile Include="UI\TreeNodes\AggregateNodeFactory.cs" />
+    <Compile Include="UI\TreeNodes\FallbackNodeFactory.cs" />
+    <Compile Include="UI\TreeNodes\ITreeNode.cs" />
     <Compile Include="MessageBoxService.cs" />
-    <Compile Include="DevEnv.cs" />
+    <Compile Include="DevEnvImpl.cs" />
     <Compile Include="Diagnostics\IndentingTextListener.cs" />
     <Compile Include="Diagnostics\IUserMessageService.cs" />
     <Compile Include="Diagnostics\OutputWindowTextWriter.cs" />
@@ -256,9 +246,9 @@
     <Compile Include="System\Diagnostics\Tracer\TracerManager.cs" />
     <Compile Include="System\Diagnostics\Tracer\Visibility.cs" />
     <Compile Include="TracingExtensions.cs" />
-    <Compile Include="TreeNodes\ITreeNodeFactory.cs" />
-    <Compile Include="TreeNodes\ITreeNodeFactoryMetadata.cs" />
-    <Compile Include="TreeNodes\TreeNodeFactoryAttribute.cs" />
+    <Compile Include="UI\TreeNodes\ITreeNodeFactory.cs" />
+    <Compile Include="UI\TreeNodes\ITreeNodeFactoryMetadata.cs" />
+    <Compile Include="UI\TreeNodes\TreeNodeFactoryAttribute.cs" />
     <Compile Include="UIThread.cs" />
     <Compile Include="UI\InputBox.xaml.cs">
       <DependentUpon>InputBox.xaml</DependentUpon>

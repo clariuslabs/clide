@@ -21,7 +21,7 @@ namespace System
     /// <summary>
     /// Defines extension methods related to <see cref="IServiceProvider"/>.
     /// </summary>
-    static partial class ServiceProviderExtensions
+    static partial class IServiceProviderExtensions
     {
         /// <summary>
         /// Gets type-based services from the  service provider.

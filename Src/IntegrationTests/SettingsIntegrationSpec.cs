@@ -5,7 +5,6 @@ using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.Settings;
 using Microsoft.VisualStudio.Shell.Settings;
-using Microsoft.VSSDK.Tools.VsIdeTesting;
 using System.ComponentModel;
 
 namespace Clide
@@ -22,7 +21,7 @@ namespace Clide
 			[TestInitialize]
 			public void Initialize()
 			{
-				var shellManager = new ShellSettingsManager(VsIdeTestHostContext.ServiceProvider);
+                var shellManager = new ShellSettingsManager(Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider);
 				this.settingsStore = shellManager.GetWritableSettingsStore(SettingsScope.UserSettings);
 
 				var collection = SettingsManager.GetSettingsCollectionName(typeof(FooSettings));
@@ -34,7 +33,7 @@ namespace Clide
 			[TestMethod]
 			public void WhenCancellingEdit_ValuesShouldNotPersist()
 			{
-				var manager = new SettingsManager(VsIdeTestHostContext.ServiceProvider);
+                var manager = new SettingsManager(Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider);
 				var foo = new FooSettings(manager);
 
 				foo.BeginEdit();
@@ -52,7 +51,7 @@ namespace Clide
 			[TestMethod]
 			public void WhenEndingEdit_ValuesShouldPersist()
 			{
-				var manager = new SettingsManager(VsIdeTestHostContext.ServiceProvider);
+                var manager = new SettingsManager(Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider);
 				var foo = new FooSettings(manager);
 
 				foo.BeginEdit();
@@ -70,7 +69,7 @@ namespace Clide
 			[TestMethod]
 			public void WhenPersisting_ShouldUseFullTypename()
 			{
-				var manager = new SettingsManager(VsIdeTestHostContext.ServiceProvider);
+                var manager = new SettingsManager(Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider);
 				var foo = new FooSettings(manager);
 
 				foo.BeginEdit();

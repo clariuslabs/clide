@@ -46,6 +46,11 @@ namespace Clide.Solution
 
             Assert.NotNull(msb);
 
+            //Console.WriteLine("IntermediateOutputPath                                      : {0}", lib.Properties.IntermediateOutputPath);
+            //Console.WriteLine("DesignTimeIntermediateOutputPath                                      : {0}", lib.Properties.DesignTimeIntermediateOutputPath);
+            //Console.WriteLine("BaseIntermediateOutputPath                                      : {0}", lib.Properties.BaseIntermediateOutputPath);
+            //Console.WriteLine("MSBuildProjectDirectory                                      : {0}", lib.Properties.MSBuildProjectDirectory);
+            
             //Console.WriteLine("OutputFileName: {0}", lib.Properties.OutputFileName);
             //Console.WriteLine("OutputPath: {0}", lib.Properties.OutputPath);
             //Console.WriteLine("TargetDir                                      : {0}", lib.Properties.TargetDir);

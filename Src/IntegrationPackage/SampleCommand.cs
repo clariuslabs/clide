@@ -6,6 +6,7 @@ using System.Windows;
 using System.ComponentModel.Composition;
 using Clide.Commands;
 using Clide;
+using Microsoft.VisualStudio.Shell;
 
 namespace IntegrationPackage
 {
@@ -13,21 +14,13 @@ namespace IntegrationPackage
 	[Command(Constants.PackageGuid, Constants.CommandSet, Constants.cmdHelloClide)]
 	public class SampleCommand : ICommandExtension
 	{
-        private IShellPackage package;
+        private IServiceProvider serviceProvider;
 
-        public SampleCommand()
+        [ImportingConstructor]
+        public SampleCommand([Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider)
         {
-
+            this.serviceProvider = serviceProvider;
         }
-
-        [Import]
-        public Lazy<IShellPackage> Package 
-        {
-            set { this.package = value.Value; } 
-        }
-
-        [Import]
-        public IMessageBoxService Messages { get; set; }
 
 		public string Text
 		{
@@ -36,8 +29,11 @@ namespace IntegrationPackage
 
 		public void Execute(IMenuCommand command)
 		{
-            this.Messages.ShowInformation(string.Format(
-                "Clide Version: {0}", typeof(IDevEnv).Assembly.GetName().Version));
+            DevEnv
+                .Get(this.serviceProvider)
+                .MessageBoxService
+                .ShowInformation(string.Format(
+                    "Clide Version: {0}", typeof(IDevEnv).Assembly.GetName().Version));
         }
 
 		public void QueryStatus(IMenuCommand command)

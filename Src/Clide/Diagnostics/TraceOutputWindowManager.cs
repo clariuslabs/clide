@@ -92,34 +92,40 @@ namespace Clide.Diagnostics
 
         private void OnShellInitialized(object sender, EventArgs args)
         {
-            this.EnsureOutputWindow();
-
-            this.listener.Flush();
-            // Replace temporary listener with the proper one, populating the 
-            // output window from the temporary buffer.
-            var tempLog = this.temporaryWriter.ToString();
-
-            if (!string.IsNullOrEmpty(tempLog))
+            using (tracer.StartActivity("Initializing trace output window"))
             {
-                ErrorHandler.ThrowOnFailure(this.outputWindowPane.OutputStringThreadSafe(this.temporaryWriter.ToString()));
+                this.EnsureOutputWindow();
+
+                this.listener.Flush();
+                // Replace temporary listener with the proper one, populating the 
+                // output window from the temporary buffer.
+                var tempLog = this.temporaryWriter.ToString();
+
+                if (!string.IsNullOrEmpty(tempLog))
+                {
+                    ErrorHandler.ThrowOnFailure(this.outputWindowPane.OutputStringThreadSafe(this.temporaryWriter.ToString()));
+                }
+
+                this.temporaryWriter = null;
+
+                // Remove existing listener which writes to the temporary writer.
+                this.tracerManager.RemoveListener(TracerManager.DefaultSourceName, this.listener);
+
+                // Initialize the true listener that writes to the output window.
+                this.listener = new IndentingTextListener(new OutputWindowTextWriter(this.outputWindowPane), this.outputPaneTitle);
+                this.listener.IndentLevel = 4;
+
+                this.tracerManager.AddListener(TracerManager.DefaultSourceName, this.listener);
+
+                tracer.Info("Trace output window initialized successfully");
             }
-
-            this.temporaryWriter = null;
-
-            // Remove existing listener which writes to the temporary writer.
-            this.tracerManager.RemoveListener(TracerManager.DefaultSourceName, this.listener);
-
-            // Initialize the true listener that writes to the output window.
-            this.listener = new IndentingTextListener(new OutputWindowTextWriter(this.outputWindowPane), this.outputPaneTitle);
-            this.listener.IndentLevel = 4;
-
-            this.tracerManager.AddListener(TracerManager.DefaultSourceName, this.listener);
         }
 
         private void EnsureOutputWindow()
         {
             if (this.outputWindowPane == null)
             {
+                tracer.Info("Creating trace output window");
                 var outputWindow = (IVsOutputWindow)this.serviceProvider.GetService(typeof(SVsOutputWindow));
                 tracer.ShieldUI(() =>
                 {
@@ -127,6 +133,7 @@ namespace Clide.Diagnostics
                     ErrorHandler.ThrowOnFailure(outputWindow.GetPane(ref this.outputPaneGuid, out this.outputWindowPane));
                 },
                 Strings.Diagnostics.FailedToCreateOutputWindow);
+                tracer.Info("Trace output window created");
             }
         }
     }

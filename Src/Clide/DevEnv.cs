@@ -6,78 +6,66 @@ All rights reserved.
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
 * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-
 * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 
-* Neither the name of Clarius Consulting nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #endregion
 
 namespace Clide
 {
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.Composition;
-    using System.Linq;
-    using Clide.Commands;
-    using Microsoft.VisualStudio.Shell;
+    using System.ComponentModel;
+    using System.Diagnostics;
 
-    [Export(typeof(IDevEnv))]
-	[PartCreationPolicy(CreationPolicy.Shared)]
-	internal class DevEnv : IDevEnv, IShellEvents
-	{
-		private Lazy<IStatusBar> status;
-		private IShellEvents shellEvents;
-		private Lazy<IDialogWindowFactory> dialogFactory;
-		private IEnumerable<Lazy<IToolWindow>> toolWindows;
-		private Lazy<IUIThread> uiThread;
+    /// <summary>
+    /// Entry point to the Clide developer environment APIs.
+    /// </summary>
+    public static class DevEnv
+    {
+        private static Lazy<DevEnvLocator> defaultFactory = new Lazy<DevEnvLocator>(() => new DevEnvLocator());
+        private static AmbientSingleton<Func<IServiceProvider, IDevEnv>> devEnvFactory =
+            new AmbientSingleton<Func<IServiceProvider, IDevEnv>>(services => defaultFactory.Value.Get(services));
 
-		[ImportingConstructor]
-		public DevEnv(
-			[Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider,
-			[ImportMany] IEnumerable<Lazy<IToolWindow>> toolWindows,
-			Lazy<IDialogWindowFactory> dialogFactory,
-			Lazy<IUIThread> uiThread,
-			IShellEvents shellEvents)
-		{
-			this.ServiceProvider = serviceProvider;
-			this.dialogFactory = dialogFactory;
-			this.toolWindows = toolWindows;
-			this.shellEvents = shellEvents;
-			this.uiThread = uiThread;
-			this.status = new Lazy<IStatusBar>(() => new StatusBar(this.ServiceProvider));
-		}
+        static DevEnv()
+        {
+            Tracer.Initialize(new TracerManager());
 
-		internal IServiceProvider ServiceProvider { get; set; }
+#if DEBUG
+            Tracer.Manager.SetTracingLevel(TracerManager.DefaultSourceName, SourceLevels.All);
+#else
+            Tracer.Manager.SetTracingLevel(TracerManager.DefaultSourceName, SourceLevels.Warning);
+#endif
 
-		public IStatusBar Status
-		{
-			get { return this.status.Value; }
-		}
+            if (Debugger.IsAttached)
+                Tracer.Manager.SetTracingLevel(TracerManager.DefaultSourceName, SourceLevels.All);
+        }
 
-		public IUIThread UIThread
-		{
-			get { return this.uiThread.Value; }
-		}
+        /// <summary>
+        /// Gets the developer environment API root.
+        /// </summary>
+        /// <remarks>
+        /// By default, the <see cref="IDevEnv"/> instance is cached for the 
+        /// AppDomain, and only created once, using the given 
+        /// IDE services as necessary. This default behavior can 
+        /// be overriden by setting the <see cref="DevEnvFactory"/>.
+        /// </remarks>
+        public static IDevEnv Get(IServiceProvider services)
+        {
+            return devEnvFactory.Value.Invoke(services);
+        }
 
-		public IDialogWindowFactory DialogFactory
-		{
-			get { return this.dialogFactory.Value; }
-		}
-
-		public IEnumerable<IToolWindow> ToolWindows
-		{
-			get { return this.toolWindows.Select(lazy => lazy.Value); }
-		}
-
-		public bool IsInitialized { get { return this.shellEvents.IsInitialized; } }
-
-		public event EventHandler Initialized
-		{
-			add { this.shellEvents.Initialized += value; }
-			remove { this.shellEvents.Initialized -= value; }
-		}
-	}
+        /// <summary>
+        /// Gets or sets the factory that will create instances of 
+        /// <see cref="IDevEnv"/> when the <see cref="Get"/> method 
+        /// is invoked by consumers. This is an ambient singleton, so 
+        /// it is safe to replace it in multi-threaded test runs.
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        public static Func<IServiceProvider, IDevEnv> DevEnvFactory
+        {
+            get { return devEnvFactory.Value; }
+            set { devEnvFactory.Value = value; }
+        }
+    }
 }

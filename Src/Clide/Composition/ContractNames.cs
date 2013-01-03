@@ -31,7 +31,7 @@ namespace Clide.Composition
         public const string ICompositionService = Prefix + "ICompositionService";
 
         /// <summary>
-        /// Contract name for accessing the global ExportProvider..
+        /// Contract name for accessing the ExportProvider.
         /// </summary>
         public const string ExportProvider = Prefix + "ExportProvider";
     }
