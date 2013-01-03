@@ -54,6 +54,7 @@ public abstract class VsHostedSpec
 
     private ShellPackage LoadPackage()
     {
+        //Debug.Fail("Attach");
         return this.ServiceProvider.GetLoadedPackage<ShellPackage>();
     }
 
@@ -71,10 +72,9 @@ public abstract class VsHostedSpec
             Dte.SuppressUI = false;
             Dte.MainWindow.Visible = true;
             Dte.MainWindow.WindowState = EnvDTE.vsWindowState.vsWindowStateMaximize;
-            //System.Diagnostics.Debug.Fail("Attach");
             try
             {
-                LoadPackage();
+                //LoadPackage();
             }
             catch (ImportCardinalityMismatchException)
             {

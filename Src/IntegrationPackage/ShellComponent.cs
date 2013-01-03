@@ -28,7 +28,7 @@ namespace IntegrationPackage
         public ShellComponent([Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider)
         {
             // Force the load of the package.
-            serviceProvider.GetLoadedPackage<ShellPackage>();
+            //serviceProvider.GetLoadedPackage<ShellPackage>();
             this.serviceProvider = serviceProvider;
         }
 

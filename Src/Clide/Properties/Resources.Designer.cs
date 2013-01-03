@@ -160,20 +160,20 @@ namespace Clide.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hosting package &apos;{packageType}&apos; does not have the required [Guid] attribute..
+        /// </summary>
+        internal static string General_MissingGuidAttribute {
+            get {
+                return ResourceManager.GetString("General_MissingGuidAttribute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to initialize host..
         /// </summary>
         internal static string Host_FailedToInitialize {
             get {
                 return ResourceManager.GetString("Host_FailedToInitialize", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Hosting package &apos;{0}&apos; does not have the required [Guid] attribute..
-        /// </summary>
-        internal static string Host_MissingGuidAttribute {
-            get {
-                return ResourceManager.GetString("Host_MissingGuidAttribute", resourceCulture);
             }
         }
         

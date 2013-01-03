@@ -11,13 +11,15 @@ namespace Clide
     [TestClass]
     public class IntegrationPackageSpec : VsHostedSpec
     {
+        internal static readonly IAssertion Assert = new Assertion();
+
         [HostType("VS IDE")]
         [TestMethod]
         public void WhenRetrievingPackage_ThenSucceeds()
         {
             var package = ServiceProvider.GetExportedValue<IShellComponent>();
             
-            Assert.IsNotNull(package);
+            Assert.NotNull(package);
         }
     }
 }

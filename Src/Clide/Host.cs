@@ -15,15 +15,27 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide
 {
     using System;
+    using System.Linq;
     using System.Diagnostics;
     using System.ComponentModel.Composition;
     using Clide.Diagnostics;
     using Clide.Properties;
     using Clide.Commands;
+    using System.Runtime.InteropServices;
 
     public class Host : IDisposable
     {
         private static readonly ITracer tracer = Tracer.Get<Host>();
+        private static IDisposable disposable;
+
+        /// <summary>
+        /// Registers the package components such as commands, filter, options, etc.
+        /// with the development environment.
+        /// </summary>
+        public static void Initialize(IServiceProvider hostingPackage)
+        {
+            Initialize(hostingPackage, null);
+        }
 
         /// <summary>
         /// Initializes the hosting facilities for the given package, 
@@ -35,12 +47,15 @@ namespace Clide
         /// package is loaded, ensuring that the components don't get 
         /// garbage-collected.
         /// </remarks>
-        public static IDisposable Initialize(IServiceProvider hostingPackage, Guid tracingPaneId, string tracingPaneTitle)
+        /// <param name="hostingPackage">The package owning this deploy 
+        /// of Clide.</param>
+        public static IDisposable Initialize(IServiceProvider hostingPackage, string tracingPaneTitle)
         {
             try
             {
                 using (tracer.StartActivity("Initializing package"))
                 {
+                    var tracingPaneId = GetPackageGuidOrThrow(hostingPackage);
                     var devEnv = DevEnv.Get(hostingPackage);
                     // Brings in imports that the package itself might need.
                     devEnv.CompositionService.SatisfyImportsOnce(hostingPackage);
@@ -63,8 +78,19 @@ namespace Clide
             }
         }
 
+        private static Guid GetPackageGuidOrThrow(IServiceProvider owningPackage)
+        {
+            var guid = owningPackage.GetType().GetCustomAttributes(typeof(GuidAttribute), true)
+                .OfType<GuidAttribute>()
+                .FirstOrDefault();
+
+            if (guid == null)
+                throw new ArgumentException(Strings.General.MissingGuidAttribute(owningPackage.GetType()));
+
+            return new Guid(guid.Value);
+        }
+
         private IServiceProvider hostingPackage;
-        private TraceOutputWindowManager outputWindowManager;
 
         private Host(IServiceProvider hostingPackage)
         {
@@ -82,19 +108,29 @@ namespace Clide
 
         private void Initialize(Guid tracingPaneId, string tracingPaneTitle)
         {
+            Initialize();
+
+            if (!string.IsNullOrEmpty(tracingPaneTitle))
+            {
+                // We keep the instance around so that the event handlers 
+                // aren't disposed.
+                disposable = new TraceOutputWindowManager(
+                    this.hostingPackage,
+                    this.shellEvents,
+                    Tracer.Manager,
+                    tracingPaneId,
+                    tracingPaneTitle);
+            }
+        }
+
+        private void Initialize()
+        {
             tracer.Info("Registering package commands");
             this.commands.AddCommands(hostingPackage);
             tracer.Info("Registering package command filters");
             this.commands.AddFilters(hostingPackage);
             tracer.Info("Registering package options pages");
             this.options.AddPages(hostingPackage);
-
-            this.outputWindowManager = new TraceOutputWindowManager(
-                this.hostingPackage,
-                this.shellEvents,
-                Tracer.Manager,
-                tracingPaneId,
-                tracingPaneTitle);
         }
 
         public void Dispose()

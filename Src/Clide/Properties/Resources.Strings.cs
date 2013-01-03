@@ -141,16 +141,24 @@ namespace Clide.Properties
 			///	Failed to initialize host.
 			/// </summary>
 			public static string FailedToInitialize { get { return Resources.Host_FailedToInitialize; } }
+		}
 		
+		///	<summary>
+		///	Provides access to string resources.
+		///	</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		public static partial class General
+		{
 			/// <summary>
 			/// Looks up a localized string similar to: 
-			///	Hosting package '{0}' does not have the required [Guid] attribute.
+			///	Hosting package '{packageType}' does not have the required [Guid] attribute.
 			/// </summary>
-			public static string MissingGuidAttribute(object arg0)
+			public static string MissingGuidAttribute(object packageType)
 			{
-				return Resources.Host_MissingGuidAttribute.FormatWith(new 
+				return Resources.General_MissingGuidAttribute.FormatWith(new 
 				{
-					arg0 = arg0,
+					packageType = packageType,
 				});
 			}
 		}

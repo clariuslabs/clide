@@ -21,7 +21,6 @@
     [ProvideToolWindow(typeof(MyToolWindow))]
     public class ShellPackage : Package
     {
-        private static readonly Guid OutputPaneId = new Guid("{05AF71DD-4245-40E1-A36E-265549CCD9C1}");
         private static readonly string OutputPaneTitle = "Clide Integration Test Package";
 
         private IDisposable host;
@@ -29,7 +28,7 @@
         protected override void Initialize()
         {
             base.Initialize();
-            this.host = Host.Initialize(this, OutputPaneId, OutputPaneTitle);
+            this.host = Host.Initialize(this, OutputPaneTitle);
             Console.WriteLine("Shell package initialized");
         }
     }
