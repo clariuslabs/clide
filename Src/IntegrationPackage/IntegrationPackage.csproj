@@ -134,6 +134,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="ViewModel.cs" />
     <None Include="..\..\Common\ClariusLabs.snk">
       <Link>ClariusLabs.snk</Link>
     </None>

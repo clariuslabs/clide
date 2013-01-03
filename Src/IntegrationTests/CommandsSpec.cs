@@ -14,7 +14,7 @@ namespace Clide
         [TestMethod]
         public void WhenRegisteringAllCommands_ThenCanRetrieveCommand()
         {
-            var package = this.ShellComponent;
+            var package = this.ShellPackage;
 
         }
     }

@@ -93,6 +93,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Compile Include="DevEnvSpec.cs" />
+    <Compile Include="DialogWindowFactorySpec.cs" />
     <Compile Include="Extensions\VsHierarchyExtensionsSpec.cs" />
     <Compile Include="Extensions\VsUIShellExtensionsSpec.cs" />
     <Compile Include="HostingSpec.cs" />

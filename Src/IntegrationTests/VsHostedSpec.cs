@@ -30,7 +30,7 @@ public abstract class VsHostedSpec
 
     protected VsHostedSpec()
     {
-        this.integrationPackage = new Lazy<IShellComponent>(() => LoadPackage());
+        this.integrationPackage = new Lazy<ShellPackage>(() => LoadPackage());
     }
 
     public TestContext TestContext { get; set; }
@@ -50,14 +50,14 @@ public abstract class VsHostedSpec
         get { return (CompositionContainer)DevEnv.Get(this.ServiceProvider).CompositionService; }
     }
 
-    private Lazy<IShellComponent> integrationPackage;
+    private Lazy<ShellPackage> integrationPackage;
 
-    private IShellComponent LoadPackage()
+    private ShellPackage LoadPackage()
     {
-        return this.ServiceProvider.GetExportedValue<IShellComponent>();
+        return this.ServiceProvider.GetLoadedPackage<ShellPackage>();
     }
 
-    protected IShellComponent ShellComponent { get { return this.integrationPackage.Value; } }
+    protected ShellPackage ShellPackage { get { return this.integrationPackage.Value; } }
 
     [TestInitialize]
     public virtual void TestInitialize()
