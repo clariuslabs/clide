@@ -19,6 +19,7 @@ namespace System
     using Clide.Properties;
     using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.Shell;
 
     /// <summary>
     /// Provides useful extensions to the IDE service provider.
@@ -33,25 +34,28 @@ namespace System
         /// <returns>The fully loaded and initialized package.</returns>
         public static TPackage GetLoadedPackage<TPackage>(this IServiceProvider serviceProvider)
         {
-            var guidString = typeof(TPackage)
-                .GetCustomAttributes(true)
-                .OfType<GuidAttribute>()
-                .Select(g => g.Value)
-                .FirstOrDefault();
+            return ThreadHelper.Generic.Invoke(() =>
+            {
+                var guidString = typeof(TPackage)
+                    .GetCustomAttributes(true)
+                    .OfType<GuidAttribute>()
+                    .Select(g => g.Value)
+                    .FirstOrDefault();
 
-            if (guidString == null)
-                throw new InvalidOperationException(Strings.IServiceProviderExtensions.MissingGuidAttribute(typeof(TPackage)));
+                if (guidString == null)
+                    throw new InvalidOperationException(Strings.IServiceProviderExtensions.MissingGuidAttribute(typeof(TPackage)));
 
-            var guid = new Guid(guidString);
-            var vsPackage = default(IVsPackage);
+                var guid = new Guid(guidString);
+                var vsPackage = default(IVsPackage);
 
-            var vsShell = serviceProvider.GetService<SVsShell, IVsShell>();
-            vsShell.IsPackageLoaded(ref guid, out vsPackage);
+                var vsShell = serviceProvider.GetService<SVsShell, IVsShell>();
+                vsShell.IsPackageLoaded(ref guid, out vsPackage);
 
-            if (vsPackage == null)
-                ErrorHandler.ThrowOnFailure(vsShell.LoadPackage(ref guid, out vsPackage));
+                if (vsPackage == null)
+                    ErrorHandler.ThrowOnFailure(vsShell.LoadPackage(ref guid, out vsPackage));
 
-            return (TPackage)vsPackage;
+                return (TPackage)vsPackage;
+            });
         }
     }
 }

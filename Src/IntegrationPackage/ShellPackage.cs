@@ -19,7 +19,7 @@
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(MyToolWindow))]
-    public class ShellPackage : Package, IShellPackage
+    public class ShellPackage : Package
     {
         private static readonly Guid OutputPaneId = new Guid("{05AF71DD-4245-40E1-A36E-265549CCD9C1}");
         private static readonly string OutputPaneTitle = "Clide Integration Test Package";
@@ -32,13 +32,5 @@
             this.host = Host.Initialize(this, OutputPaneId, OutputPaneTitle);
             Console.WriteLine("Shell package initialized");
         }
-
-        [Export]
-        public IShellPackage Shell
-        {
-            get { return ServiceProvider.GlobalProvider.GetLoadedPackage<ShellPackage>(); }
-        }
-
-        public IDevEnv DevEnv { get { return Clide.DevEnv.Get(this); } }
     }
 }

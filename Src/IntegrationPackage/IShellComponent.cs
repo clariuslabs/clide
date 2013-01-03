@@ -8,11 +8,9 @@ using Clide;
 namespace IntegrationPackage
 {
 	/// <summary>
-	/// Marker interface implemented by the package that 
-	/// components can import to force the package to load
-	/// before exports are used.
+	/// Component that forces a package load when imported.
 	/// </summary>
-	public interface IShellPackage
+	public interface IShellComponent
 	{
         IDevEnv DevEnv { get; }
 	}

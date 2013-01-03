@@ -10,7 +10,7 @@ namespace IntegrationPackage
 	public class ForcePackageLoadComponent
 	{
 		[ImportingConstructor]
-		public ForcePackageLoadComponent(IShellPackage package)
+		public ForcePackageLoadComponent(IShellComponent package)
 		{
 			// No need to do anything special with the package here, 
 			// although we might use state from it if needed.

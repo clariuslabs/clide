@@ -15,7 +15,7 @@ namespace Clide
         [TestMethod]
         public void WhenRetrievingPackage_ThenSucceeds()
         {
-            var package = ServiceProvider.GetExportedValue<IShellPackage>();
+            var package = ServiceProvider.GetExportedValue<IShellComponent>();
             
             Assert.IsNotNull(package);
         }

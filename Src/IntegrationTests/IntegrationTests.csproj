@@ -5,8 +5,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProductVersion>
-    </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{DA6BC069-580E-4248-9E38-F20BDE688271}</ProjectGuid>
     <OutputType>Library</OutputType>

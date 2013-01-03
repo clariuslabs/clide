@@ -27,11 +27,11 @@ namespace Clide
         public void WhenRetrievingShellPackage_ThenSucceeds()
         {
             var components = ServiceProvider.GetService<SComponentModel, IComponentModel>();
-            var package = components.GetService<IShellPackage>();
+            var package = components.GetService<IShellComponent>();
 
             Assert.NotNull(package);
 
-            package = ServiceProvider.GetExportedValue<IShellPackage>();
+            package = ServiceProvider.GetExportedValue<IShellComponent>();
 
             Assert.NotNull(package);
         }
