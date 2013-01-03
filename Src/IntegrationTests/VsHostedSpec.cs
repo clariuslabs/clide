@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Dynamic;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading;
@@ -16,6 +17,8 @@ using EnvDTE;
 using System.ComponentModel.Composition;
 using Microsoft.ComponentModel.Composition.Diagnostics;
 using System.Diagnostics;
+using System.Runtime.Remoting.Messaging;
+using System.Collections;
 
 [TestClass]
 public abstract class VsHostedSpec
@@ -59,7 +62,9 @@ public abstract class VsHostedSpec
     [TestInitialize]
     public virtual void TestInitialize()
     {
-        RenderComposition();
+        Console.WriteLine("Running test from: " + this.TestContext.TestDeploymentDir);
+
+        //RenderComposition();
 
         if (Dte != null)
         {
@@ -99,6 +104,16 @@ public abstract class VsHostedSpec
     [TestCleanup]
     public virtual void TestCleanup()
     {
+        var contextData = (Hashtable)ExecutionContext
+            .Capture()
+            .AsDynamicReflection()
+            .LogicalCallContext
+            .Datastore;
+
+        foreach (var slot in contextData.Keys.OfType<string>())
+        {
+            CallContext.FreeNamedDataSlot(slot);
+        }
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "None")]
