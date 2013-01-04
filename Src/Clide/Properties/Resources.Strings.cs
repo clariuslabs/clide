@@ -530,6 +530,57 @@ namespace Clide.Properties
 		{
 			/// <summary>
 			/// Looks up a localized string similar to: 
+			///	{clideAssembly} cannot be exported as a MEF component in the hosting extension manifest.
+			/// </summary>
+			public static string ClideCantBeMefComponent(object clideAssembly)
+			{
+				return Resources.DevEnvFactory_ClideCantBeMefComponent.FormatWith(new 
+				{
+					clideAssembly = clideAssembly,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	The following assemblies are specified as both Clide components and MEF components in the package manifest '{packageManifest}': {assemblies}. This is typically an error and could result in duplicate exports to the global composition container in Visual Studio. If you want to export some components only as MEF components or Clide components, place them in separate assemblies and configure them separately in the manifest.
+			/// </summary>
+			public static string ClideComponentAlsoMefComponent(object packageManifest, object assemblies)
+			{
+				return Resources.DevEnvFactory_ClideComponentAlsoMefComponent.FormatWith(new 
+				{
+					packageManifest = packageManifest,
+					assemblies = assemblies,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	The extension manifest file '{packageManifest}' specified a Clide component '{clideComponent}' that was not found at '{assemblyFile}'.
+			/// </summary>
+			public static string ClideComponentNotFound(object packageManifest, object clideComponent, object assemblyFile)
+			{
+				return Resources.DevEnvFactory_ClideComponentNotFound.FormatWith(new 
+				{
+					packageManifest = packageManifest,
+					clideComponent = clideComponent,
+					assemblyFile = assemblyFile,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	The Clide main assembly does not need to be added as Clide component in the extension manifest file '{packageManifest}'.
+			/// </summary>
+			public static string ClideNotNecessaryAsComponent(object packageManifest)
+			{
+				return Resources.DevEnvFactory_ClideNotNecessaryAsComponent.FormatWith(new 
+				{
+					packageManifest = packageManifest,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
 			///	Composition errors prevented the successfull creation of the development environment API. All {primaryRejectionCount} primary rejection errors will be logged.
 			/// </summary>
 			public static string CompositionErrors(object primaryRejectionCount)

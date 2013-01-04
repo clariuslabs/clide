@@ -19,13 +19,17 @@ using Microsoft.ComponentModel.Composition.Diagnostics;
 using System.Diagnostics;
 using System.Runtime.Remoting.Messaging;
 using System.Collections;
+using System.ComponentModel.Composition.Primitives;
 
 [TestClass]
 public abstract class VsHostedSpec
 {
+    static ConsoleTraceListener listener = new ConsoleTraceListener();
+
     static VsHostedSpec()
     {
-        Tracer.Initialize(new TracerManager());
+        //Tracer.Initialize(new TracerManager());
+        Tracer.Manager.AddListener(TracerManager.DefaultSourceName, listener);
     }
 
     protected VsHostedSpec()
@@ -114,6 +118,8 @@ public abstract class VsHostedSpec
         {
             CallContext.FreeNamedDataSlot(slot);
         }
+
+        listener.Flush();
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "None")]
@@ -171,21 +177,13 @@ public abstract class VsHostedSpec
     protected void RenderComposition()
     {
         var components = this.ServiceProvider.GetService<SComponentModel, IComponentModel>();
-        var info = new CompositionInfo(components.DefaultCatalog, components.DefaultExportProvider);
-        var writer = new StringWriter();        
-        
-        //var rejected = info.PartDefinitions.Where(part => part.IsPrimaryRejection).ToList();
+        RenderComposition(components.DefaultCatalog, components.DefaultExportProvider);
+    }
 
-        //if (rejected.Count > 0)
-        //{
-        //    rejected.ForEach(part => PartDefinitionInfoTextFormatter.Write(part, writer));
-        //    Tracer.Get(this.GetType()).Error(writer.ToString());
-        //}
-        //else
-        //{
-        //    CompositionInfoTextFormatter.Write(info, writer);
-        //    Tracer.Get(this.GetType()).Info(writer.ToString());
-        //}
+    protected void RenderComposition(ComposablePartCatalog catalog, ExportProvider exports)
+    {
+        var info = new CompositionInfo(catalog, exports);
+        var writer = new StringWriter();
 
         CompositionInfoTextFormatter.Write(info, writer);
         Tracer.Get(this.GetType()).Trace(TraceEventType.Information, writer.ToString());

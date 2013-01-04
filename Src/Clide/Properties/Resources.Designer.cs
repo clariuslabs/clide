@@ -133,6 +133,42 @@ namespace Clide.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {clideAssembly} cannot be exported as a MEF component in the hosting extension manifest..
+        /// </summary>
+        internal static string DevEnvFactory_ClideCantBeMefComponent {
+            get {
+                return ResourceManager.GetString("DevEnvFactory_ClideCantBeMefComponent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following assemblies are specified as both Clide components and MEF components in the package manifest &apos;{packageManifest}&apos;: {assemblies}. This is typically an error and could result in duplicate exports to the global composition container in Visual Studio. If you want to export some components only as MEF components or Clide components, place them in separate assemblies and configure them separately in the manifest..
+        /// </summary>
+        internal static string DevEnvFactory_ClideComponentAlsoMefComponent {
+            get {
+                return ResourceManager.GetString("DevEnvFactory_ClideComponentAlsoMefComponent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The extension manifest file &apos;{packageManifest}&apos; specified a Clide component &apos;{clideComponent}&apos; that was not found at &apos;{assemblyFile}&apos;..
+        /// </summary>
+        internal static string DevEnvFactory_ClideComponentNotFound {
+            get {
+                return ResourceManager.GetString("DevEnvFactory_ClideComponentNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Clide main assembly does not need to be added as Clide component in the extension manifest file &apos;{packageManifest}&apos;..
+        /// </summary>
+        internal static string DevEnvFactory_ClideNotNecessaryAsComponent {
+            get {
+                return ResourceManager.GetString("DevEnvFactory_ClideNotNecessaryAsComponent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Composition errors prevented the successfull creation of the development environment API. All {primaryRejectionCount} primary rejection errors will be logged..
         /// </summary>
         internal static string DevEnvFactory_CompositionErrors {

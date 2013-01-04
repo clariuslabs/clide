@@ -34,7 +34,6 @@ namespace UnitTests
             var lazy = new Lazy<string>(() => foo);
 
             foo = "foo";
-
             Console.WriteLine(lazy.Value);
 
             foo = "bar";

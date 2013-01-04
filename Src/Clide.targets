@@ -4,7 +4,7 @@
         <Error Condition="'$(VisualStudioVersion)' == ''"
                ContinueOnError="false"
                Text="Please provide the VisualStudioVersion property as a parameter to MSBuild to specify the target version of VS to build the extension for (i.e. '10.0' or '11.0')." />
-        <Message Text="Building for Visual Studio version $(VisualStudioVersion), Target Framework Version $(TargetFrameworkVersion), Platform $(Platform)"
+        <Message Text="Building for Visual Studio $(VisualStudioVersion), Target Framework $(TargetFrameworkVersion), Platform $(Platform)"
                  Importance="high" />
     </Target>
 </Project>

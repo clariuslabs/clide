@@ -17,16 +17,16 @@ namespace IntegrationPackage
     [TextViewRole(PredefinedTextViewRoles.Document)]
     public sealed class TextAdornment1Factory : IWpfTextViewCreationListener
     {
-        public IDevEnv DevEnv { get; set; }
+        private IServiceProvider services;
 
         public TextAdornment1Factory([Import(typeof(SVsServiceProvider))] IServiceProvider services)
         {
-            this.DevEnv = Clide.DevEnv.Get(services);
+            this.services = services;
         }
 
         public void TextViewCreated(IWpfTextView textView)
         {
-            this.DevEnv.MessageBoxService.ShowInformation("Clide Adornment");
+            Clide.DevEnv.Get(services).MessageBoxService.ShowInformation("Clide Adornment");
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Clide
     /// </summary>
     public static class DevEnv
     {
-        private static Lazy<DevEnvLocator> defaultFactory = new Lazy<DevEnvLocator>(() => new DevEnvLocator());
+        private static Lazy<DevEnvFactory> defaultFactory = new Lazy<DevEnvFactory>(() => new DevEnvFactory());
         private static AmbientSingleton<Func<IServiceProvider, IDevEnv>> devEnvFactory =
             new AmbientSingleton<Func<IServiceProvider, IDevEnv>>(services => defaultFactory.Value.Get(services));
 

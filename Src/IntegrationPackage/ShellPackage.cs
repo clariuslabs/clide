@@ -12,7 +12,6 @@
     using System.Collections.Generic;
     using System.ComponentModel.Composition.Hosting;
     using Clide;
-    using Microsoft.VisualStudio.ExtensibilityHosting;
 
     [Guid(Constants.PackageGuid)]
     [ProvideAutoLoad(UIContextGuids.NoSolution)]

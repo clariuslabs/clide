@@ -243,4 +243,16 @@
   <data name="IServiceProviderExtensions_MissingGuidAttribute" xml:space="preserve">
     <value>Specified package type '{packageType}' does not have the required [Guid] attribute.</value>
   </data>
+  <data name="DevEnvFactory_ClideCantBeMefComponent" xml:space="preserve">
+    <value>{clideAssembly} cannot be exported as a MEF component in the hosting extension manifest.</value>
+  </data>
+  <data name="DevEnvFactory_ClideComponentAlsoMefComponent" xml:space="preserve">
+    <value>The following assemblies are specified as both Clide components and MEF components in the package manifest '{packageManifest}': {assemblies}. This is typically an error and could result in duplicate exports to the global composition container in Visual Studio. If you want to export some components only as MEF components or Clide components, place them in separate assemblies and configure them separately in the manifest.</value>
+  </data>
+  <data name="DevEnvFactory_ClideComponentNotFound" xml:space="preserve">
+    <value>The extension manifest file '{packageManifest}' specified a Clide component '{clideComponent}' that was not found at '{assemblyFile}'.</value>
+  </data>
+  <data name="DevEnvFactory_ClideNotNecessaryAsComponent" xml:space="preserve">
+    <value>The Clide main assembly does not need to be added as Clide component in the extension manifest file '{packageManifest}'.</value>
+  </data>
 </root>

@@ -8,12 +8,15 @@ using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.ComponentModelHost;
 using System.IO;
 using System.Xml;
-using Microsoft.VisualStudio.ExtensibilityHosting;
 using System.ComponentModel.Composition.Primitives;
 using Clide;
 using Microsoft.VisualStudio.Text.Editor;
 using IntegrationPackage;
 using System.Dynamic;
+using System.Diagnostics;
+using Clide.Composition;
+using Microsoft.ComponentModel.Composition.Diagnostics;
+using System.Xml.Linq;
 
 namespace Clide
 {
@@ -44,9 +47,6 @@ namespace Clide
             var factory = components.DefaultExportProvider.GetExports<IWpfTextViewCreationListener, IDictionary<string, object>>()
                 .Where(e => e.Metadata.ContainsKey("IsClide"))
                 .FirstOrDefault();
-
-            var exports = default(ICollection<Lazy<IWpfTextViewCreationListener, IDictionary<string, object>>>);
-            VsExportProviderService.TryGetExports<IWpfTextViewCreationListener, IDictionary<string, object>>(out exports);
 
             Assert.NotNull(factory);
         }

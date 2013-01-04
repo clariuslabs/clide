@@ -34,5 +34,10 @@ namespace Clide.Composition
         /// Contract name for accessing the ExportProvider.
         /// </summary>
         public const string ExportProvider = Prefix + "ExportProvider";
+
+        /// <summary>
+        /// Contract name for accessing the Clide CompositionContainer.
+        /// </summary>
+        public const string CompositionContainer = Prefix + "CompositionContainer";
     }
 }

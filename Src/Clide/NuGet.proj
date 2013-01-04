@@ -36,9 +36,9 @@
 
         <PropertyGroup>
             <!-- Build number is of the format (2 digit year)(2 digit month) -->
-            <Build>$([System.DateTime]::Now.ToString("yyMM"))</Build>
+            <Build>$([System.DateTime]::UtcNow.ToString("yyMM"))</Build>
             <!-- Revision number is of the format (2 digit hour)(2 digit minutes) -->
-            <Revision>$([System.DateTime]::Now.ToString("ddHH"))</Revision>
+            <Revision>$([System.DateTime]::UtcNow.ToString("ddHH"))</Revision>
             <FileVersion>$(Major).$(Minor).$(Build).$(Revision)</FileVersion>
             <!-- TODO: maybe we should have two builds, one that builds the public simplified version
                  and one with the full build/revision -->

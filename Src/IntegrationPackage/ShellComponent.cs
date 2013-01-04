@@ -32,6 +32,9 @@ namespace IntegrationPackage
             this.serviceProvider = serviceProvider;
         }
 
-        public IDevEnv DevEnv { get { return Clide.DevEnv.Get(this.serviceProvider); } }
+        [Import]
+        public IDevEnv DevEnv { get; set; }
+
+        //public IDevEnv DevEnv { get { return Clide.DevEnv.Get(this.serviceProvider); } }
     }
 }
