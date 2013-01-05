@@ -15,6 +15,7 @@
     <Target Name="Build" DependsOnTargets="ReplaceCurrentVersions">
         <MSBuild Projects="Clide.csproj"
                  Properties="VisualStudioVersion=10.0;NuGet=true"
+                 Targets="Rebuild"
                  />
         <!-- We don't have a separate version anymore for v11 -->
         <!--<MSBuild Projects="Clide.csproj"
