@@ -24,7 +24,7 @@ namespace System
     /// <summary>
     /// Provides useful extensions to the IDE service provider.
     /// </summary>
-    public static partial class IServiceProviderExtensions
+    public static partial class ServiceProviderExtensions
     {
         /// <summary>
         /// Retrieves an existing loaded package or loads it 
@@ -55,6 +55,28 @@ namespace System
                     ErrorHandler.ThrowOnFailure(vsShell.LoadPackage(ref guid, out vsPackage));
 
                 return (TPackage)vsPackage;
+            });
+        }
+
+        /// <summary>
+        /// Retrieves an existing loaded package or loads it 
+        /// automatically if needed.
+        /// </summary>
+        /// <typeparam name="TPackage">The type of the package to load.</typeparam>
+        /// <returns>The fully loaded and initialized package.</returns>
+        public static IServiceProvider GetLoadedPackage(this IServiceProvider serviceProvider, Guid packageId)
+        {
+            return ThreadHelper.Generic.Invoke(() =>
+            {
+                var vsPackage = default(IVsPackage);
+
+                var vsShell = serviceProvider.GetService<SVsShell, IVsShell>();
+                vsShell.IsPackageLoaded(ref packageId, out vsPackage);
+
+                if (vsPackage == null)
+                    ErrorHandler.ThrowOnFailure(vsShell.LoadPackage(ref packageId, out vsPackage));
+
+                return (IServiceProvider)vsPackage;
             });
         }
     }

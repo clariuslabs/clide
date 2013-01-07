@@ -93,7 +93,7 @@
     <Compile Include="Composition\VsContractNames.cs" />
     <Compile Include="Composition\VsExportedServices.cs" />
     <Compile Include="DevEnv.cs" />
-    <Compile Include="Extensions\IServiceProviderExtensions.cs" />
+    <Compile Include="Extensions\ServiceProviderExtensions.cs" />
     <Compile Include="Host.cs" />
     <Compile Include="DevEnvFactory.cs" />
     <Compile Include="Events\ProjectEventArgs.cs" />
