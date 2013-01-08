@@ -42,17 +42,23 @@ namespace Clide
         }
 
         /// <summary>
-        /// Gets the developer environment API root.
+        /// Gets the developer environment for the given service provider. 
+        /// Make sure you pass your package to get your scoped dev env.
         /// </summary>
         /// <remarks>
         /// By default, the <see cref="IDevEnv"/> instance is cached for the 
-        /// AppDomain, and only created once, using the given 
+        /// given service provider, and only created once, using the given 
         /// IDE services as necessary. This default behavior can 
         /// be overriden by setting the <see cref="DevEnvFactory"/>.
         /// </remarks>
-        public static IDevEnv Get(IServiceProvider services)
+        /// <param name="serviceProvider">Typically, this is your package service provider, 
+        /// so that all provided ClideComponents are properly resolved and available through 
+        /// it. If you pass in the global VS service provider, you will get an instance 
+        /// that only contains the core Clide services but does not export any of the 
+        /// package Clide components.</param>
+        public static IDevEnv Get(IServiceProvider serviceProvider)
         {
-            return devEnvFactory.Value.Invoke(services);
+            return devEnvFactory.Value.Invoke(serviceProvider);
         }
 
         /// <summary>

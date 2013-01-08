@@ -28,40 +28,32 @@ namespace Clide
     using System.IO;
     using System.Collections.Generic;
     using System.ComponentModel.Composition.Primitives;
+    using System.Collections.Concurrent;
 
     internal class DevEnvFactory
     {
         private static readonly string ClideAssembly = Path.GetFileName(typeof(IDevEnv).Assembly.ManifestModule.FullyQualifiedName);
         private static readonly ITracer tracer = Tracer.Get<DevEnvFactory>();
-        private static object syncRoot = new object();
-        private CompositionContainer container;
+        private ConcurrentDictionary<IServiceProvider, CompositionContainer> serviceContainers = new ConcurrentDictionary<IServiceProvider, CompositionContainer>();
 
         public IDevEnv Get(IServiceProvider services)
         {
-            if (this.container == null)
-            {
-                lock (syncRoot)
-                {
-                    if (this.container != null)
-                        return this.container.GetExportedValue<IDevEnv>();
-
-                    InitializeContainer(services);
-                }
-            }
-
-            return this.container.GetExportedValue<IDevEnv>();
+            return serviceContainers
+                .GetOrAdd(services, s => InitializeContainer(s))
+                .GetExportedValue<IDevEnv>();
         }
 
-        private void InitializeContainer(IServiceProvider services)
+        private CompositionContainer InitializeContainer(IServiceProvider services)
         {
             using (tracer.StartActivity(Strings.DevEnvFactory.CreatingComposition))
             {
+                var container = default(CompositionContainer);
                 var catalogs = new List<ComposablePartCatalog>
                 {
                     new AssemblyCatalog(typeof(IDevEnv).Assembly),
-                    SingletonCatalog.Create<ICompositionService>(ContractNames.ICompositionService, new Lazy<ICompositionService>(() => this.container)),
-                    SingletonCatalog.Create<CompositionContainer>(ContractNames.CompositionContainer, new Lazy<CompositionContainer>(() => this.container)),
-                    SingletonCatalog.Create<ExportProvider>(ContractNames.ExportProvider, new Lazy<ExportProvider>(() => this.container)),
+                    SingletonCatalog.Create<ICompositionService>(ContractNames.ICompositionService, new Lazy<ICompositionService>(() => container)),
+                    SingletonCatalog.Create<CompositionContainer>(ContractNames.CompositionContainer, new Lazy<CompositionContainer>(() => container)),
+                    SingletonCatalog.Create<ExportProvider>(ContractNames.ExportProvider, new Lazy<ExportProvider>(() => container)),
                 };
 
                 var installPath = GetInstallPath();
@@ -92,44 +84,51 @@ namespace Clide
                 var composition = services.GetService<SComponentModel, IComponentModel>();
 
                 var catalog = new AggregateCatalog(catalogs);
-                this.container = new CompositionContainer(catalog, composition.DefaultExportProvider);
+                container = new CompositionContainer(catalog, composition.DefaultExportProvider);
                 
                 AppDomain.CurrentDomain.GetAssemblies()
                     .First(asm => asm.FullName.StartsWith("Microsoft.VisualStudio.ExtensibilityHosting"))
                     .GetType("Microsoft.VisualStudio.ExtensibilityHosting.VsCompositionContainer")
                     .AsDynamicReflection()
-                    .Create(new LocalOnlyExportProvider(this.container));
+                    .Create(new LocalOnlyExportProvider(container));
 
-                var info = new CompositionInfo(catalog, container);
-                var rejected = info.PartDefinitions.Where(part => part.IsPrimaryRejection).ToList();
-                if (rejected.Count > 0)
-                {
-                    tracer.Error(Strings.DevEnvFactory.CompositionErrors(rejected.Count));
-                    var writer = new StringWriter();
-                    rejected.ForEach(part => PartDefinitionInfoTextFormatter.Write(part, writer));
-                    tracer.Error(writer.ToString());
-                    throw new InvalidOperationException(
-                        Strings.DevEnvFactory.CompositionErrors(rejected.Count) + Environment.NewLine +
-                        writer.ToString());
-                }
+                Log(container, catalog);
+
+                return container;
+            }
+        }
+
+        private static void Log(CompositionContainer container, AggregateCatalog catalog)
+        {
+            var info = new CompositionInfo(catalog, container);
+            var rejected = info.PartDefinitions.Where(part => part.IsPrimaryRejection).ToList();
+            if (rejected.Count > 0)
+            {
+                tracer.Error(Strings.DevEnvFactory.CompositionErrors(rejected.Count));
+                var writer = new StringWriter();
+                rejected.ForEach(part => PartDefinitionInfoTextFormatter.Write(part, writer));
+                tracer.Error(writer.ToString());
+                throw new InvalidOperationException(
+                    Strings.DevEnvFactory.CompositionErrors(rejected.Count) + Environment.NewLine +
+                    writer.ToString());
+            }
 
 #if DEBUG
-                // Log information about the composition container in debug mode.
-                {
-                    var infoWriter = new StringWriter();
-                    CompositionInfoTextFormatter.Write(info, infoWriter);
-                    tracer.Info(infoWriter.ToString());
-                }
-#else
-                if (Debugger.IsAttached)
-                {
-                    // Log information about the composition container when debugger is attached too.
-                    var infoWriter = new StringWriter();
-                    CompositionInfoTextFormatter.Write(info, infoWriter);
-                    tracer.Info(infoWriter.ToString());
-                }
-#endif
+            // Log information about the composition container in debug mode.
+            {
+                var infoWriter = new StringWriter();
+                CompositionInfoTextFormatter.Write(info, infoWriter);
+                tracer.Info(infoWriter.ToString());
             }
+#else
+            if (Debugger.IsAttached)
+            {
+                // Log information about the composition container when debugger is attached too.
+                var infoWriter = new StringWriter();
+                CompositionInfoTextFormatter.Write(info, infoWriter);
+                tracer.Info(infoWriter.ToString());
+            }
+#endif
         }
 
         private void ThrowIfClideIsMefComponent(XDocument doc)

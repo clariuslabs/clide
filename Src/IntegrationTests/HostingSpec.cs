@@ -15,7 +15,6 @@ using IntegrationPackage;
 using System.Dynamic;
 using System.Diagnostics;
 using Clide.Composition;
-using Microsoft.ComponentModel.Composition.Diagnostics;
 using System.Xml.Linq;
 
 namespace Clide

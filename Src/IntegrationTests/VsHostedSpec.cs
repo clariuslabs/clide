@@ -15,7 +15,6 @@ using Microsoft.VisualStudio;
 using IntegrationPackage;
 using EnvDTE;
 using System.ComponentModel.Composition;
-using Microsoft.ComponentModel.Composition.Diagnostics;
 using System.Diagnostics;
 using System.Runtime.Remoting.Messaging;
 using System.Collections;
@@ -69,32 +68,11 @@ public abstract class VsHostedSpec
     {
         Console.WriteLine("Running test from: " + this.TestContext.TestDeploymentDir);
 
-        //RenderComposition();
-
         if (Dte != null)
         {
             Dte.SuppressUI = false;
             Dte.MainWindow.Visible = true;
             Dte.MainWindow.WindowState = EnvDTE.vsWindowState.vsWindowStateMaximize;
-            try
-            {
-                //LoadPackage();
-            }
-            catch (ImportCardinalityMismatchException)
-            {
-                var components = this.ServiceProvider.GetService<SComponentModel, IComponentModel>();
-                var info = new CompositionInfo(components.DefaultCatalog, components.DefaultExportProvider);
-                var rejected = info.PartDefinitions.Where(part => part.IsPrimaryRejection).ToList();
-                if (rejected.Count > 0)
-                {
-                    var writer = new StringWriter();
-                    rejected.ForEach(part => PartDefinitionInfoTextFormatter.Write(part, writer));
-                    Tracer.Get(this.GetType()).Error(writer.ToString());
-                    Console.WriteLine(writer.ToString());
-                }
-
-                throw;
-            }
         }
 
         var shellEvents = new ShellEvents(ServiceProvider);
@@ -169,24 +147,5 @@ public abstract class VsHostedSpec
             }
         }
         while (retryCondition() && retry < numberOfRetries);
-    }
-
-    /// <summary>
-    /// Renders the full composition information from VS global catalog.
-    /// </summary>
-    protected void RenderComposition()
-    {
-        var components = this.ServiceProvider.GetService<SComponentModel, IComponentModel>();
-        RenderComposition(components.DefaultCatalog, components.DefaultExportProvider);
-    }
-
-    protected void RenderComposition(ComposablePartCatalog catalog, ExportProvider exports)
-    {
-        var info = new CompositionInfo(catalog, exports);
-        var writer = new StringWriter();
-
-        CompositionInfoTextFormatter.Write(info, writer);
-        Tracer.Get(this.GetType()).Trace(TraceEventType.Information, writer.ToString());
-        Console.WriteLine(writer.ToString());
     }
 }
