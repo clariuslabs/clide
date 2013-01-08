@@ -56,7 +56,7 @@ namespace Clide
                     SingletonCatalog.Create<ExportProvider>(ContractNames.ExportProvider, new Lazy<ExportProvider>(() => container)),
                 };
 
-                var installPath = GetInstallPath();
+                var installPath = GetInstallPath(services);
                 var packageManifestFile = Path.Combine(installPath, "extension.vsixmanifest");
                 if (File.Exists(packageManifestFile))
                 {
@@ -175,9 +175,9 @@ namespace Clide
                     .Select(element => element.Attribute("Path").Value));
         }
 
-        private string GetInstallPath()
+        private string GetInstallPath(IServiceProvider services)
         {
-            return Path.GetDirectoryName(typeof(IDevEnv).Assembly.ManifestModule.FullyQualifiedName);
+            return Path.GetDirectoryName(services.GetType().Assembly.ManifestModule.FullyQualifiedName);
         }
     }
 }
