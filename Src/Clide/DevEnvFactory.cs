@@ -1,5 +1,4 @@
-﻿using System.Xml.Linq;
-#region BSD License
+﻿#region BSD License
 /* 
 Copyright (c) 2012, Clarius Consulting
 All rights reserved.
@@ -29,6 +28,7 @@ namespace Clide
     using System.Collections.Generic;
     using System.ComponentModel.Composition.Primitives;
     using System.Collections.Concurrent;
+    using System.Xml.Linq;
 
     internal class DevEnvFactory
     {
