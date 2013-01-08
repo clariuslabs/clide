@@ -13,6 +13,9 @@
     </PropertyGroup>
 
     <Target Name="Build" DependsOnTargets="ReplaceCurrentVersions">
+        <Delete Files="nuget\lib\**\*.*" ContinueOnError="false" />
+        <RemoveDir Directories="nuget\lib" Condition="false" />
+        
         <MSBuild Projects="Clide.csproj"
                  Properties="VisualStudioVersion=10.0;NuGet=true"
                  Targets="Rebuild"
