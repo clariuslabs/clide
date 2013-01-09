@@ -16,6 +16,7 @@ namespace Clide
 {
     using System;
     using System.Collections.Generic;
+    using System.Dynamic;
     using System.Linq;
     using System.Text;
     using System.ComponentModel.Composition;
@@ -31,14 +32,15 @@ namespace Clide
     using System.Reflection;
     using Microsoft.VisualStudio;
     using Clide.Composition;
+    using Microsoft.CSharp.RuntimeBinder;
 
     [PartCreationPolicy(CreationPolicy.Shared)]
     [Export(typeof(IOptionsManager))]
     internal class OptionsManager : IOptionsManager
     {
         private static readonly ITracer tracer = Tracer.Get<OptionsManager>();
-        private static readonly FieldInfo pagesField = typeof(Package).GetField("_pagesAndProfiles", BindingFlags.Instance | BindingFlags.NonPublic);
-        private static readonly MethodInfo getDialogPage = typeof(Package).GetMethod("GetDialogPage", BindingFlags.Instance | BindingFlags.NonPublic);
+        //private static readonly FieldInfo _pagesAndProfiles = typeof(Package).GetField("_pagesAndProfiles", BindingFlags.Instance | BindingFlags.NonPublic);
+        //private static readonly MethodInfo GetDialogPage = typeof(Package).GetMethod("GetDialogPage", BindingFlags.Instance | BindingFlags.NonPublic);
 
         private IVsShell vsShell;
         private string registryRoot;
@@ -114,7 +116,7 @@ namespace Clide
             RegisterOptionsPage(this.registryRoot, owningPackage, categoryName, displayName, pageType);
 
             // Need to load the page into the collection for the owning package.
-            AddPageToPackage(page, package);
+            AddPageToPackage(page, package.AsDynamicReflection());
         }
 
         public void AddPages(IServiceProvider owningPackage)
@@ -138,14 +140,13 @@ namespace Clide
             return new Guid(guid.Value);
         }
 
-        private void AddPageToPackage(IOptionsPage page, Package package)
+        private void AddPageToPackage(IOptionsPage page, dynamic package)
         {
-            // In either case, we need a managed package owner.
-            if (pagesField != null)
+            try
             {
                 var container = default(Container);
                 // If we have access to the container field, we can add any kind of page.
-                container = (Container)pagesField.GetValue(package);
+                container = (Container)package._pagesAndProfiles;
 
                 if (container == null)
                 {
@@ -154,10 +155,10 @@ namespace Clide
                     // is harmless since there is no accompanying registry information 
                     // for a page with this dummy guid, and hence it never shows up
                     // on the UI.
-                    getDialogPage.Invoke(package, new object[] { typeof(DummyPage) });
+                    package.GetDialogPage(typeof(DummyPage));
 
                     // Get the value again. It would be non-null this time.
-                    container = (Container)pagesField.GetValue(package);
+                    container = (Container)package._pagesAndProfiles;
 
                     Debug.Assert(container != null, "Failed to initialize internal container for dialog pages in the package.");
                 }
@@ -165,13 +166,13 @@ namespace Clide
                 if (container != null)
                     container.Add(page);
             }
-            else
+            catch (RuntimeBinderException)
             {
                 throw new NotSupportedException(Strings.OptionsManager.Unsupported);
             }
         }
 
-        private Package GetOwningPackageOrThrow(Guid packageGuid)
+        private IServiceProvider GetOwningPackageOrThrow(Guid packageGuid)
         {
             var guid = packageGuid;
             var package = default(IVsPackage);
@@ -184,12 +185,7 @@ namespace Clide
             if (package == null)
                 throw new InvalidOperationException(Strings.OptionsManager.OwningPackageNotFound(packageGuid));
 
-            var mpf = package as Package;
-
-            if (mpf == null)
-                throw new InvalidOperationException(Strings.OptionsManager.ManagedPackageRequired(typeof(Package)));
-
-            return mpf;
+            return (IServiceProvider)package;
         }
 
         private void RegisterOptionsPage(string registryRoot, Guid packageGuid, string categoryName, string pageName, Type pageType, int categoryNameId = 0, int pageNameId = 0)
