@@ -33,14 +33,18 @@ namespace Clide
     using Microsoft.VisualStudio;
     using Clide.Composition;
     using Microsoft.CSharp.RuntimeBinder;
+    using System.Reflection.Emit;
+    using System.CodeDom;
+    using Microsoft.CSharp;
+    using System.CodeDom.Compiler;
+    using System.IO;
+    using System.Text.RegularExpressions;
 
     [PartCreationPolicy(CreationPolicy.Shared)]
     [Export(typeof(IOptionsManager))]
     internal class OptionsManager : IOptionsManager
     {
         private static readonly ITracer tracer = Tracer.Get<OptionsManager>();
-        //private static readonly FieldInfo _pagesAndProfiles = typeof(Package).GetField("_pagesAndProfiles", BindingFlags.Instance | BindingFlags.NonPublic);
-        //private static readonly MethodInfo GetDialogPage = typeof(Package).GetMethod("GetDialogPage", BindingFlags.Instance | BindingFlags.NonPublic);
 
         private IVsShell vsShell;
         private string registryRoot;
@@ -155,7 +159,7 @@ namespace Clide
                     // is harmless since there is no accompanying registry information 
                     // for a page with this dummy guid, and hence it never shows up
                     // on the UI.
-                    package.GetDialogPage(typeof(DummyPage));
+                    package.GetDialogPage(DummyPageType.Value);
 
                     // Get the value again. It would be non-null this time.
                     container = (Container)package._pagesAndProfiles;
@@ -221,9 +225,57 @@ namespace Clide
             }
         }
 
-        [ComVisible(true)]
-        private class DummyPage : DialogPage
+        private static Lazy<Type> DummyPageType = new Lazy<Type>(() => GeneratePageType());
+
+        private static Type GeneratePageType()
         {
+            var source = @"
+namespace Clide.Dynamic
+{
+    using System.Runtime.InteropServices;
+    using Microsoft.VisualStudio.Shell;
+    
+    [Guid(""D4388FC3-B7AD-44B0-A40D-F8578BD48CE9"")]
+    [ComVisible(true)]
+    public class DummyPage : DialogPage
+    {
+    }
+}";
+
+            var options = new CompilerParameters
+            {
+                GenerateInMemory = true,
+                IncludeDebugInformation = false,
+                TreatWarningsAsErrors = false,
+            };
+
+            var registryRoot = VSRegistry.RegistryRoot(Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider, __VsLocalRegistryType.RegType_Configuration, false).Name;
+            var vsVersion = Regex.Match(registryRoot, @"(?<=\\)\d\d.\d").Value;
+            vsVersion = "10.0";
+
+            options.ReferencedAssemblies.Add(AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "System").ManifestModule.FullyQualifiedName);
+            options.ReferencedAssemblies.Add(AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "System.Windows.Forms").ManifestModule.FullyQualifiedName);
+            options.ReferencedAssemblies.Add(AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "Microsoft.VisualStudio.Shell." + vsVersion).ManifestModule.FullyQualifiedName);
+
+            var results = new CSharpCodeProvider().CompileAssemblyFromSource(options, source);
+
+            Debug.Assert(!results.Errors.HasErrors, "Failed to compile placeholder dialog page");
+
+            var type = results.CompiledAssembly.GetExportedTypes().First();
+
+            return type;
+        }
+
+        private static bool FileExists(string fileName)
+        {
+            try
+            {
+                return File.Exists(fileName);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }
