@@ -131,9 +131,9 @@
       <Name>Clide</Name>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\IntegrationPackage\IntegrationPackage.csproj">
+    <ProjectReference Include="..\IntegrationPackage\IntegrationPackage.2010.csproj">
       <Project>{53810c4a-fab5-41e8-af54-39742a7d1435}</Project>
-      <Name>IntegrationPackage</Name>
+      <Name>IntegrationPackage.2010</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

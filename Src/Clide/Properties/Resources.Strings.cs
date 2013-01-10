@@ -245,6 +245,18 @@ namespace Clide.Properties
 		
 			/// <summary>
 			/// Looks up a localized string similar to: 
+			///	Could not find reference to Microsoft.VisualStudio.Shell (either 10.0 or 11.0) on the given package type {packageType}.
+			/// </summary>
+			public static string ShellReferenceNotFound(object packageType)
+			{
+				return Resources.OptionsManager_ShellReferenceNotFound.FormatWith(new 
+				{
+					packageType = packageType,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
 			///	Tools options pages are not supported in this version of Visual Studio.
 			/// </summary>
 			public static string Unsupported { get { return Resources.OptionsManager_Unsupported; } }

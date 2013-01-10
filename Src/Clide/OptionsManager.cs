@@ -39,6 +39,7 @@ namespace Clide
     using System.CodeDom.Compiler;
     using System.IO;
     using System.Text.RegularExpressions;
+using System.Collections.Concurrent;
 
     [PartCreationPolicy(CreationPolicy.Shared)]
     [Export(typeof(IOptionsManager))]
@@ -120,7 +121,7 @@ namespace Clide
             RegisterOptionsPage(this.registryRoot, owningPackage, categoryName, displayName, pageType);
 
             // Need to load the page into the collection for the owning package.
-            AddPageToPackage(page, package.AsDynamicReflection());
+            AddPageToPackage(page, package.AsDynamicReflection(), package.GetType());
         }
 
         public void AddPages(IServiceProvider owningPackage)
@@ -144,7 +145,7 @@ namespace Clide
             return new Guid(guid.Value);
         }
 
-        private void AddPageToPackage(IOptionsPage page, dynamic package)
+        private void AddPageToPackage(IOptionsPage page, dynamic package, Type packageType)
         {
             try
             {
@@ -159,8 +160,7 @@ namespace Clide
                     // is harmless since there is no accompanying registry information 
                     // for a page with this dummy guid, and hence it never shows up
                     // on the UI.
-                    package.GetDialogPage(DummyPageType.Value);
-
+                    package.GetDialogPage(GetDummyPage(packageType));
                     // Get the value again. It would be non-null this time.
                     container = (Container)package._pagesAndProfiles;
 
@@ -225,9 +225,22 @@ namespace Clide
             }
         }
 
-        private static Lazy<Type> DummyPageType = new Lazy<Type>(() => GeneratePageType());
+        private static ConcurrentDictionary<AssemblyName, Type> dummyPages = new ConcurrentDictionary<AssemblyName, Type>();
+        private static Regex shellName = new Regex(@"Microsoft.VisualStudio.Shell.\d\d\.\d");
 
-        private static Type GeneratePageType()
+        private static Type GetDummyPage(Type packageType)
+        {
+            var shellRef = packageType.Assembly.GetReferencedAssemblies().FirstOrDefault(a => shellName.IsMatch(a.Name));
+            if (shellRef == null)
+            {
+                tracer.Critical(Strings.OptionsManager.ShellReferenceNotFound(packageType));
+                throw new ArgumentException(Strings.OptionsManager.ShellReferenceNotFound(packageType));
+            }
+
+            return dummyPages.GetOrAdd(shellRef, name => GeneratePageType(name));
+        }
+
+        private static Type GeneratePageType(AssemblyName name)
         {
             var source = @"
 namespace Clide.Dynamic
@@ -249,13 +262,9 @@ namespace Clide.Dynamic
                 TreatWarningsAsErrors = false,
             };
 
-            var registryRoot = VSRegistry.RegistryRoot(Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider, __VsLocalRegistryType.RegType_Configuration, false).Name;
-            var vsVersion = Regex.Match(registryRoot, @"(?<=\\)\d\d.\d").Value;
-            vsVersion = "10.0";
-
             options.ReferencedAssemblies.Add(AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "System").ManifestModule.FullyQualifiedName);
             options.ReferencedAssemblies.Add(AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "System.Windows.Forms").ManifestModule.FullyQualifiedName);
-            options.ReferencedAssemblies.Add(AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "Microsoft.VisualStudio.Shell." + vsVersion).ManifestModule.FullyQualifiedName);
+            options.ReferencedAssemblies.Add(AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().FullName == name.FullName).ManifestModule.FullyQualifiedName);
 
             var results = new CSharpCodeProvider().CompileAssemblyFromSource(options, source);
 

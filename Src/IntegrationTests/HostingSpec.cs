@@ -26,6 +26,13 @@ namespace Clide
 
         [HostType("VS IDE")]
         [TestMethod]
+        public void WhenLoadingBaseDirectory_ThenWorksOnBoth()
+        {
+            Console.WriteLine(AppDomain.CurrentDomain.BaseDirectory);
+        }
+
+        [HostType("VS IDE")]
+        [TestMethod]
         public void WhenRetrievingShellPackage_ThenSucceeds()
         {
             var components = ServiceProvider.GetService<SComponentModel, IComponentModel>();

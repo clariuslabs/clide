@@ -11,7 +11,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>IntegrationPackage</RootNamespace>
-    <AssemblyName>IntegrationPackage</AssemblyName>
+    <AssemblyName>IntegrationPackage.2010</AssemblyName>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\Common\ClariusLabs.snk</AssemblyOriginatorKeyFile>
     <TargetVsixContainerName>Clide.IntegrationPackage.vsix</TargetVsixContainerName>

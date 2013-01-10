@@ -255,4 +255,7 @@
   <data name="DevEnvFactory_ClideNotNecessaryAsComponent" xml:space="preserve">
     <value>The Clide main assembly does not need to be added as Clide component in the extension manifest file '{packageManifest}'.</value>
   </data>
+  <data name="OptionsManager_ShellReferenceNotFound" xml:space="preserve">
+    <value>Could not find reference to Microsoft.VisualStudio.Shell (either 10.0 or 11.0) on the given package type {packageType}.</value>
+  </data>
 </root>
