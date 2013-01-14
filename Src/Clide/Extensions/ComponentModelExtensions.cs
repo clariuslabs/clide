@@ -25,7 +25,7 @@ namespace System
     /// <summary>
     /// Defines extension methods related to <see cref="IServiceProvider"/> for use within Visual Studio.
     /// </summary>
-    internal static class ComponentModelExtensions
+    public static class ComponentModelExtensions
     {
         public static Lazy<T> GetExport<T>(this IServiceProvider provider)
         {

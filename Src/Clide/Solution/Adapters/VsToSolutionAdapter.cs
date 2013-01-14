@@ -14,16 +14,37 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution.Adapters
 {
+    using System;
     using Clide.Patterns.Adapter;
     using Microsoft.VisualStudio.Shell.Interop;
+    using System.ComponentModel.Composition;
+    using Microsoft.VisualStudio;
 
     [Adapter]
-    internal class VsSolutionHierarchyAdapter : 
-        IAdapter<SolutionTreeNode, IVsSolutionHierarchyNode>
+    internal class VsToSolutionAdapter :
+        IAdapter<IVsSolution, ISolutionNode>,
+        IAdapter<IVsProject, IProjectNode>
     {
-        public IVsSolutionHierarchyNode Adapt(SolutionTreeNode from)
+        private ISolutionExplorerNodeFactory nodeFactory;
+
+        [ImportingConstructor]
+        public VsToSolutionAdapter(ISolutionExplorerNodeFactory nodeFactory)
         {
-            return from.HierarchyNode;
+            this.nodeFactory = nodeFactory;
+        }
+
+        public IProjectNode Adapt(IVsProject from)
+        {
+            var node = new VsSolutionHierarchyNode((IVsHierarchy)from, VSConstants.VSITEMID_ROOT);
+
+            return this.nodeFactory.Create(node) as IProjectNode;
+        }
+
+        public ISolutionNode Adapt(IVsSolution from)
+        {
+            var node = new VsSolutionHierarchyNode((IVsHierarchy)from, VSConstants.VSITEMID_ROOT);
+
+            return this.nodeFactory.Create(node) as ISolutionNode;
         }
     }
 }

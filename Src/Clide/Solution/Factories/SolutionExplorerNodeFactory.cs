@@ -12,56 +12,35 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
-namespace Clide.Solution.Adapters
+namespace Clide.Solution.Factories
 {
-    using Clide.Patterns.Adapter;
-    using EnvDTE;
-    using EnvDTE80;
-    using VSLangProj;
+    using System;
+    using System.ComponentModel.Composition;
 
-    [Adapter]
-    internal class DteAdapter :
-        IAdapter<SolutionNode, Solution>,
-        IAdapter<SolutionFolderNode, SolutionFolder>,
-        IAdapter<ProjectNode, Project>,
-        IAdapter<FolderNode, ProjectItem>,
-        IAdapter<ItemNode, ProjectItem>,
-        IAdapter<ReferenceNode, Reference>,
-        IAdapter<ReferencesNode, References>
+    [Export(typeof(ISolutionExplorerNodeFactory))]
+    [PartCreationPolicy(CreationPolicy.Shared)]
+    internal class SolutionExplorerNodeFactory : ISolutionExplorerNodeFactory
     {
-        public Solution Adapt(SolutionNode from)
+        private Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory;
+
+        [ImportingConstructor]
+        public SolutionExplorerNodeFactory([Import(DefaultHierarchyFactory.ContractName)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory)
         {
-            return from.Solution.Value;
+            this.nodeFactory = nodeFactory;
         }
 
-        public SolutionFolder Adapt(SolutionFolderNode from)
+        public ISolutionExplorerNode Create(IVsSolutionHierarchyNode hierarchyNode)
         {
-            return from.SolutionFolder.Value;
-        }
+            Func<IVsSolutionHierarchyNode, Lazy<ITreeNode>> getParent = null;
+            Func<IVsSolutionHierarchyNode, ITreeNode> getNode = null;
 
-        public Project Adapt(ProjectNode from)
-        {
-            return from.Project.Value;
-        }
+            getNode = hierarchy => hierarchy == null ? null :
+                this.nodeFactory.Value.CreateNode(getParent(hierarchy), hierarchy);
 
-        public ProjectItem Adapt(FolderNode from)
-        {
-            return from.Folder.Value;
-        }
+            getParent = hierarchy => hierarchy.Parent == null ? null :
+                new Lazy<ITreeNode>(() => this.nodeFactory.Value.CreateNode(getParent(hierarchy.Parent), hierarchy.Parent));
 
-        public ProjectItem Adapt(ItemNode from)
-        {
-            return from.Item.Value;
-        }
-
-        public Reference Adapt(ReferenceNode from)
-        {
-            return from.Reference.Value;
-        }
-
-        public References Adapt(ReferencesNode from)
-        {
-            return from.References.Value;
+            return getNode(hierarchyNode) as ISolutionExplorerNode;        
         }
     }
 }

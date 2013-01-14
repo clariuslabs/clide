@@ -12,37 +12,19 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
-namespace Clide.Solution.Adapters
+namespace Clide.Solution
 {
-    using System;
-    using Clide.Patterns.Adapter;
-    using Microsoft.VisualStudio.Shell.Interop;
-
-    [Adapter]
-    internal class IVsSolutionAdapter : 
-        IAdapter<SolutionTreeNode, VsHierarchyItem>,
-        IAdapter<SolutionTreeNode, IVsHierarchy>,
-        IAdapter<SolutionNode, IVsSolution>,
-        IAdapter<ProjectNode, IVsProject>
+    /// <summary>
+    /// Internal interface used by components that need to create solution 
+    /// explorer nodes without having to pass the parent element (i.e. 
+    /// outside of traversal scenarios, like adapters, selected element 
+    /// retrieval, etc.)
+    /// </summary>
+    internal interface ISolutionExplorerNodeFactory
     {
-        IVsHierarchy IAdapter<SolutionTreeNode, IVsHierarchy>.Adapt(SolutionTreeNode from)
-        {
-            return from.HierarchyNode.VsHierarchy;
-        }
-
-        VsHierarchyItem IAdapter<SolutionTreeNode, VsHierarchyItem>.Adapt(SolutionTreeNode from)
-        {
-            return new VsHierarchyItem(from.HierarchyNode.VsHierarchy, from.HierarchyNode.ItemId);
-        }
-
-        public IVsSolution Adapt(SolutionNode from)
-        {
-            return from.HierarchyNode.ServiceProvider.GetService<SVsSolution, IVsSolution>();
-        }
-
-        public IVsProject Adapt(ProjectNode from)
-        {
-            return from.HierarchyNode.VsHierarchy as IVsProject;
-        }
+        /// <summary>
+        /// Creates the specified solution explorer node for the given hierarchy.
+        /// </summary>
+        ISolutionExplorerNode Create(IVsSolutionHierarchyNode hierarchyNode);
     }
 }

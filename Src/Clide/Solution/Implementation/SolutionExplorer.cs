@@ -32,31 +32,27 @@ namespace Clide.Solution
     internal class SolutionExplorer : ISolutionExplorer
     {
         private VsToolWindow toolWindow;
-        private Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory;
+        private ISolutionExplorerNodeFactory nodeFactory;
         private IServiceProvider serviceProvider;
 
         [ImportingConstructor]
         public SolutionExplorer(
             [Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider,
-            [ImportMany(CompositionTarget.SolutionExplorer)] 
-            IEnumerable<Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>, ITreeNodeFactoryMetadata>> nodeFactories)
+            ISolutionExplorerNodeFactory nodeFactory)
         {
             Guard.NotNull(() => serviceProvider, serviceProvider);
-            Guard.NotNull(() => nodeFactories, nodeFactories);
+            Guard.NotNull(() => nodeFactory, nodeFactory);
 
             this.serviceProvider = serviceProvider;
             this.toolWindow = serviceProvider.ToolWindow(StandardToolWindows.ProjectExplorer);
-            this.nodeFactory = new Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>>(() =>
-                new FallbackNodeFactory<IVsSolutionHierarchyNode>(
-                    new AggregateNodeFactory<IVsSolutionHierarchyNode>(nodeFactories.Where(n => !n.Metadata.IsFallback).Select(f => f.Value)),
-                    new AggregateNodeFactory<IVsSolutionHierarchyNode>(nodeFactories.Where(n => n.Metadata.IsFallback).Select(f => f.Value))));
+            this.nodeFactory = nodeFactory;
         }
 
         public ISolutionNode Solution
         {
             get
             {
-                return this.nodeFactory.Value.CreateNode(null,
+                return this.nodeFactory.Create(
                         new VsSolutionHierarchyNode(
                             this.serviceProvider.GetService<IVsSolution>() as IVsHierarchy, 
                             VSConstants.VSITEMID_ROOT))

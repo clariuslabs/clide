@@ -1,4 +1,4 @@
-﻿#region BSD License
+#region BSD License
 /* 
 Copyright (c) 2012, Clarius Consulting
 All rights reserved.
@@ -12,18 +12,23 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
-namespace Clide.Solution.Adapters
+namespace Clide
 {
-    using Clide.Patterns.Adapter;
-    using Microsoft.VisualStudio.Shell.Interop;
+    using System;
 
-    [Adapter]
-    internal class VsSolutionHierarchyAdapter : 
-        IAdapter<SolutionTreeNode, IVsSolutionHierarchyNode>
+    /// <summary>
+    /// Provides the smart cast <see cref="As"/> extension method for consumers.
+    /// </summary>
+    public static partial class Adapters
     {
-        public IVsSolutionHierarchyNode Adapt(SolutionTreeNode from)
+        /// <summary>
+        /// Tries to adapt the given <paramref name="source"/> to the requested <typeparamref name="T"/>.
+        /// </summary>
+        /// <returns>The adapted object if an adapter for the source could be found; <see langword="null"/> otherwise.</returns>
+        public static T As<T>(this object source)
+            where T : class
         {
-            return from.HierarchyNode;
+            return Clide.Patterns.Adapter.Adapters.As<T>(source);
         }
     }
 }

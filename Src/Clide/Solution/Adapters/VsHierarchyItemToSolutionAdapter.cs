@@ -15,15 +15,43 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide.Solution.Adapters
 {
     using Clide.Patterns.Adapter;
-    using Microsoft.VisualStudio.Shell.Interop;
+    using System.ComponentModel.Composition;
 
     [Adapter]
-    internal class VsSolutionHierarchyAdapter : 
-        IAdapter<SolutionTreeNode, IVsSolutionHierarchyNode>
+    internal class VsHierarchyItemToSolutionAdapter :
+        IAdapter<VsHierarchyItem, ISolutionNode>,
+        IAdapter<VsHierarchyItem, IProjectNode>, 
+        IAdapter<VsHierarchyItem, IItemNode>
     {
-        public IVsSolutionHierarchyNode Adapt(SolutionTreeNode from)
+        private ISolutionExplorerNodeFactory nodeFactory;
+
+        [ImportingConstructor]
+        public VsHierarchyItemToSolutionAdapter(ISolutionExplorerNodeFactory nodeFactory)
         {
-            return from.HierarchyNode;
+            this.nodeFactory = nodeFactory;
+        }
+
+        ISolutionNode IAdapter<VsHierarchyItem, ISolutionNode>.Adapt(VsHierarchyItem from)
+        {
+            return CreateNode<ISolutionNode>(from);
+        }
+
+        IProjectNode IAdapter<VsHierarchyItem, IProjectNode>.Adapt(VsHierarchyItem from)
+        {
+            return CreateNode<IProjectNode>(from);
+        }
+
+        IItemNode IAdapter<VsHierarchyItem, IItemNode>.Adapt(VsHierarchyItem from)
+        {
+            return CreateNode<IItemNode>(from);
+        }
+
+        private TNode CreateNode<TNode>(VsHierarchyItem item)
+            where TNode : class
+        {
+            return this.nodeFactory.Create(new VsSolutionHierarchyNode(
+                item.VsHierarchy, item.ItemId))
+                as TNode;
         }
     }
 }

@@ -21,9 +21,10 @@ namespace Clide.Solution
 
     /// <summary>
     /// This factory is the one that serves as the single dependency 
-    /// that all individual node factories to reuse it for their own 
+    /// that all individual node factories reuse for their own 
     /// parent/children construction. 
     /// </summary>
+    [PartCreationPolicy(CreationPolicy.Shared)]
     [Export(ContractName, typeof(ITreeNodeFactory<IVsSolutionHierarchyNode>))]
 	internal class DefaultHierarchyFactory : ITreeNodeFactory<IVsSolutionHierarchyNode>
 	{
@@ -35,7 +36,10 @@ namespace Clide.Solution
 		public DefaultHierarchyFactory([ImportMany(CompositionTarget.SolutionExplorer)] 
             IEnumerable<Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>, ITreeNodeFactoryMetadata>> nodeFactories)
 		{
-            this.factory = new Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>>(() => new AggregateHierarchyFactory(nodeFactories));
+            this.factory = new Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>>(() =>
+                new FallbackNodeFactory<IVsSolutionHierarchyNode>(
+                    new AggregateNodeFactory<IVsSolutionHierarchyNode>(nodeFactories.Where(n => !n.Metadata.IsFallback).Select(f => f.Value)),
+                    new AggregateNodeFactory<IVsSolutionHierarchyNode>(nodeFactories.Where(n => n.Metadata.IsFallback).Select(f => f.Value))));
 		}
 
 		public bool Supports(IVsSolutionHierarchyNode hierarchy)

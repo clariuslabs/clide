@@ -15,15 +15,41 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide.Solution.Adapters
 {
     using Clide.Patterns.Adapter;
-    using Microsoft.VisualStudio.Shell.Interop;
+    using EnvDTE;
+    using EnvDTE80;
+    using VSLangProj;
 
     [Adapter]
-    internal class VsSolutionHierarchyAdapter : 
-        IAdapter<SolutionTreeNode, IVsSolutionHierarchyNode>
+    internal class SolutionToDteAdapter :
+        IAdapter<SolutionNode, Solution>,
+        IAdapter<SolutionFolderNode, SolutionFolder>,
+        IAdapter<ProjectNode, Project>,
+        IAdapter<FolderNode, ProjectItem>,
+        IAdapter<ItemNode, ProjectItem>
     {
-        public IVsSolutionHierarchyNode Adapt(SolutionTreeNode from)
+        public Solution Adapt(SolutionNode from)
         {
-            return from.HierarchyNode;
+            return from.Solution.Value;
+        }
+
+        public SolutionFolder Adapt(SolutionFolderNode from)
+        {
+            return from.SolutionFolder.Value;
+        }
+
+        public Project Adapt(ProjectNode from)
+        {
+            return from.Project.Value;
+        }
+
+        public ProjectItem Adapt(FolderNode from)
+        {
+            return from.Folder.Value;
+        }
+
+        public ProjectItem Adapt(ItemNode from)
+        {
+            return from.Item.Value;
         }
     }
 }

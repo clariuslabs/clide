@@ -34,10 +34,12 @@ namespace Clide.Solution
         private ISolutionEvents events;
         private IServiceProvider serviceProvider;
         private ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory;
+        private ISolutionExplorerNodeFactory explorerNodeFactory;
 
         public SolutionNode(
             IVsSolutionHierarchyNode hierarchyNode,
             ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
+            ISolutionExplorerNodeFactory explorerNodeFactory,
             IServiceProvider serviceProvider,
             IAdapterService adapter,
             ISolutionEvents solutionEvents)
@@ -45,6 +47,7 @@ namespace Clide.Solution
         {
             this.Solution = new Lazy<EnvDTE.Solution>(() => hierarchyNode.ServiceProvider.GetService<EnvDTE.DTE>().Solution);
             this.nodeFactory = nodeFactory;
+            this.explorerNodeFactory = explorerNodeFactory;
             this.serviceProvider = serviceProvider;
             this.events = solutionEvents;
         }
@@ -60,18 +63,8 @@ namespace Clide.Solution
         {
             get
             {
-                Func<IVsSolutionHierarchyNode, Lazy<ITreeNode>> getParent = null;
-                Func<IVsSolutionHierarchyNode, ITreeNode> getNode = null;
-
-                getNode = hierarchy => hierarchy == null ? null :
-                    this.nodeFactory.CreateNode(getParent(hierarchy), hierarchy);
-
-                getParent = hierarchy => hierarchy.Parent == null ? null :
-                    new Lazy<ITreeNode>(() => this.nodeFactory.CreateNode(getParent(hierarchy.Parent), hierarchy.Parent));
-
                 return this.serviceProvider.GetSelection()
-                    .Select(sel => getNode(new VsSolutionHierarchyNode(sel.Item1, sel.Item2)))
-                    .OfType<ISolutionExplorerNode>();
+                    .Select(sel => this.explorerNodeFactory.Create(new VsSolutionHierarchyNode(sel.Item1, sel.Item2)));
             }
         }
 

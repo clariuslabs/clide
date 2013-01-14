@@ -15,15 +15,17 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide.Solution.Adapters
 {
     using Clide.Patterns.Adapter;
-    using Microsoft.VisualStudio.Shell.Interop;
+    using EnvDTE;
+    using EnvDTE80;
+    using VSLangProj;
 
-    [Adapter]
-    internal class VsSolutionHierarchyAdapter : 
-        IAdapter<SolutionTreeNode, IVsSolutionHierarchyNode>
+    // TODO: implement VSLang -> Solution nodes adapter
+    //[Adapter]
+    internal class VsLangToSolutionAdapter // : 
+        //IAdapter<VSProject, ProjectNode>,
+        //IAdapter<VSProjectItem, ItemNode>,
+        //IAdapter<Reference, ReferenceNode>,
+        //IAdapter<References, ReferencesNode>
     {
-        public IVsSolutionHierarchyNode Adapt(SolutionTreeNode from)
-        {
-            return from.HierarchyNode;
-        }
     }
 }

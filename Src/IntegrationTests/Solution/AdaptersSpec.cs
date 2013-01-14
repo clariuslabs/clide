@@ -14,9 +14,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
+    using Clide;
+    using Clide.Patterns.Adapter;
+    using EnvDTE;
     using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -87,6 +91,146 @@ namespace Clide.Solution
             Assert.NotNull(reference as IReferenceNode);
 
             Assert.NotNull(reference.As<Reference>());
+        }
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void WhenAdaptingDteSolutionToISolutionNode_ThenSucceeds()
+        {
+            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+
+            var adapter = this.Container.GetExportedValue<IAdapterService>();
+
+            var node = adapter.From(this.Dte.Solution).To<ISolutionNode>();
+
+            Assert.NotNull(node);
+        }
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void WhenAdaptingDteProjectToIProjectNode_ThenSucceeds()
+        {
+            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+
+            var adapter = this.Container.GetExportedValue<IAdapterService>();
+            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var library = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, x => x.Nodes)
+                .OfType<IProjectNode>()
+                .First(x => x.DisplayName == "ClassLibrary")
+                .As<Project>();
+
+            var node = adapter.From(library).To<IProjectNode>();
+
+            Assert.NotNull(node);
+        }
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void WhenAdaptingDteProjectItemToIItemNode_ThenSucceeds()
+        {
+            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+
+            var adapter = this.Container.GetExportedValue<IAdapterService>();
+            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var file = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, x => x.Nodes)
+                .OfType<IItemNode>()
+                .First(x => x.DisplayName == "Class1.cs")
+                .As<ProjectItem>();
+
+            var node = adapter.From(file).To<IItemNode>();
+
+            Assert.NotNull(node);
+        }
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void WhenAdaptingIVsSolutionToISolutionNode_ThenSucceeds()
+        {
+            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+
+            var adapter = this.Container.GetExportedValue<IAdapterService>();
+
+            var node = adapter.From(this.ServiceProvider.GetService<SVsSolution, IVsSolution>()).To<ISolutionNode>();
+
+            Assert.NotNull(node);
+        }
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void WhenAdaptingIVsProjectToIProjectNode_ThenSucceeds()
+        {
+            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+
+            var adapter = this.Container.GetExportedValue<IAdapterService>();
+            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var library = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, x => x.Nodes)
+                .OfType<IProjectNode>()
+                .First(x => x.DisplayName == "ClassLibrary")
+                .As<IVsProject>();
+
+            Assert.NotNull(library);
+
+            var node = adapter.From(library).To<IProjectNode>();
+
+            Assert.NotNull(node);
+        }
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void WhenAdaptingVsHierarchyItemToISolutionNode_ThenSucceeds()
+        {
+            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+
+            var adapter = this.Container.GetExportedValue<IAdapterService>();
+            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var source = explorer.Solution
+                .As<VsHierarchyItem>();
+
+            Assert.NotNull(source);
+
+            var node = adapter.From(source).To<ISolutionNode>();
+
+            Assert.NotNull(node);
+        }
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void WhenAdaptingVsHierarchyItemToIProjectNode_ThenSucceeds()
+        {
+            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+
+            var adapter = this.Container.GetExportedValue<IAdapterService>();
+            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var source = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, x => x.Nodes)
+                .OfType<IProjectNode>()
+                .First(x => x.DisplayName == "ClassLibrary")
+                .As<VsHierarchyItem>();
+
+            Assert.NotNull(source);
+
+            var node = adapter.From(source).To<IProjectNode>();
+
+            Assert.NotNull(node);
+        }
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void WhenAdaptingVsHierarchyItemToIItemNode_ThenSucceeds()
+        {
+            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+
+            var adapter = this.Container.GetExportedValue<IAdapterService>();
+            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var source = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, x => x.Nodes)
+                .OfType<IItemNode>()
+                .First(x => x.DisplayName == "Class1.cs")
+                .As<VsHierarchyItem>();
+
+            Assert.NotNull(source);
+
+            var node = adapter.From(source).To<IItemNode>();
+
+            Assert.NotNull(node);
         }
     }
 }

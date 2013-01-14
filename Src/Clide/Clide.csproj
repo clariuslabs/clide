@@ -111,6 +111,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adapters.cs" />
     <Compile Include="Commands\CommandAttribute.cs" />
     <Compile Include="Commands\CommandFilterAttribute.cs" />
     <Compile Include="Commands\CommandManager.cs" />
@@ -162,12 +163,16 @@
     <Compile Include="Patterns\Adapter\Constants.cs" />
     <Compile Include="Patterns\Adapter\IAdapter.cs" />
     <Compile Include="Patterns\Adapter\IAdapterService.cs" />
+    <Compile Include="Solution\Adapters\VsLangToSolutionAdapter.cs" />
+    <Compile Include="Solution\Adapters\VsHierarchyItemToSolutionAdapter.cs" />
+    <Compile Include="Solution\Adapters\VsToSolutionAdapter.cs" />
+    <Compile Include="Solution\Adapters\DteToSolutionAdapter.cs" />
     <Compile Include="Solution\Adapters\IServiceProviderAdapter.cs" />
-    <Compile Include="Solution\Adapters\VsLangAdapter.cs" />
+    <Compile Include="Solution\Adapters\SolutionToVsLangAdapter.cs" />
     <Compile Include="Solution\Adapters\VsSolutionHierarchyAdapter.cs" />
-    <Compile Include="Solution\Adapters\IVsAdapter.cs" />
+    <Compile Include="Solution\Adapters\SolutionToVsAdapter.cs" />
     <Compile Include="Solution\Adapters\MsBuildAdapter.cs" />
-    <Compile Include="Solution\Adapters\DteAdapter.cs" />
+    <Compile Include="Solution\Adapters\SolutionToDteAdapter.cs" />
     <Compile Include="OptionsManager.cs" />
     <Compile Include="OptionsPage.cs">
       <SubType>Component</SubType>
@@ -176,7 +181,11 @@
     <Compile Include="IOptionsPageMetadata.cs" />
     <Compile Include="OptionsPageWindowFactory.cs" />
     <Compile Include="Solution\Extensions\IProjectNodeExtensions.cs" />
+    <Compile Include="Solution\Extensions\ISolutionExplorerNodeExtensions.cs" />
+    <Compile Include="UI\TreeNodes\ITreeNodeExtensions.cs" />
+    <Compile Include="Solution\Factories\ISolutionExplorerNodeFactory.cs" />
     <Compile Include="Solution\Factories\SolutionItemNodeFactory.cs" />
+    <Compile Include="Solution\Factories\SolutionExplorerNodeFactory.cs" />
     <Compile Include="Solution\Implementation\ProjectConfiguration.cs" />
     <Compile Include="Solution\Implementation\SolutionItemNode.cs" />
     <Compile Include="Solution\ISolutionItemNode.cs" />
@@ -278,7 +287,7 @@
     <Compile Include="Solution\Implementation\SolutionExplorer.cs" />
     <Compile Include="Solution\Implementation\SolutionFolderNode.cs" />
     <Compile Include="Solution\Implementation\SolutionNode.cs" />
-    <Compile Include="Solution\Implementation\SolutionTreeNode.cs" />
+    <Compile Include="Solution\Implementation\SolutionExplorerNode.cs" />
     <Compile Include="Solution\Implementation\VsSolutionHierarchyNode.cs" />
     <Compile Include="Solution\Implementation\VsSolutionHierarchyNodeIterator.cs" />
     <Compile Include="Solution\IProjectNode.cs" />
@@ -357,11 +366,11 @@
       <Visible>False</Visible>
     </SymbolSource>
   </ItemGroup>
-    <PropertyGroup>
-        <StartAction>Program</StartAction>
-        <StartProgram>C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\devenv.exe</StartProgram>
-        <StartArguments>/rootSuffix Exp /log</StartArguments>
-    </PropertyGroup>
+  <PropertyGroup>
+    <StartAction>Program</StartAction>
+    <StartProgram>C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\devenv.exe</StartProgram>
+    <StartArguments>/rootSuffix Exp /log</StartArguments>
+  </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildThisFileDirectory)..\Clide.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

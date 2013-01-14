@@ -42,6 +42,7 @@ namespace Clide.Solution
 				var solutionNode = new SolutionNode(
 					new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT),
                     Mock.Of<ITreeNodeFactory<IVsSolutionHierarchyNode>>(),
+                    Mock.Of<ISolutionExplorerNodeFactory>(),
                     Mock.Of<IServiceProvider>(),
                     Mock.Of<IAdapterService>(),
 					Mock.Of<ISolutionEvents>());
@@ -61,6 +62,7 @@ namespace Clide.Solution
 				var solutionNode = new SolutionNode(
                     new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT),
 					Mock.Of<ITreeNodeFactory<IVsSolutionHierarchyNode>>(),
+                    Mock.Of<ISolutionExplorerNodeFactory>(),
                     Mock.Of<IServiceProvider>(),
                     Mock.Of<IAdapterService>(),
 					Mock.Of<ISolutionEvents>());
@@ -78,6 +80,7 @@ namespace Clide.Solution
 				var solutionNode = new SolutionNode(
                     new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT),
                     Mock.Of<ITreeNodeFactory<IVsSolutionHierarchyNode>>(),
+                    Mock.Of<ISolutionExplorerNodeFactory>(),
                     Mock.Of<IServiceProvider>(),
                     Mock.Of<IAdapterService>(),
 					Mock.Of<ISolutionEvents>());
@@ -96,6 +99,7 @@ namespace Clide.Solution
                 var solutionNode = new SolutionNode(
                     new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT),
                     Mock.Of<ITreeNodeFactory<IVsSolutionHierarchyNode>>(),
+                    Mock.Of<ISolutionExplorerNodeFactory>(),
                     Mock.Of<IServiceProvider>(),
                     Mock.Of<IAdapterService>(),
                     Mock.Of<ISolutionEvents>());

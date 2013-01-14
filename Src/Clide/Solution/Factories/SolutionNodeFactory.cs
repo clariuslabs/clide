@@ -31,16 +31,19 @@ namespace Clide.Solution
 		private ISolutionEvents solutionEvents;
 		private IAdapterService adapter;
         private IServiceProvider serviceProvider;
+        private ISolutionExplorerNodeFactory explorerNodeFactory;
 
 		[ImportingConstructor]
 		public SolutionNodeFactory(
             [Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider,
 			[Import(DefaultHierarchyFactory.ContractName)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory,
+            ISolutionExplorerNodeFactory explorerNodeFactory,
 			ISolutionEvents solutionEvents,
 			IAdapterService adapter)
 		{
             this.serviceProvider = serviceProvider;
 			this.nodeFactory = nodeFactory;
+            this.explorerNodeFactory = explorerNodeFactory;
 			this.solutionEvents = solutionEvents;
 			this.adapter = adapter;
 		}
@@ -53,7 +56,7 @@ namespace Clide.Solution
 		public ITreeNode CreateNode(Lazy<ITreeNode> parent, IVsSolutionHierarchyNode hierarchy)
 		{
 			return Supports(hierarchy) ?
-				new SolutionNode(hierarchy, this.nodeFactory.Value, this.serviceProvider,  this.adapter, this.solutionEvents) : null;
+				new SolutionNode(hierarchy, this.nodeFactory.Value, this.explorerNodeFactory, this.serviceProvider,  this.adapter, this.solutionEvents) : null;
 		}
 	}
 }

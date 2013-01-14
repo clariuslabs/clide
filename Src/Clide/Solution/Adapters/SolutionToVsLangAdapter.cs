@@ -20,9 +20,11 @@ namespace Clide.Solution.Adapters
     using VSLangProj;
 
     [Adapter]
-    internal class VsLangAdapter : 
+    internal class SolutionToVsLangAdapter : 
         IAdapter<ProjectNode, VSProject>,
-        IAdapter<ItemNode, VSProjectItem> 
+        IAdapter<ItemNode, VSProjectItem>,
+        IAdapter<ReferenceNode, Reference>,
+        IAdapter<ReferencesNode, References>
     {
         public VSProject Adapt(ProjectNode from)
         {
@@ -32,6 +34,16 @@ namespace Clide.Solution.Adapters
         public VSProjectItem Adapt(ItemNode from)
         {
             return from.Item.Value.Object as VSProjectItem;
+        }
+
+        public Reference Adapt(ReferenceNode from)
+        {
+            return from.Reference.Value;
+        }
+
+        public References Adapt(ReferencesNode from)
+        {
+            return from.References.Value;
         }
     }
 }
