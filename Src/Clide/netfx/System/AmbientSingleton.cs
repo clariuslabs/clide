@@ -1,34 +1,17 @@
 ﻿#region BSD License
 /* 
-Copyright (c) 2011, NETFx
+Copyright (c) 2012, Clarius Consulting
 All rights reserved.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
-* Redistributions of source code must retain the above copyright notice, this list 
-  of conditions and the following disclaimer.
+* Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+* Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 
-* Redistributions in binary form must reproduce the above copyright notice, this 
-  list of conditions and the following disclaimer in the documentation and/or other 
-  materials provided with the distribution.
-
-* Neither the name of Clarius Consulting nor the names of its contributors may be 
-  used to endorse or promote products derived from this software without specific 
-  prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY 
-EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
-OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
-SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED 
-TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR 
-BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
-DAMAGE.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +25,16 @@ using System.Runtime.Remoting.Messaging;
 /// </summary>
 static partial class AmbientSingleton
 {
+    /// <summary>
+    /// Creates an ambient singleton with no default value and a specific identifier.
+    /// </summary>
+    /// <typeparam name="T">Type of value held by the singleton.</typeparam>
+    /// <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
+    public static AmbientSingleton<T> Create<T>(string identifier)
+    {
+        return new AmbientSingleton<T>(default(T), identifier);
+    }
+
     /// <summary>
     /// Creates an ambient singleton with no default value and a specific identifier.
     /// </summary>
@@ -84,12 +77,34 @@ static partial class AmbientSingleton
     }
 
     /// <summary>
+    /// Creates an ambient singleton with the specified default value and identifier.
+    /// </summary>
+    /// <typeparam name="T">Type of value held by the singleton. No need to specify it explicitly.</typeparam>
+    /// <param name="defaultValue">The default value for the singleton.</param>
+    /// <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
+    public static AmbientSingleton<T> Create<T>(T defaultValue, string identifier)
+    {
+        return new AmbientSingleton<T>(defaultValue, identifier);
+    }
+
+    /// <summary>
     /// Creates an ambient singleton with the specified default value factory.
     /// </summary>
     /// <typeparam name="T">Type of value held by the singleton. No need to specify it explicitly.</typeparam>
     /// <param name="defaultValueFactory">The default value factory for the singleton.</param>
     /// <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
     public static AmbientSingleton<T> Create<T>(Func<T> defaultValueFactory, Guid identifier)
+    {
+        return new AmbientSingleton<T>(defaultValueFactory, identifier);
+    }
+
+    /// <summary>
+    /// Creates an ambient singleton with the specified default value factory.
+    /// </summary>
+    /// <typeparam name="T">Type of value held by the singleton. No need to specify it explicitly.</typeparam>
+    /// <param name="defaultValueFactory">The default value factory for the singleton.</param>
+    /// <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
+    public static AmbientSingleton<T> Create<T>(Func<T> defaultValueFactory, string identifier)
     {
         return new AmbientSingleton<T>(defaultValueFactory, identifier);
     }
@@ -197,6 +212,18 @@ partial class AmbientSingleton<T>
     }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="AmbientSingleton&lt;T&gt;"/> class 
+    /// with a global default value. This value will be returned by the <see cref="Value"/> 
+    /// property if no other value has been set in the current call context.
+    /// </summary>
+    /// <param name="defaultValue">The default value for the singleton.</param>
+    /// <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
+    public AmbientSingleton(T defaultValue, string identifier)
+        : this(() => defaultValue, identifier)
+    {
+    }
+
+    /// <summary>
 	/// Initializes a new instance of the <see cref="AmbientSingleton&lt;T&gt;"/> class 
 	/// with a global default value factory. This factory will be called once the first 
 	/// time the global default value is accessed, such as if no other value has been 
@@ -217,15 +244,28 @@ partial class AmbientSingleton<T>
     /// <param name="defaultValueFactory">The default value factory for the singleton.</param>
     /// <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
     public AmbientSingleton(Func<T> defaultValueFactory, Guid identifier)
+        : this(defaultValueFactory, identifier.ToString())
     {
-        Guard.NotNull(() => defaultValueFactory, defaultValueFactory);
-        Guard.NotNull(() => identifier, identifier);
-
-        this.defaultValue = new Lazy<T>(defaultValueFactory);
-        this.slotName = identifier.ToString();
     }
 
-	/// <summary>
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AmbientSingleton&lt;T&gt;"/> class 
+    /// with a global default value factory. This factory will be called once the first 
+    /// time the global default value is accessed, such as if no other value has been 
+    /// set in the current call context for the <see cref="Value"/> property.
+    /// </summary>
+    /// <param name="defaultValueFactory">The default value factory for the singleton.</param>
+    /// <param name="identifier">An identifier for the created singleton. Allows to reuse the ambient "variable" if needed.</param>
+    public AmbientSingleton(Func<T> defaultValueFactory, string identifier)
+    {
+        Guard.NotNull(() => defaultValueFactory, defaultValueFactory);
+        Guard.NotNullOrEmpty(() => identifier, identifier);
+
+        this.defaultValue = new Lazy<T>(defaultValueFactory);
+        this.slotName = identifier;
+    }
+
+    /// <summary>
 	/// Gets or sets the value of the ambient singleton.
 	/// </summary>
 	/// <remarks>

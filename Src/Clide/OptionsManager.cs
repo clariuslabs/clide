@@ -240,7 +240,7 @@ using System.Collections.Concurrent;
             return dummyPages.GetOrAdd(shellRef, name => GeneratePageType(name));
         }
 
-        private static Type GeneratePageType(AssemblyName name)
+        private static Type GeneratePageType(AssemblyName shellAssemblyName)
         {
             var source = @"
 namespace Clide.Dynamic
@@ -264,7 +264,12 @@ namespace Clide.Dynamic
 
             options.ReferencedAssemblies.Add(AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "System").ManifestModule.FullyQualifiedName);
             options.ReferencedAssemblies.Add(AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "System.Windows.Forms").ManifestModule.FullyQualifiedName);
-            options.ReferencedAssemblies.Add(AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().FullName == name.FullName).ManifestModule.FullyQualifiedName);
+            
+            var shellAssembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().FullName == shellAssemblyName.FullName);
+            if (shellAssembly == null)
+                shellAssembly = Assembly.Load(shellAssemblyName);
+
+            options.ReferencedAssemblies.Add(shellAssembly.ManifestModule.FullyQualifiedName);
 
             var results = new CSharpCodeProvider().CompileAssemblyFromSource(options, source);
 

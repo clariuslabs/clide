@@ -77,28 +77,43 @@ namespace Clide.Patterns.Adapter
                         string.Format("{0}->{1}: {2}", adapter.From, adapter.To, adapter.Adapter))));
 		}
 
-		public T As<T>(object source)
-			where T : class
+        public IAdaptable<TSource> Adapt<TSource>(TSource source)
+            where TSource : class
+        {
+            return new Adaptable<TSource>(this, source);
+        }
+
+		private TTarget Adapt<TSource, TTarget>(TSource source)
+            where TSource : class
+            where TTarget : class
 		{
             // Null always adapts to null.
 			if (source == null)
-				return default(T);
+				return default(TTarget);
 
+            // We first try the most specific source type, the 
+            // actual implementation.
 			var sourceType = source.GetType();
-            var targetType = typeof(T);
+            var targetType = typeof(TTarget);
             // Avoid the more costly conversion if types are 
             // directly assignable.
-			if (targetType.IsAssignableFrom(sourceType))
-				return (T)source;
+			if (targetType.IsAssignableFrom(sourceType) || targetType.IsAssignableFrom(typeof(TSource)))
+				return source as TTarget;
 
             var fromTo = new FromTo(sourceType, targetType);
             var adapter = this.cachedFromToAdapters.GetOrAdd(fromTo, FindAdapter);
             if (adapter == null)
-                return default(T);
+            {
+                // Try again but with the explicit TSource we were passed-in.
+                fromTo = new FromTo(typeof(TSource), targetType);
+                adapter = this.cachedFromToAdapters.GetOrAdd(fromTo, FindAdapter);
+                if (adapter == null)
+                    return default(TTarget);
+            }
 
             var adaptMethod = GetAdaptMethod(fromTo, adapter);
 
-            return adaptMethod.Invoke(adapter, source) as T;
+            return adaptMethod.Invoke(adapter, source) as TTarget;
 		}
 
         private IAdapter FindAdapter(FromTo fromTo)
@@ -170,6 +185,24 @@ namespace Clide.Patterns.Adapter
             public IAdapter Adapter;
             public Type From;
             public Type To;
+        }
+
+        private class Adaptable<TSource> : IAdaptable<TSource>
+            where TSource : class
+        {
+            private AdapterService service;
+            private TSource source;
+
+            public Adaptable(AdapterService service, TSource source)
+            {
+                this.service = service;
+                this.source = source;
+            }
+
+            public T As<T>() where T : class
+            {
+                return this.service.Adapt<TSource, T>(source);
+            }
         }
 	}
 }

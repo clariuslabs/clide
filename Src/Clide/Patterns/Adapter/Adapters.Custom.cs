@@ -12,17 +12,24 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
-namespace Clide.Patterns.Adapter
+namespace Clide
 {
-	/// <summary>
-	/// Service that provides pluggable adaptation of types.
-	/// </summary>
-    public partial interface IAdapterService
-	{
-		/// <summary>
-		/// Returns an adaptable object for the given <paramref name="source"/>.
-		/// </summary>
-		/// <returns>The adaptable object for the given source type.</returns>
-		IAdaptable<TSource> Adapt<TSource>(TSource source) where TSource : class;
-	}
+    using System;
+    using Clide.Patterns.Adapter;
+
+    /// <summary>
+    /// Provides the smart cast <see cref="As"/> extension method for consumers.
+    /// </summary>
+    public static partial class Adapters
+    {
+        /// <summary>
+        /// Tries to adapt the given <paramref name="source"/> to the requested <typeparamref name="TSource"/>.
+        /// </summary>
+        /// <returns>The adapted object if an adapter for the source could be found; <see langword="null"/> otherwise.</returns>
+        public static IAdaptable<TSource> Adapt<TSource>(this TSource source)
+            where TSource : class
+        {
+            return Clide.Patterns.Adapter.Adapters.Adapt<TSource>(source);
+        }
+    }
 }

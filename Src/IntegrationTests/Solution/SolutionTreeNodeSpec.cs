@@ -42,8 +42,10 @@ namespace Clide.Solution
 				base.OpenSolution(GetFullPath("SampleSolution\\SampleSolution.sln"));
 
 				var adapter = new Mock<IAdapterService>();
-				adapter.Setup(x => x.As<ISolutionNode>(It.IsAny<object>()))
-					.Returns<object>(o => (ISolutionNode)o);
+                //adapter.Setup(x => x.As<ISolutionNode>(It.IsAny<object>()))
+                //    .Returns<object>(o => (ISolutionNode)o);
+                adapter.Setup(x => x.Adapt(It.IsAny<object>()))
+                    .Returns<object>(o => Mock.Of<IAdaptable<object>>(a => a.As<ISolutionNode>() == (ISolutionNode)o));
 
 				var solution = ServiceProvider.GetService<IVsSolution>();
 				var hierarchy = solution as IVsHierarchy;

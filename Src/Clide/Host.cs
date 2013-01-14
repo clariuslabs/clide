@@ -22,6 +22,8 @@ namespace Clide
     using Clide.Properties;
     using Clide.Commands;
     using System.Runtime.InteropServices;
+    using System.ComponentModel.Composition.Hosting;
+    using Clide.Patterns.Adapter;
 
     public class Host : IDisposable
     {
@@ -65,6 +67,9 @@ namespace Clide
                     devEnv.CompositionService.SatisfyImportsOnce(host);
 
                     host.Initialize(tracingPaneId, tracingPaneTitle);
+
+                    // Initialize the default adapter service for the smart cast extension method.
+                    Clide.Patterns.Adapter.AdaptersInitializer.SetService(((ExportProvider)devEnv.CompositionService).GetExportedValue<IAdapterService>());
 
                     tracer.Info("Package initialization finished successfully");
 

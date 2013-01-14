@@ -19,15 +19,41 @@ namespace Clide.Patterns.Adapter
     /// </summary>
     internal static partial class Constants
     {
+        private static string globalIdentifier;
+        private static string transientIdentifier;
+
+        static Constants()
+        {
+            globalIdentifier = typeof(IAdapterService).Assembly.GetName().Version + "{29938042-C16D-46BA-93D3-F513E88EC345}";
+            transientIdentifier = typeof(IAdapterService).Assembly.GetName().Version + "{E0A43955-6A73-4FD7-B30E-3FB699A804EC}";
+        }
+
         /// <summary>
         /// The identifier for the global state that lives in the AppDomain and provides 
         /// the implementation for the extension method at runtime.
         /// </summary>
-        public const string GlobalStateIdentifier = "{29938042-C16D-46BA-93D3-F513E88EC345}";
+        /// <remarks>
+        /// The current assembly version is always prepended to this identifier to 
+        /// avoid collisions in the AppDomain if multiple versions of the adapter 
+        /// are running side-by-side.
+        /// </remarks>
+        public static string GlobalStateIdentifier
+        {
+            get { return globalIdentifier; }
+        }
+
         /// <summary>
         /// The identifier for the transient state that lives in an AmbientSingleton that 
         /// can be used in tests to replace the adapter service.
         /// </summary>
-        public const string TransientStateIdenfier = "{E0A43955-6A73-4FD7-B30E-3FB699A804EC}";
+        /// <remarks>
+        /// The current assembly version is always prepended to this identifier to 
+        /// avoid collisions in the AppDomain if multiple versions of the adapter 
+        /// are running side-by-side.
+        /// </remarks>
+        public static string TransientStateIdenfier
+        {
+            get { return transientIdentifier; }
+        }
     }
 }

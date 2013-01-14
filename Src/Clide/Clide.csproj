@@ -111,7 +111,12 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Adapters.cs" />
+    <Compile Include="netfx\System\AmbientSingleton.cs" />
+    <Compile Include="netfx\System\Collections\Generic\IEnumerable\TraverseKind.cs" />
+    <Compile Include="netfx\System\Collections\Generic\IEnumerable\Traverser.cs" />
+    <Compile Include="netfx\System\StringFormatWith.cs" />
+    <Compile Include="Patterns\Adapter\AdapterAttribute.cs" />
+    <Compile Include="Patterns\Adapter\Adapters.cs" />
     <Compile Include="Commands\CommandAttribute.cs" />
     <Compile Include="Commands\CommandFilterAttribute.cs" />
     <Compile Include="Commands\CommandManager.cs" />
@@ -155,14 +160,14 @@
     <Compile Include="Extensions\TracingExtensions.cs" />
     <Compile Include="IOptionsManager.cs" />
     <Compile Include="IOptionsPage.cs" />
-    <Compile Include="Patterns\Adapter\AdapterAttribute.cs" />
-    <Compile Include="Patterns\Adapter\Adapters.cs" />
     <Compile Include="Patterns\Adapter\AdapterService.cs" />
     <Compile Include="Patterns\Adapter\AdaptersInitializer.cs" />
     <Compile Include="Patterns\Adapter\ComposedAdapterService.cs" />
     <Compile Include="Patterns\Adapter\Constants.cs" />
+    <Compile Include="Patterns\Adapter\IAdaptable.cs" />
     <Compile Include="Patterns\Adapter\IAdapter.cs" />
     <Compile Include="Patterns\Adapter\IAdapterService.cs" />
+    <Compile Include="Patterns\Adapter\IFluentInterface.cs" />
     <Compile Include="Solution\Adapters\VsLangToSolutionAdapter.cs" />
     <Compile Include="Solution\Adapters\VsHierarchyItemToSolutionAdapter.cs" />
     <Compile Include="Solution\Adapters\VsToSolutionAdapter.cs" />
@@ -182,6 +187,10 @@
     <Compile Include="OptionsPageWindowFactory.cs" />
     <Compile Include="Solution\Extensions\IProjectNodeExtensions.cs" />
     <Compile Include="Solution\Extensions\ISolutionExplorerNodeExtensions.cs" />
+    <Compile Include="System\Diagnostics\Tracer\ITracer.cs" />
+    <Compile Include="System\Diagnostics\Tracer\ITracerExtensions.cs" />
+    <Compile Include="System\Diagnostics\Tracer\ITracerManager.cs" />
+    <Compile Include="System\Diagnostics\Tracer\Tracer.cs" />
     <Compile Include="UI\TreeNodes\ITreeNodeExtensions.cs" />
     <Compile Include="Solution\Factories\ISolutionExplorerNodeFactory.cs" />
     <Compile Include="Solution\Factories\SolutionItemNodeFactory.cs" />
@@ -196,9 +205,6 @@
     <Compile Include="Solution\ISolutionExplorerNode.cs" />
     <Compile Include="Solution\IProjectConfiguration.cs" />
     <Compile Include="VisualStudio\VsHierarchyExtensions.cs" />
-    <Compile Include="netfx\System\AmbientSingleton.cs" />
-    <Compile Include="netfx\System\Collections\Generic\IEnumerable\TraverseKind.cs" />
-    <Compile Include="netfx\System\Collections\Generic\IEnumerable\Traverser.cs" />
     <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="netfx\System\TypeInheritance.cs" />
     <Compile Include="netfx\System\TypeInheritanceExtension.cs" />
@@ -253,7 +259,6 @@
       <DependentUpon>Reflect.Overloads.tt</DependentUpon>
     </Compile>
     <Compile Include="netfx\System\ServiceProvider.cs" />
-    <Compile Include="netfx\System\StringFormatWith.cs" />
     <Compile Include="OwningPackageAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -298,11 +303,7 @@
     <Compile Include="Solution\ISolutionNode.cs" />
     <Compile Include="Solution\SolutionNodeKind.cs" />
     <Compile Include="StatusBar.cs" />
-    <Compile Include="System\Diagnostics\Tracer\ITracer.cs" />
-    <Compile Include="System\Diagnostics\Tracer\ITracerExtensions.cs" />
-    <Compile Include="System\Diagnostics\Tracer\ITracerManager.cs" />
     <Compile Include="System\Diagnostics\Tracer\StartActivityExtension.cs" />
-    <Compile Include="System\Diagnostics\Tracer\Tracer.cs" />
     <Compile Include="System\Diagnostics\Tracer\TracerManager.cs" />
     <Compile Include="System\Diagnostics\Tracer\Visibility.cs" />
     <Compile Include="TracingExtensions.cs" />

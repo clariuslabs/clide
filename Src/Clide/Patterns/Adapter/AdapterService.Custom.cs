@@ -17,17 +17,6 @@ namespace Clide.Patterns.Adapter
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using FromTo = System.Tuple<System.Type, System.Type>;
-
-    public interface IFrom
-    {
-        T To<T>() where T : class;
-    }
-
-    partial interface IAdapterService
-    {
-        IFrom From<T>(T source);
-    }
 
     partial class AdapterService
     {
@@ -49,52 +38,6 @@ namespace Clide.Patterns.Adapter
                     ToInheritance = GetInheritance(info.To)
                 })
                 .SelectMany(info => info.ToInheritance.Select(h => h.Type));
-        }
-
-        public IFrom From<T>(T source)
-        {
-            return new FromImpl<T>(this, source);
-        }
-
-        private class FromImpl<TFrom> : IFrom
-        {
-            private AdapterService adapter;
-            private TFrom source;
-
-            public FromImpl(AdapterService adapter, TFrom source)
-            {
-                this.adapter = adapter;
-                this.source = source;
-            }
-
-            public T To<T>() where T : class
-            {
-                return this.adapter.Convert<TFrom, T>(this.source);
-            }
-        }
-
-        private TTo Convert<TFrom, TTo>(TFrom source)
-            where TTo : class
-        {
-            // Null always adapts to null.
-            if (source == null)
-                return default(TTo);
-
-            var sourceType = typeof(TFrom);
-            var targetType = typeof(TTo);
-            // Avoid the more costly conversion if types are 
-            // directly assignable.
-            if (targetType.IsAssignableFrom(sourceType))
-                return source as TTo;
-
-            var fromTo = new FromTo(sourceType, targetType);
-            var adapter = this.cachedFromToAdapters.GetOrAdd(fromTo, FindAdapter);
-            if (adapter == null)
-                return default(TTo);
-
-            var adaptMethod = GetAdaptMethod(fromTo, adapter);
-
-            return adaptMethod.Invoke(adapter, source) as TTo;
         }
     }
 }

@@ -25,16 +25,16 @@ namespace Clide.Patterns.Adapter
     {
         // AppDomain-wise global static service instance that is set with the same GUID from the AdapterService implementation.
         private static Lazy<IAdapterService> service = new Lazy<IAdapterService>(() => (IAdapterService)AppDomain.CurrentDomain.GetData(Constants.GlobalStateIdentifier));
-        private static readonly AmbientSingleton<IAdapterService> transientService = new AmbientSingleton<IAdapterService>(new Guid(Constants.TransientStateIdenfier));
+        private static readonly AmbientSingleton<IAdapterService> transientService = new AmbientSingleton<IAdapterService>(default(IAdapterService), Constants.TransientStateIdenfier);
 
         /// <summary>
-        /// Tries to adapt the given <paramref name="source"/> to the requested <typeparamref name="T"/>.
+        /// Returns an adaptable object for the given <paramref name="source"/>.
         /// </summary>
-        /// <returns>The adapted object if an adapter for the source could be found; <see langword="null"/> otherwise.</returns>
-        public static T As<T>(this object source)
-            where T : class
+        /// <returns>The adaptable object for the given source type.</returns>
+        public static IAdaptable<TSource> Adapt<TSource>(this TSource source)
+            where TSource : class
         {
-            return AdapterService.As<T>(source);
+            return AdapterService.Adapt<TSource>(source);
         }
 
         private static IAdapterService AdapterService

@@ -34,7 +34,7 @@ namespace Clide.Patterns.Adapter
     /// </remarks>
     public static partial class AdaptersInitializer
     {
-        private static readonly AmbientSingleton<IAdapterService> transientService = new AmbientSingleton<IAdapterService>(new Guid(Constants.TransientStateIdenfier));
+        private static readonly AmbientSingleton<IAdapterService> transientService = new AmbientSingleton<IAdapterService>(default(IAdapterService), Constants.TransientStateIdenfier);
 
         /// <summary>
         /// Sets the singleton adapter service instance to use to implement the 

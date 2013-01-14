@@ -156,7 +156,7 @@ namespace Clide.Solution
 
         public virtual T As<T>() where T : class
         {
-            return this.adapter.As<T>(this);
+            return this.adapter.Adapt(this).As<T>();
         }
 
         public virtual void Collapse()

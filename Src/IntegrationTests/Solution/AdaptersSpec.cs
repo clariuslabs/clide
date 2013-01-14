@@ -36,6 +36,18 @@ namespace Clide.Solution
 
         [HostType("VS IDE")]
         [TestMethod]
+        public void WhenAdaptingUsingExtensionMethod_ThenSucceeds()
+        {
+            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+
+            var node = this.ServiceProvider.GetService<SVsSolution, IVsSolution>().Adapt().As<ISolutionNode>();
+
+            Assert.NotNull(node);
+        }
+
+
+        [HostType("VS IDE")]
+        [TestMethod]
         public void WhenSolutionIsOpened_ThenCanAdaptTypes()
         {
             var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
@@ -101,7 +113,7 @@ namespace Clide.Solution
 
             var adapter = this.Container.GetExportedValue<IAdapterService>();
 
-            var node = adapter.From(this.Dte.Solution).To<ISolutionNode>();
+            var node = adapter.Adapt(this.Dte.Solution).As<ISolutionNode>();
 
             Assert.NotNull(node);
         }
@@ -119,7 +131,7 @@ namespace Clide.Solution
                 .First(x => x.DisplayName == "ClassLibrary")
                 .As<Project>();
 
-            var node = adapter.From(library).To<IProjectNode>();
+            var node = adapter.Adapt(library).As<IProjectNode>();
 
             Assert.NotNull(node);
         }
@@ -137,7 +149,7 @@ namespace Clide.Solution
                 .First(x => x.DisplayName == "Class1.cs")
                 .As<ProjectItem>();
 
-            var node = adapter.From(file).To<IItemNode>();
+            var node = adapter.Adapt(file).As<IItemNode>();
 
             Assert.NotNull(node);
         }
@@ -150,7 +162,7 @@ namespace Clide.Solution
 
             var adapter = this.Container.GetExportedValue<IAdapterService>();
 
-            var node = adapter.From(this.ServiceProvider.GetService<SVsSolution, IVsSolution>()).To<ISolutionNode>();
+            var node = adapter.Adapt(this.ServiceProvider.GetService<SVsSolution, IVsSolution>()).As<ISolutionNode>();
 
             Assert.NotNull(node);
         }
@@ -170,7 +182,7 @@ namespace Clide.Solution
 
             Assert.NotNull(library);
 
-            var node = adapter.From(library).To<IProjectNode>();
+            var node = adapter.Adapt(library).As<IProjectNode>();
 
             Assert.NotNull(node);
         }
@@ -188,7 +200,7 @@ namespace Clide.Solution
 
             Assert.NotNull(source);
 
-            var node = adapter.From(source).To<ISolutionNode>();
+            var node = adapter.Adapt(source).As<ISolutionNode>();
 
             Assert.NotNull(node);
         }
@@ -208,7 +220,7 @@ namespace Clide.Solution
 
             Assert.NotNull(source);
 
-            var node = adapter.From(source).To<IProjectNode>();
+            var node = adapter.Adapt(source).As<IProjectNode>();
 
             Assert.NotNull(node);
         }
@@ -228,7 +240,7 @@ namespace Clide.Solution
 
             Assert.NotNull(source);
 
-            var node = adapter.From(source).To<IItemNode>();
+            var node = adapter.Adapt(source).As<IItemNode>();
 
             Assert.NotNull(node);
         }
