@@ -79,6 +79,78 @@ namespace Clide.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to In order to register command interceptor instance &apos;{interceptor}&apos;, it must have a [CommandInterceptor] attribute..
+        /// </summary>
+        internal static string CommandManager_CommandInterceptorAttributeMissing {
+            get {
+                return ResourceManager.GetString("CommandManager_CommandInterceptorAttributeMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Package &apos;{packageId}&apos; does not provide a command with group identifier &apos;{groupId}&apos; and command identifier &apos;{commandId}&apos;..
+        /// </summary>
+        internal static string CommandManager_CommandNotFound {
+            get {
+                return ResourceManager.GetString("CommandManager_CommandNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Command to filter does not provide the required BeforeQueryStatus event (typically inherited from OleMenuCommand). Filtering cannot be performed. (Package Id: &apos;{packageId}&apos;, Group Id: &apos;{groupId}&apos;, Command Id &apos;{commandId}&apos;).
+        /// </summary>
+        internal static string CommandManager_CommandNotOle {
+            get {
+                return ResourceManager.GetString("CommandManager_CommandNotOle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loaded package with identifier &apos;{packageId}&apos; that owns the command to filter is not a service provider..
+        /// </summary>
+        internal static string CommandManager_CommandPackageNotServiceProvider {
+            get {
+                return ResourceManager.GetString("CommandManager_CommandPackageNotServiceProvider", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registered command {commandText} ({commandType}). .
+        /// </summary>
+        internal static string CommandManager_CommandRegistered {
+            get {
+                return ResourceManager.GetString("CommandManager_CommandRegistered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Command filter {filter} caused an unexpected exception: {exception}..
+        /// </summary>
+        internal static string CommandManager_FilterFailed {
+            get {
+                return ResourceManager.GetString("CommandManager_FilterFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Command interceptor {interceptor} caused an unexpected exception: {exception}..
+        /// </summary>
+        internal static string CommandManager_InterceptorFailed {
+            get {
+                return ResourceManager.GetString("CommandManager_InterceptorFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not retrieve the menu command service from the package with identifier &apos;{packageId}&apos; that owns the command to filter..
+        /// </summary>
+        internal static string CommandManager_NoMenuCommandService {
+            get {
+                return ResourceManager.GetString("CommandManager_NoMenuCommandService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Command type &apos;{type}&apos; does not have the required attribute &apos;{attribute}&apos;..
         /// </summary>
         internal static string CommandManager_OwningPackageAttributeRequired {

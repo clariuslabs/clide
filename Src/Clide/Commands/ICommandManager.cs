@@ -111,5 +111,49 @@ namespace Clide.Commands
         /// on the given <paramref name="owningPackage"/>.
         /// </summary>
         void AddFilters(IServiceProvider owningPackage);
+
+        /// <summary>
+        /// Adds the command interceptor of the given type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the command interceptor, which
+        /// must implement the <see cref="ICommandInterceptor"/> interface and be annotated with 
+        /// the <see cref="CommandInterceptorAttribute"/> attribute.</typeparam>
+        /// <remarks>
+        /// The command can import additional services, which are satisfied right after creation.
+        /// </remarks>
+        void AddInterceptor<T>() where T : ICommandInterceptor, new();
+
+        /// <summary>
+        /// Adds the specified command interceptor implementation to the manager.
+        /// </summary>
+        /// <param name="filter">The command intercepto instance, which must be annotated with 
+        /// the <see cref="CommandFilterAttribute"/> attribute.</param>
+        /// <remarks>
+        /// The manager performs a satisfy imports call for pre-instantiated commands 
+        /// so that property dependencies are set.
+        /// </remarks>
+        void AddInterceptor(ICommandInterceptor interceptor);
+
+        /// <summary>
+        /// Adds the specified command interceptor implementation to the manager, 
+        /// with the specified explicit metadata.
+        /// </summary>
+        /// <param name="command">The command interceptor instance, which does not need to 
+        /// be annotated with the <see cref="CommandInterceptorAttribute"/> attribute since 
+        /// it's provided explicitly.</param>
+        /// <param name="metadata">Explicit metadata to use for the command, 
+        /// instead of reflecting the <see cref="CommandInterceptorAttribute"/>.</param>
+        /// <remarks>
+        /// The manager performs a satisfy imports call for pre-instantiated commands 
+        /// so that property dependencies are set.
+        /// </remarks>
+        void AddInterceptor(ICommandInterceptor interceptor, ICommandInterceptorMetadata metadata);
+
+        /// <summary>
+        /// Adds all the commands interceptors that have been annotated with the <see cref="CommandInterceptorAttribute"/> with 
+        /// a package identifier that matches the <see cref="GuidAttribute"/> 
+        /// on the given <paramref name="owningPackage"/>.
+        /// </summary>
+        void AddInterceptors(IServiceProvider owningPackage);
     }
 }

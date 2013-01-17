@@ -50,7 +50,7 @@ public abstract class VsHostedSpec
 
     protected CompositionContainer Container
     {
-        get { return (CompositionContainer)DevEnv.Get(this.ServiceProvider).CompositionService; }
+        get { return (CompositionContainer)DevEnv.Get(this.ServiceProvider).CompositionContainer; }
     }
 
     private Lazy<ShellPackage> integrationPackage;

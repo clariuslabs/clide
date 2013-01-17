@@ -27,13 +27,14 @@ namespace Clide
     using Clide.Diagnostics;
     using System.Diagnostics;
     using Clide.Properties;
+    using System.ComponentModel.Composition.Hosting;
 
     [Export(typeof(IDevEnv))]
 	internal class DevEnvImpl : IDevEnv, IShellEvents
 	{
         private static readonly Guid OutputWindowId = new Guid("{66893206-0EF5-4A16-AA10-6EC6B6319F92}");
 
-        private Lazy<ICompositionService> composition;
+        private Lazy<CompositionContainer> composition;
         private Lazy<IStatusBar> status;
 		private IShellEvents shellEvents;
 		private Lazy<IDialogWindowFactory> dialogFactory;
@@ -45,7 +46,7 @@ namespace Clide
 		[ImportingConstructor]
 		public DevEnvImpl(
 			[Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider,
-            [Import(ContractNames.ICompositionService)] Lazy<ICompositionService> composition,
+            [Import(ContractNames.CompositionContainer)] Lazy<CompositionContainer> composition,
 			[ImportMany] IEnumerable<Lazy<IToolWindow>> toolWindows,
 			Lazy<IDialogWindowFactory> dialogFactory,
 			Lazy<IUIThread> uiThread,
@@ -71,7 +72,7 @@ namespace Clide
 
 		internal IServiceProvider ServiceProvider { get; set; }
 
-        public ICompositionService CompositionService
+        public CompositionContainer CompositionContainer
         {
             get { return this.composition.Value; }
         }

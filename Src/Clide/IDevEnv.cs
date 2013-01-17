@@ -20,10 +20,11 @@ namespace Clide
     using System.Collections.Generic;
     using Clide.Commands;
     using System.ComponentModel.Composition;
+    using System.ComponentModel.Composition.Hosting;
 
     public interface IDevEnv : IShellEvents, IFluentInterface
 	{
-        ICompositionService CompositionService { get; }
+        CompositionContainer CompositionContainer { get; }
 		IDialogWindowFactory DialogWindowFactory { get; }
         IMessageBoxService MessageBoxService { get; }
 		IStatusBar StatusBar { get; }

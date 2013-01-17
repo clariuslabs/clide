@@ -65,11 +65,11 @@ namespace Clide
 				// Optimize code path if no dynamic context was deceived.
 				if (dynamicContextValues == null || dynamicContextValues.Length == 0)
 				{ 
-					 view.DataContext = ((ExportProvider)this.devEnv.Value.CompositionService).GetExportedValue<TDataContext>();
+					 view.DataContext = ((ExportProvider)this.devEnv.Value.CompositionContainer).GetExportedValue<TDataContext>();
 				}
 				else
 				{
-                    var container = new CompositionContainer(((ExportProvider)this.devEnv.Value.CompositionService));
+                    var container = new CompositionContainer(((ExportProvider)this.devEnv.Value.CompositionContainer));
 					foreach (var dynamicValue in dynamicContextValues.Where(value => value != null))
 					{
 						var composeValue = ComposeExportedValueMethod.MakeGenericMethod(dynamicValue.GetType());

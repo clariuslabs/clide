@@ -60,16 +60,16 @@ namespace Clide
                     var tracingPaneId = GetPackageGuidOrThrow(hostingPackage);
                     var devEnv = DevEnv.Get(hostingPackage);
                     // Brings in imports that the package itself might need.
-                    devEnv.CompositionService.SatisfyImportsOnce(hostingPackage);
+                    devEnv.CompositionContainer.SatisfyImportsOnce(hostingPackage);
 
                     // Initialize the host package components.
                     var host = new Host(hostingPackage);
-                    devEnv.CompositionService.SatisfyImportsOnce(host);
+                    devEnv.CompositionContainer.SatisfyImportsOnce(host);
 
                     host.Initialize(tracingPaneId, tracingPaneTitle);
 
                     // Initialize the default adapter service for the smart cast extension method.
-                    Clide.Patterns.Adapter.AdaptersInitializer.SetService(((ExportProvider)devEnv.CompositionService).GetExportedValue<IAdapterService>());
+                    Clide.Patterns.Adapter.AdaptersInitializer.SetService(((ExportProvider)devEnv.CompositionContainer).GetExportedValue<IAdapterService>());
 
                     tracer.Info("Package initialization finished successfully");
 
@@ -134,6 +134,8 @@ namespace Clide
             this.commands.AddCommands(hostingPackage);
             tracer.Info("Registering package command filters");
             this.commands.AddFilters(hostingPackage);
+            tracer.Info("Registering package command interceptors");
+            this.commands.AddInterceptors(hostingPackage);
             tracer.Info("Registering package options pages");
             this.options.AddPages(hostingPackage);
         }

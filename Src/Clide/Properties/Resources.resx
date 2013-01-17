@@ -258,4 +258,28 @@
   <data name="OptionsManager_ShellReferenceNotFound" xml:space="preserve">
     <value>Could not find reference to Microsoft.VisualStudio.Shell (either 10.0 or 11.0) on the given package type {packageType}.</value>
   </data>
+  <data name="CommandManager_CommandInterceptorAttributeMissing" xml:space="preserve">
+    <value>In order to register command interceptor instance '{interceptor}', it must have a [CommandInterceptor] attribute.</value>
+  </data>
+  <data name="CommandManager_CommandNotFound" xml:space="preserve">
+    <value>Package '{packageId}' does not provide a command with group identifier '{groupId}' and command identifier '{commandId}'.</value>
+  </data>
+  <data name="CommandManager_CommandNotOle" xml:space="preserve">
+    <value>Command to filter does not provide the required BeforeQueryStatus event (typically inherited from OleMenuCommand). Filtering cannot be performed. (Package Id: '{packageId}', Group Id: '{groupId}', Command Id '{commandId}')</value>
+  </data>
+  <data name="CommandManager_CommandPackageNotServiceProvider" xml:space="preserve">
+    <value>Loaded package with identifier '{packageId}' that owns the command to filter is not a service provider.</value>
+  </data>
+  <data name="CommandManager_CommandRegistered" xml:space="preserve">
+    <value>Registered command {commandText} ({commandType}). </value>
+  </data>
+  <data name="CommandManager_FilterFailed" xml:space="preserve">
+    <value>Command filter {filter} caused an unexpected exception: {exception}.</value>
+  </data>
+  <data name="CommandManager_InterceptorFailed" xml:space="preserve">
+    <value>Command interceptor {interceptor} caused an unexpected exception: {exception}.</value>
+  </data>
+  <data name="CommandManager_NoMenuCommandService" xml:space="preserve">
+    <value>Could not retrieve the menu command service from the package with identifier '{packageId}' that owns the command to filter.</value>
+  </data>
 </root>

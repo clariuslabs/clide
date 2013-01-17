@@ -1,4 +1,10 @@
+v1.3
+
+* Expose CompositionContainer directly on IDevEnv. This simplifies many scenarios where you want to interact with the container. Users can still import ICompositionService.
+* Added support for intercepting arbitrary commands in the IDE via simple exports of ICommandInterceptor components, automatically registered when the host is initialized. 
+
 v1.2
+
 * Refactored for easier reuse by offering two static entry points: 
      - DevEnv.Get: gets the IDevEnv entry point API. This can be 
        used from anywhere you can import an IServiceProvider. By 
@@ -10,6 +16,7 @@ v1.2
   you use Clide (you may because of other dependencies, like VSMSDK).
 
 v1.1
+
 * ISolutionExplorer API, with full solution traversal, behaviors
   for selecting, expanding and collapsing nodes, etc.
 * Integration with Adapter pattern for pluggable conversion of 
@@ -18,6 +25,7 @@ v1.1
 * Improved reporting of composition errors in the Clide output window
 
 v1.0
+
 * Full support for MEF-exported commands (ICommandExtension) and command filters
 * ToolWindow support
 * Tools options pages support

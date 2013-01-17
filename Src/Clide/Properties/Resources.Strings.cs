@@ -51,6 +51,109 @@ namespace Clide.Properties
 		
 			/// <summary>
 			/// Looks up a localized string similar to: 
+			///	In order to register command interceptor instance '{interceptor}', it must have a [CommandInterceptor] attribute.
+			/// </summary>
+			public static string CommandInterceptorAttributeMissing(object interceptor)
+			{
+				return Resources.CommandManager_CommandInterceptorAttributeMissing.FormatWith(new 
+				{
+					interceptor = interceptor,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Package '{packageId}' does not provide a command with group identifier '{groupId}' and command identifier '{commandId}'.
+			/// </summary>
+			public static string CommandNotFound(object packageId, object groupId, object commandId)
+			{
+				return Resources.CommandManager_CommandNotFound.FormatWith(new 
+				{
+					packageId = packageId,
+					groupId = groupId,
+					commandId = commandId,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Command to filter does not provide the required BeforeQueryStatus event (typically inherited from OleMenuCommand). Filtering cannot be performed. (Package Id: '{packageId}', Group Id: '{groupId}', Command Id '{commandId}')
+			/// </summary>
+			public static string CommandNotOle(object packageId, object groupId, object commandId)
+			{
+				return Resources.CommandManager_CommandNotOle.FormatWith(new 
+				{
+					packageId = packageId,
+					groupId = groupId,
+					commandId = commandId,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Loaded package with identifier '{packageId}' that owns the command to filter is not a service provider.
+			/// </summary>
+			public static string CommandPackageNotServiceProvider(object packageId)
+			{
+				return Resources.CommandManager_CommandPackageNotServiceProvider.FormatWith(new 
+				{
+					packageId = packageId,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Registered command {commandText} ({commandType}). 
+			/// </summary>
+			public static string CommandRegistered(object commandText, object commandType)
+			{
+				return Resources.CommandManager_CommandRegistered.FormatWith(new 
+				{
+					commandText = commandText,
+					commandType = commandType,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Command filter {filter} caused an unexpected exception: {exception}.
+			/// </summary>
+			public static string FilterFailed(object filter, object exception)
+			{
+				return Resources.CommandManager_FilterFailed.FormatWith(new 
+				{
+					filter = filter,
+					exception = exception,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Command interceptor {interceptor} caused an unexpected exception: {exception}.
+			/// </summary>
+			public static string InterceptorFailed(object interceptor, object exception)
+			{
+				return Resources.CommandManager_InterceptorFailed.FormatWith(new 
+				{
+					interceptor = interceptor,
+					exception = exception,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Could not retrieve the menu command service from the package with identifier '{packageId}' that owns the command to filter.
+			/// </summary>
+			public static string NoMenuCommandService(object packageId)
+			{
+				return Resources.CommandManager_NoMenuCommandService.FormatWith(new 
+				{
+					packageId = packageId,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
 			///	Command type '{type}' does not have the required attribute '{attribute}'.
 			/// </summary>
 			public static string OwningPackageAttributeRequired(object type, object attribute)

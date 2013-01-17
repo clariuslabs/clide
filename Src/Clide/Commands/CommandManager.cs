@@ -31,6 +31,9 @@ namespace Clide.Commands
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.CSharp.RuntimeBinder;
+    using EnvDTE;
+    using System.Collections.Concurrent;
+    using System.Diagnostics;
 
     /// <summary>
     /// Implements the command registration mechanism.
@@ -39,10 +42,17 @@ namespace Clide.Commands
     [Export(typeof(ICommandManager))]
     internal class CommandManager : ICommandManager
     {
+        private static readonly ITracer tracer = Tracer.Get<CommandManager>();
+
         private IVsShell vsShell;
         private Lazy<ICompositionService> composition;
+        private CommandEvents commandEvents;
+
         private IEnumerable<Lazy<ICommandExtension, ICommandMetadata>> allCommands;
         private IEnumerable<Lazy<ICommandFilter, ICommandFilterMetadata>> allFilters;
+        private IEnumerable<Lazy<ICommandInterceptor, ICommandInterceptorMetadata>> allInterceptors;
+
+        private ConcurrentDictionary<Tuple<Guid, int>, List<ICommandInterceptor>> registeredInterceptors = new ConcurrentDictionary<Tuple<Guid, int>, List<ICommandInterceptor>>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandManager"/> class.
@@ -50,23 +60,21 @@ namespace Clide.Commands
         [ImportingConstructor]
         public CommandManager(
             [Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider,
-            [Import(VsContractNames.IVsShell)] IVsShell vsShell,
             [Import(ContractNames.ICompositionService)] Lazy<ICompositionService> composition,
             [ImportMany] IEnumerable<Lazy<ICommandExtension, ICommandMetadata>> allCommands,
-            [ImportMany] IEnumerable<Lazy<ICommandFilter, ICommandFilterMetadata>> allFilters)
+            [ImportMany] IEnumerable<Lazy<ICommandFilter, ICommandFilterMetadata>> allFilters,
+            [ImportMany] IEnumerable<Lazy<ICommandInterceptor, ICommandInterceptorMetadata>> allInterceptors)
         {
-            this.ServiceProvider = serviceProvider;
-            this.vsShell = vsShell;
+            this.composition = composition;
+            this.vsShell = serviceProvider.GetService<SVsShell, IVsShell>();
+            this.commandEvents = serviceProvider.GetService<DTE>().Events.CommandEvents;
             this.allCommands = allCommands;
             this.allFilters = allFilters;
-            this.composition = composition;
-        }
+            this.allInterceptors = allInterceptors.ToList();
 
-        /// <summary>
-        /// Gets or sets the service provider.
-        /// </summary>
-        /// <devdoc>Made internal to allow replacing for testing.</devdoc>
-        internal IServiceProvider ServiceProvider { get; set; }
+            this.commandEvents.BeforeExecute += OnBeforeExecute;
+            this.commandEvents.AfterExecute += OnAfterExecute;
+        }
 
         /// <summary>
         /// Adds the command of the given type <typeparamref name="T"/>.
@@ -113,6 +121,7 @@ namespace Clide.Commands
             var menuService = services.GetService<IMenuCommandService>();
 
             menuService.AddCommand(new VsCommandExtensionAdapter(new CommandID(new Guid(metadata.GroupId), metadata.CommandId), command));
+            tracer.Info(Strings.CommandManager.CommandRegistered(command.Text, command.GetType()));
         }
 
         /// <summary>
@@ -159,6 +168,7 @@ namespace Clide.Commands
             Guard.NotNull(() => filter, filter);
 
             var metadata = GetFilterMetadataOrThrow(filter.GetType());
+
             AddFilter(filter, metadata);
         }
 
@@ -183,32 +193,50 @@ namespace Clide.Commands
             if (commandPackage == null)
                 ErrorHandler.ThrowOnFailure(vsShell.LoadPackage(ref commandPackageGuid, out commandPackage));
 
-            // TODO: trace all these failure conditions.
             var serviceProvider = commandPackage as IServiceProvider;
             if (serviceProvider == null)
+            {
+                tracer.Error(Strings.CommandManager.CommandPackageNotServiceProvider(commandPackageGuid));
                 return;
+            }
 
             var mcs = serviceProvider.GetService<IMenuCommandService>();
-            if (mcs != null)
+            if (mcs == null)
             {
-                var command = mcs.FindCommand(new CommandID(new Guid(metadata.GroupId), metadata.CommandId));
-                // \o/: for some reason this cast never works on VS2012, even with the proper assembly references :(.
-                // So we resort to dynamic.
-                // var command =  as OleMenuCommand;
-                if (command != null)
+                tracer.Error(Strings.CommandManager.NoMenuCommandService(commandPackageGuid));
+                return;
+            }
+
+            var command = mcs.FindCommand(new CommandID(new Guid(metadata.GroupId), metadata.CommandId));
+            if (command == null)
+            {
+                tracer.Error(Strings.CommandManager.CommandNotFound(commandPackageGuid, metadata.GroupId, metadata.CommandId));
+                return;
+            }
+
+            // \o/: for some reason this cast never works on VS2012, even with the proper assembly references :(.
+            // So we resort to dynamic.
+            // var command =  as OleMenuCommand;
+            dynamic dynCommand = command.AsDynamicReflection();
+            try
+            {
+                dynCommand.add_BeforeQueryStatus(new EventHandler((sender, args) =>
                 {
-                    dynamic dynCommand = command.AsDynamicReflection();
                     try
                     {
-                        dynCommand.add_BeforeQueryStatus(new EventHandler((sender, args) =>
-                            filter.QueryStatus(new OleMenuCommandAdapter((OleMenuCommand)sender))));
+                        filter.QueryStatus(new OleMenuCommandAdapter((OleMenuCommand)sender));
                     }
-                    catch (RuntimeBinderException)
+                    catch (Exception e)
                     {
-                        // The command may not be an OleMenuCommand and therefore it wouldn't have the BeforeQueryStatus.
-                        // TODO: should trace. 
+                        tracer.Error(Strings.CommandManager.FilterFailed(filter, e));
                     }
-                }
+                }));
+            }
+            catch (RuntimeBinderException)
+            {
+                // The command may not be an OleMenuCommand and therefore it wouldn't have the BeforeQueryStatus.
+                // TODO: should trace. 
+                tracer.Error(Strings.CommandManager.CommandNotOle(commandPackageGuid, metadata.GroupId, metadata.CommandId));
             }
         }
 
@@ -230,6 +258,105 @@ namespace Clide.Commands
             foreach (var filter in packageFilters)
             {
                 AddFilter(filter.Value, filter.Metadata);
+            }
+        }
+
+        /// <summary>
+        /// Adds the command interceptor of the given type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the command interceptor, which
+        /// must implement the <see cref="ICommandInterceptor"/> interface and be annotated with
+        /// the <see cref="CommandInterceptorAttribute"/> attribute.</typeparam>
+        public void AddInterceptor<T>() where T : ICommandInterceptor, new()
+        {
+            var interceptor = new T();
+            this.composition.Value.SatisfyImportsOnce(interceptor);
+
+            AddInterceptor(interceptor);
+        }
+
+        /// <summary>
+        /// Adds the specified command interceptor implementation to the manager.
+        /// </summary>
+        /// <param name="interceptor">The command interceptor instance, which must be annotated with
+        /// the <see cref="CommandInterceptorAttribute"/> attribute.</param>
+        public void AddInterceptor(ICommandInterceptor interceptor)
+        {
+            Guard.NotNull(() => interceptor, interceptor);
+
+            var metadata = GetInterceptorMetadataOrThrow(interceptor.GetType());
+
+            AddInterceptor(interceptor, metadata);
+        }
+
+        /// <summary>
+        /// Adds the specified command interceptor implementation to the manager,
+        /// with the specified explicit metadata.
+        /// </summary>
+        /// <param name="interceptor">The command interceptor instance, which does not need to
+        /// be annotated with the <see cref="CommandInterceptorAttribute"/> attribute since
+        /// it's provided explicitly.</param>
+        /// <param name="metadata">Explicit metadata to use for the command interceptor,
+        /// instead of reflecting the <see cref="CommandInterceptorAttribute"/>.</param>
+        public void AddInterceptor(ICommandInterceptor interceptor, ICommandInterceptorMetadata metadata)
+        {
+            Guard.NotNull(() => interceptor, interceptor);
+            Guard.NotNull(() => metadata, metadata);
+
+            var commandInterceptors = this.registeredInterceptors.GetOrAdd(
+                Tuple.Create(new Guid(metadata.GroupId), metadata.CommandId),
+                key => new List<ICommandInterceptor>());
+
+            commandInterceptors.Add(interceptor);
+        }
+
+        /// <summary>
+        /// Adds all the command interceptors that have been annotated with the <see cref="CommandInterceptorAttribute"/> with
+        /// an owning package identifier that matches the <see cref="GuidAttribute"/>
+        /// on the given <paramref name="owningPackage"/>.
+        /// </summary>
+        public void AddInterceptors(IServiceProvider owningPackage)
+        {
+            Guard.NotNull(() => owningPackage, owningPackage);
+
+            var owningPackageGuid = GetPackageGuidOrThrow(owningPackage);
+            var packageInterceptors = this.allInterceptors
+                .Where(interceptor => new Guid(interceptor.Metadata.OwningPackageId) == owningPackageGuid);
+
+            var vsShell = owningPackage.GetService<SVsShell, IVsShell>();
+
+            foreach (var interceptor in packageInterceptors)
+            {
+                AddInterceptor(interceptor.Value, interceptor.Metadata);
+            }
+        }
+
+        private void OnBeforeExecute(string groupGuid, int commandId, object customIn, object customOut, ref bool CancelDefault)
+        {
+            ExecuteInterceptors(groupGuid, commandId, interceptor => interceptor.BeforeExecute());
+        }
+
+        private void OnAfterExecute(string groupGuid, int commandId, object customIn, object customOut)
+        {
+            ExecuteInterceptors(groupGuid, commandId, interceptor => interceptor.AfterExecute());
+        }
+
+        private void ExecuteInterceptors(string groupGuid, int commandId, Action<ICommandInterceptor> execute)
+        {
+            var interceptors = default(List<ICommandInterceptor>);
+            if (this.registeredInterceptors.TryGetValue(Tuple.Create(new Guid(groupGuid), commandId), out interceptors))
+            {
+                foreach (var interceptor in interceptors)
+                {
+                    try
+                    {
+                        execute(interceptor);
+                    }
+                    catch (Exception e)
+                    {
+                        tracer.Error(Strings.CommandManager.InterceptorFailed(interceptor, e));
+                    }
+                }
             }
         }
 
@@ -257,6 +384,20 @@ namespace Clide.Commands
             {
                 OwningPackageId = cmd.OwningPackageId,
                 PackageId = cmd.PackageId,
+                GroupId = cmd.GroupId,
+                CommandId = cmd.CommandId
+            };
+        }
+
+        private ICommandInterceptorMetadata GetInterceptorMetadataOrThrow(Type type)
+        {
+            var cmd = type.GetCustomAttribute<CommandInterceptorAttribute>();
+            if (cmd == null)
+                throw new ArgumentException(Strings.CommandManager.CommandInterceptorAttributeMissing(type));
+
+            return new CommandInterceptorMetadata
+            {
+                OwningPackageId = cmd.OwningPackageId,
                 GroupId = cmd.GroupId,
                 CommandId = cmd.CommandId
             };
@@ -302,6 +443,13 @@ namespace Clide.Commands
         private class CommandFilterMetadata : CommandMetadata, ICommandFilterMetadata
         {
             public string OwningPackageId { get; set; }
+        }
+
+        private class CommandInterceptorMetadata : ICommandInterceptorMetadata
+        {
+            public string OwningPackageId { get; set; }
+            public string GroupId { get; set; }
+            public int CommandId { get; set; }
         }
     }
 }

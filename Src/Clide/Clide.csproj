@@ -111,6 +111,9 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CommandInterceptorAttribute.cs" />
+    <Compile Include="Commands\ICommandInterceptor.cs" />
+    <Compile Include="Commands\ICommandInterceptorMetadata.cs" />
     <Compile Include="netfx\System\AmbientSingleton.cs" />
     <Compile Include="netfx\System\Collections\Generic\IEnumerable\TraverseKind.cs" />
     <Compile Include="netfx\System\Collections\Generic\IEnumerable\Traverser.cs" />

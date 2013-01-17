@@ -19,6 +19,7 @@ namespace IntegrationPackage
     {
         private IServiceProvider services;
 
+        [ImportingConstructor]
         public TextAdornment1Factory([Import(typeof(SVsServiceProvider))] IServiceProvider services)
         {
             this.services = services;
