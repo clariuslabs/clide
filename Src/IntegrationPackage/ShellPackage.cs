@@ -12,6 +12,8 @@
     using System.Collections.Generic;
     using System.ComponentModel.Composition.Hosting;
     using Clide;
+    using System.Diagnostics;
+    using System.IO;
 
     [Guid(Constants.PackageGuid)]
     [ProvideAutoLoad(UIContextGuids.NoSolution)]
@@ -22,13 +24,17 @@
     {
         private static readonly string OutputPaneTitle = "Clide Integration Test Package";
 
+        private ITracer tracer;
         private IDisposable host;
 
         protected override void Initialize()
         {
             base.Initialize();
             this.host = Host.Initialize(this, OutputPaneTitle);
-            Console.WriteLine("Shell package initialized");
+            this.tracer = Tracer.Get<ShellPackage>();
+
+            this.tracer.Info("Shell package initialized");
+            this.tracer.Info("Composition log path: {0}", Path.Combine(Path.GetTempPath(), "DevEnv.log"));
         }
     }
 }

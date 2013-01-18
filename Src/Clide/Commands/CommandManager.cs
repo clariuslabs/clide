@@ -133,7 +133,7 @@ namespace Clide.Commands
         {
             Guard.NotNull(() => owningPackage, owningPackage);
 
-            var packageGuid = GetPackageGuidOrThrow(owningPackage);
+            var packageGuid = owningPackage.GetPackageGuidOrThrow();
             var menuService = owningPackage.GetService<IMenuCommandService>();
             var packageCommands = this.allCommands
                 .Where(command => new Guid(command.Metadata.PackageId) == packageGuid);
@@ -249,7 +249,7 @@ namespace Clide.Commands
         {
             Guard.NotNull(() => owningPackage, owningPackage);
 
-            var owningPackageGuid = GetPackageGuidOrThrow(owningPackage);
+            var owningPackageGuid = owningPackage.GetPackageGuidOrThrow();
             var packageFilters = this.allFilters
                 .Where(filter => new Guid(filter.Metadata.OwningPackageId) == owningPackageGuid);
 
@@ -319,7 +319,7 @@ namespace Clide.Commands
         {
             Guard.NotNull(() => owningPackage, owningPackage);
 
-            var owningPackageGuid = GetPackageGuidOrThrow(owningPackage);
+            var owningPackageGuid = owningPackage.GetPackageGuidOrThrow();
             var packageInterceptors = this.allInterceptors
                 .Where(interceptor => new Guid(interceptor.Metadata.OwningPackageId) == owningPackageGuid);
 
@@ -401,15 +401,6 @@ namespace Clide.Commands
                 GroupId = cmd.GroupId,
                 CommandId = cmd.CommandId
             };
-        }
-
-        private static Guid GetPackageGuidOrThrow(IServiceProvider owningPackage)
-        {
-            var guid = owningPackage.GetType().GetCustomAttribute<GuidAttribute>(true);
-            if (guid == null)
-                throw new ArgumentException(Strings.CommandManager.PackageGuidMissing(owningPackage.GetType()));
-
-            return new Guid(guid.Value);
         }
 
         private IServiceProvider GetPackageOrThrow(Type command, Guid packageGuid)

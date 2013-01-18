@@ -16,6 +16,7 @@ namespace Clide
         {
             var package = this.ShellPackage;
 
+            // TODO: add test.
         }
     }
 }

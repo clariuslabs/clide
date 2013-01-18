@@ -670,6 +670,19 @@ namespace Clide.Properties
 		
 			/// <summary>
 			/// Looks up a localized string similar to: 
+			///	Found Clide component '{component}' to register for composition at '{componentAssembly}'.
+			/// </summary>
+			public static string ClideComponentDeclared(object component, object componentAssembly)
+			{
+				return Resources.DevEnvFactory_ClideComponentDeclared.FormatWith(new 
+				{
+					component = component,
+					componentAssembly = componentAssembly,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
 			///	The extension manifest file '{packageManifest}' specified a Clide component '{clideComponent}' that was not found at '{assemblyFile}'.
 			/// </summary>
 			public static string ClideComponentNotFound(object packageManifest, object clideComponent, object assemblyFile)
@@ -711,6 +724,42 @@ namespace Clide.Properties
 			///	Initializing development environment composition.
 			/// </summary>
 			public static string CreatingComposition { get { return Resources.DevEnvFactory_CreatingComposition; } }
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Detected hosting package installation path at '{installPath}'.
+			/// </summary>
+			public static string DetectedInstallPath(object installPath)
+			{
+				return Resources.DevEnvFactory_DetectedInstallPath.FormatWith(new 
+				{
+					installPath = installPath,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Extension manifest for hosting package found at '{manifestFile}'.
+			/// </summary>
+			public static string ExtensionManifestFound(object manifestFile)
+			{
+				return Resources.DevEnvFactory_ExtensionManifestFound.FormatWith(new 
+				{
+					manifestFile = manifestFile,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Extension manifest for hosting package not found at expected location '{manifestFile}'.
+			/// </summary>
+			public static string ExtensionManifestNotFound(object manifestFile)
+			{
+				return Resources.DevEnvFactory_ExtensionManifestNotFound.FormatWith(new 
+				{
+					manifestFile = manifestFile,
+				});
+			}
 		}
 		
 		///	<summary>
@@ -729,6 +778,40 @@ namespace Clide.Properties
 				return Resources.IServiceProviderExtensions_MissingGuidAttribute.FormatWith(new 
 				{
 					packageType = packageType,
+				});
+			}
+		}
+		
+		///	<summary>
+		///	Provides access to string resources.
+		///	</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		public static partial class ShellAssembly
+		{
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Microsoft.VisualStudio.Shell assembly was not found in the current application domain.
+			/// </summary>
+			public static string NotFound { get { return Resources.ShellAssembly_NotFound; } }
+		}
+		
+		///	<summary>
+		///	Provides access to string resources.
+		///	</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		public static partial class ComponentModelExtensions
+		{
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	The given export provider '{provider}' does not implement the required ICompositionService interface.
+			/// </summary>
+			public static string ExportProviderIsNotCompositionService(object provider)
+			{
+				return Resources.ComponentModelExtensions_ExportProviderIsNotCompositionService.FormatWith(new 
+				{
+					provider = provider,
 				});
 			}
 		}

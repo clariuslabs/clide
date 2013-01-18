@@ -12,33 +12,22 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
-namespace Clide.Composition
+namespace IntegrationPackage
 {
+    using Microsoft.VisualStudio.Shell;
     using System;
-    using System.ComponentModel.Composition.Primitives;
+    using System.ComponentModel.Composition;
 
-    internal class LocalDecoratingCatalog : DecoratingReflectionCatalog
+    [PartCreationPolicy(CreationPolicy.Shared)]
+    internal class ShellPackageExport
     {
-        public LocalDecoratingCatalog(Guid hostId, ComposablePartCatalog catalogToDecorate)
-            : base(catalogToDecorate)
+        [Export(Constants.ShellContractName)]
+        public IServiceProvider ShellPackage
         {
-            this.ExportDecorator = context =>
-                !IsClideExport(context.ExportDefinition) ? null :
-                new ExportInfo(ContractNames.AsLocal(hostId, context.ExportDefinition.ContractName));
-
-            this.ImportDecorator = context =>
-                !IsClideImport(context.ImportDefinition) ? null :
-                new ImportInfo(ContractNames.AsLocal(hostId, context.ImportDefinition.ContractName));
-        }
-
-        private static bool IsClideExport(ExportDefinition export)
-        {
-            return export.ContractName.StartsWith("Clide.");
-        }
-
-        private static bool IsClideImport(ImportDefinition import)
-        {
-            return import.ContractName.StartsWith("Clide.");
+            get
+            {
+                return ServiceProvider.GlobalProvider.GetLoadedPackage<ShellPackage>();
+            }
         }
     }
 }

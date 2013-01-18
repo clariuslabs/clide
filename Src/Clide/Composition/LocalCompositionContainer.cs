@@ -15,25 +15,38 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide.Composition
 {
     using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.Composition;
+    using System.ComponentModel.Composition.Hosting;
     using System.ComponentModel.Composition.Primitives;
+    using System.ComponentModel.Composition.ReflectionModel;
 
-    internal class LocalDecoratingCatalog : DecoratingReflectionCatalog
+    internal class LocalCompositionContainer : CompositionContainer
     {
-        public LocalDecoratingCatalog(Guid hostId, ComposablePartCatalog catalogToDecorate)
-            : base(catalogToDecorate)
-        {
-            this.ExportDecorator = context =>
-                !IsClideExport(context.ExportDefinition) ? null :
-                new ExportInfo(ContractNames.AsLocal(hostId, context.ExportDefinition.ContractName));
+        private Guid hostId;
 
-            this.ImportDecorator = context =>
-                !IsClideImport(context.ImportDefinition) ? null :
-                new ImportInfo(ContractNames.AsLocal(hostId, context.ImportDefinition.ContractName));
+        public LocalCompositionContainer(Guid hostId, CompositionContainer innerContainer)
+            : base(innerContainer)
+        {
+            this.hostId = hostId;
         }
 
-        private static bool IsClideExport(ExportDefinition export)
+        protected override IEnumerable<Export> GetExportsCore(ImportDefinition import, AtomicComposition atomicComposition)
         {
-            return export.ContractName.StartsWith("Clide.");
+            var contractImport = import as ContractBasedImportDefinition;
+            if (contractImport == null || !IsClideImport(import))
+                return base.GetExportsCore(import, atomicComposition);
+
+            var adaptedImport = new ContractBasedImportDefinition(
+                 ContractNames.AsLocal(this.hostId, import.ContractName),
+                 contractImport.RequiredTypeIdentity,
+                 contractImport.RequiredMetadata,
+                 contractImport.Cardinality,
+                 contractImport.IsRecomposable,
+                 contractImport.IsPrerequisite,
+                 contractImport.RequiredCreationPolicy);
+
+            return base.GetExportsCore(adaptedImport, atomicComposition);
         }
 
         private static bool IsClideImport(ImportDefinition import)

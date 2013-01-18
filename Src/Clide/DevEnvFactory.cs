@@ -34,7 +34,7 @@ namespace Clide
     {
         private static readonly string ClideAssembly = Path.GetFileName(typeof(IDevEnv).Assembly.ManifestModule.FullyQualifiedName);
         private static readonly ITracer tracer = Tracer.Get<DevEnvFactory>();
-        private ConcurrentDictionary<IServiceProvider, CompositionContainer> serviceContainers = new ConcurrentDictionary<IServiceProvider, CompositionContainer>();
+        private ConcurrentDictionary<IServiceProvider, ExportProvider> serviceContainers = new ConcurrentDictionary<IServiceProvider, ExportProvider>();
 
         public IDevEnv Get(IServiceProvider services)
         {
@@ -43,23 +43,26 @@ namespace Clide
                 .GetExportedValue<IDevEnv>();
         }
 
-        private CompositionContainer InitializeContainer(IServiceProvider services)
+        private ExportProvider InitializeContainer(IServiceProvider services)
         {
+            var hostId = services.GetPackageGuidOrThrow();
+
             using (tracer.StartActivity(Strings.DevEnvFactory.CreatingComposition))
             {
                 var container = default(CompositionContainer);
                 var catalogs = new List<ComposablePartCatalog>
                 {
-                    new LocalDecoratingCatalog(new AssemblyCatalog(typeof(IDevEnv).Assembly)),
-                    SingletonCatalog.Create<ICompositionService>(ContractNames.ICompositionService, new Lazy<ICompositionService>(() => container)),
-                    SingletonCatalog.Create<CompositionContainer>(ContractNames.CompositionContainer, new Lazy<CompositionContainer>(() => container)),
-                    SingletonCatalog.Create<ExportProvider>(ContractNames.ExportProvider, new Lazy<ExportProvider>(() => container)),
+                    new LocalDecoratingCatalog(hostId, new AssemblyCatalog(typeof(IDevEnv).Assembly)),
+                    SingletonCatalog.Create<ICompositionService>(ContractNames.LocalCompositionService(hostId), new Lazy<ICompositionService>(() => container)),
+                    SingletonCatalog.Create<ExportProvider>(ContractNames.LocalExportProvider(hostId), new Lazy<ExportProvider>(() => container)),
                 };
 
                 var installPath = GetInstallPath(services);
+
                 var packageManifestFile = Path.Combine(installPath, "extension.vsixmanifest");
                 if (File.Exists(packageManifestFile))
                 {
+                    tracer.Info(Strings.DevEnvFactory.ExtensionManifestFound(packageManifestFile));
                     var manifestDoc = XDocument.Load(packageManifestFile);
 
                     ThrowIfClideIsMefComponent(manifestDoc);
@@ -67,32 +70,45 @@ namespace Clide
 
                     foreach (string clideComponent in GetClideComponents(manifestDoc))
                     {
+                        var assemblyFile = Path.Combine(installPath, clideComponent);
+                        tracer.Info(Strings.DevEnvFactory.ClideComponentDeclared(clideComponent, assemblyFile));
+
                         if (clideComponent == ClideAssembly)
                         {
                             tracer.Warn(Strings.DevEnvFactory.ClideNotNecessaryAsComponent(clideComponent));
                             continue;
                         }
 
-                        var assemblyFile = Path.Combine(installPath, clideComponent);
                         if (!File.Exists(assemblyFile))
                             throw new InvalidOperationException(Strings.DevEnvFactory.ClideComponentNotFound(packageManifestFile, clideComponent, assemblyFile));
 
-                        catalogs.Add(new LocalDecoratingCatalog(new AssemblyCatalog(assemblyFile)));
+                        catalogs.Add(new LocalDecoratingCatalog(hostId, new AssemblyCatalog(assemblyFile)));
                     }
+                }
+                else
+                {
+                    tracer.Info(Strings.DevEnvFactory.ExtensionManifestNotFound(packageManifestFile));
                 }
 
                 var composition = services.GetService<SComponentModel, IComponentModel>();
-
                 var catalog = new AggregateCatalog(catalogs);
-                container = new CompositionContainer(catalog, composition.DefaultExportProvider);
-                
-                AppDomain.CurrentDomain.GetAssemblies()
+                var vsContainer = (CompositionContainer)AppDomain.CurrentDomain.GetAssemblies()
                     .First(asm => asm.FullName.StartsWith("Microsoft.VisualStudio.ExtensibilityHosting"))
                     .GetType("Microsoft.VisualStudio.ExtensibilityHosting.VsCompositionContainer")
                     .AsDynamicReflection()
-                    .Create(new LocalOnlyExportProvider(container));
+                    .Create(catalog);
 
-                Log(container, catalog);
+                // Set the container that the lazy singleton exports for ICompositionService and ExportProvider will use.
+                container = new LocalCompositionContainer(hostId, vsContainer);
+
+                try
+                {
+                    Log(vsContainer, catalog);
+                }
+                catch (Exception ex)
+                {
+                    tracer.Error(ex, "Failed to log composition information. For more information open the log file at {0}.", Path.Combine(Path.GetTempPath(), "DevEnv.log"));
+                }
 
                 return container;
             }
@@ -108,6 +124,7 @@ namespace Clide
                 var writer = new StringWriter();
                 rejected.ForEach(part => PartDefinitionInfoTextFormatter.Write(part, writer));
                 tracer.Error(writer.ToString());
+                File.WriteAllText(Path.Combine(Path.GetTempPath(), "DevEnv.log"), writer.ToString());
                 throw new InvalidOperationException(
                     Strings.DevEnvFactory.CompositionErrors(rejected.Count) + Environment.NewLine +
                     writer.ToString());
@@ -119,6 +136,7 @@ namespace Clide
                 var infoWriter = new StringWriter();
                 CompositionInfoTextFormatter.Write(info, infoWriter);
                 tracer.Info(infoWriter.ToString());
+                File.WriteAllText(Path.Combine(Path.GetTempPath(), "DevEnv.log"), infoWriter.ToString());
             }
 #else
             if (Debugger.IsAttached)

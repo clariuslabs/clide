@@ -30,12 +30,12 @@ namespace Clide
 	{
         public void Invoke(Action action)
         {
-            ThreadHelper.Generic.Invoke(action);
+            ShellAssembly.GetType("Microsoft.VisualStudio.Shell.ThreadHelper").Generic.Invoke(action);
         }
 
         public TResult Invoke<TResult>(Func<TResult> function)
         {
-            return ThreadHelper.Generic.Invoke(function);
+            return (TResult)ShellAssembly.GetType("Microsoft.VisualStudio.Shell.ThreadHelper").Generic.Invoke(function);
         }
     }
 }

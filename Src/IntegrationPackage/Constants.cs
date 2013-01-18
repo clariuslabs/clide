@@ -11,6 +11,6 @@ namespace IntegrationPackage
 
         public const string ToolWindowGuid = "d8a7b26d-f11f-482a-954d-8799fdaa01f0";
 
-        public const string CatalogName = "Clide.IntegrationPackage";
+        public const string ShellContractName = "Clide.IntegrationPackage.Shell";
     }
 }

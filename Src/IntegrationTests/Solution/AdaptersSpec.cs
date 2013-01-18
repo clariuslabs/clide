@@ -92,8 +92,6 @@ namespace Clide.Solution
             Assert.NotNull(item.As<IVsHierarchy>());
             Assert.NotNull(item.As<MsBuild.ProjectItem>());
 
-            //Debug.Fail("Attach");
-
             var references = csLib.Nodes.FirstOrDefault(n => n.DisplayName == "References") as IReferencesNode;
             Assert.NotNull(references, "No References node was exposed in the tree.");
 

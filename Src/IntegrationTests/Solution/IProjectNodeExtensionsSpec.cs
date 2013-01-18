@@ -35,7 +35,6 @@ namespace Clide.Solution
         {
             base.OpenSolution("SampleSolution\\SampleSolution.sln");
 
-            //Debug.Fail("Attach");
             var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
 
             var lib = new ITreeNode[] {explorer.Solution }.Traverse(TraverseKind.BreadthFirst, node => node.Nodes)
@@ -60,7 +59,6 @@ namespace Clide.Solution
                 .Select(e => e.Attribute("Include").Value)
                 .ToList();
             
-            //Debug.Fail("Attach");
             var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
 
             var lib = new ITreeNode[] { explorer.Solution }.Traverse(TraverseKind.BreadthFirst, node => node.Nodes)

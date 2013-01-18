@@ -20,7 +20,7 @@ namespace IntegrationPackage
         private IServiceProvider services;
 
         [ImportingConstructor]
-        public TextAdornment1Factory([Import(typeof(SVsServiceProvider))] IServiceProvider services)
+        public TextAdornment1Factory([Import(Constants.ShellContractName)] IServiceProvider services)
         {
             this.services = services;
         }

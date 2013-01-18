@@ -34,24 +34,28 @@ namespace Clide.Composition
 		/// <summary>
 		/// Initializes the catalog.
 		/// </summary>
-		/// <param name="innerCatalog"></param>
 		public DecoratingReflectionCatalog(ComposablePartCatalog innerCatalog)
 		{
-			this.ExportMetadataDecorator = context => { };
-			this.PartMetadataDecorator = context => { };
+            this.ImportDecorator = context => null;
+            this.ExportDecorator = context => null;
+			this.PartDecorator = context => { };
 			this.innerCatalog = innerCatalog;
-			// TODO: detect changes in inner catalog.
 		}
 
 		/// <summary>
-		/// Gets or sets the decorator for a parts metadata.
+		/// Gets or sets the decorator for a parts.
 		/// </summary>
-		public Action<DecoratedPart> PartMetadataDecorator { get; set; }
+		public Action<DecoratingPartContext> PartDecorator { get; set; }
 
 		/// <summary>
-		/// Gets or sets the decorator for exports metadata.
+		/// Gets or sets the decorator for exports.
 		/// </summary>
-		public Action<DecoratedExport> ExportMetadataDecorator { get; set; }
+		public Func<DecoratingExportContext, ExportInfo> ExportDecorator { get; set; }
+
+        /// <summary>
+        /// Gets or sets the decorator for imports.
+        /// </summary>
+        public Func<DecoratingImportContext, ImportInfo> ImportDecorator { get; set; }
 
 		/// <summary>
 		/// Applies the decorations and gets the parts definitions.
@@ -83,17 +87,12 @@ namespace Clide.Composition
 
 		private IEnumerable<ComposablePartDefinition> BuildParts(IQueryable<ComposablePartDefinition> parts)
 		{
-			return parts.Select(def => ReflectionModelServices.CreatePartDefinition(
-				ReflectionModelServices.GetPartType(def),
+			return parts.Select(part => ReflectionModelServices.CreatePartDefinition(
+				ReflectionModelServices.GetPartType(part),
 				true,
-				new Lazy<IEnumerable<ImportDefinition>>(() => def.ImportDefinitions),
-				new Lazy<IEnumerable<ExportDefinition>>(() => def.ExportDefinitions.Select(export =>
-					ReflectionModelServices.CreateExportDefinition(
-						ReflectionModelServices.GetExportingMember(export),
-						export.ContractName,
-						new Lazy<IDictionary<string, object>>(() => VisitExport(def, export)),
-						this))),
-				new Lazy<IDictionary<string, object>>(() => VisitPart(def)),
+				new Lazy<IEnumerable<ImportDefinition>>(() => part.ImportDefinitions.Select(import => VisitImport(part, import))),
+				new Lazy<IEnumerable<ExportDefinition>>(() => part.ExportDefinitions.Select(export => VisitExport(part, export))),
+				new Lazy<IDictionary<string, object>>(() => VisitPart(part)),
 				this));
 		}
 
@@ -106,17 +105,60 @@ namespace Clide.Composition
 
 		private IDictionary<string, object> VisitPart(ComposablePartDefinition def)
 		{
-			var context = new DecoratedPart(def);
-			PartMetadataDecorator(context);
+			var context = new DecoratingPartContext(def);
+			PartDecorator(context);
 			return context.NewMetadata;
 		}
 
-		private IDictionary<string, object> VisitExport(ComposablePartDefinition part, ExportDefinition export)
+		private ExportDefinition VisitExport(ComposablePartDefinition part, ExportDefinition export)
 		{
-			var context = new DecoratedExport(part, export);
-			ExportMetadataDecorator(context);
-			return context.NewMetadata;
+			var context = new DecoratingExportContext(part, export);
+			var info = ExportDecorator(context);
+            if (info == null)
+                return export;
+
+            return ReflectionModelServices.CreateExportDefinition(
+                ReflectionModelServices.GetExportingMember(export),
+                info.ContractName,
+                new Lazy<IDictionary<string, object>>(() => info.Metadata ?? export.Metadata),
+                this);
 		}
+
+        private ImportDefinition VisitImport(ComposablePartDefinition part, ImportDefinition import)
+        {
+            var contractImport = import as ContractBasedImportDefinition;
+            if (contractImport == null)
+                return import;
+
+            var context = new DecoratingImportContext(part, import);
+            var info = ImportDecorator(context);
+            if (info == null)
+                return import;
+
+            if (ReflectionModelServices.IsImportingParameter(import))
+            {
+                return ReflectionModelServices.CreateImportDefinition(
+                    ReflectionModelServices.GetImportingParameter(contractImport),
+                    info.ContractName,
+                    info.RequiredTypeIdentity ?? contractImport.RequiredTypeIdentity,
+                    info.RequiredMetadata ?? contractImport.RequiredMetadata,
+                    info.Cardinality.HasValue ? info.Cardinality.Value : contractImport.Cardinality,
+                    info.RequiredCreationPolicy.HasValue ? info.RequiredCreationPolicy.Value : contractImport.RequiredCreationPolicy, 
+                    this);
+            }
+            else
+            {
+                return ReflectionModelServices.CreateImportDefinition(
+                    ReflectionModelServices.GetImportingMember(contractImport),
+                    info.ContractName,
+                    info.RequiredTypeIdentity ?? contractImport.RequiredTypeIdentity,
+                    info.RequiredMetadata ?? contractImport.RequiredMetadata,
+                    info.Cardinality.HasValue ? info.Cardinality.Value : contractImport.Cardinality,
+                    info.IsRecomposable.HasValue ? info.IsRecomposable.Value : contractImport.IsRecomposable,
+                    info.RequiredCreationPolicy.HasValue ? info.RequiredCreationPolicy.Value : contractImport.RequiredCreationPolicy,
+                    this);
+            }
+        }
 
 		/// <summary>
 		/// Disposes the inner catalog.

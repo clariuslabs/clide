@@ -33,6 +33,7 @@ namespace Clide
 
 #if DEBUG
             Tracer.Manager.SetTracingLevel(TracerManager.DefaultSourceName, SourceLevels.All);
+            Tracer.Manager.AddListener(TracerManager.DefaultSourceName, new ConsoleTraceListener());
 #else
             Tracer.Manager.SetTracingLevel(TracerManager.DefaultSourceName, SourceLevels.Warning);
 #endif

@@ -15,6 +15,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
+using System;
 namespace Clide.Composition
 {
     /// <summary>
@@ -36,8 +37,27 @@ namespace Clide.Composition
         public const string ExportProvider = Prefix + "ExportProvider";
 
         /// <summary>
-        /// Contract name for accessing the Clide CompositionContainer.
+        /// Gets the local contract name for accessing ICompositionService.
         /// </summary>
-        public const string CompositionContainer = Prefix + "CompositionContainer";
+        internal static string LocalCompositionService(Guid hostId)
+        {
+            return AsLocal(hostId, ContractNames.ICompositionService);
+        }
+
+        /// <summary>
+        /// Gets the local contract name for accessing the ExportProvider.
+        /// </summary>
+        internal static string LocalExportProvider(Guid hostId)
+        {
+            return AsLocal(hostId, ContractNames.ExportProvider);
+        }
+
+        /// <summary>
+        /// Gets the local contract name for the given host and bare contract.
+        /// </summary>
+        internal static string AsLocal(Guid hostId, string contractName)
+        {
+            return contractName + "-" + hostId;
+        }
     }
 }

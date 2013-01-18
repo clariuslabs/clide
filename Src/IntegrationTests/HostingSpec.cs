@@ -33,6 +33,17 @@ namespace Clide
 
         [HostType("VS IDE")]
         [TestMethod]
+        public void WhenRetrievingAPackageExport_ThenReturnsSingleExport()
+        {
+            var devEnv = DevEnv.Get(this.ServiceProvider);
+
+            var models = devEnv.ExportProvider.GetExportedValues<ViewModel>().ToList();
+
+            Assert.Equal(1, models.Count);
+        }
+
+        [HostType("VS IDE")]
+        [TestMethod]
         public void WhenRetrievingShellPackage_ThenSucceeds()
         {
             var components = ServiceProvider.GetService<SComponentModel, IComponentModel>();

@@ -15,30 +15,25 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide.Composition
 {
     using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Primitives;
+    using System.Linq;
+    using System.Text;
 
-    internal class LocalDecoratingCatalog : DecoratingReflectionCatalog
+    internal class ImportInfo
     {
-        public LocalDecoratingCatalog(Guid hostId, ComposablePartCatalog catalogToDecorate)
-            : base(catalogToDecorate)
+        public ImportInfo(string contractName)
         {
-            this.ExportDecorator = context =>
-                !IsClideExport(context.ExportDefinition) ? null :
-                new ExportInfo(ContractNames.AsLocal(hostId, context.ExportDefinition.ContractName));
-
-            this.ImportDecorator = context =>
-                !IsClideImport(context.ImportDefinition) ? null :
-                new ImportInfo(ContractNames.AsLocal(hostId, context.ImportDefinition.ContractName));
+            this.ContractName = contractName;
         }
 
-        private static bool IsClideExport(ExportDefinition export)
-        {
-            return export.ContractName.StartsWith("Clide.");
-        }
-
-        private static bool IsClideImport(ImportDefinition import)
-        {
-            return import.ContractName.StartsWith("Clide.");
-        }
+        public ImportCardinality? Cardinality { get; set; }
+        public string ContractName { get; private set; }
+        public bool? IsPrerequisite { get; set; }
+        public bool? IsRecomposable { get; set; }
+        public CreationPolicy? RequiredCreationPolicy { get; set; }
+        public IDictionary<string, Type> RequiredMetadata { get; private set; }
+        public string RequiredTypeIdentity { get; set; }
     }
 }

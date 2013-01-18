@@ -282,4 +282,22 @@
   <data name="CommandManager_NoMenuCommandService" xml:space="preserve">
     <value>Could not retrieve the menu command service from the package with identifier '{packageId}' that owns the command to filter.</value>
   </data>
+  <data name="DevEnvFactory_ClideComponentDeclared" xml:space="preserve">
+    <value>Found Clide component '{component}' to register for composition at '{componentAssembly}'.</value>
+  </data>
+  <data name="DevEnvFactory_DetectedInstallPath" xml:space="preserve">
+    <value>Detected hosting package installation path at '{installPath}'.</value>
+  </data>
+  <data name="DevEnvFactory_ExtensionManifestFound" xml:space="preserve">
+    <value>Extension manifest for hosting package found at '{manifestFile}'.</value>
+  </data>
+  <data name="DevEnvFactory_ExtensionManifestNotFound" xml:space="preserve">
+    <value>Extension manifest for hosting package not found at expected location '{manifestFile}'.</value>
+  </data>
+  <data name="ShellAssembly_NotFound" xml:space="preserve">
+    <value>Microsoft.VisualStudio.Shell assembly was not found in the current application domain.</value>
+  </data>
+  <data name="ComponentModelExtensions_ExportProviderIsNotCompositionService" xml:space="preserve">
+    <value>The given export provider '{provider}' does not implement the required ICompositionService interface.</value>
+  </data>
 </root>

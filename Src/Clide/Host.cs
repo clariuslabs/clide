@@ -57,19 +57,19 @@ namespace Clide
             {
                 using (tracer.StartActivity("Initializing package"))
                 {
-                    var tracingPaneId = GetPackageGuidOrThrow(hostingPackage);
+                    var tracingPaneId = hostingPackage.GetPackageGuidOrThrow();
                     var devEnv = DevEnv.Get(hostingPackage);
                     // Brings in imports that the package itself might need.
-                    devEnv.CompositionContainer.SatisfyImportsOnce(hostingPackage);
+                    devEnv.ExportProvider.SatisfyImportsOnce(hostingPackage);
 
                     // Initialize the host package components.
                     var host = new Host(hostingPackage);
-                    devEnv.CompositionContainer.SatisfyImportsOnce(host);
+                    devEnv.ExportProvider.SatisfyImportsOnce(host);
 
                     host.Initialize(tracingPaneId, tracingPaneTitle);
 
                     // Initialize the default adapter service for the smart cast extension method.
-                    Clide.Patterns.Adapter.AdaptersInitializer.SetService(((ExportProvider)devEnv.CompositionContainer).GetExportedValue<IAdapterService>());
+                    Clide.Patterns.Adapter.AdaptersInitializer.SetService(((ExportProvider)devEnv.ExportProvider).GetExportedValue<IAdapterService>());
 
                     tracer.Info("Package initialization finished successfully");
 
@@ -81,18 +81,6 @@ namespace Clide
                 tracer.Error(ex, Strings.Host.FailedToInitialize);
                 throw;
             }
-        }
-
-        private static Guid GetPackageGuidOrThrow(IServiceProvider owningPackage)
-        {
-            var guid = owningPackage.GetType().GetCustomAttributes(typeof(GuidAttribute), true)
-                .OfType<GuidAttribute>()
-                .FirstOrDefault();
-
-            if (guid == null)
-                throw new ArgumentException(Strings.General.MissingGuidAttribute(owningPackage.GetType()));
-
-            return new Guid(guid.Value);
         }
 
         private IServiceProvider hostingPackage;

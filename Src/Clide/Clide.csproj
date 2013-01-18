@@ -114,11 +114,17 @@
     <Compile Include="Commands\CommandInterceptorAttribute.cs" />
     <Compile Include="Commands\ICommandInterceptor.cs" />
     <Compile Include="Commands\ICommandInterceptorMetadata.cs" />
-    <Compile Include="Composition\DecoratedExport.cs" />
-    <Compile Include="Composition\DecoratedPart.cs" />
+    <Compile Include="Composition\ExportInfo.cs" />
+    <Compile Include="Composition\DecoratingImportContext.cs" />
+    <Compile Include="Composition\DecoratingExportContext.cs" />
+    <Compile Include="Composition\DecoratingPartContext.cs" />
     <Compile Include="Composition\DecoratingReflectionCatalog.cs" />
+    <Compile Include="Composition\ImportInfo.cs" />
+    <Compile Include="Composition\LocalCompositionContainer.cs" />
     <Compile Include="Composition\LocalDecoratingCatalog.cs" />
-    <Compile Include="Composition\SelectorEqualityComparer.cs" />
+    <Compile Include="Composition\SelectorEqualityComparer.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="IOptionsPageWindowFactory.cs" />
     <Compile Include="netfx\System\AmbientSingleton.cs" />
     <Compile Include="netfx\System\Collections\Generic\IEnumerable\TraverseKind.cs" />
@@ -152,7 +158,6 @@
     <Compile Include="Composition\Diagnostics\UnsuitableExportDefinitionInfo.cs" />
     <Compile Include="Composition\Diagnostics\UnsuitableExportDefinitionIssue.cs" />
     <Compile Include="Composition\Diagnostics\UnsuitableExportDefinitionReason.cs" />
-    <Compile Include="Composition\LocalOnlyExportProvider.cs" />
     <Compile Include="Composition\SingletonCatalog.cs" />
     <Compile Include="Composition\VsContractNames.cs" />
     <Compile Include="Composition\VsExportedServices.cs" />
@@ -177,6 +182,7 @@
     <Compile Include="Patterns\Adapter\IAdapter.cs" />
     <Compile Include="Patterns\Adapter\IAdapterService.cs" />
     <Compile Include="Patterns\Adapter\IFluentInterface.cs" />
+    <Compile Include="ShellAssembly.cs" />
     <Compile Include="Solution\Adapters\VsLangToSolutionAdapter.cs" />
     <Compile Include="Solution\Adapters\VsHierarchyItemToSolutionAdapter.cs" />
     <Compile Include="Solution\Adapters\VsToSolutionAdapter.cs" />

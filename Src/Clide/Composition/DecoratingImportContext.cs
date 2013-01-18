@@ -20,40 +20,27 @@ namespace Clide.Composition
     using System;
 
     /// <summary>
-    /// The context where a reflection-based export was found in the decorated catalog.
+    /// The context where a reflection-based import was found in the decorated catalog.
     /// </summary>
-    internal class DecoratedExport
+    internal class DecoratingImportContext
     {
         /// <summary>
         /// Initializes the context from a part and the export.
         /// </summary>
-        internal DecoratedExport(ComposablePartDefinition part, ExportDefinition export)
+        internal DecoratingImportContext(ComposablePartDefinition part, ImportDefinition import)
         {
-            this.ExportDefinition = export;
-            this.ExportingMember = ReflectionModelServices.GetExportingMember(export);
-            this.ExportingType = ReflectionModelServices.GetPartType(part);
-            this.NewMetadata = new Dictionary<string, object>(export.Metadata);
+            this.ImportDefinition = import;
+            this.PartType = ReflectionModelServices.GetPartType(part);
         }
 
         /// <summary>
-        /// Gets a read/write bag of metadata containing the 
-        /// original export metadata.
+        /// Gets the original import definition.
         /// </summary>
-        public IDictionary<string, object> NewMetadata { get; private set; }
+        public ImportDefinition ImportDefinition { get; private set; }
 
         /// <summary>
-        /// Gets the original export definition.
+        /// Gets the type that specifies the import.
         /// </summary>
-        public ExportDefinition ExportDefinition { get; private set; }
-
-        /// <summary>
-        /// Gets the type that provides the export.
-        /// </summary>
-        public Lazy<Type> ExportingType { get; private set; }
-
-        /// <summary>
-        /// Optional member where the export is provided.
-        /// </summary>
-        public LazyMemberInfo ExportingMember { get; private set; }
+        public Lazy<Type> PartType { get; private set; }
     }
 }

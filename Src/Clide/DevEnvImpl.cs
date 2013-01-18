@@ -34,7 +34,7 @@ namespace Clide
 	{
         private static readonly Guid OutputWindowId = new Guid("{66893206-0EF5-4A16-AA10-6EC6B6319F92}");
 
-        private Lazy<CompositionContainer> composition;
+        private Lazy<ExportProvider> composition;
         private Lazy<IStatusBar> status;
 		private IShellEvents shellEvents;
 		private Lazy<IDialogWindowFactory> dialogFactory;
@@ -46,7 +46,7 @@ namespace Clide
 		[ImportingConstructor]
 		public DevEnvImpl(
 			[Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider,
-            [Import(ContractNames.CompositionContainer)] Lazy<CompositionContainer> composition,
+            [Import(ContractNames.ExportProvider)] Lazy<ExportProvider> composition,
 			[ImportMany] IEnumerable<Lazy<IToolWindow>> toolWindows,
 			Lazy<IDialogWindowFactory> dialogFactory,
 			Lazy<IUIThread> uiThread,
@@ -72,7 +72,7 @@ namespace Clide
 
 		internal IServiceProvider ServiceProvider { get; set; }
 
-        public CompositionContainer CompositionContainer
+        public ExportProvider ExportProvider
         {
             get { return this.composition.Value; }
         }

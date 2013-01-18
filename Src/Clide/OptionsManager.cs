@@ -126,7 +126,7 @@ using System.Collections.Concurrent;
 
         public void AddPages(IServiceProvider owningPackage)
         {
-            var packageGuid = GetPackageGuidOrThrow(owningPackage);
+            var packageGuid = owningPackage.GetPackageGuidOrThrow();
             var packagePages = this.optionPages
                 .Where(page => new Guid(page.Metadata.PackageId) == packageGuid);
 
@@ -134,15 +134,6 @@ using System.Collections.Concurrent;
             {
                 AddPage(page.Value, packageGuid);
             }
-        }
-
-        private static Guid GetPackageGuidOrThrow(IServiceProvider owningPackage)
-        {
-            var guid = owningPackage.GetType().GetCustomAttribute<GuidAttribute>(true);
-            if (guid == null)
-                throw new ArgumentException(Strings.CommandManager.PackageGuidMissing(owningPackage.GetType()));
-
-            return new Guid(guid.Value);
         }
 
         private void AddPageToPackage(IOptionsPage page, dynamic package, Type packageType)

@@ -27,6 +27,22 @@ namespace System
     public static partial class ServiceProviderExtensions
     {
         /// <summary>
+        /// Gets the package GUID or throws an <see cref="ArgumentException"/> if the 
+        /// <see cref="GuidAttribute"/> is not found on the given instance type.
+        /// </summary>
+        internal static Guid GetPackageGuidOrThrow(this IServiceProvider owningPackage)
+        {
+            var guid = owningPackage.GetType().GetCustomAttributes(typeof(GuidAttribute), true)
+                .OfType<GuidAttribute>()
+                .FirstOrDefault();
+
+            if (guid == null)
+                throw new ArgumentException(Strings.General.MissingGuidAttribute(owningPackage.GetType()));
+
+            return new Guid(guid.Value);
+        }
+
+        /// <summary>
         /// Retrieves an existing loaded package or loads it 
         /// automatically if needed.
         /// </summary>

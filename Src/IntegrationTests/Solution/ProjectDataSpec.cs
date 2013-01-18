@@ -160,7 +160,6 @@ namespace Clide.Solution
 
             Assert.NotNull(project);
 
-            //Debug.Fail("Attach");
             var vsBuild = (IVsBuildPropertyStorage)project.HierarchyNode.VsHierarchy;
             ErrorHandler.ThrowOnFailure(vsBuild.SetPropertyValue(
                 "RootNamespace", "", (uint)_PersistStorageType.PST_PROJECT_FILE, "MyLibrary"));

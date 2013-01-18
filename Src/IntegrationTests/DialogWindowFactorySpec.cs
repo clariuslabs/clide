@@ -21,6 +21,7 @@ namespace Clide
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Windows;
     using IntegrationPackage;
+    using System.Diagnostics;
 
     [TestClass]
     public class DialogWindowFactorySpec : VsHostedSpec

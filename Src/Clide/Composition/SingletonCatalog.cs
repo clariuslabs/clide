@@ -89,10 +89,6 @@ namespace Clide.Composition
                            CompositionConstants.ExportTypeIdentityMetadataName, 
                            AttributedModelServices.GetTypeIdentity(typeof(T)) 
                        }, 
-                       {
-                           LocalDecoratingCatalog.IsLocalKey, 
-                           true
-                       }
                    });
             }
 

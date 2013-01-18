@@ -17,7 +17,7 @@ namespace IntegrationPackage
         private IServiceProvider serviceProvider;
 
         [ImportingConstructor]
-        public SampleCommand([Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider)
+        public SampleCommand([Import(Constants.ShellContractName)] IServiceProvider serviceProvider)
         {
             this.serviceProvider = serviceProvider;
         }

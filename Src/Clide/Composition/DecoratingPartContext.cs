@@ -14,31 +14,40 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Composition
 {
-    using System;
     using System.ComponentModel.Composition.Primitives;
+    using System.ComponentModel.Composition.ReflectionModel;
+    using System.Collections.Generic;
+    using System;
 
-    internal class LocalDecoratingCatalog : DecoratingReflectionCatalog
+    /// <summary>
+    /// The context where a reflection-based part was found in the decorated catalog.
+    /// </summary>
+    public class DecoratingPartContext
     {
-        public LocalDecoratingCatalog(Guid hostId, ComposablePartCatalog catalogToDecorate)
-            : base(catalogToDecorate)
+        /// <summary>
+        /// Initializes the context from a part definition.
+        /// </summary>
+        internal DecoratingPartContext(ComposablePartDefinition definition)
         {
-            this.ExportDecorator = context =>
-                !IsClideExport(context.ExportDefinition) ? null :
-                new ExportInfo(ContractNames.AsLocal(hostId, context.ExportDefinition.ContractName));
-
-            this.ImportDecorator = context =>
-                !IsClideImport(context.ImportDefinition) ? null :
-                new ImportInfo(ContractNames.AsLocal(hostId, context.ImportDefinition.ContractName));
+            this.PartDefinition = definition;
+            this.PartType = ReflectionModelServices.GetPartType(definition);
+            this.NewMetadata = new Dictionary<string, object>(definition.Metadata);
         }
 
-        private static bool IsClideExport(ExportDefinition export)
-        {
-            return export.ContractName.StartsWith("Clide.");
-        }
+        /// <summary>
+        /// Gets a read/write bag of metadata containing the 
+        /// original part metadata.
+        /// </summary>
+        public IDictionary<string, object> NewMetadata { get; private set; }
 
-        private static bool IsClideImport(ImportDefinition import)
-        {
-            return import.ContractName.StartsWith("Clide.");
-        }
+        /// <summary>
+        /// Gets the original part definition.
+        /// </summary>
+        public ComposablePartDefinition PartDefinition { get; private set; }
+
+        /// <summary>
+        /// Gets the part type.
+        /// </summary>
+        public Lazy<Type> PartType { get; private set; }
     }
 }

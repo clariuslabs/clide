@@ -23,17 +23,14 @@ using System.ComponentModel.Composition.Primitives;
 [TestClass]
 public abstract class VsHostedSpec
 {
-    static ConsoleTraceListener listener = new ConsoleTraceListener();
-
-    static VsHostedSpec()
-    {
-        //Tracer.Initialize(new TracerManager());
-        Tracer.Manager.AddListener(TracerManager.DefaultSourceName, listener);
-    }
+    private Lazy<ShellPackage> integrationPackage;
+    private ITracer tracer;
+    private StringBuilder strings;
+    private TraceListener listener;
 
     protected VsHostedSpec()
     {
-        this.integrationPackage = new Lazy<ShellPackage>(() => LoadPackage());
+        this.integrationPackage = new Lazy<ShellPackage>(() => Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider.GetLoadedPackage<ShellPackage>());
     }
 
     public TestContext TestContext { get; set; }
@@ -43,30 +40,33 @@ public abstract class VsHostedSpec
         get { return ServiceProvider.GetService<DTE>(); }
     }
 
+    protected ShellPackage ShellPackage { get { return this.integrationPackage.Value; } }
+
     protected IServiceProvider ServiceProvider
     {
-        get { return Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider; }
+        get { return this.ShellPackage; }
     }
 
     protected CompositionContainer Container
     {
-        get { return (CompositionContainer)DevEnv.Get(this.ServiceProvider).CompositionContainer; }
+        get { return (CompositionContainer)DevEnv.Get(this.ServiceProvider).ExportProvider; }
     }
-
-    private Lazy<ShellPackage> integrationPackage;
-
-    private ShellPackage LoadPackage()
-    {
-        //Debug.Fail("Attach");
-        return this.ServiceProvider.GetLoadedPackage<ShellPackage>();
-    }
-
-    protected ShellPackage ShellPackage { get { return this.integrationPackage.Value; } }
 
     [TestInitialize]
     public virtual void TestInitialize()
     {
-        Console.WriteLine("Running test from: " + this.TestContext.TestDeploymentDir);
+        // Causes devenv to initialize
+        var factory = DevEnv.DevEnvFactory;
+
+        this.tracer = Tracer.Get(this.GetType());
+        this.strings = new StringBuilder();
+        this.listener = new TextWriterTraceListener(new StringWriter(this.strings));
+
+        // Just in case, re-set the tracers.
+        Tracer.Manager.SetTracingLevel(TracerManager.DefaultSourceName, SourceLevels.All);
+        Tracer.Manager.AddListener(TracerManager.DefaultSourceName, this.listener);
+
+        tracer.Info("Running test from: " + this.TestContext.TestDeploymentDir);
 
         if (Dte != null)
         {
@@ -81,11 +81,14 @@ public abstract class VsHostedSpec
         {
             System.Threading.Thread.Sleep(10);
         }
+
+        tracer.Info("Shell initialized successfully");
     }
 
     [TestCleanup]
     public virtual void TestCleanup()
     {
+        tracer.Info("Cleaning ambient context data");
         var contextData = (Hashtable)ExecutionContext
             .Capture()
             .AsDynamicReflection()
@@ -98,6 +101,9 @@ public abstract class VsHostedSpec
         }
 
         listener.Flush();
+        Debug.WriteLine(this.strings.ToString());
+        Console.WriteLine(this.strings.ToString());
+        Trace.WriteLine(this.strings.ToString());
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "None")]

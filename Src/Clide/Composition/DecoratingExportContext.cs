@@ -20,34 +20,33 @@ namespace Clide.Composition
     using System;
 
     /// <summary>
-    /// The context where a reflection-based part was found in the decorated catalog.
+    /// The context where a reflection-based export was found in the decorated catalog.
     /// </summary>
-    public class DecoratedPart
+    internal class DecoratingExportContext
     {
         /// <summary>
-        /// Initializes the context from a part definition.
+        /// Initializes the context from a part and the export.
         /// </summary>
-        internal DecoratedPart(ComposablePartDefinition definition)
+        internal DecoratingExportContext(ComposablePartDefinition part, ExportDefinition export)
         {
-            this.PartDefinition = definition;
-            this.PartType = ReflectionModelServices.GetPartType(definition);
-            this.NewMetadata = new Dictionary<string, object>(definition.Metadata);
+            this.ExportDefinition = export;
+            this.ExportingMember = ReflectionModelServices.GetExportingMember(export);
+            this.PartType = ReflectionModelServices.GetPartType(part);
         }
 
         /// <summary>
-        /// Gets a read/write bag of metadata containing the 
-        /// original part metadata.
+        /// Gets the original export definition.
         /// </summary>
-        public IDictionary<string, object> NewMetadata { get; private set; }
+        public ExportDefinition ExportDefinition { get; private set; }
 
         /// <summary>
-        /// Gets the original part definition.
-        /// </summary>
-        public ComposablePartDefinition PartDefinition { get; private set; }
-
-        /// <summary>
-        /// Gets the part type.
+        /// Gets the type that provides the export.
         /// </summary>
         public Lazy<Type> PartType { get; private set; }
+
+        /// <summary>
+        /// Optional member where the export is provided.
+        /// </summary>
+        public LazyMemberInfo ExportingMember { get; private set; }
     }
 }

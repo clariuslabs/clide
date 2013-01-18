@@ -12,33 +12,40 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
-namespace Clide.Composition
+namespace Clide
 {
+    using Clide.Properties;
     using System;
-    using System.ComponentModel.Composition.Primitives;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using System.Dynamic;
 
-    internal class LocalDecoratingCatalog : DecoratingReflectionCatalog
+    /// <summary>
+    /// Allows to work with the latest version of Microsoft.VisualStudio.Shell 
+    /// that the current IDE supports.
+    /// </summary>
+    internal static class ShellAssembly
     {
-        public LocalDecoratingCatalog(Guid hostId, ComposablePartCatalog catalogToDecorate)
-            : base(catalogToDecorate)
-        {
-            this.ExportDecorator = context =>
-                !IsClideExport(context.ExportDefinition) ? null :
-                new ExportInfo(ContractNames.AsLocal(hostId, context.ExportDefinition.ContractName));
+        private static Regex shellName = new Regex(@"Microsoft.VisualStudio.Shell.(\d\d)\.\d");
 
-            this.ImportDecorator = context =>
-                !IsClideImport(context.ImportDefinition) ? null :
-                new ImportInfo(ContractNames.AsLocal(hostId, context.ImportDefinition.ContractName));
-        }
-
-        private static bool IsClideExport(ExportDefinition export)
+        /// <summary>
+        /// Gets the type from the latest version of VS Shell that's loaded in the app domain.
+        /// </summary>
+        public static dynamic GetType(string typeName)
         {
-            return export.ContractName.StartsWith("Clide.");
-        }
+            var shellAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(asm => shellName.IsMatch(asm.FullName))
+                .Select(asm => new { Assembly = asm, Version = int.Parse(shellName.Match(asm.FullName).Groups[1].Value) })
+                .OrderByDescending(asm => asm.Version)
+                .Select(asm => asm.Assembly)
+                .FirstOrDefault();
 
-        private static bool IsClideImport(ImportDefinition import)
-        {
-            return import.ContractName.StartsWith("Clide.");
+            if (shellAssembly == null)
+                throw new InvalidOperationException(Strings.ShellAssembly.NotFound);
+
+            return shellAssembly.GetType(typeName, true).AsDynamicReflection();
         }
     }
 }

@@ -187,6 +187,15 @@ namespace Clide.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The given export provider &apos;{provider}&apos; does not implement the required ICompositionService interface..
+        /// </summary>
+        internal static string ComponentModelExtensions_ExportProviderIsNotCompositionService {
+            get {
+                return ResourceManager.GetString("ComponentModelExtensions_ExportProviderIsNotCompositionService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Project &apos;{projectFile}&apos; must be based on MSBuild in order to support dynamic properties..
         /// </summary>
         internal static string ConfigProjectProperties_UnsupportedProject {
@@ -223,6 +232,15 @@ namespace Clide.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Found Clide component &apos;{component}&apos; to register for composition at &apos;{componentAssembly}&apos;..
+        /// </summary>
+        internal static string DevEnvFactory_ClideComponentDeclared {
+            get {
+                return ResourceManager.GetString("DevEnvFactory_ClideComponentDeclared", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The extension manifest file &apos;{packageManifest}&apos; specified a Clide component &apos;{clideComponent}&apos; that was not found at &apos;{assemblyFile}&apos;..
         /// </summary>
         internal static string DevEnvFactory_ClideComponentNotFound {
@@ -255,6 +273,33 @@ namespace Clide.Properties {
         internal static string DevEnvFactory_CreatingComposition {
             get {
                 return ResourceManager.GetString("DevEnvFactory_CreatingComposition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Detected hosting package installation path at &apos;{installPath}&apos;..
+        /// </summary>
+        internal static string DevEnvFactory_DetectedInstallPath {
+            get {
+                return ResourceManager.GetString("DevEnvFactory_DetectedInstallPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extension manifest for hosting package found at &apos;{manifestFile}&apos;..
+        /// </summary>
+        internal static string DevEnvFactory_ExtensionManifestFound {
+            get {
+                return ResourceManager.GetString("DevEnvFactory_ExtensionManifestFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extension manifest for hosting package not found at expected location &apos;{manifestFile}&apos;..
+        /// </summary>
+        internal static string DevEnvFactory_ExtensionManifestNotFound {
+            get {
+                return ResourceManager.GetString("DevEnvFactory_ExtensionManifestNotFound", resourceCulture);
             }
         }
         
@@ -498,6 +543,15 @@ namespace Clide.Properties {
         internal static string SettingsManager_InvalidValue {
             get {
                 return ResourceManager.GetString("SettingsManager_InvalidValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Microsoft.VisualStudio.Shell assembly was not found in the current application domain..
+        /// </summary>
+        internal static string ShellAssembly_NotFound {
+            get {
+                return ResourceManager.GetString("ShellAssembly_NotFound", resourceCulture);
             }
         }
         

@@ -24,7 +24,7 @@ namespace Clide
 
     public interface IDevEnv : IShellEvents, IFluentInterface
 	{
-        CompositionContainer CompositionContainer { get; }
+        ExportProvider ExportProvider { get; }
 		IDialogWindowFactory DialogWindowFactory { get; }
         IMessageBoxService MessageBoxService { get; }
 		IStatusBar StatusBar { get; }

@@ -23,7 +23,7 @@ namespace Clide.Composition
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
-using System.Threading;
+    using System.Threading;
 
     /// <summary>
     /// Avoids exposing to VS the Clide APIs, which are only for the specific 
@@ -61,6 +61,8 @@ using System.Threading;
                 }
 
                 this.innerProvider.TryGetExports(contractDefinition, atomicComposition, out exports);
+
+                exports = exports.ToList();
 
                 return exports.Where(e => IsLocal(e) && !IsClideExport(e));
 
