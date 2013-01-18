@@ -35,12 +35,9 @@ namespace System.Diagnostics
         {
             ShowExceptionAction = (exception, format, args) =>
             {
-                System.Windows.MessageBox.Show(ServiceProvider.GlobalProvider
-                    .GetService<SVsUIShell, IVsUIShell>().GetMainWindow(),
-                    string.Format(format, args),
-                    "Visual Studio",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                ServiceProvider.GlobalProvider.GetService<SVsUIShell, IVsUIShell>().ShowMessageBox(
+                    string.Format(format, args), 
+                    icon: MessageBoxImage.Error);
             };
         }
 

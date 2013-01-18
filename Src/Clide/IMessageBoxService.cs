@@ -19,10 +19,25 @@ namespace Clide
 {
     using System.Windows;
 
+    /// <summary>
+    /// Provides a contract to show messages to the user.
+    /// </summary>
     public interface IMessageBoxService
 	{
-		void Show(string message, string title = "Visual Studio", MessageBoxButton button = MessageBoxButton.OK, MessageBoxImage icon = MessageBoxImage.None, MessageBoxResult defaultResult = MessageBoxResult.OK);
-		MessageBoxResult Prompt(string message, string title = "Visual Studio", MessageBoxButton button = MessageBoxButton.OKCancel, MessageBoxImage icon = MessageBoxImage.Question, MessageBoxResult defaultResult = MessageBoxResult.OK);
-        string InputBox(string message, string title = "Visual Studio");
+        /// <summary>
+        /// Shows a message to the user.
+        /// </summary>
+        /// <returns><see langword="true"/> if the user clicked on Yes/OK.</returns>
+		bool? Show(string message, string title = MessageBoxService.DefaultTitle, MessageBoxButton button = MessageBoxButton.OK, MessageBoxImage icon = MessageBoxImage.None, MessageBoxResult defaultResult = MessageBoxResult.OK);
+
+        /// <summary>
+        /// Prompts the user for a response.
+        /// </summary>
+        MessageBoxResult Prompt(string message, string title = MessageBoxService.DefaultTitle, MessageBoxButton button = MessageBoxButton.OKCancel, MessageBoxImage icon = MessageBoxImage.Question, MessageBoxResult defaultResult = MessageBoxResult.OK);
+
+        /// <summary>
+        /// Gets a string inputs from the user.
+        /// </summary>
+        string InputBox(string message, string title = MessageBoxService.DefaultTitle);
     }
 }

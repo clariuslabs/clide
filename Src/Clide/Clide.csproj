@@ -119,6 +119,7 @@
     <Compile Include="Composition\DecoratingReflectionCatalog.cs" />
     <Compile Include="Composition\LocalDecoratingCatalog.cs" />
     <Compile Include="Composition\SelectorEqualityComparer.cs" />
+    <Compile Include="IOptionsPageWindowFactory.cs" />
     <Compile Include="netfx\System\AmbientSingleton.cs" />
     <Compile Include="netfx\System\Collections\Generic\IEnumerable\TraverseKind.cs" />
     <Compile Include="netfx\System\Collections\Generic\IEnumerable\Traverser.cs" />
@@ -229,10 +230,8 @@
     <Compile Include="MessageBoxService.cs" />
     <Compile Include="DevEnvImpl.cs" />
     <Compile Include="Diagnostics\IndentingTextListener.cs" />
-    <Compile Include="Diagnostics\IUserMessageService.cs" />
     <Compile Include="Diagnostics\OutputWindowTextWriter.cs" />
     <Compile Include="Diagnostics\TraceOutputWindowManager.cs" />
-    <Compile Include="Diagnostics\UserMessageService.cs" />
     <Compile Include="DialogWindowFactory.cs" />
     <Compile Include="Events\IGlobalEvents.cs" />
     <Compile Include="Events\IShellEvents.cs" />

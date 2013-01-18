@@ -27,33 +27,52 @@ namespace Clide
     using System.Windows.Input;
     using System.ComponentModel;
 
-	internal class OptionsPageWindowFactory
+    [Export(typeof(IOptionsPageWindowFactory))]
+	internal class OptionsPageWindowFactory : IOptionsPageWindowFactory
 	{
+        private IMessageBoxService messageBox;
+
+        [ImportingConstructor]
+        public OptionsPageWindowFactory(IMessageBoxService messageBox)
+        {
+            this.messageBox = messageBox;
+        }
+
 		public System.Windows.Forms.IWin32Window CreateWindow(IEditableObject model, UserControl view)
 		{
-			return new ToolsOptionsPageWin32Window(model, view);
+			return new ToolsOptionsPageWin32Window(model, view, this.messageBox);
 		}
 
 		private class EditableDialogPage
 		{
 			private IEditableObject model;
+            private IMessageBoxService messageBox;
 
-			public EditableDialogPage(IEditableObject model)
+			public EditableDialogPage(IEditableObject model, IMessageBoxService messageBox)
 			{
 				this.model = model;
+                this.messageBox = messageBox;
 			}
 
-			internal void OnActivate(CancelEventArgs ce)
+			internal void OnActivate(CancelEventArgs args)
 			{
 				this.model.BeginEdit();
 			}
 
-			internal void OnApply(PageApplyEventArgs e)
+			internal void OnApply(PageApplyEventArgs args)
 			{
-				if (e.ApplyBehavior == ApplyKind.Apply)
+				if (args.ApplyBehavior == ApplyKind.Apply)
 				{
-					this.model.EndEdit();
-				}
+                    try
+                    {
+                        this.model.EndEdit();
+                    }
+                    catch (Exception ex)
+                    {
+                        this.messageBox.Show(ex.Message, icon: MessageBoxImage.Error);
+                        args.ApplyBehavior = ApplyKind.CancelNoNavigate;
+                    }
+                }
 				else
 				{
 					this.model.CancelEdit();
@@ -88,11 +107,13 @@ namespace Clide
 			private DialogPageElementHost elementHost;
 			private IEditableObject model;
 			private DialogSubclass subClass;
+            private IMessageBoxService messageBox;
 
-			public ToolsOptionsPageWin32Window(IEditableObject model, UserControl view)
+			public ToolsOptionsPageWin32Window(IEditableObject model, UserControl view, IMessageBoxService messageBox)
 			{
 				this.model = model;
 				this.view = view;
+                this.messageBox = messageBox;
 
 				this.elementHost = new DialogPageElementHost();
 				this.elementHost.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -109,7 +130,7 @@ namespace Clide
 				{
 					if (this.subClass == null)
 					{
-						this.subClass = new DialogSubclass(new EditableDialogPage(this.model));
+						this.subClass = new DialogSubclass(new EditableDialogPage(this.model, this.messageBox));
 					}
 					if (this.subClass.Handle != this.elementHost.Handle)
 					{

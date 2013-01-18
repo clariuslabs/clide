@@ -15,43 +15,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Runtime.InteropServices;
-    using System.Windows;
-    using System.Windows.Input;
-    using System.Windows.Controls;
     using System.ComponentModel;
-    using System.ComponentModel.Composition;
-    using Microsoft.VisualStudio.Shell;
 
-    [DesignerCategory("Code")]
-	[ComVisible(true)]
-	public abstract class OptionsPage<TControl, TSettings> : Component, IOptionsPage
-		where TControl : UserControl, new()
-		where TSettings : ISettings
-	{
-		private TSettings settings;
-		private Lazy<UserControl> userControl;
-		private Lazy<System.Windows.Forms.IWin32Window> windowHandle;
-
-        [Import]
-        private IOptionsPageWindowFactory windowFactory;
-
-		protected OptionsPage(TSettings settings)
-		{
-            this.settings = settings;
-			this.userControl = new Lazy<UserControl>(() =>
-				new TControl { DataContext = this.settings });
-
-			this.windowHandle = new Lazy<System.Windows.Forms.IWin32Window>(() =>
-				this.windowFactory.CreateWindow(this.settings, this.userControl.Value));
-		}
-
-		public IntPtr Handle
-		{
-			get { return this.windowHandle.Value.Handle; }
-		}
-	}
+    internal interface IOptionsPageWindowFactory
+    {
+        System.Windows.Forms.IWin32Window CreateWindow(IEditableObject model, System.Windows.Controls.UserControl view);
+    }
 }

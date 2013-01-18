@@ -26,7 +26,7 @@ namespace Clide
     /// <summary>
     /// Defines extension methods related to <see cref="IVsUIShell"/>.
     /// </summary>
-    internal static class VsUIShellExtensions
+    public static class VsUIShellExtensions
     {
         /// <summary>
         /// Gets the Visual Studio main window.
@@ -36,6 +36,143 @@ namespace Clide
             IntPtr hwnd;
             ErrorHandler.ThrowOnFailure(shell.GetDialogOwnerHwnd(out hwnd));
             return HwndSource.FromHwnd(hwnd).RootVisual as Window;
+        }
+
+        /// <summary>
+        /// Shows a message to the user.
+        /// </summary>
+        public static bool? ShowMessageBox(this IVsUIShell shell, string message, 
+            string title = MessageBoxService.DefaultTitle, 
+            MessageBoxButton button = MessageBoxService.DefaultButton,
+            MessageBoxImage icon = MessageBoxService.DefaultIcon,
+            MessageBoxResult defaultResult = MessageBoxService.DefaultResult)
+        {
+            var classId = Guid.Empty;
+            var result = 0;
+
+            shell.ShowMessageBox(0, ref classId, title, message, string.Empty, 0,
+                ToOleButton(button),
+                ToOleDefault(defaultResult, button),
+                ToOleIcon(icon),
+                0, out result);
+
+            if (result == 0)
+                return null;
+            else if (result == 1)
+                return true;
+            else
+                return false;
+        }
+
+        /// <summary>
+        /// Prompts the user for a response.
+        /// </summary>
+        public static MessageBoxResult Prompt(this IVsUIShell shell, string message,
+            string title = MessageBoxService.DefaultTitle,
+            MessageBoxButton button = MessageBoxService.DefaultButton,
+            MessageBoxImage icon = MessageBoxImage.Question,
+            MessageBoxResult defaultResult = MessageBoxService.DefaultResult)
+        {
+            var classId = Guid.Empty;
+            var result = 0;
+
+            shell.ShowMessageBox(0, ref classId, title, message, string.Empty, 0,
+                ToOleButton(button),
+                ToOleDefault(defaultResult, button),
+                ToOleIcon(icon),
+                0, out result);
+
+            return FromOle(result);
+        }
+
+        private static OLEMSGBUTTON ToOleButton(MessageBoxButton button)
+        {
+            switch (button)
+            {
+                case MessageBoxButton.OKCancel:
+                    return OLEMSGBUTTON.OLEMSGBUTTON_OKCANCEL;
+
+                case MessageBoxButton.YesNo:
+                    return OLEMSGBUTTON.OLEMSGBUTTON_YESNO;
+
+                case MessageBoxButton.YesNoCancel:
+                    return OLEMSGBUTTON.OLEMSGBUTTON_YESNOCANCEL;
+
+                default:
+                    return OLEMSGBUTTON.OLEMSGBUTTON_OK;
+            }
+        }
+
+        private static OLEMSGDEFBUTTON ToOleDefault(MessageBoxResult defaultResult, MessageBoxButton button)
+        {
+            switch (button)
+            {
+                case MessageBoxButton.OK:
+                    return OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST;
+
+                case MessageBoxButton.OKCancel:
+                    if (defaultResult == MessageBoxResult.Cancel)
+                        return OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_SECOND;
+
+                    return OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST;
+
+                case MessageBoxButton.YesNoCancel:
+                    if (defaultResult == MessageBoxResult.No)
+                        return OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_SECOND;
+                    if (defaultResult == MessageBoxResult.Cancel)
+                        return OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_THIRD;
+
+                    return OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST;
+
+                case MessageBoxButton.YesNo:
+                    if (defaultResult == MessageBoxResult.No)
+                        return OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_SECOND;
+
+                    return OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST;
+            }
+
+            return OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST;
+        }
+
+        private static OLEMSGICON ToOleIcon(MessageBoxImage icon)
+        {
+            switch (icon)
+            {
+                case MessageBoxImage.Asterisk:
+                    return OLEMSGICON.OLEMSGICON_INFO;
+
+                case MessageBoxImage.Error:
+                    return OLEMSGICON.OLEMSGICON_CRITICAL;
+
+                case MessageBoxImage.Exclamation:
+                    return OLEMSGICON.OLEMSGICON_WARNING;
+
+                case MessageBoxImage.Question:
+                    return OLEMSGICON.OLEMSGICON_QUERY;
+
+                default:
+                    return OLEMSGICON.OLEMSGICON_NOICON;
+            }
+        }
+
+        private static MessageBoxResult FromOle(int value)
+        {
+            switch (value)
+            {
+                case 1:
+                    return MessageBoxResult.OK;
+
+                case 2:
+                    return MessageBoxResult.Cancel;
+
+                case 6:
+                    return MessageBoxResult.Yes;
+
+                case 7:
+                    return MessageBoxResult.No;
+            }
+
+            return MessageBoxResult.No;
         }
     }
 }

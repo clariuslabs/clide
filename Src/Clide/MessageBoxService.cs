@@ -22,6 +22,7 @@ namespace Clide
     using System.Windows;
     using Clide.Composition;
     using Microsoft.VisualStudio.Shell.Interop;
+    using System;
 
     /// <summary>
     /// Default implementation of the <see cref="IMessageBoxService"/>.
@@ -29,6 +30,11 @@ namespace Clide
     [Export(typeof(IMessageBoxService))]
     internal class MessageBoxService : IMessageBoxService
     {
+        public const string DefaultTitle = "Microsoft Visual Studio";
+        public const MessageBoxButton DefaultButton = MessageBoxButton.OK;
+        public const MessageBoxImage DefaultIcon = MessageBoxImage.None;
+        public const MessageBoxResult DefaultResult = MessageBoxResult.OK;
+
         private static readonly ITracer tracer = Tracer.Get<MessageBoxService>();
         private IVsUIShell uiShell;
         private IUIThread uiThread;
@@ -48,63 +54,40 @@ namespace Clide
             this.uiThread = uiThread;
         }
 
-        public void Show(string message,
-            string title = "Visual Studio",
-            MessageBoxButton button = MessageBoxButton.OK,
-            MessageBoxImage icon = MessageBoxImage.None,
-            MessageBoxResult defaultResult = MessageBoxResult.OK)
+        public bool? Show(string message,
+            string title = DefaultTitle,
+            MessageBoxButton button = DefaultButton,
+            MessageBoxImage icon = DefaultIcon,
+            MessageBoxResult defaultResult = DefaultResult)
         {
-            this.uiShell.EnableModeless(0);
-            try
-            {
-                this.uiThread.Invoke(() =>
-                    MessageBox.Show(this.uiShell.GetMainWindow(), message, title, button, icon, defaultResult));
-            }
-            finally
-            {
-                this.uiShell.EnableModeless(1);
-            }
+            return this.uiShell.ShowMessageBox(message, title, button, icon, defaultResult);
         }
 
         public MessageBoxResult Prompt(string message,
-            string title = "Visual Studio",
-            MessageBoxButton button = MessageBoxButton.OKCancel,
+            string title = DefaultTitle,
+            MessageBoxButton button = DefaultButton,
             MessageBoxImage icon = MessageBoxImage.Question,
-            MessageBoxResult defaultResult = MessageBoxResult.OK)
+            MessageBoxResult defaultResult = DefaultResult)
         {
-            this.uiShell.EnableModeless(0);
-            try
-            {
-                return this.uiThread.Invoke(() =>
-                    MessageBox.Show(this.uiShell.GetMainWindow(), message, title, button, icon, defaultResult));
-            }
-            finally
-            {
-                this.uiShell.EnableModeless(1);
-            }
+            return this.uiShell.Prompt(message, title, button, icon, defaultResult);
         }
 
-        public string InputBox(string message, string title = "Visual Studio")
+        public string InputBox(string message, string title = DefaultTitle)
         {
-            this.uiShell.EnableModeless(0);
-            try
+            return this.uiThread.Invoke(() =>
             {
-                return this.uiThread.Invoke(() =>
-                {
-                    var dialog = new InputBox();
-                    dialog.Message = message;
-                    dialog.Title = title;
-                    dialog.ShowInTaskbar = false;
-                    if (dialog.ShowDialog() == true)
-                        return dialog.ResponseText;
+                var dialog = new InputBox();
+                dialog.Message = message;
+                dialog.Title = title;
+                dialog.ShowInTaskbar = false;
+                IntPtr parent;
+                this.uiShell.GetDialogOwnerHwnd(out parent);
 
-                    return null;
-                });
-            }
-            finally
-            {
-                this.uiShell.EnableModeless(1);
-            }
+                if (Microsoft.Internal.VisualStudio.PlatformUI.WindowHelper.ShowModal(dialog, parent) != 0)
+                    return dialog.ResponseText;
+
+                return null;
+            });
         }
     }
 }
