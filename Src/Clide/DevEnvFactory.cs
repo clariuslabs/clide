@@ -50,7 +50,7 @@ namespace Clide
                 var container = default(CompositionContainer);
                 var catalogs = new List<ComposablePartCatalog>
                 {
-                    new AssemblyCatalog(typeof(IDevEnv).Assembly),
+                    new LocalDecoratingCatalog(new AssemblyCatalog(typeof(IDevEnv).Assembly)),
                     SingletonCatalog.Create<ICompositionService>(ContractNames.ICompositionService, new Lazy<ICompositionService>(() => container)),
                     SingletonCatalog.Create<CompositionContainer>(ContractNames.CompositionContainer, new Lazy<CompositionContainer>(() => container)),
                     SingletonCatalog.Create<ExportProvider>(ContractNames.ExportProvider, new Lazy<ExportProvider>(() => container)),
@@ -77,7 +77,7 @@ namespace Clide
                         if (!File.Exists(assemblyFile))
                             throw new InvalidOperationException(Strings.DevEnvFactory.ClideComponentNotFound(packageManifestFile, clideComponent, assemblyFile));
 
-                        catalogs.Add(new AssemblyCatalog(assemblyFile));
+                        catalogs.Add(new LocalDecoratingCatalog(new AssemblyCatalog(assemblyFile)));
                     }
                 }
 
@@ -98,7 +98,7 @@ namespace Clide
             }
         }
 
-        private static void Log(CompositionContainer container, AggregateCatalog catalog)
+        private static void Log(CompositionContainer container, ComposablePartCatalog catalog)
         {
             var info = new CompositionInfo(catalog, container);
             var rejected = info.PartDefinitions.Where(part => part.IsPrimaryRejection).ToList();

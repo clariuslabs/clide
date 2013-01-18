@@ -15,7 +15,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
-namespace Clide
+namespace Clide.Composition
 {
     /// <summary>
 	/// Constants and contract names used for internal composition.

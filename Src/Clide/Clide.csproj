@@ -114,6 +114,11 @@
     <Compile Include="Commands\CommandInterceptorAttribute.cs" />
     <Compile Include="Commands\ICommandInterceptor.cs" />
     <Compile Include="Commands\ICommandInterceptorMetadata.cs" />
+    <Compile Include="Composition\DecoratedExport.cs" />
+    <Compile Include="Composition\DecoratedPart.cs" />
+    <Compile Include="Composition\DecoratingReflectionCatalog.cs" />
+    <Compile Include="Composition\LocalDecoratingCatalog.cs" />
+    <Compile Include="Composition\SelectorEqualityComparer.cs" />
     <Compile Include="netfx\System\AmbientSingleton.cs" />
     <Compile Include="netfx\System\Collections\Generic\IEnumerable\TraverseKind.cs" />
     <Compile Include="netfx\System\Collections\Generic\IEnumerable\Traverser.cs" />

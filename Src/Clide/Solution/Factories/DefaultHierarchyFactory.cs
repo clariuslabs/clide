@@ -18,6 +18,7 @@ namespace Clide.Solution
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
     using System.Linq;
+    using Clide.Composition;
 
     /// <summary>
     /// This factory is the one that serves as the single dependency 

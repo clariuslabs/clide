@@ -24,6 +24,7 @@ namespace Clide.Solution
     using Microsoft.VisualStudio.Shell;
     using Moq;
     using System.Diagnostics;
+    using Clide.Composition;
 
     public class SolutionExplorerSpec
 	{

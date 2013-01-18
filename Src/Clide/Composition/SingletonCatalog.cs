@@ -12,7 +12,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
-namespace Clide
+namespace Clide.Composition
 {
     using System;
     using System.Collections.Generic;
@@ -88,6 +88,10 @@ namespace Clide
                        { 
                            CompositionConstants.ExportTypeIdentityMetadataName, 
                            AttributedModelServices.GetTypeIdentity(typeof(T)) 
+                       }, 
+                       {
+                           LocalDecoratingCatalog.IsLocalKey, 
+                           true
                        }
                    });
             }

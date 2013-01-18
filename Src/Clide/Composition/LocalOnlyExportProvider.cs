@@ -12,7 +12,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
-namespace Clide
+namespace Clide.Composition
 {
     using Clide.Properties;
     using System;
@@ -22,19 +22,8 @@ namespace Clide
     using System.ComponentModel.Composition.Primitives;
     using System.Diagnostics;
     using System.Linq;
-    using System.Linq.Expressions;
-    // Alias to the constructor we use to make up a new contract definition with specific 
-    // metadata. This is needed because the reference assemblies don't expose this constructor 
-    // that does exist in .NET 4.0.
-    using ImportDefinitionConstructor = System.Func<
-        string,
-        string,
-        System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, System.Type>>,
-        System.ComponentModel.Composition.Primitives.ImportCardinality,
-        bool, bool,
-        System.ComponentModel.Composition.CreationPolicy,
-        System.Collections.Generic.IDictionary<string, object>, System.ComponentModel.Composition.Primitives.ContractBasedImportDefinition>;
-
+    using System.Reflection;
+using System.Threading;
 
     /// <summary>
     /// Avoids exposing to VS the Clide APIs, which are only for the specific 
@@ -43,46 +32,10 @@ namespace Clide
     /// </summary>
     internal class LocalOnlyExportProvider : ExportProvider
     {
+        private ThreadLocal<bool> gettingExports = new ThreadLocal<bool>(() => false);
         private static readonly ITracer tracer = Tracer.Get<LocalOnlyExportProvider>();
-        private static readonly ImportDefinitionConstructor ImportDefinitionFactory;
 
         private ExportProvider innerProvider;
-
-        static LocalOnlyExportProvider()
-        {
-            var args = typeof(ImportDefinitionConstructor)
-                .GetMethod("Invoke")
-                .GetParameters();
-
-            var ctor = typeof(ContractBasedImportDefinition)
-                .GetConstructor(args
-                    .Select(p => p.ParameterType)
-                    .ToArray());
-
-            if (ctor != null)
-            {
-                // Changing the metadata of the import, or even create a new 
-                // contract-based import with specific metadata is not 
-                // exposed via API, even though it exists in the .NET 4.0 
-                // GAC assembly as a public constructor overload. The 
-                // corresponding Reference Assembly, however, hides it, 
-                // so we need to resort to invoking the actual type constructor
-                // via reflection, which we make more performant by 
-                // compiling a lambda.
-                var parameters = args
-                    .Select(p => Expression.Parameter(p.ParameterType, p.Name))
-                    .ToArray();
-
-                ImportDefinitionFactory = Expression
-                    .Lambda<ImportDefinitionConstructor>(Expression.New(ctor, parameters), parameters)
-                    .Compile();
-            }
-            else
-            {
-                tracer.Error(Strings.Hosting.UnsupportedRuntime);
-                throw new NotSupportedException(Strings.Hosting.UnsupportedRuntime);
-            }
-        }
 
         public LocalOnlyExportProvider(ExportProvider innerProvider)
         {
@@ -91,47 +44,37 @@ namespace Clide
 
         protected override IEnumerable<Export> GetExportsCore(ImportDefinition definition, AtomicComposition atomicComposition)
         {
-            IEnumerable<Export> exports;
-
-            var importSource = typeof(ImportAttribute).Assembly.GetType("System.ComponentModel.Composition.ImportSource");
-            if (importSource == null)
-            {
-                tracer.Error(Strings.Hosting.UnsupportedRuntime);
-                throw new NotSupportedException(Strings.Hosting.UnsupportedRuntime);
-            }
-
-            // This special kind of metadata is checked y the base ExportProvider 
-            // to determine whether to query for exports from the parent container, 
-            // which in our case is the global VS composition container.
-            // We want to avoid querying VS composition container as this 
-            // would cause a stack overflow, as we're answering that call 
-            // here ourselves (VSMEF rewrote the GetExportsCore so that it 
-            // queries all created VsCompositionContainers for their exports.
-            var metadata = new Dictionary<string, object>
-                {
-                    {  importSource.FullName, Enum.Parse(importSource, "Local") }
-                };
-
-            var contractDefinition = definition as ContractBasedImportDefinition;
-            if (contractDefinition == null)
-            {
-                // This provider does not support non-contract based exports.
+            if (gettingExports.Value)
                 return Enumerable.Empty<Export>();
+
+            try
+            {
+                gettingExports.Value = true;
+
+                IEnumerable<Export> exports;
+
+                var contractDefinition = definition as ContractBasedImportDefinition;
+                if (contractDefinition == null)
+                {
+                    // This provider does not support non-contract based exports.
+                    return Enumerable.Empty<Export>();
+                }
+
+                this.innerProvider.TryGetExports(contractDefinition, atomicComposition, out exports);
+
+                return exports.Where(e => IsLocal(e) && !IsClideExport(e));
+
             }
+            finally
+            {
+                gettingExports.Value = false;
+            }
+        }
 
-            var localImport = ImportDefinitionFactory.Invoke(
-                contractDefinition.ContractName,
-                contractDefinition.RequiredTypeIdentity,
-                contractDefinition.RequiredMetadata,
-                contractDefinition.Cardinality,
-                contractDefinition.IsRecomposable,
-                contractDefinition.IsPrerequisite,
-                contractDefinition.RequiredCreationPolicy,
-                metadata);
-
-            this.innerProvider.TryGetExports(localImport, atomicComposition, out exports);
-
-            return exports.Where(e => !IsClideExport(e));
+        private static bool IsLocal(Export e)
+        {
+            return e.Metadata.ContainsKey(LocalDecoratingCatalog.IsLocalKey) && 
+                (bool)e.Metadata[LocalDecoratingCatalog.IsLocalKey];
         }
 
         private static bool IsClideExport(Export e)

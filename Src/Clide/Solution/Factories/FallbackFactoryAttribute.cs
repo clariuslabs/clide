@@ -19,6 +19,7 @@ namespace Clide.Solution
 {
     using System;
     using System.ComponentModel.Composition;
+    using Clide.Composition;
 
     internal class FallbackFactoryAttribute : TreeNodeFactoryAttribute
 	{
