@@ -88,17 +88,17 @@ public abstract class VsHostedSpec
     [TestCleanup]
     public virtual void TestCleanup()
     {
-        tracer.Info("Cleaning ambient context data");
-        var contextData = (Hashtable)ExecutionContext
-            .Capture()
-            .AsDynamicReflection()
-            .LogicalCallContext
-            .Datastore;
+        //tracer.Info("Cleaning ambient context data");
+        //var contextData = (Hashtable)ExecutionContext
+        //    .Capture()
+        //    .AsDynamicReflection()
+        //    .LogicalCallContext
+        //    .Datastore;
 
-        foreach (var slot in contextData.Keys.OfType<string>())
-        {
-            CallContext.FreeNamedDataSlot(slot);
-        }
+        //foreach (var slot in contextData.Keys.OfType<string>())
+        //{
+        //    CallContext.FreeNamedDataSlot(slot);
+        //}
 
         listener.Flush();
         Debug.WriteLine(this.strings.ToString());
