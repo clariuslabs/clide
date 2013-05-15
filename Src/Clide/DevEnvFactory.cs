@@ -29,6 +29,7 @@ namespace Clide
     using System.ComponentModel.Composition.Primitives;
     using System.Collections.Concurrent;
     using System.Xml.Linq;
+    using System.Threading.Tasks;
 
     internal class DevEnvFactory
     {
@@ -101,14 +102,7 @@ namespace Clide
                 // Set the container that the lazy singleton exports for ICompositionService and ExportProvider will use.
                 container = new LocalCompositionContainer(hostId, vsContainer);
 
-                try
-                {
-                    Log(vsContainer, catalog);
-                }
-                catch (Exception ex)
-                {
-                    tracer.Error(ex, "Failed to log composition information. For more information open the log file at {0}.", Path.Combine(Path.GetTempPath(), "DevEnv.log"));
-                }
+                Task.Factory.StartNew(() => Log(vsContainer, catalog));
 
                 return container;
             }
@@ -125,9 +119,9 @@ namespace Clide
                 rejected.ForEach(part => PartDefinitionInfoTextFormatter.Write(part, writer));
                 tracer.Error(writer.ToString());
                 File.WriteAllText(Path.Combine(Path.GetTempPath(), "DevEnv.log"), writer.ToString());
-                throw new InvalidOperationException(
-                    Strings.DevEnvFactory.CompositionErrors(rejected.Count) + Environment.NewLine +
-                    writer.ToString());
+
+                tracer.Error(Strings.DevEnvFactory.CompositionErrors(rejected.Count) + Environment.NewLine + writer.ToString());
+                tracer.Error("Failed to log composition information. For more information open the log file at {0}.", Path.Combine(Path.GetTempPath(), "DevEnv.log"));
             }
 
 #if DEBUG
