@@ -2,6 +2,7 @@ v1.3
 
 * Expose CompositionContainer directly on IDevEnv. This simplifies many scenarios where you want to interact with the container. Users can still import ICompositionService.
 * Added support for intercepting arbitrary commands in the IDE via simple exports of ICommandInterceptor components, automatically registered when the host is initialized. 
+* Moved MEF tracing/diagnostics to run on a separate background thread. This makes host initialization much faster.
 
 v1.2
 
