@@ -17,6 +17,7 @@ namespace Clide
     using System;
     using System.ComponentModel;
     using System.Diagnostics;
+    using Clide.Diagnostics;
 
     /// <summary>
     /// Entry point to the Clide developer environment APIs.
@@ -35,7 +36,7 @@ namespace Clide
             Tracer.Manager.SetTracingLevel(TracerManager.DefaultSourceName, SourceLevels.All);
             Tracer.Manager.AddListener(TracerManager.DefaultSourceName, new ConsoleTraceListener());
 #else
-            Tracer.Manager.SetTracingLevel(TracerManager.DefaultSourceName, SourceLevels.Warning);
+            Tracer.Manager.SetTracingLevel(TracerManager.DefaultSourceName, SourceLevels.Information);
 #endif
 
             if (Debugger.IsAttached)

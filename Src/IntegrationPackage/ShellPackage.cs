@@ -14,6 +14,7 @@
     using Clide;
     using System.Diagnostics;
     using System.IO;
+    using Clide.Diagnostics;
 
     [Guid(Constants.PackageGuid)]
     [ProvideAutoLoad(UIContextGuids.NoSolution)]

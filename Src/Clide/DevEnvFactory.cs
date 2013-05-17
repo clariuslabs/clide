@@ -30,6 +30,7 @@ namespace Clide
     using System.Collections.Concurrent;
     using System.Xml.Linq;
     using System.Threading.Tasks;
+    using Clide.Diagnostics;
 
     internal class DevEnvFactory
     {

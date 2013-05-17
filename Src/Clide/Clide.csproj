@@ -87,6 +87,7 @@
       <SpecificVersion>True</SpecificVersion>
       <HintPath>$(VSSDK)Microsoft.VisualStudio.Shell.Interop.9.0.dll</HintPath>
     </Reference>
+    <Reference Include="System.Configuration" />
     <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <SpecificVersion>True</SpecificVersion>
       <HintPath>$(PublicAssemblies)VSLangProj.dll</HintPath>
@@ -125,10 +126,22 @@
     <Compile Include="Composition\SelectorEqualityComparer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Diagnostics\TracerManager.cs" />
+    <Compile Include="Diagnostics\Visibility.cs" />
+    <Compile Include="Diagnostics\ITracerManager.cs" />
+    <Compile Include="Diagnostics\Tracer\ITracer.cs" />
+    <Compile Include="Diagnostics\Tracer\ITracerExtensions.cs" />
+    <Compile Include="Diagnostics\Tracer\ITracerManager.cs" />
+    <Compile Include="Diagnostics\Tracer\StartActivityExtension.cs" />
+    <Compile Include="Diagnostics\Tracer\Tracer.cs" />
+    <Compile Include="Diagnostics\Tracer\TracerManager.cs" />
+    <Compile Include="Diagnostics\Tracer\Visibility.cs" />
+    <Compile Include="Diagnostics\Tracer.cs" />
     <Compile Include="IOptionsPageWindowFactory.cs" />
     <Compile Include="netfx\System\AmbientSingleton.cs" />
     <Compile Include="netfx\System\Collections\Generic\IEnumerable\TraverseKind.cs" />
     <Compile Include="netfx\System\Collections\Generic\IEnumerable\Traverser.cs" />
+    <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="netfx\System\StringFormatWith.cs" />
     <Compile Include="Patterns\Adapter\AdapterAttribute.cs" />
     <Compile Include="Patterns\Adapter\Adapters.cs" />
@@ -182,6 +195,11 @@
     <Compile Include="Patterns\Adapter\IAdapter.cs" />
     <Compile Include="Patterns\Adapter\IAdapterService.cs" />
     <Compile Include="Patterns\Adapter\IFluentInterface.cs" />
+    <Compile Include="Properties\Resources.Strings.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.tt</DependentUpon>
+    </Compile>
     <Compile Include="ShellAssembly.cs" />
     <Compile Include="Solution\Adapters\VsLangToSolutionAdapter.cs" />
     <Compile Include="Solution\Adapters\VsHierarchyItemToSolutionAdapter.cs" />
@@ -202,10 +220,6 @@
     <Compile Include="OptionsPageWindowFactory.cs" />
     <Compile Include="Solution\Extensions\IProjectNodeExtensions.cs" />
     <Compile Include="Solution\Extensions\ISolutionExplorerNodeExtensions.cs" />
-    <Compile Include="System\Diagnostics\Tracer\ITracer.cs" />
-    <Compile Include="System\Diagnostics\Tracer\ITracerExtensions.cs" />
-    <Compile Include="System\Diagnostics\Tracer\ITracerManager.cs" />
-    <Compile Include="System\Diagnostics\Tracer\Tracer.cs" />
     <Compile Include="UI\TreeNodes\ITreeNodeExtensions.cs" />
     <Compile Include="Solution\Factories\ISolutionExplorerNodeFactory.cs" />
     <Compile Include="Solution\Factories\SolutionItemNodeFactory.cs" />
@@ -220,7 +234,6 @@
     <Compile Include="Solution\ISolutionExplorerNode.cs" />
     <Compile Include="Solution\IProjectConfiguration.cs" />
     <Compile Include="VisualStudio\VsHierarchyExtensions.cs" />
-    <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="netfx\System\TypeInheritance.cs" />
     <Compile Include="netfx\System\TypeInheritanceExtension.cs" />
     <Compile Include="Composition\CompositionTarget.cs" />
@@ -279,11 +292,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Resources.Strings.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.tt</DependentUpon>
-    </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsAttribute.cs" />
     <Compile Include="SettingsManager.cs" />
@@ -316,10 +324,7 @@
     <Compile Include="Solution\ISolutionNode.cs" />
     <Compile Include="Solution\SolutionNodeKind.cs" />
     <Compile Include="StatusBar.cs" />
-    <Compile Include="System\Diagnostics\Tracer\StartActivityExtension.cs" />
-    <Compile Include="System\Diagnostics\Tracer\TracerManager.cs" />
-    <Compile Include="System\Diagnostics\Tracer\Visibility.cs" />
-    <Compile Include="TracingExtensions.cs" />
+    <Compile Include="Diagnostics\TracingExtensions.cs" />
     <Compile Include="UI\TreeNodes\ITreeNodeFactory.cs" />
     <Compile Include="UI\TreeNodes\ITreeNodeFactoryMetadata.cs" />
     <Compile Include="UI\TreeNodes\TreeNodeFactoryAttribute.cs" />
@@ -380,6 +385,7 @@
       <Visible>False</Visible>
     </SymbolSource>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <StartAction>Program</StartAction>
     <StartProgram>C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\devenv.exe</StartProgram>

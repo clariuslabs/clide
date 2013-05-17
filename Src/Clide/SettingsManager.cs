@@ -25,6 +25,7 @@ namespace Clide
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
+    using Clide.Diagnostics;
     using Clide.Properties;
     using Microsoft.VisualStudio.Settings;
     using Microsoft.VisualStudio.Shell;

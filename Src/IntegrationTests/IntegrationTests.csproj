@@ -79,6 +79,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\IntegrationPackage\Constants.cs">
+      <Link>Constants.cs</Link>
+    </Compile>
     <Compile Include="CommandsSpec.cs" />
     <Content Include="Content\SampleSolution\ClassLibrary\Class1.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -132,9 +135,9 @@
       <Name>Clide</Name>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\IntegrationPackage\IntegrationPackage.2010.csproj">
-      <Project>{53810c4a-fab5-41e8-af54-39742a7d1435}</Project>
-      <Name>IntegrationPackage.2010</Name>
+    <ProjectReference Include="..\IntegrationPackage\IntegrationPackage.2012.csproj">
+      <Project>{41c96c7d-bc81-489c-a60e-97cf431b7608}</Project>
+      <Name>IntegrationPackage.2012</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

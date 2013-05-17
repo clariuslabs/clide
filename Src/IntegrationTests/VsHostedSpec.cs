@@ -19,18 +19,21 @@ using System.Diagnostics;
 using System.Runtime.Remoting.Messaging;
 using System.Collections;
 using System.ComponentModel.Composition.Primitives;
+using Clide.Diagnostics;
+using Microsoft.VisualStudio.Shell;
 
 [TestClass]
 public abstract class VsHostedSpec
 {
-    private Lazy<ShellPackage> integrationPackage;
+    private Lazy<IServiceProvider> package;
     private ITracer tracer;
-    private StringBuilder strings;
+    private StringBuilder strings; 
     private TraceListener listener;
 
     protected VsHostedSpec()
     {
-        this.integrationPackage = new Lazy<ShellPackage>(() => Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider.GetLoadedPackage<ShellPackage>());
+        this.package = new Lazy<IServiceProvider>(() => Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider
+            .GetLoadedPackage(new Guid(IntegrationPackage.Constants.PackageGuid)));
     }
 
     public TestContext TestContext { get; set; }
@@ -40,11 +43,9 @@ public abstract class VsHostedSpec
         get { return ServiceProvider.GetService<DTE>(); }
     }
 
-    protected ShellPackage ShellPackage { get { return this.integrationPackage.Value; } }
-
     protected IServiceProvider ServiceProvider
     {
-        get { return this.ShellPackage; }
+        get { return this.package.Value; }
     }
 
     protected CompositionContainer Container

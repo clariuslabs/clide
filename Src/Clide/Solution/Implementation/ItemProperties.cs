@@ -24,6 +24,7 @@ namespace Clide.Solution
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using Clide.Diagnostics;
 
     internal class ItemProperties : DynamicObject
     {

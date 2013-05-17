@@ -173,7 +173,7 @@ public static class ResourceFile
 						"Area name '{0}' is already in use as a value name under area '{1}'.",
 						areaName, currentArea.Name));
 
-				existing = new ResourceArea { Name = areaName, Prefix = string.Join("_", areaPath) + "_" };
+				existing = new ResourceArea { Name = areaName, Prefix = currentArea.Prefix + areaName + "_" };
 				currentArea.NestedAreas.Add(existing);
 			}
 

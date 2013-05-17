@@ -23,6 +23,7 @@ namespace Clide
     using System.Linq.Expressions;
     using Clide.Properties;
     using System.Diagnostics;
+    using Clide.Diagnostics;
 
     /// <summary>
     /// Helper base class that can be used to provide transparent loading and saving of settings. 

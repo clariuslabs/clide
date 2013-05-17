@@ -23,6 +23,7 @@ namespace Clide
     using Clide.Composition;
     using Microsoft.VisualStudio.Shell.Interop;
     using System;
+    using Clide.Diagnostics;
 
     /// <summary>
     /// Default implementation of the <see cref="IMessageBoxService"/>.

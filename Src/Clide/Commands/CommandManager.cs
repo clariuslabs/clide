@@ -34,6 +34,7 @@ namespace Clide.Commands
     using EnvDTE;
     using System.Collections.Concurrent;
     using System.Diagnostics;
+    using Clide.Diagnostics;
 
     /// <summary>
     /// Implements the command registration mechanism.

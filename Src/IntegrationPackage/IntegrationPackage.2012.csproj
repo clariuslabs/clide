@@ -116,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adornment.cs" />
+    <Compile Include="BuildCommandInterceptor.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="FooOptionsPage.cs">
       <SubType>Component</SubType>
@@ -136,6 +137,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="ShellPackageExport.cs" />
     <Compile Include="ViewModel.cs" />
     <None Include="..\..\Common\ClariusLabs.snk">
       <Link>ClariusLabs.snk</Link>

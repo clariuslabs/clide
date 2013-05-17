@@ -27,6 +27,7 @@ namespace Clide.Solution
     using Clide.Properties;
     using System.Diagnostics;
     using VSLangProj;
+    using Clide.Diagnostics;
 
     /// <summary>
     /// Provides usability extensions to the <see cref="IProjectNode"/>.

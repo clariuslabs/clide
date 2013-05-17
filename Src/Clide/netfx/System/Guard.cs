@@ -85,9 +85,9 @@ static class Guard
     /// </summary>
     /// <exception cref="System.ArgumentException">The <paramref name="value"/> is not valid according 
     /// to the <paramref name="validate"/> function.</exception>
-    public static void IsValid<T>(Expression<Func<T>> reference, T value, Func<T, bool> valid, string format, params object[] args)
+    public static void IsValid<T>(Expression<Func<T>> reference, T value, Func<T, bool> validate, string format, params object[] args)
     {
-        if (!valid(value))
+        if (!validate(value))
             throw new ArgumentException(string.Format(format, args), GetParameterName(reference));
     }
 

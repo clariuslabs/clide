@@ -40,6 +40,7 @@ namespace Clide
     using System.IO;
     using System.Text.RegularExpressions;
 using System.Collections.Concurrent;
+    using Clide.Diagnostics;
 
     [PartCreationPolicy(CreationPolicy.Shared)]
     [Export(typeof(IOptionsManager))]

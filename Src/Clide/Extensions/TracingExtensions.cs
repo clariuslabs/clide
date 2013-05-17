@@ -20,6 +20,7 @@ namespace System.Diagnostics
     using System;
     using System.Windows;
     using Clide;
+    using Clide.Diagnostics;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;

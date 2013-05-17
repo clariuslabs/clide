@@ -30,8 +30,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7E8606
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationPackage.2010", "Src\IntegrationPackage\IntegrationPackage.2010.csproj", "{53810C4A-FAB5-41E8-AF54-39742A7D1435}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationPackage.2012", "Src\IntegrationPackage\IntegrationPackage.2012.csproj", "{41C96C7D-BC81-489C-A60E-97CF431B7608}"
 EndProject
 Global
@@ -77,16 +75,6 @@ Global
 		{3B640876-2510-4EED-8157-1ACB417C758D}.Release|Mixed Platforms.Build.0 = Release|x86
 		{3B640876-2510-4EED-8157-1ACB417C758D}.Release|x86.ActiveCfg = Release|x86
 		{3B640876-2510-4EED-8157-1ACB417C758D}.Release|x86.Build.0 = Release|x86
-		{53810C4A-FAB5-41E8-AF54-39742A7D1435}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{53810C4A-FAB5-41E8-AF54-39742A7D1435}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{53810C4A-FAB5-41E8-AF54-39742A7D1435}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{53810C4A-FAB5-41E8-AF54-39742A7D1435}.Debug|x86.ActiveCfg = Debug|x86
-		{53810C4A-FAB5-41E8-AF54-39742A7D1435}.Debug|x86.Build.0 = Debug|x86
-		{53810C4A-FAB5-41E8-AF54-39742A7D1435}.Release|Any CPU.ActiveCfg = Release|x86
-		{53810C4A-FAB5-41E8-AF54-39742A7D1435}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{53810C4A-FAB5-41E8-AF54-39742A7D1435}.Release|Mixed Platforms.Build.0 = Release|x86
-		{53810C4A-FAB5-41E8-AF54-39742A7D1435}.Release|x86.ActiveCfg = Release|x86
-		{53810C4A-FAB5-41E8-AF54-39742A7D1435}.Release|x86.Build.0 = Release|x86
 		{41C96C7D-BC81-489C-A60E-97CF431B7608}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{41C96C7D-BC81-489C-A60E-97CF431B7608}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{41C96C7D-BC81-489C-A60E-97CF431B7608}.Debug|Mixed Platforms.Build.0 = Debug|x86

@@ -20,6 +20,7 @@ namespace Clide.Commands
     using System;
     using System.ComponentModel.Design;
     using System.Diagnostics;
+    using Clide.Diagnostics;
     using Clide.Properties;
     using Microsoft.VisualStudio.Shell;
 
