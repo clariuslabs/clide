@@ -208,10 +208,11 @@ namespace Clide.Commands
                 return;
             }
 
-            var command = mcs.FindCommand(new CommandID(new Guid(metadata.GroupId), metadata.CommandId));
+            var groupId = new Guid(metadata.GroupId);
+            var command = mcs.FindCommand(new CommandID(groupId, metadata.CommandId));
             if (command == null)
             {
-                tracer.Error(Strings.CommandManager.CommandNotFound(commandPackageGuid, metadata.GroupId, metadata.CommandId));
+                tracer.Error(Strings.CommandManager.CommandNotFound(commandPackageGuid, groupId, metadata.CommandId));
                 return;
             }
 

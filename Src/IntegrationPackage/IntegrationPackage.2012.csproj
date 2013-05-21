@@ -118,6 +118,7 @@
     <Compile Include="Adornment.cs" />
     <Compile Include="BuildCommandInterceptor.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="BadCommandFilter.cs" />
     <Compile Include="FooOptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -51,13 +51,16 @@ namespace Clide
         /// </remarks>
         /// <param name="hostingPackage">The package owning this deploy 
         /// of Clide.</param>
-        public static IDisposable Initialize(IServiceProvider hostingPackage, string tracingPaneTitle)
+        /// <param name="tracingPaneTitle">Optional title of an output 
+        /// pane to create for the calling package, for tracing purposes. 
+        /// If it</param>
+        public static IDisposable Initialize(IServiceProvider hostingPackage, string tracingPaneTitle = null)
         {
             try
             {
                 using (tracer.StartActivity("Initializing package"))
                 {
-                    var tracingPaneId = hostingPackage.GetPackageGuidOrThrow();
+                    var packageId = hostingPackage.GetPackageGuidOrThrow();
                     var devEnv = DevEnv.Get(hostingPackage);
                     // Brings in imports that the package itself might need.
                     devEnv.ExportProvider.SatisfyImportsOnce(hostingPackage);
@@ -66,7 +69,7 @@ namespace Clide
                     var host = new Host(hostingPackage);
                     devEnv.ExportProvider.SatisfyImportsOnce(host);
 
-                    host.Initialize(tracingPaneId, tracingPaneTitle);
+                    host.Initialize(packageId, tracingPaneTitle);
 
                     // Initialize the default adapter service for the smart cast extension method.
                     Clide.Patterns.Adapter.AdaptersInitializer.SetService(((ExportProvider)devEnv.ExportProvider).GetExportedValue<IAdapterService>());
@@ -99,7 +102,7 @@ namespace Clide
         private IShellEvents shellEvents;
 #pragma warning restore 0649
 
-        private void Initialize(Guid tracingPaneId, string tracingPaneTitle)
+        private void Initialize(Guid packageId, string tracingPaneTitle)
         {
             Initialize();
 
@@ -111,7 +114,7 @@ namespace Clide
                     this.hostingPackage,
                     this.shellEvents,
                     Tracer.Manager,
-                    tracingPaneId,
+                    packageId,
                     tracingPaneTitle);
             }
         }
