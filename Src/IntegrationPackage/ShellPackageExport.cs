@@ -17,6 +17,7 @@ namespace IntegrationPackage
     using Microsoft.VisualStudio.Shell;
     using System;
     using System.ComponentModel.Composition;
+    using Clide.VisualStudio;
 
     [PartCreationPolicy(CreationPolicy.Shared)]
     internal class ShellPackageExport
@@ -26,7 +27,7 @@ namespace IntegrationPackage
         {
             get
             {
-                return ServiceProvider.GlobalProvider.GetLoadedPackage<ShellPackage>();
+                return ServiceLocator.GlobalProvider.GetLoadedPackage<ShellPackage>();
             }
         }
     }

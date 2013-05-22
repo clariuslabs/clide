@@ -20,6 +20,7 @@ namespace System
     using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
+    using Clide;
 
     /// <summary>
     /// Provides useful extensions to the IDE service provider.
@@ -50,7 +51,7 @@ namespace System
         /// <returns>The fully loaded and initialized package.</returns>
         public static TPackage GetLoadedPackage<TPackage>(this IServiceProvider serviceProvider)
         {
-            return ThreadHelper.Generic.Invoke(() =>
+            return UIThread.Default.Invoke(() =>
             {
                 var guidString = typeof(TPackage)
                     .GetCustomAttributes(true)
@@ -82,7 +83,7 @@ namespace System
         /// <returns>The fully loaded and initialized package.</returns>
         public static IServiceProvider GetLoadedPackage(this IServiceProvider serviceProvider, Guid packageId)
         {
-            return ThreadHelper.Generic.Invoke(() =>
+            return UIThread.Default.Invoke(() =>
             {
                 var vsPackage = default(IVsPackage);
 

@@ -30,9 +30,7 @@ namespace Clide.Composition
         private static IComponentModel componentModelOverride;
 
         /// <summary>
-        /// Gets the global component model. The global 
-        /// service provider <see cref="ServiceProvider.GlobalProvider"/> 
-        /// must be available before invoking this property.
+        /// Gets the global component model.
         /// </summary>
         public static IComponentModel GlobalComponentModel
         {
@@ -41,10 +39,7 @@ namespace Clide.Composition
                 if (componentModelOverride != null)
                     return componentModelOverride;
 
-                if (ServiceProvider.GlobalProvider == null)
-                    throw new InvalidOperationException("No global service provider found.");
-
-                return ServiceProvider.GlobalProvider.GetService<SComponentModel, IComponentModel>();
+                return (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
             }
             // Allows replacing for testing.
             internal set { componentModelOverride = value; }

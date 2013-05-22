@@ -20,6 +20,7 @@ namespace Clide.Solution.Adapters
     using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.VisualStudio;
     using Ole = Microsoft.VisualStudio.OLE.Interop;
+    using Clide.VisualStudio;
 
     [Adapter]
     internal class IServiceProviderAdapter : 
@@ -29,7 +30,7 @@ namespace Clide.Solution.Adapters
     {
         public IServiceProvider Adapt(ISolutionNode from)
         {
-            return ServiceProvider.GlobalProvider;
+            return ServiceLocator.GlobalProvider;
         }
 
         public IServiceProvider Adapt(IProjectNode from)
@@ -41,7 +42,7 @@ namespace Clide.Solution.Adapters
             if (vsProject != null && vsProject.GetItemContext(VSConstants.VSITEMID_ROOT, out oleSp) == VSConstants.S_OK)
                 return new ServiceProvider(oleSp);
 
-            return ServiceProvider.GlobalProvider;
+            return ServiceLocator.GlobalProvider;
         }
 
         public IServiceProvider Adapt(ProjectItemNode from)

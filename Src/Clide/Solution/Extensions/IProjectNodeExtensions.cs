@@ -28,6 +28,7 @@ namespace Clide.Solution
     using System.Diagnostics;
     using VSLangProj;
     using Clide.Diagnostics;
+    using Clide.VisualStudio;
 
     /// <summary>
     /// Provides usability extensions to the <see cref="IProjectNode"/>.
@@ -80,7 +81,7 @@ namespace Clide.Solution
             var assemblyName = AssemblyName.GetAssemblyName(assemblyFile);
             var vsProject = project.As<IVsHierarchy>();
             var localServices = project.As<IServiceProvider>();
-            var globalServices = ServiceProvider.GlobalProvider;
+            var globalServices = ServiceLocator.GlobalProvider.TryGetService<SVsServiceProvider, IServiceProvider>();
 
             if (vsProject == null ||
                 localServices == null ||
@@ -116,7 +117,7 @@ namespace Clide.Solution
             var vsProject = project.As<IVsHierarchy>();
             var vsLangProject = project.As<VSProject>();
             var localServices = project.As<IServiceProvider>();
-            var globalServices = ServiceProvider.GlobalProvider;
+            var globalServices = ServiceLocator.GlobalProvider.TryGetService<SVsServiceProvider, IServiceProvider>();
 
             if (vsProject == null ||
                 localServices == null ||

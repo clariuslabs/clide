@@ -243,7 +243,7 @@ namespace Clide.Solution
 
         private string BuildDebuggerDisplay()
         {
-            return ThreadHelper.Generic.Invoke<string>(() =>
+            return UIThread.Default.Invoke<string>(() =>
             {
                 var display = this.DisplayName;
                 var current = this.parent.Value;

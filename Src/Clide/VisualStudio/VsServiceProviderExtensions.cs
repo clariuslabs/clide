@@ -38,7 +38,7 @@ namespace Clide.VisualStudio
             var hierarchyPtr = IntPtr.Zero;
             var selectionContainer = IntPtr.Zero;
 
-            return ThreadHelper.Generic.Invoke<IEnumerable<Tuple<IVsHierarchy, uint>>>(() =>
+            return UIThread.Default.Invoke<IEnumerable<Tuple<IVsHierarchy, uint>>>(() =>
             {
                 try
                 {

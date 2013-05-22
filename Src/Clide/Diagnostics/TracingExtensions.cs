@@ -21,6 +21,7 @@ namespace Clide
     using System.Diagnostics;
     using System.Windows;
     using Clide.Diagnostics;
+    using Clide.VisualStudio;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
@@ -32,8 +33,8 @@ namespace Clide
     {
         internal static Action<Exception, string, string[]> ShowExceptionAction = (ex, format, args) =>
         {
-            System.Windows.MessageBox.Show(ServiceProvider.GlobalProvider
-                .GetService<SVsUIShell, IVsUIShell>().GetMainWindow(), 
+            System.Windows.MessageBox.Show(
+                ServiceLocator.GlobalProvider.GetService<SVsUIShell, IVsUIShell>().GetMainWindow(), 
                 string.Format(format, args),
                 "Visual Studio", 
                 MessageBoxButton.OK, 

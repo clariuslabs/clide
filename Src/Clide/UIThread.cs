@@ -15,12 +15,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
-using System;
-using System.ComponentModel.Composition;
-using Microsoft.VisualStudio.Shell;
-
 namespace Clide
 {
+    using System;
+    using System.ComponentModel.Composition;
+    using System.Windows;
+    using Microsoft.VisualStudio.Shell;
+
     /// <summary>
     /// Default UI thread invoker implementation.
     /// </summary>
@@ -28,14 +29,24 @@ namespace Clide
 	[Export(typeof(IUIThread))]
 	internal class UIThread : IUIThread
 	{
+        private static readonly IUIThread ui = new UIThread();
+
+        internal static IUIThread Default { get { return ui; } }
+
         public void Invoke(Action action)
         {
-            ShellAssembly.GetType("Microsoft.VisualStudio.Shell.ThreadHelper").Generic.Invoke(action);
+            if (Application.Current != null)
+                Application.Current.Dispatcher.Invoke(action);
+            else
+                ShellAssembly.GetType("Microsoft.VisualStudio.Shell.ThreadHelper").Generic.Invoke(action);
         }
 
         public TResult Invoke<TResult>(Func<TResult> function)
         {
-            return (TResult)ShellAssembly.GetType("Microsoft.VisualStudio.Shell.ThreadHelper").Generic.Invoke(function);
+            if (Application.Current != null)
+                return (TResult)Application.Current.Dispatcher.Invoke(function);
+            else
+                return (TResult)ShellAssembly.GetType("Microsoft.VisualStudio.Shell.ThreadHelper").Generic.Invoke(function);
         }
     }
 }
