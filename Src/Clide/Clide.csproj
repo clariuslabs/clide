@@ -266,7 +266,6 @@
     <Compile Include="ISettings.cs" />
     <Compile Include="ISettingsManager.cs" />
     <Compile Include="ISettingsStore.cs" />
-    <Compile Include="IShellEvents.cs" />
     <Compile Include="IStatusBar.cs" />
     <Compile Include="IToolWindow.cs" />
     <Compile Include="IUIThread.cs" />
@@ -296,7 +295,6 @@
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsAttribute.cs" />
     <Compile Include="SettingsManager.cs" />
-    <Compile Include="ShellEvents.cs" />
     <Compile Include="Solution\IFolderNode.cs" />
     <Compile Include="Solution\IItemNode.cs" />
     <Compile Include="Solution\Factories\FolderNodeFactory.cs" />

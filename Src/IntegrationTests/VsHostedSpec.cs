@@ -21,6 +21,8 @@ using System.Collections;
 using System.ComponentModel.Composition.Primitives;
 using Clide.Diagnostics;
 using Microsoft.VisualStudio.Shell;
+using Clide.Events;
+using Clide.VisualStudio;
 
 [TestClass]
 public abstract class VsHostedSpec
@@ -32,8 +34,7 @@ public abstract class VsHostedSpec
 
     protected VsHostedSpec()
     {
-        this.package = new Lazy<IServiceProvider>(() => Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider
-            .GetLoadedPackage(new Guid(IntegrationPackage.Constants.PackageGuid)));
+        this.package = new Lazy<IServiceProvider>(() => ServiceLocator.GlobalProvider.GetLoadedPackage(new Guid(IntegrationPackage.Constants.PackageGuid)));
     }
 
     public TestContext TestContext { get; set; }

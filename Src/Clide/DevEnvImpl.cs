@@ -28,6 +28,7 @@ namespace Clide
     using System.Diagnostics;
     using Clide.Properties;
     using System.ComponentModel.Composition.Hosting;
+    using Clide.Events;
 
     [Export(typeof(IDevEnv))]
 	internal class DevEnvImpl : IDevEnv, IShellEvents

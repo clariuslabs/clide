@@ -21,6 +21,7 @@ namespace Clide
     using Clide.Commands;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
+    using Clide.Events;
 
     public interface IDevEnv : IShellEvents, IFluentInterface
 	{

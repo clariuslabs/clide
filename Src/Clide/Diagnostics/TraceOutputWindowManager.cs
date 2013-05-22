@@ -21,6 +21,7 @@ namespace Clide.Diagnostics
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
+    using Clide.Events;
     using Clide.Properties;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;

@@ -24,6 +24,7 @@ namespace Clide
     using System.Runtime.InteropServices;
     using System.ComponentModel.Composition.Hosting;
     using Clide.Patterns.Adapter;
+    using Clide.Events;
 
     public class Host : IDisposable
     {
