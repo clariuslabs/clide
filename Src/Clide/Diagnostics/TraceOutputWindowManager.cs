@@ -35,6 +35,7 @@ namespace Clide.Diagnostics
 
         private IServiceProvider serviceProvider;
         private IShellEvents shellEvents;
+        private Lazy<IUIThread> uiThread;
         private ITracerManager tracerManager;
 
         private IVsOutputWindowPane outputWindowPane;
@@ -51,18 +52,22 @@ namespace Clide.Diagnostics
         /// <param name="shellEvents">The shell events.</param>
         /// <param name="outputPaneId">The output pane GUID, which must be unique and remain constant for a given pane.</param>
         /// <param name="outputPaneTitle">The output pane title.</param>
-        public TraceOutputWindowManager(IServiceProvider serviceProvider, IShellEvents shellEvents, ITracerManager tracerManager, Guid outputPaneId, string outputPaneTitle)
+        public TraceOutputWindowManager(IServiceProvider serviceProvider, IShellEvents shellEvents,
+            Lazy<IUIThread> uiThread, ITracerManager tracerManager, Guid outputPaneId, string outputPaneTitle)
         {
             Guard.NotNull(() => serviceProvider, serviceProvider);
             Guard.NotNull(() => shellEvents, shellEvents);
+            Guard.NotNull(() => uiThread, uiThread);            
             Guard.NotNull(() => tracerManager, tracerManager);
             Guard.NotNullOrEmpty(() => outputPaneTitle, outputPaneTitle);
 
             this.serviceProvider = serviceProvider;
+            this.shellEvents = shellEvents;
+            this.uiThread = uiThread;
+            this.tracerManager = tracerManager;
+
             this.outputPaneGuid = outputPaneId;
             this.outputPaneTitle = outputPaneTitle;
-            this.shellEvents = shellEvents;
-            this.tracerManager = tracerManager;
 
             // Create a temporary writer that buffers events that happen 
             // before shell initialization is completed, so that we don't 
@@ -96,16 +101,16 @@ namespace Clide.Diagnostics
             using (tracer.StartActivity("Initializing trace output window"))
             {
                 this.EnsureOutputWindow();
-
                 this.listener.Flush();
+
+                var outputWriter = new OutputWindowTextWriter(this.uiThread, this.outputWindowPane);
+
                 // Replace temporary listener with the proper one, populating the 
                 // output window from the temporary buffer.
                 var tempLog = this.temporaryWriter.ToString();
 
                 if (!string.IsNullOrEmpty(tempLog))
-                {
-                    ErrorHandler.ThrowOnFailure(this.outputWindowPane.OutputStringThreadSafe(this.temporaryWriter.ToString()));
-                }
+                    outputWriter.WriteLine(tempLog);
 
                 this.temporaryWriter = null;
 
@@ -113,7 +118,7 @@ namespace Clide.Diagnostics
                 this.tracerManager.RemoveListener(TracerManager.DefaultSourceName, this.listener);
 
                 // Initialize the true listener that writes to the output window.
-                this.listener = new IndentingTextListener(new OutputWindowTextWriter(this.outputWindowPane), this.outputPaneTitle);
+                this.listener = new IndentingTextListener(outputWriter, this.outputPaneTitle);
                 this.listener.IndentLevel = 4;
 
                 this.tracerManager.AddListener(TracerManager.DefaultSourceName, this.listener);

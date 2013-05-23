@@ -22,8 +22,17 @@ namespace Clide
     /// <summary>
     /// Allows marshaling calls to the developer environment main UI thread.
     /// </summary>
+    /// <remarks>
+    /// If the calling code is already running on the UI thread, the delegates
+    /// are invoked immediately without marshaling.
+    /// </remarks>
     public interface IUIThread
     {
+        /// <summary>
+        /// Begins invoking the specified action in the UI thread.
+        /// </summary>
+        void BeginInvoke(Action action);
+
         /// <summary>
         /// Invokes the specified action in the UI thread.
         /// </summary>

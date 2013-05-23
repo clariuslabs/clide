@@ -43,9 +43,6 @@ namespace Clide.Patterns.Adapter
         /// </summary>
         public static void SetService(IAdapterService service)
         {
-            if (AppDomain.CurrentDomain.GetData(Constants.GlobalStateIdentifier) != null)
-                throw new NotSupportedException("Global adapter service can only be set once per application domain.");
-
             AppDomain.CurrentDomain.SetData(Constants.GlobalStateIdentifier, service);
         }
 

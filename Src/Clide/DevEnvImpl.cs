@@ -66,6 +66,7 @@ namespace Clide
             this.outputWindowManager = new TraceOutputWindowManager(
                 serviceProvider,
                 shellEvents,
+                uiThread,
                 Tracer.Manager,
                 OutputWindowId,
                 Strings.DevEnv.OutputPaneTitle);

@@ -25,6 +25,7 @@ namespace Clide
     using System.ComponentModel.Composition.Hosting;
     using Clide.Patterns.Adapter;
     using Clide.Events;
+    using System.Windows.Threading;
 
     public class Host : IDisposable
     {
@@ -48,19 +49,23 @@ namespace Clide
         /// <remarks>
         /// The returned instance must remain alive while the hosting 
         /// package is loaded, ensuring that the components don't get 
-        /// garbage-collected.
+        /// garbage-collected and in particular for the tracing the 
+        /// output window to remain active.
         /// </remarks>
         /// <param name="hostingPackage">The package owning this deploy 
         /// of Clide.</param>
         /// <param name="tracingPaneTitle">Optional title of an output 
         /// pane to create for the calling package, for tracing purposes. 
         /// If it</param>
-        public static IDisposable Initialize(IServiceProvider hostingPackage, string tracingPaneTitle = null)
+        public static IDisposable Initialize(IServiceProvider hostingPackage, string tracingPaneTitle)
         {
             try
             {
                 using (tracer.StartActivity("Initializing package"))
                 {
+                    // This call should always be made from a package Initialize method, 
+                    // which is guaranteed to be called from the UI thread.
+                    UIThread.Initialize(Dispatcher.CurrentDispatcher);
                     var packageId = hostingPackage.GetPackageGuidOrThrow();
                     var devEnv = DevEnv.Get(hostingPackage);
                     // Brings in imports that the package itself might need.
@@ -101,6 +106,8 @@ namespace Clide
         private IOptionsManager options;
         [Import]
         private IShellEvents shellEvents;
+        [Import]
+        private Lazy<IUIThread> uiThread;
 #pragma warning restore 0649
 
         private void Initialize(Guid packageId, string tracingPaneTitle)
@@ -112,8 +119,9 @@ namespace Clide
                 // We keep the instance around so that the event handlers 
                 // aren't disposed.
                 disposable = new TraceOutputWindowManager(
-                    this.hostingPackage,
-                    this.shellEvents,
+                    hostingPackage,
+                    shellEvents,
+                    uiThread,
                     Tracer.Manager,
                     packageId,
                     tracingPaneTitle);

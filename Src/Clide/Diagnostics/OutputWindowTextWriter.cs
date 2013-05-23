@@ -28,10 +28,12 @@ namespace Clide.Diagnostics
     /// </summary>
     internal class OutputWindowTextWriter : TextWriter
     {
-        IVsOutputWindowPane outputPane;
+        private Lazy<IUIThread> uiThread;
+        private IVsOutputWindowPane outputPane;
 
-        public OutputWindowTextWriter(IVsOutputWindowPane outputPane)
+        public OutputWindowTextWriter(Lazy<IUIThread> uiThread, IVsOutputWindowPane outputPane)
         {
+            this.uiThread = uiThread;
             this.outputPane = outputPane;
         }
 
@@ -42,17 +44,17 @@ namespace Clide.Diagnostics
 
         public override void Write(string value)
         {
-            outputPane.OutputStringThreadSafe(value);
+            uiThread.Value.BeginInvoke(() => outputPane.OutputStringThreadSafe(value));
         }
 
         public override void WriteLine()
         {
-            outputPane.OutputStringThreadSafe(Environment.NewLine);
+            uiThread.Value.BeginInvoke(() => outputPane.OutputStringThreadSafe(Environment.NewLine));
         }
 
         public override void WriteLine(string value)
         {
-            Write(value);
+            Write(value);;
             WriteLine();
         }
     }

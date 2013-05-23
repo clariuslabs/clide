@@ -143,6 +143,7 @@
     <Compile Include="netfx\System\Collections\Generic\IEnumerable\Traverser.cs" />
     <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="netfx\System\StringFormatWith.cs" />
+    <Compile Include="netfx\System\Windows\Threading\DispatcherInvokeExtensions.cs" />
     <Compile Include="Patterns\Adapter\AdapterAttribute.cs" />
     <Compile Include="Patterns\Adapter\Adapters.cs" />
     <Compile Include="Commands\CommandAttribute.cs" />
@@ -200,7 +201,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
-    <Compile Include="ShellAssembly.cs" />
     <Compile Include="Solution\Adapters\VsLangToSolutionAdapter.cs" />
     <Compile Include="Solution\Adapters\VsHierarchyItemToSolutionAdapter.cs" />
     <Compile Include="Solution\Adapters\VsToSolutionAdapter.cs" />

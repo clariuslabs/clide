@@ -20,33 +20,51 @@ namespace Clide
     using System;
     using System.ComponentModel.Composition;
     using System.Windows;
+    using System.Windows.Threading;
     using Microsoft.VisualStudio.Shell;
 
     /// <summary>
-    /// Default UI thread invoker implementation.
+    /// Default UI thread invoker implementation, which uses the 
+    /// current <see cref="Dispatcher.CurrentDispatcher"/> by default 
+    /// or the one initialized from the host.
     /// </summary>
     [PartCreationPolicy(CreationPolicy.Shared)]
 	[Export(typeof(IUIThread))]
 	internal class UIThread : IUIThread
 	{
-        private static readonly IUIThread ui = new UIThread();
+        private static Dispatcher dispatcher = Dispatcher.CurrentDispatcher;
 
-        internal static IUIThread Default { get { return ui; } }
+        private static readonly IUIThread uiThread = new UIThread();
 
-        public void Invoke(Action action)
+        internal static IUIThread Default { get { return uiThread; } }
+
+        public static void Initialize(Dispatcher dispatcher)
         {
-            if (Application.Current != null)
-                Application.Current.Dispatcher.Invoke(action);
-            else
-                ShellAssembly.GetType("Microsoft.VisualStudio.Shell.ThreadHelper").Generic.Invoke(action);
+            UIThread.dispatcher = dispatcher;
         }
 
         public TResult Invoke<TResult>(Func<TResult> function)
         {
-            if (Application.Current != null)
-                return (TResult)Application.Current.Dispatcher.Invoke(function);
+            if (dispatcher.CheckAccess())
+                return function();
             else
-                return (TResult)ShellAssembly.GetType("Microsoft.VisualStudio.Shell.ThreadHelper").Generic.Invoke(function);
+                return dispatcher.Invoke<TResult>(function);
+        }
+
+        public void Invoke(Action action)
+        {
+            if (dispatcher.CheckAccess())
+                action();
+            else
+                dispatcher.Invoke(action);
+        }
+
+        public void BeginInvoke(Action action)
+        {
+            if (dispatcher.CheckAccess())
+                action();
+            else
+                dispatcher.BeginInvoke(action);
         }
     }
 }
