@@ -11,7 +11,8 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #endregion
-namespace Clide.VisualStudio
+
+namespace Clide
 {
     using System;
     using System.Globalization;
@@ -21,7 +22,7 @@ namespace Clide.VisualStudio
     using Microsoft.VisualStudio.Shell;
 
     /// <summary>
-    /// Locates services within Visual Studio. 
+    /// Locates global services inside Visual Studio.
     /// </summary>
     public static class ServiceLocator
     {
@@ -29,24 +30,11 @@ namespace Clide.VisualStudio
         private static readonly VsServiceProvider vsProvider = new VsServiceProvider();
         private static readonly ComponentModelProvider cmProvider = new ComponentModelProvider(vsProvider);
 
-        private static IServiceProvider hostingPackage;
         private static IServiceProvider globalProvider = new FallbackServiceProvider(
             // DTE, ComponentModel, Global Package
             dteProvider, new FallbackServiceProvider(
                 cmProvider, 
                     vsProvider));
-
-        public static void Initialize(IServiceProvider hostingPackage)
-        {
-            ServiceLocator.hostingPackage = hostingPackage;
-            // Now we prepent the hosting package at the beginning of the chain.
-            globalProvider = new FallbackServiceProvider(
-                // Hosting package, DTE, ComponentModel, Global Package
-                hostingPackage, new FallbackServiceProvider(
-                    dteProvider, new FallbackServiceProvider(
-                        cmProvider,
-                            vsProvider)));
-        }
 
         public static IServiceProvider GlobalProvider
         {

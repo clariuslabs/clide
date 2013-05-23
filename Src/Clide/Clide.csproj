@@ -233,7 +233,7 @@
     <Compile Include="Solution\Implementation\GlobalProjectProperties.cs" />
     <Compile Include="Solution\ISolutionExplorerNode.cs" />
     <Compile Include="Solution\IProjectConfiguration.cs" />
-    <Compile Include="VisualStudio\ServiceLocator.cs" />
+    <Compile Include="ServiceLocator.cs" />
     <Compile Include="VisualStudio\VsHierarchyExtensions.cs" />
     <Compile Include="netfx\System\TypeInheritance.cs" />
     <Compile Include="netfx\System\TypeInheritanceExtension.cs" />
