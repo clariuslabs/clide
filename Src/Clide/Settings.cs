@@ -64,6 +64,10 @@ namespace Clide
         private bool initializing;
         private ISettingsManager manager;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Settings"/> class.
+        /// </summary>
+        /// <param name="manager">The settings manager that will read and save data for this instance.</param>
         public Settings(ISettingsManager manager)
         {
             this.tracer = Tracer.Get(this.GetType());
@@ -72,14 +76,24 @@ namespace Clide
             this.IsInitialized = false;
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the component is initialized.
+        /// </summary>
+        /// <returns>true to indicate the component has completed initialization; otherwise, false. </returns>
         public bool IsInitialized { get; private set; }
 
+        /// <summary>
+        /// Begins an edit on an object.
+        /// </summary>
         public virtual void BeginEdit()
         {
             tracer.Verbose("BeginEdit");
             this.editing = true;
         }
 
+        /// <summary>
+        /// Discards changes since the last <see cref="M:System.ComponentModel.IEditableObject.BeginEdit" /> call.
+        /// </summary>
         public virtual void CancelEdit()
         {
             tracer.Verbose("CancelEdit");
@@ -107,6 +121,10 @@ namespace Clide
             }
         }
 
+        /// <summary>
+        /// Pushes changes since the last <see cref="M:System.ComponentModel.IEditableObject.BeginEdit" /> or <see cref="M:System.ComponentModel.IBindingList.AddNew" /> call into the underlying object.
+        /// </summary>
+        /// <exception cref="System.InvalidOperationException"></exception>
         public virtual void EndEdit()
         {
             tracer.Verbose("EndEdit");
@@ -120,6 +138,10 @@ namespace Clide
             this.editing = false;
         }
 
+        /// <summary>
+        /// Signals the object that initialization is starting.
+        /// </summary>
+        /// <exception cref="System.InvalidOperationException"></exception>
         public virtual void BeginInit()
         {
             if (this.IsInitialized)
@@ -128,6 +150,10 @@ namespace Clide
             this.initializing = true;
         }
 
+        /// <summary>
+        /// Signals the object that initialization is complete.
+        /// </summary>
+        /// <exception cref="System.InvalidOperationException"></exception>
         public virtual void EndInit()
         {
             if (!this.initializing)
@@ -139,19 +165,29 @@ namespace Clide
             this.Initialized(this, EventArgs.Empty);
         }
 
-        public virtual void Save()
+        /// <summary>
+        /// Saves the current settings class, optionally specifying whether to 
+        /// forcedly persist values which have their defaults only.
+        /// </summary>
+        public virtual void Save(bool saveDefaults = false)
         {
             OnSaving();
-            this.manager.Save(this);
+            this.manager.Save(this, saveDefaults);
             OnSaved();
 
             tracer.Info(Strings.Settings.TraceSaved);
         }
 
+        /// <summary>
+        /// Called before saving this instance to the settings store.
+        /// </summary>
         protected virtual void OnSaving()
         {
         }
 
+        /// <summary>
+        /// Called after saving this instance to the settings store.
+        /// </summary>
         protected virtual void OnSaved()
         {
         }

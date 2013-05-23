@@ -33,6 +33,6 @@ namespace Clide
 		/// Saves the specified settings, after validating it using the data annotations attributes.
 		/// </summary>
 		/// <exception cref="System.ComponentModel.DataAnnotations.ValidationException"> The object is not valid.</exception>
-		void Save(object settings);
-	}
+		void Save(object settings, bool saveDefaults = false);
+    }
 }

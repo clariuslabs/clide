@@ -103,7 +103,17 @@ namespace Clide
                 // Set the container that the lazy singleton exports for ICompositionService and ExportProvider will use.
                 container = new LocalCompositionContainer(hostId, vsContainer);
 
-                Task.Factory.StartNew(() => Log(vsContainer, catalog));
+                var settings = container.GetExportedValue<ClideSettings>();
+                if (settings.LogComposition)
+                {
+                    Task.Factory.StartNew(() => Log(vsContainer, catalog));
+                }
+                else
+                {
+#if DEBUG
+                    Task.Factory.StartNew(() => Log(vsContainer, catalog));
+#endif
+                }
 
                 return container;
             }
@@ -111,38 +121,24 @@ namespace Clide
 
         private static void Log(CompositionContainer container, ComposablePartCatalog catalog)
         {
-            if (Debugger.IsAttached)
+            var info = new CompositionInfo(catalog, container);
+            var rejected = info.PartDefinitions.Where(part => part.IsPrimaryRejection).ToList();
+            if (rejected.Count > 0)
             {
-                var info = new CompositionInfo(catalog, container);
-                var rejected = info.PartDefinitions.Where(part => part.IsPrimaryRejection).ToList();
-                if (rejected.Count > 0)
-                {
-                    tracer.Error(Strings.DevEnvFactory.CompositionErrors(rejected.Count));
-                    var writer = new StringWriter();
-                    rejected.ForEach(part => PartDefinitionInfoTextFormatter.Write(part, writer));
-                    tracer.Error(writer.ToString());
-                    File.WriteAllText(Path.Combine(Path.GetTempPath(), "DevEnv.log"), writer.ToString());
+                tracer.Error(Strings.DevEnvFactory.CompositionErrors(rejected.Count));
+                var writer = new StringWriter();
+                rejected.ForEach(part => PartDefinitionInfoTextFormatter.Write(part, writer));
+                tracer.Error(writer.ToString());
+                File.WriteAllText(Path.Combine(Path.GetTempPath(), "DevEnv.log"), writer.ToString());
 
-                    tracer.Error(Strings.DevEnvFactory.CompositionErrors(rejected.Count) + Environment.NewLine + writer.ToString());
-                    tracer.Error("Failed to log composition information. For more information open the log file at {0}.", Path.Combine(Path.GetTempPath(), "DevEnv.log"));
-                }
+                tracer.Error(Strings.DevEnvFactory.CompositionErrors(rejected.Count) + Environment.NewLine + writer.ToString());
+                tracer.Error("Failed to log composition information. For more information open the log file at {0}.", Path.Combine(Path.GetTempPath(), "DevEnv.log"));
+            }
 
-                // Log information about the composition container when debugger is attached too.
-                var infoWriter = new StringWriter();
-                CompositionInfoTextFormatter.Write(info, infoWriter);
-                tracer.Info(infoWriter.ToString());
-            }
-            else
-            {
-#if DEBUG
-                // Log information about the composition container in debug mode.
-                var info = new CompositionInfo(catalog, container);
-                var infoWriter = new StringWriter();
-                CompositionInfoTextFormatter.Write(info, infoWriter);
-                tracer.Info(infoWriter.ToString());
-                File.WriteAllText(Path.Combine(Path.GetTempPath(), "DevEnv.log"), infoWriter.ToString());
-#endif
-            }
+            // Log information about the composition container when debugger is attached too.
+            var infoWriter = new StringWriter();
+            CompositionInfoTextFormatter.Write(info, infoWriter);
+            tracer.Info(infoWriter.ToString());
         }
 
         private void ThrowIfClideIsMefComponent(XDocument doc)

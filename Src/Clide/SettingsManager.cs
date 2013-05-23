@@ -63,7 +63,7 @@ namespace Clide
 
 		internal IServiceProvider ServiceProvider { get; set; }
 
-		public void Save(object settings)
+		public void Save(object settings, bool saveDefaults = false)
 		{
 			Guard.NotNull(() => settings, settings);
 
@@ -272,8 +272,16 @@ namespace Clide
 			}
 		}
 
-		private bool ShouldSaveValue(PropertyDescriptor property, object value)
+        private bool ShouldSaveValue(PropertyDescriptor property, object value, bool saveDefaults = false)
 		{
+            if (property.IsReadOnly || 
+                property.SerializationVisibility == DesignerSerializationVisibility.Hidden)
+                return false;
+
+            // This overrides the default value probing below.
+            if (saveDefaults)
+                return true;
+
 			var defaultValue = property.Attributes.OfType<DefaultValueAttribute>().Select(x => x.Value).FirstOrDefault();
 			if (defaultValue != null &&
 				!property.PropertyType.IsAssignableFrom(defaultValue.GetType()) &&

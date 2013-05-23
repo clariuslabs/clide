@@ -30,6 +30,9 @@ namespace Clide
         /// also when using the <see cref="IEditableObject.BeginEdit"/> 
         /// and <see cref="IEditableObject.EndEdit"/> methods.
         /// </summary>
-        void Save();
+        /// <param name="saveDefaults">The optional parameter can be used 
+        /// to forcely persist all properties, including those that 
+        /// only have default values.</param>
+        void Save(bool saveDefaults = false);
 	}
 }
