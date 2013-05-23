@@ -1,3 +1,14 @@
+v1.4
+
+* Fixes some performance issues due to MEF (lack of) caching
+* Tracing of MEF composition off by default (can be turned on for diagnostics via the registry)
+* Exposed ServiceLocator.GlobalProvider to get access to a thread-safe IServiceProvider for the entire Visual Studio IDE. 
+* Removed usage of the problematic ServiceProvider.GlobalProvider (see above)
+* Removed usage of the problematic ThreadHelper for UI thread marshaling (now leveraging the WPF Dispatcher)
+* Added support for customizing what kinds of traces you want to receive on your output window via Host.Initialize
+* Fixed a potential hang when using the Tracer from a background thread
+* Fixed issue when a command filter was improperly configured.
+
 v1.3
 
 * Expose CompositionContainer directly on IDevEnv. This simplifies many scenarios where you want to interact with the container. Users can still import ICompositionService.
