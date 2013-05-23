@@ -52,8 +52,9 @@ namespace Clide.Diagnostics
         /// <param name="shellEvents">The shell events.</param>
         /// <param name="outputPaneId">The output pane GUID, which must be unique and remain constant for a given pane.</param>
         /// <param name="outputPaneTitle">The output pane title.</param>
+        /// <param name="rootTraceSource">Root trace source to hook the output window trace listener to.</param>
         public TraceOutputWindowManager(IServiceProvider serviceProvider, IShellEvents shellEvents,
-            Lazy<IUIThread> uiThread, ITracerManager tracerManager, Guid outputPaneId, string outputPaneTitle)
+            Lazy<IUIThread> uiThread, ITracerManager tracerManager, Guid outputPaneId, string outputPaneTitle, string rootTraceSource = TracerManager.DefaultSourceName)
         {
             Guard.NotNull(() => serviceProvider, serviceProvider);
             Guard.NotNull(() => shellEvents, shellEvents);
@@ -68,6 +69,7 @@ namespace Clide.Diagnostics
 
             this.outputPaneGuid = outputPaneId;
             this.outputPaneTitle = outputPaneTitle;
+            this.rootTraceSource = rootTraceSource;
 
             // Create a temporary writer that buffers events that happen 
             // before shell initialization is completed, so that we don't 
@@ -76,7 +78,7 @@ namespace Clide.Diagnostics
             this.listener = new IndentingTextListener(this.temporaryWriter, this.outputPaneTitle);
             this.listener.IndentLevel = 4;
 
-            this.tracerManager.AddListener(TracerManager.DefaultSourceName, this.listener);
+            this.tracerManager.AddListener(rootTraceSource, this.listener);
 
             this.shellEvents.Initialized += this.OnShellInitialized;
         }
@@ -86,7 +88,7 @@ namespace Clide.Diagnostics
         /// </summary>
         public void Dispose()
         {
-            this.tracerManager.RemoveListener(TracerManager.DefaultSourceName, this.listener);
+            this.tracerManager.RemoveListener(this.rootTraceSource, this.listener);
             this.listener.Dispose();
             this.listener = null;
 
@@ -115,13 +117,13 @@ namespace Clide.Diagnostics
                 this.temporaryWriter = null;
 
                 // Remove existing listener which writes to the temporary writer.
-                this.tracerManager.RemoveListener(TracerManager.DefaultSourceName, this.listener);
+                this.tracerManager.RemoveListener(this.rootTraceSource, this.listener);
 
                 // Initialize the true listener that writes to the output window.
                 this.listener = new IndentingTextListener(outputWriter, this.outputPaneTitle);
                 this.listener.IndentLevel = 4;
 
-                this.tracerManager.AddListener(TracerManager.DefaultSourceName, this.listener);
+                this.tracerManager.AddListener(this.rootTraceSource, this.listener);
 
                 tracer.Info("Trace output window initialized successfully");
             }
@@ -142,5 +144,7 @@ namespace Clide.Diagnostics
                 tracer.Info("Trace output window created");
             }
         }
+
+        public string rootTraceSource { get; set; }
     }
 }

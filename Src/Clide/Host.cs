@@ -38,7 +38,7 @@ namespace Clide
         /// </summary>
         public static void Initialize(IServiceProvider hostingPackage)
         {
-            Initialize(hostingPackage, null);
+            Initialize(hostingPackage, null, null);
         }
 
         /// <summary>
@@ -57,7 +57,8 @@ namespace Clide
         /// <param name="tracingPaneTitle">Optional title of an output 
         /// pane to create for the calling package, for tracing purposes. 
         /// If it</param>
-        public static IDisposable Initialize(IServiceProvider hostingPackage, string tracingPaneTitle)
+        /// <param name="rootTraceSource">Root trace source to hook the output window trace listener to.</param>
+        public static IDisposable Initialize(IServiceProvider hostingPackage, string tracingPaneTitle, string rootTraceSource)
         {
             try
             {
@@ -75,7 +76,7 @@ namespace Clide
                     var host = new Host(hostingPackage);
                     devEnv.ExportProvider.SatisfyImportsOnce(host);
 
-                    host.Initialize(packageId, tracingPaneTitle);
+                    host.Initialize(packageId, tracingPaneTitle, rootTraceSource);
 
                     // Initialize the default adapter service for the smart cast extension method.
                     Clide.Patterns.Adapter.AdaptersInitializer.SetService(((ExportProvider)devEnv.ExportProvider).GetExportedValue<IAdapterService>());
@@ -110,11 +111,11 @@ namespace Clide
         private Lazy<IUIThread> uiThread;
 #pragma warning restore 0649
 
-        private void Initialize(Guid packageId, string tracingPaneTitle)
+        private void Initialize(Guid packageId, string tracingPaneTitle, string rootTraceSource)
         {
             Initialize();
 
-            if (!string.IsNullOrEmpty(tracingPaneTitle))
+            if (!string.IsNullOrEmpty(tracingPaneTitle) && !string.IsNullOrEmpty(rootTraceSource))
             {
                 // We keep the instance around so that the event handlers 
                 // aren't disposed.
@@ -124,7 +125,8 @@ namespace Clide
                     uiThread,
                     Tracer.Manager,
                     packageId,
-                    tracingPaneTitle);
+                    tracingPaneTitle,
+                    rootTraceSource);
             }
         }
 

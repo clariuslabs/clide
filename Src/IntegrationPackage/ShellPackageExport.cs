@@ -17,7 +17,7 @@ namespace IntegrationPackage
     using Microsoft.VisualStudio.Shell;
     using System;
     using System.ComponentModel.Composition;
-    using Clide.VisualStudio;
+    using Clide;
 
     [PartCreationPolicy(CreationPolicy.Shared)]
     internal class ShellPackageExport
