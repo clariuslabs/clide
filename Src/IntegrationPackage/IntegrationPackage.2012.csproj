@@ -165,11 +165,11 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="VS2012\source.extension.vsixmanifest">
+    <None Include="VisualStudio\2012\source.extension.vsixmanifest">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </None>
-    <None Include="VS2012\source.extension.vsixmanifest">
+    <None Include="VisualStudio\2012\source.extension.vsixmanifest">
       <Link>source.extension.vsixmanifest</Link>
     </None>
     <None Include="Resources\Images.png" />

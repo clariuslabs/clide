@@ -114,7 +114,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adornment.cs" />
+    <Compile Include="BadCommandFilter.cs" />
     <Compile Include="BuildCommandInterceptor.cs" />
+    <Compile Include="ClideIntegrationPackage.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="FooOptionsPage.cs">
       <SubType>Component</SubType>
@@ -143,7 +145,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SampleCommand.cs" />
     <Compile Include="ShellComponent.cs" />
-    <Compile Include="ShellPackage.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
@@ -194,10 +195,13 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <None Include="source.extension.vsixmanifest">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </None>
+      <None Include="VisualStudio\2010\source.extension.vsixmanifest">
+          <AutoGen>True</AutoGen>
+          <DesignTime>True</DesignTime>
+      </None>
+      <None Include="VisualStudio\2010\source.extension.vsixmanifest">
+          <Link>source.extension.vsixmanifest</Link>
+      </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Common\ClariusLabs.licenseheader">
