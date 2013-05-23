@@ -30,16 +30,20 @@ namespace Clide.Composition
 	{
 		private readonly ComposablePartCatalog innerCatalog;
 		private IEnumerable<ComposablePartDefinition> cachedSharedParts;
+        private readonly bool isStaticCatalog;
+        private readonly Lazy<bool> hasOnlySharedParts;
 
 		/// <summary>
 		/// Initializes the catalog.
 		/// </summary>
-		public DecoratingReflectionCatalog(ComposablePartCatalog innerCatalog)
+		public DecoratingReflectionCatalog(ComposablePartCatalog innerCatalog, bool isStaticCatalog = true)
 		{
             this.ImportDecorator = context => null;
             this.ExportDecorator = context => null;
 			this.PartDecorator = context => { };
 			this.innerCatalog = innerCatalog;
+            this.isStaticCatalog = isStaticCatalog;
+            this.hasOnlySharedParts = new Lazy<bool>(() => !BuildNonSharedParts().Any());
 		}
 
 		/// <summary>
@@ -68,6 +72,9 @@ namespace Clide.Composition
 				{
 					this.cachedSharedParts = this.BuildSharedParts().ToList();
 				}
+
+                if (isStaticCatalog && hasOnlySharedParts.Value)
+                    return this.cachedSharedParts.AsQueryable();
 
 				return this.cachedSharedParts.Concat(BuildNonSharedParts())
 					.Distinct(new SelectorEqualityComparer<ComposablePartDefinition, Type>(def => ReflectionModelServices.GetPartType(def).Value))
