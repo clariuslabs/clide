@@ -14,7 +14,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Events
 {
-
     /// <summary>
 	/// Marker interface and composition contract for events that are global 
 	/// in the developer environment.
