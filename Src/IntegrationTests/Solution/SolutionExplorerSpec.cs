@@ -25,6 +25,7 @@ namespace Clide.Solution
     using Moq;
     using System.Diagnostics;
     using Clide.Composition;
+    using Autofac.Features.Metadata;
 
     public class SolutionExplorerSpec
 	{
@@ -33,11 +34,28 @@ namespace Clide.Solution
 		[TestClass]
 		public class GivenNocontext : VsHostedSpec
 		{
+            [HostType("VS IDE")]
+            [TestMethod]
+            public void WhenGettingDefaultHierarchyFactory_ThenSucceeds()
+            {
+                var factory = base.ServiceLocator.GetInstance<ITreeNodeFactory<IVsSolutionHierarchyNode>>(DefaultHierarchyFactory.RegisterKey);
+
+                Assert.NotNull(factory);
+
+                var nodefactories = base.ServiceLocator.GetInstance<IEnumerable<Meta<ITreeNodeFactory<IVsSolutionHierarchyNode>, TreeNodeFactoryMetadata>>>("SolutionExplorer")
+                    .ToList();
+
+                foreach (var node in nodefactories)
+                {
+                    Console.WriteLine("{0} (is fallback: {1}", node.Value, node.Metadata.IsFallback);
+                }
+            }
+
 			[HostType("VS IDE")]
 			[TestMethod]
 			public void WhenGettingSolutionExplorer_ThenReturnsInstance()
 			{
-				var solutionExplorer = base.Container.GetExportedValue<ISolutionExplorer>();
+				var solutionExplorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
 
 				Assert.NotNull(solutionExplorer);
 			}
@@ -46,7 +64,7 @@ namespace Clide.Solution
 			[TestMethod]
 			public void WhenClosingSolutionExplorer_ThenIsOpenReturnsFalse()
 			{
-                var solutionExplorer = base.Container.GetExportedValue<ISolutionExplorer>();
+                var solutionExplorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
 
 				solutionExplorer.Close();
 
@@ -57,7 +75,7 @@ namespace Clide.Solution
 			[TestMethod]
 			public void WhenOpeningSolutionExplorer_ThenIsOpenReturnsTrue()
 			{
-                var solutionExplorer = base.Container.GetExportedValue<ISolutionExplorer>();
+                var solutionExplorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
 
 				solutionExplorer.Show();
 
@@ -68,21 +86,21 @@ namespace Clide.Solution
 			[TestMethod]
 			public void WhenGettingDefaultFactories_ThenGetsAllOfThem()
 			{
-                var withMetadata = base.Container.GetExports<ITreeNodeFactory<IVsSolutionHierarchyNode>, ITreeNodeFactoryMetadata>(CompositionTarget.SolutionExplorer).ToList();
-                var withoutMetadata = base.Container.GetExports<ITreeNodeFactory<IVsSolutionHierarchyNode>>(CompositionTarget.SolutionExplorer).ToList();
+                var withMetadata = base.ServiceLocator.GetInstance<IEnumerable<Meta<ITreeNodeFactory<IVsSolutionHierarchyNode>, TreeNodeFactoryMetadata>>>("SolutionExplorer").ToList();
+                var withoutMetadata = base.ServiceLocator.GetInstance<IEnumerable<ITreeNodeFactory<IVsSolutionHierarchyNode>>>("SolutionExplorer").ToList();
 
 				Assert.Equal(withoutMetadata.Count, withMetadata.Count);
 
 				var fallbacks = withMetadata.Where(n => n.Metadata.IsFallback).ToList();
 
-				Assert.True(fallbacks.Any());
+				Assert.True(fallbacks.Any(), "No fallback factories found. Factories with and without metadata found: {0}", withMetadata.Count);
 			}
 
 			[HostType("VS IDE")]
 			[TestMethod]
 			public void WhenGettingDefaultFactory_ThenCanRetrieveIt()
 			{
-                var defaultFactory = base.Container.GetExportedValue<ITreeNodeFactory<IVsSolutionHierarchyNode>>(DefaultHierarchyFactory.ContractName);
+                var defaultFactory = base.ServiceLocator.GetInstance<ITreeNodeFactory<IVsSolutionHierarchyNode>>(DefaultHierarchyFactory.RegisterKey);
 
 				Assert.NotNull(defaultFactory);
 
@@ -100,7 +118,7 @@ namespace Clide.Solution
             {
                 base.TestInitialize();
 
-                this.explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+                this.explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
                 this.OpenSolution("SampleSolution\\SampleSolution.sln");
             }
 

@@ -26,9 +26,14 @@ namespace Clide
 	/// </summary>
 	public interface IOptionsManager : IFluentInterface
 	{
-		void AddPage<TPage>() where TPage : IOptionsPage, new();
+        /// <summary>
+        /// Adds the given page to the manager..
+        /// </summary>
         void AddPage(IOptionsPage page);
-        void AddPage(IOptionsPage page, Guid owningPackage);
-        void AddPages(IServiceProvider owningPackage);
+
+        /// <summary>
+        /// Adds all the registered page components.
+        /// </summary>
+        void AddPages();
     }
 }

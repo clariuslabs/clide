@@ -28,11 +28,9 @@ namespace IntegrationPackage
         public ShellComponent([Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider)
         {
             // Force the load of the package.
-            //serviceProvider.GetLoadedPackage<ShellPackage>();
-            this.serviceProvider = serviceProvider;
+            this.serviceProvider = serviceProvider.GetLoadedPackage<ClideIntegrationPackage>();
         }
 
-        [Import]
-        public IDevEnv DevEnv { get; set; }
+        public IDevEnv DevEnv { get { return Clide.DevEnv.Get(serviceProvider); } }
     }
 }

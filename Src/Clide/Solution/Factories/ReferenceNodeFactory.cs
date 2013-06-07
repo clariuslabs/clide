@@ -22,6 +22,7 @@ namespace Clide.Solution
     using Microsoft.VisualStudio;
     using Clide.Patterns.Adapter;
     using Clide.VisualStudio;
+    using Clide.Composition;
 
     [FallbackFactory]
     internal class ReferenceNodeFactory : ITreeNodeFactory<IVsSolutionHierarchyNode>
@@ -29,9 +30,8 @@ namespace Clide.Solution
 		private Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory;
 		private IAdapterService adapter;
 
-		[ImportingConstructor]
 		public ReferenceNodeFactory(
-			[Import(DefaultHierarchyFactory.ContractName)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory,
+			[WithKey(DefaultHierarchyFactory.RegisterKey)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory,
 			IAdapterService adapter)
 		{
 			this.nodeFactory = nodeFactory;

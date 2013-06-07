@@ -16,24 +16,20 @@ namespace Clide
 {
     using System;
     using System.ComponentModel.Composition;
+    using Clide.Composition;
 
-    [MetadataAttribute]
+    /// <summary>
+    /// Marks a component as an options page for registration purposes.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class OptionsPageAttribute : InheritedExportAttribute, IOptionsPageMetadata
+    public class OptionsPageAttribute : ComponentAttribute
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="OptionsPageAttribute"/> class.
         /// </summary>
-        public OptionsPageAttribute(string packageGuid)
+        public OptionsPageAttribute()
             : base(typeof(IOptionsPage))
         {
-            this.PackageId = packageGuid;
         }
-
-        /// <summary>
-        /// Gets the package GUID.
-        /// </summary>
-        public string PackageId { get; private set; }
-
     }
 }

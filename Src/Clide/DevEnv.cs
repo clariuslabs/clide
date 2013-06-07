@@ -62,6 +62,26 @@ namespace Clide
         }
 
         /// <summary>
+        /// Gets the developer environment for the given package identifier. 
+        /// Make sure you pass your package GUID to get your scoped dev env.
+        /// </summary>
+        /// <remarks>
+        /// By default, the <see cref="IDevEnv"/> instance is cached for the 
+        /// given service provider, and only created once, using the given 
+        /// IDE services as necessary. This default behavior can 
+        /// be overriden by setting the <see cref="DevEnvFactory"/>.
+        /// </remarks>
+        /// <param name="packageId">This is your package identifier, 
+        /// so that all provided ClideComponents are properly resolved and available through 
+        /// it. If you pass in the global VS service provider, you will get an instance 
+        /// that only contains the core Clide services but does not export any of the 
+        /// package Clide components.</param>
+        public static IDevEnv Get(Guid packageId)
+        {
+            return devEnvFactory.Value.Invoke(GlobalServiceProvider.Instance.GetLoadedPackage(packageId));
+        }
+
+        /// <summary>
         /// Gets or sets the factory that will create instances of 
         /// <see cref="IDevEnv"/> when the <see cref="Get"/> method 
         /// is invoked by consumers. This is an ambient singleton, so 

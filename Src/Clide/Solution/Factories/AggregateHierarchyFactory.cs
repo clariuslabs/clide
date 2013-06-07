@@ -29,9 +29,7 @@ namespace Clide.Solution
 	{
 		private Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> factory;
 
-		[ImportingConstructor]
-        public AggregateHierarchyFactory([ImportMany(CompositionTarget.SolutionExplorer)] 
-            IEnumerable<Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>, ITreeNodeFactoryMetadata>> nodeFactories)
+        public AggregateHierarchyFactory(IEnumerable<Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>, TreeNodeFactoryMetadata>> nodeFactories)
 		{
             this.factory = new Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>>(() => new FallbackNodeFactory<IVsSolutionHierarchyNode>(
                     new CachingNodeFactory(nodeFactories.Where(n => !n.Metadata.IsFallback).Select(f => f.Value)),

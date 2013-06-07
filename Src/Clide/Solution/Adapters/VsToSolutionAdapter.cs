@@ -27,7 +27,6 @@ namespace Clide.Solution.Adapters
     {
         private ISolutionExplorerNodeFactory nodeFactory;
 
-        [ImportingConstructor]
         public VsToSolutionAdapter(ISolutionExplorerNodeFactory nodeFactory)
         {
             this.nodeFactory = nodeFactory;

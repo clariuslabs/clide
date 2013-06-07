@@ -50,7 +50,7 @@ namespace Clide.Solution
         [TestMethod]
         public void WhenSolutionIsOpened_ThenCanAdaptTypes()
         {
-            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
 
             base.OpenSolution("SampleSolution\\SampleSolution.sln");
 
@@ -109,7 +109,7 @@ namespace Clide.Solution
         {
             base.OpenSolution("SampleSolution\\SampleSolution.sln");
 
-            var adapter = this.Container.GetExportedValue<IAdapterService>();
+            var adapter = this.ServiceLocator.GetInstance<IAdapterService>();
 
             var node = adapter.Adapt(this.Dte.Solution).As<ISolutionNode>();
 
@@ -122,8 +122,8 @@ namespace Clide.Solution
         {
             base.OpenSolution("SampleSolution\\SampleSolution.sln");
 
-            var adapter = this.Container.GetExportedValue<IAdapterService>();
-            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var adapter = this.ServiceLocator.GetInstance<IAdapterService>();
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
             var library = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, x => x.Nodes)
                 .OfType<IProjectNode>()
                 .First(x => x.DisplayName == "ClassLibrary")
@@ -140,8 +140,8 @@ namespace Clide.Solution
         {
             base.OpenSolution("SampleSolution\\SampleSolution.sln");
 
-            var adapter = this.Container.GetExportedValue<IAdapterService>();
-            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var adapter = this.ServiceLocator.GetInstance<IAdapterService>();
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
             var file = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, x => x.Nodes)
                 .OfType<IItemNode>()
                 .First(x => x.DisplayName == "Class1.cs")
@@ -158,7 +158,7 @@ namespace Clide.Solution
         {
             base.OpenSolution("SampleSolution\\SampleSolution.sln");
 
-            var adapter = this.Container.GetExportedValue<IAdapterService>();
+            var adapter = this.ServiceLocator.GetInstance<IAdapterService>();
 
             var node = adapter.Adapt(this.ServiceProvider.GetService<SVsSolution, IVsSolution>()).As<ISolutionNode>();
 
@@ -171,8 +171,8 @@ namespace Clide.Solution
         {
             base.OpenSolution("SampleSolution\\SampleSolution.sln");
 
-            var adapter = this.Container.GetExportedValue<IAdapterService>();
-            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var adapter = this.ServiceLocator.GetInstance<IAdapterService>();
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
             var library = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, x => x.Nodes)
                 .OfType<IProjectNode>()
                 .First(x => x.DisplayName == "ClassLibrary")
@@ -191,8 +191,8 @@ namespace Clide.Solution
         {
             base.OpenSolution("SampleSolution\\SampleSolution.sln");
 
-            var adapter = this.Container.GetExportedValue<IAdapterService>();
-            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var adapter = this.ServiceLocator.GetInstance<IAdapterService>();
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
             var source = explorer.Solution
                 .As<VsHierarchyItem>();
 
@@ -209,8 +209,8 @@ namespace Clide.Solution
         {
             base.OpenSolution("SampleSolution\\SampleSolution.sln");
 
-            var adapter = this.Container.GetExportedValue<IAdapterService>();
-            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var adapter = this.ServiceLocator.GetInstance<IAdapterService>();
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
             var source = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, x => x.Nodes)
                 .OfType<IProjectNode>()
                 .First(x => x.DisplayName == "ClassLibrary")
@@ -229,8 +229,8 @@ namespace Clide.Solution
         {
             base.OpenSolution("SampleSolution\\SampleSolution.sln");
 
-            var adapter = this.Container.GetExportedValue<IAdapterService>();
-            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var adapter = this.ServiceLocator.GetInstance<IAdapterService>();
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
             var source = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, x => x.Nodes)
                 .OfType<IItemNode>()
                 .First(x => x.DisplayName == "Class1.cs")

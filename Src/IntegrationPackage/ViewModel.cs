@@ -21,8 +21,9 @@ namespace IntegrationPackage
     using System.ComponentModel.Composition;
     using Clide;
     using Microsoft.VisualStudio.Shell;
+    using Clide.Composition;
 
-    [Export]
+    [Component]
     public class ViewModel
     {
         [Import(typeof(SVsServiceProvider))]

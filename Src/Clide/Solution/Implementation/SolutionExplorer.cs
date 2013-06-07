@@ -26,19 +26,16 @@ namespace Clide.Solution
     using System.Collections.Generic;
     using System.Linq;
     using Clide.VisualStudio;
+    using Clide.Composition;
 
-    [Export(typeof(IToolWindow))]
-    [Export(typeof(ISolutionExplorer))]
+    [Component(typeof(IToolWindow), typeof(ISolutionExplorer))]
     internal class SolutionExplorer : ISolutionExplorer
     {
         private VsToolWindow toolWindow;
         private ISolutionExplorerNodeFactory nodeFactory;
         private IServiceProvider serviceProvider;
 
-        [ImportingConstructor]
-        public SolutionExplorer(
-            [Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider,
-            ISolutionExplorerNodeFactory nodeFactory)
+        public SolutionExplorer(IServiceProvider serviceProvider, ISolutionExplorerNodeFactory nodeFactory)
         {
             Guard.NotNull(() => serviceProvider, serviceProvider);
             Guard.NotNull(() => nodeFactory, nodeFactory);
@@ -54,7 +51,7 @@ namespace Clide.Solution
             {
                 return this.nodeFactory.Create(
                         new VsSolutionHierarchyNode(
-                            this.serviceProvider.GetService<IVsSolution>() as IVsHierarchy, 
+                            this.serviceProvider.GetService<IVsSolution>() as IVsHierarchy,
                             VSConstants.VSITEMID_ROOT))
                         .As<ISolutionNode>();
             }

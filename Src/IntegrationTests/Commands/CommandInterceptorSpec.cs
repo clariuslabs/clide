@@ -23,6 +23,7 @@ namespace Clide.Commands
     using Moq;
     using IntegrationPackage;
     using EnvDTE80;
+    using System.Diagnostics;
 
     [TestClass]
     public class CommandInterceptorSpec : VsHostedSpec
@@ -36,12 +37,10 @@ namespace Clide.Commands
             this.OpenSolution("SampleSolution\\SampleSolution.sln");
 
             var interceptor = new Mock<ICommandInterceptor>();
-            var commands = this.Container.GetExportedValue<ICommandManager>();
-
-            commands.AddInterceptor(interceptor.Object, Mock.Of<ICommandInterceptorMetadata>(m =>
-                m.OwningPackageId == Constants.PackageGuid &&
-                m.GroupId == "{5efc7975-14bc-11cf-9b2b-00aa00573819}" &&
-                m.CommandId == 0x372));
+            var commands = this.ServiceLocator.GetInstance<ICommandManager>();
+            Debugger.Launch();
+            commands.AddInterceptor(interceptor.Object, new CommandInterceptorAttribute(
+                Constants.PackageGuid, "{5efc7975-14bc-11cf-9b2b-00aa00573819}", 0x372));
 
             this.Dte.ExecuteCommand("Build.BuildSolution");
 

@@ -8,11 +8,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace IntegrationPackage
 {
-    [PartCreationPolicy(CreationPolicy.Shared)]
 	[Settings]
 	public class FooSettings : Settings
 	{
-		[ImportingConstructor]
 		public FooSettings(ISettingsManager manager)
 			: base(manager)
 		{

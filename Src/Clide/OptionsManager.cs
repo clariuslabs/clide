@@ -39,76 +39,35 @@ namespace Clide
     using System.CodeDom.Compiler;
     using System.IO;
     using System.Text.RegularExpressions;
-using System.Collections.Concurrent;
+    using System.Collections.Concurrent;
     using Clide.Diagnostics;
 
-    [PartCreationPolicy(CreationPolicy.Shared)]
-    [Export(typeof(IOptionsManager))]
+    [Component(typeof(IOptionsManager))]
     internal class OptionsManager : IOptionsManager
     {
         private static readonly ITracer tracer = Tracer.Get<OptionsManager>();
 
+        private IServiceProvider serviceProvider;
         private IVsShell vsShell;
         private string registryRoot;
-        private IEnumerable<Lazy<IOptionsPage, IOptionsPageMetadata>> optionPages;
-        private Lazy<ICompositionService> composition;
+        private IEnumerable<Lazy<IOptionsPage>> optionPages;
 
-        [ImportingConstructor]
-        public OptionsManager(
-            [Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider,
-            [Import(VsContractNames.IVsShell)] IVsShell vsShell,
-            [Import(ContractNames.ICompositionService)] Lazy<ICompositionService> composition,
-            [ImportMany] IEnumerable<Lazy<IOptionsPage, IOptionsPageMetadata>> optionPages)
+        public OptionsManager(IServiceProvider serviceProvider, IVsShell vsShell, IEnumerable<Lazy<IOptionsPage>> optionPages)
         {
-            this.ServiceProvider = serviceProvider;
+            this.serviceProvider = serviceProvider;
             this.vsShell = vsShell;
-            this.composition = composition;
             this.optionPages = optionPages;
 
             // This is the same as shellPackage.ApplicationRegistryRoot
             this.registryRoot = VSRegistry.RegistryRoot(serviceProvider, __VsLocalRegistryType.RegType_Configuration, false).Name;
         }
 
-        internal IServiceProvider ServiceProvider { get; set; }
-
         /// <summary>
-        /// Adds the page of the given type <typeparamref name="T"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of the page, which
-        /// must implement the <see cref="IOptionsPage"/> interface and be annotated with
-        /// the <see cref="OptionsPageAttribute"/> attribute.</typeparam>
-        public void AddPage<TPage>()
-            where TPage : IOptionsPage, new()
-        {
-            var page = new TPage();
-            this.composition.Value.SatisfyImportsOnce(page);
-
-            AddPage(page);
-        }
-
-        /// <summary>
-        /// Adds the page to the manager, and retrieves the owning package 
-        /// identifier from the instance type <see cref="OptionsPageAttribute"/> attribute.
+        /// Adds the page to the manager using the given owning package identifier.
         /// </summary>
         public void AddPage(IOptionsPage page)
         {
             var pageType = page.GetType();
-            var pageAttribute = pageType.GetCustomAttribute<OptionsPageAttribute>();
-            if (pageAttribute == null)
-                throw new ArgumentException();
-
-            var packageGuid = new Guid(pageAttribute.PackageId);
-
-            AddPage(page, packageGuid);
-        }
-
-        /// <summary>
-        /// Adds the page to the manager using the given owning package identifier.
-        /// </summary>
-        public void AddPage(IOptionsPage page, Guid owningPackage)
-        {
-            var pageType = page.GetType();
-            var package = GetOwningPackageOrThrow(owningPackage);
             var categoryName = pageType.ComponentModel().Category ?? "";
             var displayName = pageType.ComponentModel().DisplayName ?? "";
 
@@ -119,21 +78,17 @@ using System.Collections.Concurrent;
                 throw new ArgumentException(Strings.OptionsManager.PageDisplayNameRequired(page.GetType()));
 
             //TODO: validate attributes on the type, write to registry, etc.
-            RegisterOptionsPage(this.registryRoot, owningPackage, categoryName, displayName, pageType);
+            RegisterOptionsPage(registryRoot, serviceProvider.GetPackageGuidOrThrow(), categoryName, displayName, pageType);
 
             // Need to load the page into the collection for the owning package.
-            AddPageToPackage(page, package.AsDynamicReflection(), package.GetType());
+            AddPageToPackage(page, serviceProvider.AsDynamicReflection(), serviceProvider.GetType());
         }
 
-        public void AddPages(IServiceProvider owningPackage)
+        public void AddPages()
         {
-            var packageGuid = owningPackage.GetPackageGuidOrThrow();
-            var packagePages = this.optionPages
-                .Where(page => new Guid(page.Metadata.PackageId) == packageGuid);
-
-            foreach (var page in packagePages)
+            foreach (var optionPage in optionPages)
             {
-                AddPage(page.Value, packageGuid);
+                AddPage(optionPage.Value);
             }
         }
 
@@ -166,22 +121,6 @@ using System.Collections.Concurrent;
             {
                 throw new NotSupportedException(Strings.OptionsManager.Unsupported);
             }
-        }
-
-        private IServiceProvider GetOwningPackageOrThrow(Guid packageGuid)
-        {
-            var guid = packageGuid;
-            var package = default(IVsPackage);
-
-            this.vsShell.IsPackageLoaded(ref guid, out package);
-
-            if (package == null)
-                ErrorHandler.ThrowOnFailure(this.vsShell.LoadPackage(ref guid, out package));
-
-            if (package == null)
-                throw new InvalidOperationException(Strings.OptionsManager.OwningPackageNotFound(packageGuid));
-
-            return (IServiceProvider)package;
         }
 
         private void RegisterOptionsPage(string registryRoot, Guid packageGuid, string categoryName, string pageName, Type pageType, int categoryNameId = 0, int pageNameId = 0)
@@ -256,7 +195,7 @@ namespace Clide.Dynamic
 
             options.ReferencedAssemblies.Add(AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "System").ManifestModule.FullyQualifiedName);
             options.ReferencedAssemblies.Add(AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "System.Windows.Forms").ManifestModule.FullyQualifiedName);
-            
+
             var shellAssembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().FullName == shellAssemblyName.FullName);
             if (shellAssembly == null)
                 shellAssembly = Assembly.Load(shellAssemblyName);

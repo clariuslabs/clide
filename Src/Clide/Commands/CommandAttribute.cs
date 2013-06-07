@@ -18,7 +18,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide.Commands
 {
     using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.Composition;
+    using Clide.Composition;
 
     /// <summary>
     /// Attribute that must be placed on command implementations in order to 
@@ -26,23 +29,27 @@ namespace Clide.Commands
     /// </summary>
     [MetadataAttribute]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class CommandAttribute : InheritedExportAttribute, ICommandMetadata
+    public class CommandAttribute : ComponentAttribute
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandAttribute"/> class.
+        /// Initializes a new instance of the <see cref="CommandAttribute"/> class 
+        /// from a dictionary of values
         /// </summary>
-        public CommandAttribute(string packageGuid, string groupGuid, int commandId)
-            : base(typeof(ICommandExtension))
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public CommandAttribute(IDictionary<string, object> attributes)
+            : this((string)attributes["GroupId"], (int)attributes["CommandId"])
         {
-            this.PackageId = packageGuid;
-            this.GroupId = groupGuid;
-            this.CommandId = commandId;
         }
 
         /// <summary>
-        /// Gets the package GUID.
+        /// Initializes a new instance of the <see cref="CommandAttribute"/> class.
         /// </summary>
-        public string PackageId { get; private set; }
+        public CommandAttribute(string groupGuid, int commandId)
+            : base(typeof(ICommandExtension))
+        {
+            this.GroupId = groupGuid;
+            this.CommandId = commandId;
+        }
 
         /// <summary>
         /// Gets the group GUID.

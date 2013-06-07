@@ -26,7 +26,9 @@ namespace Clide
     using Clide.Patterns.Adapter;
     using Clide.Events;
     using System.Windows.Threading;
+    using Clide.Composition;
 
+    [Component]
     public class Host : IDisposable
     {
         private static readonly ITracer tracer = Tracer.Get<Host>();
@@ -70,16 +72,16 @@ namespace Clide
                     var packageId = hostingPackage.GetPackageGuidOrThrow();
                     var devEnv = DevEnv.Get(hostingPackage);
                     // Brings in imports that the package itself might need.
-                    devEnv.ExportProvider.SatisfyImportsOnce(hostingPackage);
+
+                    // TODO
+                    //devEnv.ServiceLocator.SatisfyImportsOnce(hostingPackage);
 
                     // Initialize the host package components.
-                    var host = new Host(hostingPackage);
-                    devEnv.ExportProvider.SatisfyImportsOnce(host);
-
+                    var host = devEnv.ServiceLocator.GetInstance<Host>();
                     host.Initialize(packageId, tracingPaneTitle, rootTraceSource);
 
                     // Initialize the default adapter service for the smart cast extension method.
-                    Clide.Patterns.Adapter.AdaptersInitializer.SetService(((ExportProvider)devEnv.ExportProvider).GetExportedValue<IAdapterService>());
+                    Clide.Patterns.Adapter.AdaptersInitializer.SetService(devEnv.ServiceLocator.GetInstance<IAdapterService>());
 
                     tracer.Info("Package initialization finished successfully");
 
@@ -93,23 +95,20 @@ namespace Clide
             }
         }
 
-        private IServiceProvider hostingPackage;
+        private readonly IServiceProvider hostingPackage;
+        private readonly ICommandManager commands;
+        private readonly IOptionsManager options;
+        private readonly IShellEvents shellEvents;
+        private readonly Lazy<IUIThread> uiThread;
 
-        private Host(IServiceProvider hostingPackage)
+        private Host(IServiceProvider hostingPackage, ICommandManager commands, IOptionsManager options, IShellEvents shellEvents, Lazy<IUIThread> uiThread)
         {
             this.hostingPackage = hostingPackage;
+            this.commands = commands;
+            this.options = options;
+            this.shellEvents = shellEvents;
+            this.uiThread = uiThread;
         }
-
-#pragma warning disable 0649
-        [Import]
-        private ICommandManager commands;
-        [Import]
-        private IOptionsManager options;
-        [Import]
-        private IShellEvents shellEvents;
-        [Import]
-        private Lazy<IUIThread> uiThread;
-#pragma warning restore 0649
 
         private void Initialize(Guid packageId, string tracingPaneTitle, string rootTraceSource)
         {
@@ -133,13 +132,13 @@ namespace Clide
         private void Initialize()
         {
             tracer.Info("Registering package commands");
-            this.commands.AddCommands(hostingPackage);
+            this.commands.AddCommands();
             tracer.Info("Registering package command filters");
-            this.commands.AddFilters(hostingPackage);
+            this.commands.AddFilters();
             tracer.Info("Registering package command interceptors");
-            this.commands.AddInterceptors(hostingPackage);
+            this.commands.AddInterceptors();
             tracer.Info("Registering package options pages");
-            this.options.AddPages(hostingPackage);
+            this.options.AddPages();
         }
 
         public void Dispose()

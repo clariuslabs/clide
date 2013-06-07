@@ -16,15 +16,14 @@ namespace Clide.Solution.Factories
 {
     using System;
     using System.ComponentModel.Composition;
+    using Clide.Composition;
 
-    [Export(typeof(ISolutionExplorerNodeFactory))]
-    [PartCreationPolicy(CreationPolicy.Shared)]
+    [Component(typeof(ISolutionExplorerNodeFactory))]
     internal class SolutionExplorerNodeFactory : ISolutionExplorerNodeFactory
     {
         private Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory;
 
-        [ImportingConstructor]
-        public SolutionExplorerNodeFactory([Import(DefaultHierarchyFactory.ContractName)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory)
+        public SolutionExplorerNodeFactory([WithKey(DefaultHierarchyFactory.RegisterKey)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory)
         {
             this.nodeFactory = nodeFactory;
         }

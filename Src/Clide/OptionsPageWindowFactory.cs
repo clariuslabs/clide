@@ -26,13 +26,13 @@ namespace Clide
     using System.Windows.Interop;
     using System.Windows.Input;
     using System.ComponentModel;
+    using Clide.Composition;
 
-    [Export(typeof(IOptionsPageWindowFactory))]
+    [Component(typeof(IOptionsPageWindowFactory))]
 	internal class OptionsPageWindowFactory : IOptionsPageWindowFactory
 	{
         private IMessageBoxService messageBox;
 
-        [ImportingConstructor]
         public OptionsPageWindowFactory(IMessageBoxService messageBox)
         {
             this.messageBox = messageBox;

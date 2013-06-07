@@ -10,14 +10,12 @@ using Microsoft.VisualStudio.Shell;
 
 namespace IntegrationPackage
 {
-	[PartCreationPolicy(CreationPolicy.Shared)]
-	[Command(Constants.PackageGuid, Constants.CommandSet, Constants.cmdHelloClide)]
+	[Command(Constants.CommandSet, Constants.cmdHelloClide)]
 	public class SampleCommand : ICommandExtension
 	{
         private IServiceProvider serviceProvider;
 
-        [ImportingConstructor]
-        public SampleCommand([Import(Constants.ShellContractName)] IServiceProvider serviceProvider)
+        public SampleCommand(IServiceProvider serviceProvider)
         {
             this.serviceProvider = serviceProvider;
         }

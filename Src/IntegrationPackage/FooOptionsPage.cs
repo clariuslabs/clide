@@ -21,12 +21,11 @@ namespace IntegrationPackage
 
     [Category("Clide")]
     [DisplayName("Integration Package")]
-    [OptionsPage(Constants.PackageGuid)]
+    [OptionsPage]
     public class FooOptionsPage : OptionsPage<FooView, FooSettings>
     {
-        [ImportingConstructor]
-        public FooOptionsPage(FooSettings settings)
-            : base(settings)
+        public FooOptionsPage(IOptionsPageWindowFactory windowFactory, FooSettings settings)
+            : base(windowFactory, settings)
         {
         }
     }

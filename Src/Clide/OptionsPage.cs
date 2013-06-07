@@ -36,11 +36,11 @@ namespace Clide
 		private Lazy<UserControl> userControl;
 		private Lazy<System.Windows.Forms.IWin32Window> windowHandle;
 
-        [Import]
         private IOptionsPageWindowFactory windowFactory;
 
-		protected OptionsPage(TSettings settings)
+		protected OptionsPage(IOptionsPageWindowFactory windowFactory, TSettings settings)
 		{
+            this.windowFactory = windowFactory;
             this.settings = settings;
 			this.userControl = new Lazy<UserControl>(() =>
 				new TControl { DataContext = this.settings });

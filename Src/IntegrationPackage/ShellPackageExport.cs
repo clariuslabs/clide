@@ -27,7 +27,7 @@ namespace IntegrationPackage
         {
             get
             {
-                return ServiceLocator.GlobalProvider.GetLoadedPackage<ClideIntegrationPackage>();
+                return GlobalServiceProvider.Instance.GetLoadedPackage<ClideIntegrationPackage>();
             }
         }
     }

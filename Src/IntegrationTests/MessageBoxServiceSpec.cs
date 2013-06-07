@@ -31,7 +31,7 @@ namespace Clide
 		[TestMethod]
 		public void WhenShowingMessageBox_ThenCanInvokeShowAndPrompt()
 		{
-			var service = Container.GetExportedValueOrDefault<IMessageBoxService>();
+			var service = ServiceLocator.GetInstance<IMessageBoxService>();
 
 			service.Show("Hello");
 
@@ -43,7 +43,7 @@ namespace Clide
         [TestMethod]
         public void WhenShowingMessageBox_ThenSucceeds()
         {
-            var service = Container.GetExportedValueOrDefault<IMessageBoxService>();
+            var service = ServiceLocator.GetInstance<IMessageBoxService>();
 
             service.Show("Default should be Cancel", button: System.Windows.MessageBoxButton.OKCancel, defaultResult: System.Windows.MessageBoxResult.Cancel);
             service.Show("Default should be OK", button: System.Windows.MessageBoxButton.OKCancel);

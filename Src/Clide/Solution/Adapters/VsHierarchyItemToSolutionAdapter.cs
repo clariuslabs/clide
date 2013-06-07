@@ -25,7 +25,6 @@ namespace Clide.Solution.Adapters
     {
         private ISolutionExplorerNodeFactory nodeFactory;
 
-        [ImportingConstructor]
         public VsHierarchyItemToSolutionAdapter(ISolutionExplorerNodeFactory nodeFactory)
         {
             this.nodeFactory = nodeFactory;

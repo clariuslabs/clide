@@ -28,7 +28,7 @@ namespace Clide
     /// <summary>
     /// Default implementation of the <see cref="IMessageBoxService"/>.
     /// </summary>
-    [Export(typeof(IMessageBoxService))]
+    [Component(typeof(IMessageBoxService))]
     internal class MessageBoxService : IMessageBoxService
     {
         public const string DefaultTitle = "Microsoft Visual Studio";
@@ -43,10 +43,7 @@ namespace Clide
         /// <summary>
         /// Default constructor for runtime behavior that can't be mocked.
         /// </summary>
-        [ImportingConstructor]
-        public MessageBoxService(
-            [Import(VsContractNames.IVsUIShell)] IVsUIShell uiShell,
-            IUIThread uiThread)
+        public MessageBoxService(IVsUIShell uiShell, IUIThread uiThread)
         {
             Guard.NotNull(() => uiShell, uiShell);
             Guard.NotNull(() => uiThread, uiThread);

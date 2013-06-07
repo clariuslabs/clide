@@ -33,7 +33,7 @@ namespace Clide.Solution
 		[TestMethod]
 		public void WhenSolutionOpened_ThenRaisesOpenedEvent()
 		{
-			var explorer = this.Container.GetExportedValue<ISolutionExplorer>();
+            var explorer = this.ServiceLocator.GetInstance<ISolutionExplorer>();
 
 			var called = false;
 
@@ -48,7 +48,7 @@ namespace Clide.Solution
 		[TestMethod]
 		public void WhenSolutionClosed_ThenRaisesClosingAndClosedEvent()
 		{
-            var explorer = this.Container.GetExportedValue<ISolutionExplorer>();
+            var explorer = this.ServiceLocator.GetInstance<ISolutionExplorer>();
 			explorer.Solution.Open(GetFullPath("SampleSolution\\SampleSolution.sln"));
 
 			var closing = false;
@@ -67,7 +67,7 @@ namespace Clide.Solution
 		[TestMethod]
 		public void WhenSolutionOpened_ThenRaisesProjectOpenedEvent()
 		{
-            var explorer = this.Container.GetExportedValue<ISolutionExplorer>();
+            var explorer = this.ServiceLocator.GetInstance<ISolutionExplorer>();
 
 			var called = false;
 
@@ -82,7 +82,7 @@ namespace Clide.Solution
 		[TestMethod]
 		public void WhenSolutionClosed_ThenRaisesProjectClosingEvent()
 		{
-            var explorer = this.Container.GetExportedValue<ISolutionExplorer>();
+            var explorer = this.ServiceLocator.GetInstance<ISolutionExplorer>();
 			explorer.Solution.Open(GetFullPath("SampleSolution\\SampleSolution.sln"));
 
 			var closing = false;

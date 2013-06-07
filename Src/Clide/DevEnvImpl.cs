@@ -23,19 +23,19 @@ namespace Clide
     using System.Linq;
     using Clide.Commands;
     using Microsoft.VisualStudio.Shell;
-    using Clide.Composition;
     using Clide.Diagnostics;
     using System.Diagnostics;
     using Clide.Properties;
     using System.ComponentModel.Composition.Hosting;
     using Clide.Events;
+    using Microsoft.Practices.ServiceLocation;
+    using Clide.Composition;
 
-    [Export(typeof(IDevEnv))]
+    [Component(typeof(IDevEnv))]
 	internal class DevEnvImpl : IDevEnv, IShellEvents
 	{
         private static readonly Guid OutputWindowId = new Guid("{66893206-0EF5-4A16-AA10-6EC6B6319F92}");
 
-        private Lazy<ExportProvider> composition;
         private Lazy<IStatusBar> status;
 		private IShellEvents shellEvents;
 		private Lazy<IDialogWindowFactory> dialogFactory;
@@ -44,27 +44,24 @@ namespace Clide
         private Lazy<IMessageBoxService> messageBox;
         private TraceOutputWindowManager outputWindowManager;
 
-		[ImportingConstructor]
 		public DevEnvImpl(
-			[Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider,
-            [Import(ContractNames.ExportProvider)] Lazy<ExportProvider> composition,
-			[ImportMany] IEnumerable<Lazy<IToolWindow>> toolWindows,
+			IServiceLocator serviceLocator,
+			IEnumerable<Lazy<IToolWindow>> toolWindows,
 			Lazy<IDialogWindowFactory> dialogFactory,
 			Lazy<IUIThread> uiThread,
             Lazy<IMessageBoxService> messageBox,
 			IShellEvents shellEvents)
 		{
-			this.ServiceProvider = serviceProvider;
-            this.composition = composition;
+            this.ServiceLocator = serviceLocator;
 			this.dialogFactory = dialogFactory;
 			this.toolWindows = toolWindows;
 			this.shellEvents = shellEvents;
 			this.uiThread = uiThread;
             this.messageBox = messageBox;
-			this.status = new Lazy<IStatusBar>(() => new StatusBar(this.ServiceProvider));
+            this.status = new Lazy<IStatusBar>(() => new StatusBar(this.ServiceLocator));
 
             this.outputWindowManager = new TraceOutputWindowManager(
-                serviceProvider,
+                serviceLocator,
                 shellEvents,
                 uiThread,
                 Tracer.Manager,
@@ -72,12 +69,7 @@ namespace Clide
                 Strings.DevEnv.OutputPaneTitle);
 		}
 
-		internal IServiceProvider ServiceProvider { get; set; }
-
-        public ExportProvider ExportProvider
-        {
-            get { return this.composition.Value; }
-        }
+        public IServiceLocator ServiceLocator { get; private set; }
 
 		public IStatusBar StatusBar
 		{

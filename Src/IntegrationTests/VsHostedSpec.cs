@@ -40,6 +40,7 @@ using Clide.Diagnostics;
 using Microsoft.VisualStudio.Shell;
 using Clide.Events;
 using Clide.VisualStudio;
+using Microsoft.Practices.ServiceLocation;
 
 [TestClass]
 public abstract class VsHostedSpec
@@ -49,26 +50,21 @@ public abstract class VsHostedSpec
     private StringBuilder strings; 
     private TraceListener listener;
 
-    protected VsHostedSpec()
-    {
-        this.package = new Lazy<IServiceProvider>(() => ServiceLocator.GlobalProvider.GetLoadedPackage(new Guid(IntegrationPackage.Constants.PackageGuid)));
-    }
-
     public TestContext TestContext { get; set; }
 
     protected EnvDTE.DTE Dte
     {
-        get { return ServiceProvider.GetService<DTE>(); }
+        get { return this.ServiceProvider.GetService<DTE>(); }
     }
 
     protected IServiceProvider ServiceProvider
     {
-        get { return this.package.Value; }
+        get { return GlobalServiceProvider.Instance; }
     }
 
-    protected CompositionContainer Container
+    protected IServiceLocator ServiceLocator
     {
-        get { return (CompositionContainer)DevEnv.Get(this.ServiceProvider).ExportProvider; }
+        get { return DevEnv.Get(this.ServiceProvider).ServiceLocator; }
     }
 
     [TestInitialize]

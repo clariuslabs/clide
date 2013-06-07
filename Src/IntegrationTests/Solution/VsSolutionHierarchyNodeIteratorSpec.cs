@@ -85,7 +85,8 @@ namespace Clide.Solution
 				var project = solutionFolder2.Children
                     .FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "ClassLibrary");
 
-				Assert.Equal(4, project.Children.Count());
+                var count = project.Children.Count();
+				Assert.Equal(4, count, "Expected 4 child nodes for project, but instead got {0}", count);
 			}
 
 			[HostType("VS IDE")]

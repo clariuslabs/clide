@@ -27,6 +27,7 @@ namespace Clide
     using System.Reflection;
     using Clide.Diagnostics;
     using Clide.Properties;
+    using Clide.Composition;
     using Microsoft.VisualStudio.Settings;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Settings;
@@ -34,8 +35,7 @@ namespace Clide
     /// <summary>
 	/// Default implementation of <see cref="ISettingsManager"/> which uses <see cref="ShellSettingsManager"/>.
 	/// </summary>
-	[PartCreationPolicy(CreationPolicy.Shared)]
-	[Export(typeof(ISettingsManager))]
+	[Component(typeof(ISettingsManager))]
 	internal class SettingsManager : ISettingsManager
 	{
 		private static readonly ITracer tracer = Tracer.Get<SettingsManager>();
@@ -46,8 +46,7 @@ namespace Clide
 		/// Initializes a new instance of the <see cref="SettingsManager"/> class.
 		/// </summary>
 		/// <param name="serviceProvider">The service provider.</param>
-		[ImportingConstructor]
-		public SettingsManager([Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider)
+		public SettingsManager(IServiceProvider serviceProvider)
 			: this(serviceProvider, new Lazy<ISettingsStore>(() => new ShellSettingsStore(serviceProvider)))
 		{
 		}

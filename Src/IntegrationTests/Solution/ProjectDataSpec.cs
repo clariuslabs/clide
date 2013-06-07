@@ -35,7 +35,7 @@ namespace Clide.Solution
         [TestMethod]
         public void WhenRetrievingPropertyNames_ThenFindsDteAndMsBuild()
         {
-            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
             this.OpenSolution("SampleSolution\\SampleSolution.sln");
 
             var project = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
@@ -53,7 +53,7 @@ namespace Clide.Solution
         [TestMethod]
         public void WhenSettingDteProperty_ThenCanRetrieveIt()
         {
-            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
             this.OpenSolution("SampleSolution\\SampleSolution.sln");
 
             var project = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
@@ -77,7 +77,7 @@ namespace Clide.Solution
         [TestMethod]
         public void WhenSettingExistingMsBuildProperty_ThenCanRetrieveIt()
         {
-            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
             this.OpenSolution("SampleSolution\\SampleSolution.sln");
 
             var project = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
@@ -101,7 +101,7 @@ namespace Clide.Solution
         [TestMethod]
         public void WhenSettingNewMsBuildProperty_ThenCanRetrieveIt()
         {
-            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
             this.OpenSolution("SampleSolution\\SampleSolution.sln");
 
             var project = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
@@ -126,7 +126,7 @@ namespace Clide.Solution
         [TestMethod]
         public void WhenSettingExistingMsBuildConfiguration_ThenCanRetrieveIt()
         {
-            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
             this.OpenSolution("SampleSolution\\SampleSolution.sln");
 
             var project = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
@@ -152,7 +152,7 @@ namespace Clide.Solution
         {
             this.OpenSolution("SampleSolution\\SampleSolution.sln");
 
-            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
 
             var project = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
                 .OfType<ProjectNode>()
@@ -238,7 +238,7 @@ namespace Clide.Solution
         {
             this.OpenSolution("SampleSolution\\SampleSolution.sln");
 
-            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
 
             var project = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
                 .OfType<ProjectNode>()

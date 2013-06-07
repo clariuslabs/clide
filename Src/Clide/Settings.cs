@@ -39,7 +39,6 @@ namespace Clide
     /// [Settings(typeof(IServerSettings))]
     /// public class ServerSettings : Settings, IServerSettings
     /// {
-    ///     [ImportingConstructor]
     ///     public FooSettings(ISettingsManager manager)
     ///         : base(manager)
     ///     {

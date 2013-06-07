@@ -35,7 +35,7 @@ namespace Clide.Solution
         {
             base.OpenSolution("SampleSolution\\SampleSolution.sln");
 
-            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
 
             var lib = new ITreeNode[] {explorer.Solution }.Traverse(TraverseKind.BreadthFirst, node => node.Nodes)
                 .OfType<IProjectNode>()
@@ -54,8 +54,8 @@ namespace Clide.Solution
             var refs = proj.Descendants(XName.Get("{http://schemas.microsoft.com/developer/msbuild/2003}Reference"))
                 .Select(e => e.Attribute("Include").Value)
                 .ToList();
-            
-            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
 
             var lib = new ITreeNode[] { explorer.Solution }.Traverse(TraverseKind.BreadthFirst, node => node.Nodes)
                 .OfType<IProjectNode>()
@@ -75,7 +75,7 @@ namespace Clide.Solution
         public void WhenGettingConfigurations_ThenRetrievesDebugAndRelease()
         {
             base.OpenSolution("SampleSolution\\SampleSolution.sln");
-            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
             var lib = new ITreeNode[] { explorer.Solution }.Traverse(TraverseKind.BreadthFirst, node => node.Nodes)
                 .OfType<IProjectNode>()
                 .FirstOrDefault(node => node.DisplayName == "ClassLibrary");
@@ -91,7 +91,7 @@ namespace Clide.Solution
         public void WhenGettingPlatforms_ThenRetrievesAnyCPU()
         {
             base.OpenSolution("SampleSolution\\SampleSolution.sln");
-            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
             var lib = new ITreeNode[] { explorer.Solution }.Traverse(TraverseKind.BreadthFirst, node => node.Nodes)
                 .OfType<IProjectNode>()
                 .FirstOrDefault(node => node.DisplayName == "ClassLibrary");
@@ -107,7 +107,7 @@ namespace Clide.Solution
         public void WhenGettingActiveConfigurationName_ThenRetrievesDebugAnyCPU()
         {
             base.OpenSolution("SampleSolution\\SampleSolution.sln");
-            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
             var lib = new ITreeNode[] { explorer.Solution }.Traverse(TraverseKind.BreadthFirst, node => node.Nodes)
                 .OfType<IProjectNode>()
                 .FirstOrDefault(node => node.DisplayName == "ClassLibrary");

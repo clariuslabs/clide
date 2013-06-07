@@ -20,28 +20,45 @@ namespace Clide.Commands
     using System.Text;
     using System.ComponentModel.Composition;
     using Clide.Commands;
+    using System.ComponentModel;
+    using Clide.Composition;
 
     /// <summary>
     /// Attribute that must be placed on command interceptors in order to 
     /// use the <see cref="ICommandManager.AddInterceptors"/> method.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     [MetadataAttribute]
-    public class CommandInterceptorAttribute : InheritedExportAttribute, ICommandInterceptorMetadata
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public class CommandInterceptorAttribute : ComponentAttribute
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommandInterceptorAttribute"/> class 
+        /// from a dictionary of values
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public CommandInterceptorAttribute(IDictionary<string, object> attributes)
+            : this((string)attributes["PackageId"], (string)attributes["GroupId"], (int)attributes["CommandId"])
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandInterceptorAttribute" /> class.
         /// </summary>
-        /// <param name="owningPackageGuid">The GUID of the package that is providing the interceptor.</param>
+        /// <param name="packageGuid">Gets the GUID of the package that provides the command to intercept.</param>
         /// <param name="groupGuid">The group GUID of the intercepted command.</param>
         /// <param name="commandId">The command id of the intercepted command.</param>
-        public CommandInterceptorAttribute(string owningPackageGuid, string groupGuid, int commandId)
-           :base(typeof(ICommandInterceptor))
+        public CommandInterceptorAttribute(string packageGuid, string groupGuid, int commandId)
+            : base(typeof(ICommandInterceptor))
         {
-            this.OwningPackageId = owningPackageGuid;
+            this.PackageId = packageGuid;
             this.GroupId = groupGuid;
             this.CommandId = commandId;
         }
+
+        /// <summary>
+        /// Gets the GUID of the package that provides the command to intercept.
+        /// </summary>
+        public string PackageId { get; private set; }
 
         /// <summary>
         /// Gets the command id of the command to intercept.
@@ -52,13 +69,5 @@ namespace Clide.Commands
         /// Gets the group id of the command to intercept.
         /// </summary>
         public string GroupId { get; private set; }
-
-        /// <summary>
-        /// Gets the GUID of the package that exposes the interceptor,
-        /// which can be different than the <see cref="ICommandMetadata.PackageId" />
-        /// which is instead the GUID of the package that provides the original
-        /// command.
-        /// </summary>
-        public string OwningPackageId { get; private set; }
     }
 }

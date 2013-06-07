@@ -19,19 +19,28 @@ namespace Clide
 {
     using System;
     using System.ComponentModel.Composition;
+    using Clide.Composition;
 
     /// <summary>
 	/// Attribute to apply to classes that implement the <see cref="ISettings"/> interface.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-	public class SettingsAttribute : InheritedExportAttribute
+	public class SettingsAttribute : ComponentAttribute
 	{
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SettingsAttribute"/> class, 
+        /// using the concrete type of the settings class as the component registration.
+        /// </summary>
 		public SettingsAttribute()
 		{
 		}
 
-		public SettingsAttribute(Type settingsType)
-			: base(settingsType)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SettingsAttribute"/> class, 
+        /// using a specific type (typically an interface) for the component registration.
+        /// </summary>
+		public SettingsAttribute(Type registerAs)
+			: base(registerAs)
 		{
 		}
 	}

@@ -29,16 +29,13 @@ namespace Clide.Solution.Adapters
         IAdapter<Solution, ISolutionNode>,
         IAdapter<Project, IProjectNode>,
         IAdapter<ProjectItem, IItemNode>
-        // TODO: we're missing solution folder conversion.
-        //IAdapter<SolutionFolder, ISolutionFolderNode>,
+    // TODO: we're missing solution folder conversion.
+    //IAdapter<SolutionFolder, ISolutionFolderNode>,
     {
         private ISolutionExplorerNodeFactory nodeFactory;
         private IServiceProvider serviceProvider;
 
-        [ImportingConstructor]
-        public DteToSolutionAdapter(
-            [Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider,
-            ISolutionExplorerNodeFactory nodeFactory)
+        public DteToSolutionAdapter(IServiceProvider serviceProvider, ISolutionExplorerNodeFactory nodeFactory)
         {
             this.serviceProvider = serviceProvider;
             this.nodeFactory = nodeFactory;
@@ -81,12 +78,12 @@ namespace Clide.Solution.Adapters
             uint itemId = 0;
 
             if (!ErrorHandler.Succeeded(((IVsProject)project).IsDocumentInProject(
-                fileName, out found, new VSDOCUMENTPRIORITY[1], out itemId)) || 
+                fileName, out found, new VSDOCUMENTPRIORITY[1], out itemId)) ||
                 found == 0 || itemId == 0)
                 return null;
 
             return this.nodeFactory
-                .Create(new VsSolutionHierarchyNode(project, itemId)) 
+                .Create(new VsSolutionHierarchyNode(project, itemId))
                 as IItemNode;
         }
     }

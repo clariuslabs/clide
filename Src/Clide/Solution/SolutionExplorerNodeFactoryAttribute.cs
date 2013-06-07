@@ -28,7 +28,7 @@ namespace Clide.Solution
     public class SolutionExplorerNodeFactoryAttribute : TreeNodeFactoryAttribute
 	{
 		public SolutionExplorerNodeFactoryAttribute()
-			: base(CompositionTarget.SolutionExplorer, typeof(IVsSolutionHierarchyNode), false)
+			: base("SolutionExplorer", typeof(IVsSolutionHierarchyNode), false)
 		{
 		}
 	}

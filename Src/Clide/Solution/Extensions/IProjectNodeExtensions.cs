@@ -29,6 +29,7 @@ namespace Clide.Solution
     using VSLangProj;
     using Clide.Diagnostics;
     using Clide.VisualStudio;
+    using System.Threading;
 
     /// <summary>
     /// Provides usability extensions to the <see cref="IProjectNode"/>.
@@ -48,7 +49,7 @@ namespace Clide.Solution
                 throw new ArgumentException(Strings.IProjectNodeExtensions.BuildNoSolution(project.DisplayName));
 
             var build = (EnvDTE80.SolutionBuild2)dte.SolutionBuild;
-
+            
             dte.SolutionBuild.BuildProject(build.ActiveConfiguration.Name, project.As<EnvDTE.Project>().UniqueName, true);
         }
 
@@ -71,6 +72,14 @@ namespace Clide.Solution
             if (!File.Exists(assemblyFile))
             {
                 project.Build();
+                for (int i = 0; i < 5; i++)
+                {
+                    if (File.Exists(assemblyFile))
+                        break;
+
+                    Thread.Sleep(200);
+                }
+
                 if (!File.Exists(assemblyFile))
                 {
                     tracer.Warn(Strings.IProjectNodeExtensions.NoBuildOutput(project.DisplayName, assemblyFile));
@@ -81,7 +90,7 @@ namespace Clide.Solution
             var assemblyName = AssemblyName.GetAssemblyName(assemblyFile);
             var vsProject = project.As<IVsHierarchy>();
             var localServices = project.As<IServiceProvider>();
-            var globalServices = ServiceLocator.GlobalProvider.TryGetService<SVsServiceProvider, IServiceProvider>();
+            var globalServices = GlobalServiceProvider.Instance;
 
             if (vsProject == null ||
                 localServices == null ||
@@ -117,7 +126,7 @@ namespace Clide.Solution
             var vsProject = project.As<IVsHierarchy>();
             var vsLangProject = project.As<VSProject>();
             var localServices = project.As<IServiceProvider>();
-            var globalServices = ServiceLocator.GlobalProvider.TryGetService<SVsServiceProvider, IServiceProvider>();
+            var globalServices = GlobalServiceProvider.Instance;
 
             if (vsProject == null ||
                 localServices == null ||

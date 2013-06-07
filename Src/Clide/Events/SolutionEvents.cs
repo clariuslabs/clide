@@ -25,10 +25,9 @@ namespace Clide.Events
     using EnvDTE80;
     using EnvDTE;
     using Clide.Solution;
+    using Clide.Composition;
 
-    [Export(typeof(IGlobalEvents))]
-	[Export(typeof(ISolutionEvents))]
-	[PartCreationPolicy(CreationPolicy.Shared)]
+    [Component(typeof(IGlobalEvents), typeof(ISolutionEvents))]
 	internal class SolutionEvents : IDisposable, IVsSolutionEvents, ISolutionEvents
 	{
 		private bool isDisposed;
@@ -44,10 +43,9 @@ namespace Clide.Events
 		public event EventHandler<ProjectEventArgs> ProjectOpened;
 		public event EventHandler<ProjectEventArgs> ProjectClosing;
 
-		[ImportingConstructor]
 		public SolutionEvents(
-			[Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider,
-			[Import(DefaultHierarchyFactory.ContractName)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory)
+			IServiceProvider serviceProvider,
+			[WithKey(DefaultHierarchyFactory.RegisterKey)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory)
 		{
 			Guard.NotNull(() => serviceProvider, serviceProvider);
 			Guard.NotNull(() => nodeFactory, nodeFactory);

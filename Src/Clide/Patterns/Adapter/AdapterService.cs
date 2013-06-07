@@ -38,14 +38,6 @@ namespace Clide.Patterns.Adapter
         /// <summary>
         /// Initializes the adapter service with the given set of adapters.
         /// </summary>
-        public AdapterService(params IAdapter[] adapters)
-            : this((IEnumerable<IAdapter>)adapters)
-        {
-        }
-
-        /// <summary>
-        /// Initializes the adapter service with the given set of adapters.
-        /// </summary>
 		public AdapterService(IEnumerable<IAdapter> adapters)
 		{
             var genericAdapter = typeof(IAdapter<,>);

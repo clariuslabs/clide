@@ -17,8 +17,14 @@ namespace Clide
     using System;
     using System.ComponentModel;
 
-    internal interface IOptionsPageWindowFactory
+    /// <summary>
+    /// Factory for options page windows. For internal use only.
+    /// </summary>
+    public interface IOptionsPageWindowFactory
     {
+        /// <summary>
+        /// Creates the options page window for the given view control and underlying editable model.
+        /// </summary>
         System.Windows.Forms.IWin32Window CreateWindow(IEditableObject model, System.Windows.Controls.UserControl view);
     }
 }

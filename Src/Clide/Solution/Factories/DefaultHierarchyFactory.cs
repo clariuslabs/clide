@@ -25,17 +25,15 @@ namespace Clide.Solution
     /// that all individual node factories reuse for their own 
     /// parent/children construction. 
     /// </summary>
-    [PartCreationPolicy(CreationPolicy.Shared)]
-    [Export(ContractName, typeof(ITreeNodeFactory<IVsSolutionHierarchyNode>))]
+    [Component(RegisterKey, typeof(ITreeNodeFactory<IVsSolutionHierarchyNode>))]
 	internal class DefaultHierarchyFactory : ITreeNodeFactory<IVsSolutionHierarchyNode>
 	{
-        public const string ContractName = "Clide.Solution.DefaultHierarchyFactory";
+        public const string RegisterKey = "Clide.Solution.DefaultHierarchyFactory";
 
 		private Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> factory;
 
-		[ImportingConstructor]
-		public DefaultHierarchyFactory([ImportMany(CompositionTarget.SolutionExplorer)] 
-            IEnumerable<Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>, ITreeNodeFactoryMetadata>> nodeFactories)
+		public DefaultHierarchyFactory([WithKey("SolutionExplorer")] 
+            IEnumerable<Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>, TreeNodeFactoryMetadata>> nodeFactories)
 		{
             this.factory = new Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>>(() =>
                 new FallbackNodeFactory<IVsSolutionHierarchyNode>(

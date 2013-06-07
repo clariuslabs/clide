@@ -23,7 +23,6 @@ namespace System.Diagnostics
     using Clide.Diagnostics;
     using Clide.VisualStudio;
     using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
 
     /// <summary>
@@ -37,7 +36,7 @@ namespace System.Diagnostics
         {
             ShowExceptionAction = (exception, format, args) =>
             {
-                ServiceLocator.GlobalProvider.GetService<SVsUIShell, IVsUIShell>().ShowMessageBox(
+                GlobalServiceProvider.Instance.GetService<SVsUIShell, IVsUIShell>().ShowMessageBox(
                     string.Format(format, args), 
                     icon: MessageBoxImage.Error);
             };

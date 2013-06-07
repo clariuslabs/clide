@@ -36,7 +36,7 @@ namespace Clide.Solution
         {
             base.OpenSolution("SampleSolution\\SampleSolution.sln");
 
-            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
 
             var lib = new ITreeNode[] { explorer.Solution }.Traverse(TraverseKind.BreadthFirst, node => node.Nodes)
                 .OfType<IProjectNode>()

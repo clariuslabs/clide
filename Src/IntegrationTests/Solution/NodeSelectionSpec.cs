@@ -30,7 +30,7 @@ namespace Clide.Solution
         {
             base.TestInitialize();
             
-            this.explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            this.explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
             this.OpenSolution("SampleSolution\\SampleSolution.sln");
             this.explorer.Solution.Select();
         }

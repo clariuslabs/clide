@@ -21,10 +21,11 @@ namespace Clide.Solution
     using System.ComponentModel.Composition;
     using Clide.Composition;
 
+    [MetadataAttribute]
     internal class FallbackFactoryAttribute : TreeNodeFactoryAttribute
 	{
         public FallbackFactoryAttribute()
-			: base(CompositionTarget.SolutionExplorer, typeof(IVsSolutionHierarchyNode), true)
+            : base("SolutionExplorer", typeof(IVsSolutionHierarchyNode), true)
 		{
 		}
 	}

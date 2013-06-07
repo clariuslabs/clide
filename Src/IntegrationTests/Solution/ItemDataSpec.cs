@@ -30,7 +30,7 @@ namespace Clide.Solution
         {
             this.OpenSolution("SampleSolution\\SampleSolution.sln");
 
-            var explorer = base.Container.GetExportedValue<ISolutionExplorer>();
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
 
             explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
                 .Where(node => node.DisplayName == "TextFile1.txt")

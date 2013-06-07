@@ -34,7 +34,7 @@ namespace Clide
         internal static Action<Exception, string, string[]> ShowExceptionAction = (ex, format, args) =>
         {
             System.Windows.MessageBox.Show(
-                ServiceLocator.GlobalProvider.GetService<SVsUIShell, IVsUIShell>().GetMainWindow(), 
+                GlobalServiceProvider.Instance.GetService<SVsUIShell, IVsUIShell>().GetMainWindow(), 
                 string.Format(format, args),
                 "Visual Studio", 
                 MessageBoxButton.OK, 

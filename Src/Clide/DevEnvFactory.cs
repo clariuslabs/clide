@@ -22,8 +22,6 @@ namespace Clide
     using Microsoft.VisualStudio.ComponentModelHost;
     using System.ComponentModel.Composition.Hosting;
     using System.ComponentModel.Composition;
-    using Clide.Composition;
-    using Microsoft.ComponentModel.Composition.Diagnostics;
     using System.IO;
     using System.Collections.Generic;
     using System.ComponentModel.Composition.Primitives;
@@ -31,33 +29,48 @@ namespace Clide
     using System.Xml.Linq;
     using System.Threading.Tasks;
     using Clide.Diagnostics;
+    using Microsoft.Practices.ServiceLocation;
+    using Autofac;
+    using Autofac.Extras.CommonServiceLocator;
+    using System.Reflection;
+    using Clide.Composition;
+    using Autofac.Extras.Attributed;
 
     internal class DevEnvFactory
     {
         private static readonly string ClideAssembly = Path.GetFileName(typeof(IDevEnv).Assembly.ManifestModule.FullyQualifiedName);
         private static readonly ITracer tracer = Tracer.Get<DevEnvFactory>();
-        private ConcurrentDictionary<IServiceProvider, ExportProvider> serviceContainers = new ConcurrentDictionary<IServiceProvider, ExportProvider>();
+        private ConcurrentDictionary<IServiceProvider, IServiceLocator> serviceLocators = new ConcurrentDictionary<IServiceProvider, IServiceLocator>();
 
         public IDevEnv Get(IServiceProvider services)
         {
-            return serviceContainers
+            return serviceLocators
                 .GetOrAdd(services, s => InitializeContainer(s))
-                .GetExportedValue<IDevEnv>();
+                .GetInstance<IDevEnv>();
         }
 
-        private ExportProvider InitializeContainer(IServiceProvider services)
+        private IServiceLocator InitializeContainer(IServiceProvider services)
         {
-            var hostId = services.GetPackageGuidOrThrow();
-
             using (tracer.StartActivity(Strings.DevEnvFactory.CreatingComposition))
             {
-                var container = default(CompositionContainer);
-                var catalogs = new List<ComposablePartCatalog>
-                {
-                    new LocalDecoratingCatalog(hostId, new AssemblyCatalog(typeof(IDevEnv).Assembly)),
-                    SingletonCatalog.Create<ICompositionService>(ContractNames.LocalCompositionService(hostId), new Lazy<ICompositionService>(() => container)),
-                    SingletonCatalog.Create<ExportProvider>(ContractNames.LocalExportProvider(hostId), new Lazy<ExportProvider>(() => container)),
-                };
+                var builder = new ContainerBuilder();
+                // Allow dependencies of VS exported services.
+                var composition = services.GetService<SComponentModel, IComponentModel>();
+                builder.RegisterComponentModel(composition);
+                // Allow dependencies of non-exported VS services.
+                builder.RegisterServiceProvider(services);
+                // Automatically registers metadata associated via metadata attributes on components.
+                builder.RegisterModule(new AttributedMetadataModule());
+                builder.Register<IServiceLocator>(c => serviceLocators[services]);
+
+                // Keep track of assemblies we've already added, to avoid duplicate registrations.
+                var addedAssemblies = new HashSet<string>();
+
+                // Register built-in components from Clide assembly.
+                RegisterAssembly(builder, composition, Assembly.GetExecutingAssembly(), addedAssemblies);
+
+                // Register hosting package assembly.
+                RegisterAssembly(builder, composition, services.GetType().Assembly, addedAssemblies);
 
                 var installPath = GetInstallPath(services);
 
@@ -68,7 +81,7 @@ namespace Clide
                     var manifestDoc = XDocument.Load(packageManifestFile);
 
                     ThrowIfClideIsMefComponent(manifestDoc);
-                    WarnIfClideComponentIsAlsoMefComponent(packageManifestFile, manifestDoc);
+                    //WarnIfClideComponentIsAlsoMefComponent(packageManifestFile, manifestDoc);
 
                     foreach (string clideComponent in GetClideComponents(manifestDoc))
                     {
@@ -84,7 +97,7 @@ namespace Clide
                         if (!File.Exists(assemblyFile))
                             throw new InvalidOperationException(Strings.DevEnvFactory.ClideComponentNotFound(packageManifestFile, clideComponent, assemblyFile));
 
-                        catalogs.Add(new LocalDecoratingCatalog(hostId, new AssemblyCatalog(assemblyFile)));
+                        RegisterAssembly(builder, composition, Assembly.LoadFrom(assemblyFile), addedAssemblies);
                     }
                 }
                 else
@@ -92,53 +105,24 @@ namespace Clide
                     tracer.Info(Strings.DevEnvFactory.ExtensionManifestNotFound(packageManifestFile));
                 }
 
-                var composition = services.GetService<SComponentModel, IComponentModel>();
-                var catalog = new AggregateCatalog(catalogs);
-                var vsContainer = (CompositionContainer)AppDomain.CurrentDomain.GetAssemblies()
-                    .First(asm => asm.FullName.StartsWith("Microsoft.VisualStudio.ExtensibilityHosting"))
-                    .GetType("Microsoft.VisualStudio.ExtensibilityHosting.VsCompositionContainer")
-                    .AsDynamicReflection()
-                    .Create(catalog);
+                var container = builder.Build();
 
-                // Set the container that the lazy singleton exports for ICompositionService and ExportProvider will use.
-                container = new LocalCompositionContainer(hostId, vsContainer);
-
-                var settings = container.GetExportedValue<ClideSettings>();
-                if (settings.LogComposition)
-                {
-                    Task.Factory.StartNew(() => Log(vsContainer, catalog));
-                }
-                else
-                {
-#if DEBUG
-                    Task.Factory.StartNew(() => Log(vsContainer, catalog));
-#endif
-                }
-
-                return container;
+                return new AutofacServiceLocator(container);
             }
         }
 
-        private static void Log(CompositionContainer container, ComposablePartCatalog catalog)
+        private static void RegisterAssembly(ContainerBuilder builder, IComponentModel composition, Assembly assembly, HashSet<string> addedAssemblies)
         {
-            var info = new CompositionInfo(catalog, container);
-            var rejected = info.PartDefinitions.Where(part => part.IsPrimaryRejection).ToList();
-            if (rejected.Count > 0)
+            var assemblyFile = assembly.Location.ToLowerInvariant();
+            if (!addedAssemblies.Contains(assemblyFile))
             {
-                tracer.Error(Strings.DevEnvFactory.CompositionErrors(rejected.Count));
-                var writer = new StringWriter();
-                rejected.ForEach(part => PartDefinitionInfoTextFormatter.Write(part, writer));
-                tracer.Error(writer.ToString());
-                File.WriteAllText(Path.Combine(Path.GetTempPath(), "DevEnv.log"), writer.ToString());
-
-                tracer.Error(Strings.DevEnvFactory.CompositionErrors(rejected.Count) + Environment.NewLine + writer.ToString());
-                tracer.Error("Failed to log composition information. For more information open the log file at {0}.", Path.Combine(Path.GetTempPath(), "DevEnv.log"));
+                builder.RegisterAssemblyComponents(assembly)
+                    .WithImports(composition.DefaultExportProvider)
+                    .WithKeyFilter()
+                    .WithMetadataFilter();
+                
+                addedAssemblies.Add(assemblyFile);
             }
-
-            // Log information about the composition container when debugger is attached too.
-            var infoWriter = new StringWriter();
-            CompositionInfoTextFormatter.Write(info, infoWriter);
-            tracer.Info(infoWriter.ToString());
         }
 
         private void ThrowIfClideIsMefComponent(XDocument doc)

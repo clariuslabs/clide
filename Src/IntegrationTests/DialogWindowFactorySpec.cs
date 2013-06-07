@@ -30,18 +30,15 @@ namespace Clide
 
         [HostType("VS IDE")]
         [TestMethod]
-        public void WhenCreatingDialogWithContext_ThenSucceeds()
+        public void WhenCreatingDialog_ThenSucceeds()
         {
             var devEnv = DevEnv.Get(this.ServiceProvider);
 
-            var window = devEnv.DialogWindowFactory.CreateDialog<FooWindow, ViewModel>();
+            var window = devEnv.DialogWindowFactory.CreateDialog<FooWindow>();
 
             devEnv.UIThread.Invoke(() =>
             {
                 Assert.NotNull(window);
-                Assert.NotNull(window.DataContext);
-                Assert.True(window.DataContext is ViewModel);
-                Assert.NotNull(((ViewModel)window.DataContext).Services);
             });
         }
 

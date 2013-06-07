@@ -22,10 +22,11 @@ namespace Clide
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
     using Clide.Events;
+    using Microsoft.Practices.ServiceLocation;
 
     public interface IDevEnv : IShellEvents, IFluentInterface
 	{
-        ExportProvider ExportProvider { get; }
+        IServiceLocator ServiceLocator { get; }
 		IDialogWindowFactory DialogWindowFactory { get; }
         IMessageBoxService MessageBoxService { get; }
 		IStatusBar StatusBar { get; }

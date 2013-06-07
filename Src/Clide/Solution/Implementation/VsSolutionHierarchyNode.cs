@@ -73,7 +73,7 @@ namespace Clide.Solution
                 hierarchy.GetSite(out oleSp);
                 return oleSp != null ?
                     new ServiceProvider(oleSp) :
-                    ServiceLocator.GlobalProvider;
+                    GlobalServiceProvider.Instance;
             });
 
             this.DisplayName = this.VsHierarchy.Properties(this.ItemId).DisplayName;

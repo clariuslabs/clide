@@ -19,11 +19,9 @@ namespace Clide
     using System.ComponentModel.Composition;
     using System.Linq;
 
-    [PartCreationPolicy(CreationPolicy.Shared)]
     [Settings]
     internal class ClideSettings : Settings
     {
-        [ImportingConstructor]
         public ClideSettings(ISettingsManager manager)
             : base(manager)
         {

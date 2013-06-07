@@ -21,6 +21,7 @@ namespace Clide
     using System.ComponentModel.Composition;
     using System.Windows;
     using System.Windows.Threading;
+    using Clide.Composition;
     using Microsoft.VisualStudio.Shell;
 
     /// <summary>
@@ -28,8 +29,7 @@ namespace Clide
     /// current <see cref="Dispatcher.CurrentDispatcher"/> by default 
     /// or the one initialized from the host.
     /// </summary>
-    [PartCreationPolicy(CreationPolicy.Shared)]
-	[Export(typeof(IUIThread))]
+	[Component(typeof(IUIThread))]
 	internal class UIThread : IUIThread
 	{
         private static Dispatcher dispatcher = Dispatcher.CurrentDispatcher;

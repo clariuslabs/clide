@@ -18,7 +18,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide.Commands
 {
     using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.Composition;
+    using Clide.Composition;
 
     /// <summary>
     /// Attribute that must be placed on command implementations in order to 
@@ -26,27 +29,39 @@ namespace Clide.Commands
     /// </summary>
     [MetadataAttribute]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class CommandFilterAttribute : InheritedExportAttribute, ICommandFilterMetadata
+    public class CommandFilterAttribute : ComponentAttribute
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandFilterAttribute"/> class.
+        /// Initializes a new instance of the <see cref="CommandFilterAttribute"/> class 
+        /// from a dictionary of values
         /// </summary>
-        public CommandFilterAttribute(string owningPackageGuid, string commandPackageGuid, string groupGuid, int commandId)
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public CommandFilterAttribute(IDictionary<string, object> attributes)
+            : this((string)attributes["PackageId"], (string)attributes["GroupId"], (int)attributes["CommandId"])
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommandFilterAttribute" /> class.
+        /// </summary>
+        /// <param name="packageGuid">Identifer for the package that owns/exposes the given command.</param>
+        /// <param name="groupGuid">Gets the command group GUID (also known as CommandSet ID).</param>
+        /// <param name="commandId">The command id.</param>
+        public CommandFilterAttribute(string packageGuid, string groupGuid, int commandId)
             : base(typeof(ICommandFilter))
         {
-            this.OwningPackageId = owningPackageGuid;
-            this.PackageId = commandPackageGuid;
+            this.PackageId = packageGuid;
             this.GroupId = groupGuid;
             this.CommandId = commandId;
         }
 
         /// <summary>
-        /// Gets the package GUID.
+        /// Identifer for the package that owns/exposes the given command.
         /// </summary>
         public string PackageId { get; private set; }
 
         /// <summary>
-        /// Gets the group GUID.
+        /// Gets the command group GUID (also known as CommandSet ID).
         /// </summary>
         public string GroupId { get; private set; }
 
@@ -54,10 +69,5 @@ namespace Clide.Commands
         /// Gets the command id.
         /// </summary>
         public int CommandId { get; private set; }
-
-        /// <summary>
-        /// Gets the owning package GUID.
-        /// </summary>
-        public string OwningPackageId { get; private set; }
     }
 }

@@ -29,11 +29,20 @@ namespace Clide
 	{
 		internal static readonly IAssertion Assert = new Assertion();
 
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void when_getting_global_devenv_then_succeeds()
+        {
+            var dev = DevEnv.Get(Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider);
+
+            Assert.NotNull(dev);
+        }
+
 		[HostType("VS IDE")]
 		[TestMethod]
 		public void WhenEnvironmentInitialized_ThenRaisesInitializedEvent()
 		{
-            var devenv = Container.GetExportedValue<IDevEnv>();
+            var devenv = ServiceLocator.GetInstance<IDevEnv>();
 
 			var called = false;
 

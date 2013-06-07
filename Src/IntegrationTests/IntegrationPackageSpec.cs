@@ -34,7 +34,7 @@ namespace Clide
         [TestMethod]
         public void WhenRetrievingPackage_ThenSucceeds()
         {
-            var package = ServiceProvider.GetExportedValue<IShellComponent>();
+            var package = ServiceLocator.GetInstance<IShellComponent>();
             
             Assert.NotNull(package);
         }

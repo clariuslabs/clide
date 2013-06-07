@@ -30,7 +30,7 @@ namespace Clide.Solution.Adapters
     {
         public IServiceProvider Adapt(ISolutionNode from)
         {
-            return ServiceLocator.GlobalProvider;
+            return GlobalServiceProvider.Instance;
         }
 
         public IServiceProvider Adapt(IProjectNode from)
@@ -42,7 +42,7 @@ namespace Clide.Solution.Adapters
             if (vsProject != null && vsProject.GetItemContext(VSConstants.VSITEMID_ROOT, out oleSp) == VSConstants.S_OK)
                 return new ServiceProvider(oleSp);
 
-            return ServiceLocator.GlobalProvider;
+            return GlobalServiceProvider.Instance;
         }
 
         public IServiceProvider Adapt(ProjectItemNode from)

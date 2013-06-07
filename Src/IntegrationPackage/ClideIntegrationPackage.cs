@@ -31,6 +31,7 @@
         protected override void Initialize()
         {
             base.Initialize();
+
             this.host = Host.Initialize(this, OutputPaneTitle, "*");
             this.tracer = Tracer.Get<ClideIntegrationPackage>();
 

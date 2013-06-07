@@ -18,38 +18,69 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide
 {
     using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.Composition;
+    using Clide.Composition;
 
     /// <summary>
     /// Attribute that designates a given class as a 
     /// tree node factory for a specific owner and model type.
     /// </summary>
     [MetadataAttribute]
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false, Inherited = true)]
-	public class TreeNodeFactoryAttribute : InheritedExportAttribute, ITreeNodeFactoryMetadata
-	{
-		public TreeNodeFactoryAttribute(string ownerContractName, Type modelType, bool isFallback)
-			: base(ownerContractName, BuildFactoryType(modelType))
-		{
-			this.IsFallback = isFallback;
-		}
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false, Inherited = true)]
+    public class TreeNodeFactoryAttribute : ComponentAttribute
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TreeNodeFactoryAttribute"/> class.
+        /// </summary>
+        /// <param name="treeOwner">The owner of the tree, used to filter factories for this particular tree.</param>
+        /// <param name="modelType">Type of the model backing the tree.</param>
+        /// <param name="isFallback">Whether the factory is a fallback one, meaning a non-fallback one should be tried first..</param>
+        public TreeNodeFactoryAttribute(string treeOwner, Type modelType, bool isFallback)
+            : base(treeOwner, BuildFactoryType(modelType))
+        {
+            this.IsFallback = isFallback;
+        }
 
-		public TreeNodeFactoryAttribute(Type treeOwner, Type modelType, bool isFallback)
-			: base(ContractFor(treeOwner), BuildFactoryType(modelType))
-		{
-			this.IsFallback = isFallback;
-		}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TreeNodeFactoryAttribute"/> class.
+        /// </summary>
+        /// <param name="treeOwner">The owner of the tree, used to filter factories for this particular tree.</param>
+        /// <param name="modelType">Type of the model backing the tree.</param>
+        /// <param name="isFallback">Whether the factory is a fallback one, meaning a non-fallback one should be tried first..</param>
+        public TreeNodeFactoryAttribute(Type treeOwner, Type modelType, bool isFallback)
+            : base(ContractFor(treeOwner), BuildFactoryType(modelType))
+        {
+            this.IsFallback = isFallback;
+        }
 
-		public bool IsFallback { get; private set; }
+        /// <summary>
+        /// For internal use by the composition container.
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public TreeNodeFactoryAttribute(IDictionary<string, object> metadata)
+            : base(metadata)
+        {
+            object value;
+            if (metadata.TryGetValue("IsFallback", out value))
+                this.IsFallback = (bool)value;
+        }
 
-		private static string ContractFor(Type treeOwner)
-		{
-			return treeOwner.FullName;
-		}
+        /// <summary>
+        /// Gets a value indicating whether the factory is meant
+        /// to provide fallback behavior.
+        /// </summary>
+        public bool IsFallback { get; private set; }
 
-		private static Type BuildFactoryType(Type modelType)
-		{
-			return typeof(ITreeNodeFactory<>).MakeGenericType(modelType);
-		}
-	}
+        private static string ContractFor(Type treeOwner)
+        {
+            return treeOwner.FullName;
+        }
+
+        private static Type BuildFactoryType(Type modelType)
+        {
+            return typeof(ITreeNodeFactory<>).MakeGenericType(modelType);
+        }
+    }
 }

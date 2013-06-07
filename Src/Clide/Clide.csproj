@@ -45,6 +45,9 @@
     <Reference Include="Autofac.Configuration">
       <HintPath>..\..\packages\Autofac.3.0.2\lib\net40\Autofac.Configuration.dll</HintPath>
     </Reference>
+    <Reference Include="Autofac.Extras.Attributed">
+      <HintPath>..\..\packages\Autofac.Extras.Attributed.3.0.0\lib\net40\Autofac.Extras.Attributed.dll</HintPath>
+    </Reference>
     <Reference Include="Autofac.Extras.CommonServiceLocator">
       <HintPath>..\..\packages\Autofac.Extras.CommonServiceLocator.3.0.1\lib\net40\Autofac.Extras.CommonServiceLocator.dll</HintPath>
     </Reference>
@@ -99,6 +102,7 @@
       <SpecificVersion>True</SpecificVersion>
       <HintPath>$(VSSDK)Microsoft.VisualStudio.Shell.Interop.9.0.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Configuration" />
     <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <SpecificVersion>True</SpecificVersion>
@@ -110,7 +114,6 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
@@ -127,18 +130,15 @@
     <Compile Include="ClideSettings.cs" />
     <Compile Include="Commands\CommandInterceptorAttribute.cs" />
     <Compile Include="Commands\ICommandInterceptor.cs" />
-    <Compile Include="Commands\ICommandInterceptorMetadata.cs" />
-    <Compile Include="Composition\ExportInfo.cs" />
-    <Compile Include="Composition\DecoratingImportContext.cs" />
-    <Compile Include="Composition\DecoratingExportContext.cs" />
-    <Compile Include="Composition\DecoratingPartContext.cs" />
-    <Compile Include="Composition\DecoratingReflectionCatalog.cs" />
-    <Compile Include="Composition\ImportInfo.cs" />
-    <Compile Include="Composition\LocalCompositionContainer.cs" />
-    <Compile Include="Composition\LocalDecoratingCatalog.cs" />
-    <Compile Include="Composition\SelectorEqualityComparer.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Composition\AutofacContrib\AutofacAttributeExtensions.cs" />
+    <Compile Include="Composition\AutofacContrib\WithKeyAttribute.cs" />
+    <Compile Include="Composition\CompositionExtensions.cs" />
+    <Compile Include="Composition\CompositionModule.cs" />
+    <Compile Include="Composition\CompositionSource.cs" />
+    <Compile Include="Composition\MefServiceLocator.cs" />
+    <Compile Include="Composition\ServiceProviderLocator.cs" />
+    <Compile Include="Composition\ServiceProviderSource.cs" />
+    <Compile Include="Composition\AutofacContrib\WithMetadataAttribute.cs" />
     <Compile Include="Diagnostics\TracerManager.cs" />
     <Compile Include="Diagnostics\Visibility.cs" />
     <Compile Include="Diagnostics\ITracerManager.cs" />
@@ -157,37 +157,18 @@
     <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="netfx\System\StringFormatWith.cs" />
     <Compile Include="netfx\System\Windows\Threading\DispatcherInvokeExtensions.cs" />
-    <Compile Include="Patterns\Adapter\AdapterAttribute.cs" />
+    <Compile Include="Patterns\AdapterAttribute.cs" />
     <Compile Include="Patterns\Adapter\Adapters.cs" />
     <Compile Include="Commands\CommandAttribute.cs" />
     <Compile Include="Commands\CommandFilterAttribute.cs" />
     <Compile Include="Commands\CommandManager.cs" />
     <Compile Include="Commands\ICommandExtension.cs" />
     <Compile Include="Commands\ICommandFilter.cs" />
-    <Compile Include="Commands\ICommandFilterMetadata.cs" />
     <Compile Include="Commands\ICommandManager.cs" />
-    <Compile Include="Commands\ICommandMetadata.cs" />
     <Compile Include="Commands\IMenuCommand.cs" />
     <Compile Include="Commands\OleMenuCommandAdapter.cs" />
     <Compile Include="Commands\VsCommand.cs" />
     <Compile Include="Commands\VsCommandExtensionAdapter.cs" />
-    <Compile Include="Composition\ComponentModel.cs" />
-    <Compile Include="Composition\ContractNames.cs" />
-    <Compile Include="Composition\Diagnostics\CompositionContractInfo.cs" />
-    <Compile Include="Composition\Diagnostics\CompositionElementTextFormatter.cs" />
-    <Compile Include="Composition\Diagnostics\CompositionInfo.cs" />
-    <Compile Include="Composition\Diagnostics\CompositionInfoTextFormatter.cs" />
-    <Compile Include="Composition\Diagnostics\ContractInfo.cs" />
-    <Compile Include="Composition\Diagnostics\EnumerableExtensions.cs" />
-    <Compile Include="Composition\Diagnostics\ImportDefinitionInfo.cs" />
-    <Compile Include="Composition\Diagnostics\PartDefinitionInfo.cs" />
-    <Compile Include="Composition\Diagnostics\PartDefinitionInfoTextFormatter.cs" />
-    <Compile Include="Composition\Diagnostics\UnsuitableExportDefinitionInfo.cs" />
-    <Compile Include="Composition\Diagnostics\UnsuitableExportDefinitionIssue.cs" />
-    <Compile Include="Composition\Diagnostics\UnsuitableExportDefinitionReason.cs" />
-    <Compile Include="Composition\SingletonCatalog.cs" />
-    <Compile Include="Composition\VsContractNames.cs" />
-    <Compile Include="Composition\VsExportedServices.cs" />
     <Compile Include="DevEnv.cs" />
     <Compile Include="Extensions\ServiceProviderExtensions.cs" />
     <Compile Include="Host.cs" />
@@ -195,7 +176,6 @@
     <Compile Include="Events\ProjectEventArgs.cs" />
     <Compile Include="Events\ShellEvents.cs" />
     <Compile Include="Events\SolutionEvents.cs" />
-    <Compile Include="Extensions\ComponentModelExtensions.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="IMessageBoxServiceExtensions.cs" />
     <Compile Include="Extensions\TracingExtensions.cs" />
@@ -203,7 +183,6 @@
     <Compile Include="IOptionsPage.cs" />
     <Compile Include="Patterns\Adapter\AdapterService.cs" />
     <Compile Include="Patterns\Adapter\AdaptersInitializer.cs" />
-    <Compile Include="Patterns\Adapter\ComposedAdapterService.cs" />
     <Compile Include="Patterns\Adapter\Constants.cs" />
     <Compile Include="Patterns\Adapter\IAdaptable.cs" />
     <Compile Include="Patterns\Adapter\IAdapter.cs" />
@@ -214,6 +193,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
+    <Compile Include="Composition\ComponentAttribute.cs" />
     <Compile Include="Solution\Adapters\VsLangToSolutionAdapter.cs" />
     <Compile Include="Solution\Adapters\VsHierarchyItemToSolutionAdapter.cs" />
     <Compile Include="Solution\Adapters\VsToSolutionAdapter.cs" />
@@ -229,7 +209,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="OptionsPageAttribute.cs" />
-    <Compile Include="IOptionsPageMetadata.cs" />
     <Compile Include="OptionsPageWindowFactory.cs" />
     <Compile Include="Solution\Extensions\IProjectNodeExtensions.cs" />
     <Compile Include="Solution\Extensions\ISolutionExplorerNodeExtensions.cs" />
@@ -246,11 +225,10 @@
     <Compile Include="Solution\Implementation\GlobalProjectProperties.cs" />
     <Compile Include="Solution\ISolutionExplorerNode.cs" />
     <Compile Include="Solution\IProjectConfiguration.cs" />
-    <Compile Include="ServiceLocator.cs" />
+    <Compile Include="GlobalServiceProvider.cs" />
     <Compile Include="VisualStudio\VsHierarchyExtensions.cs" />
     <Compile Include="netfx\System\TypeInheritance.cs" />
     <Compile Include="netfx\System\TypeInheritanceExtension.cs" />
-    <Compile Include="Composition\CompositionTarget.cs" />
     <Compile Include="Solution\Factories\AggregateHierarchyFactory.cs" />
     <Compile Include="Solution\Factories\DefaultHierarchyFactory.cs" />
     <Compile Include="Solution\Factories\FallbackFactoryAttribute.cs" />
@@ -338,7 +316,7 @@
     <Compile Include="StatusBar.cs" />
     <Compile Include="Diagnostics\TracingExtensions.cs" />
     <Compile Include="UI\TreeNodes\ITreeNodeFactory.cs" />
-    <Compile Include="UI\TreeNodes\ITreeNodeFactoryMetadata.cs" />
+    <Compile Include="UI\TreeNodes\TreeNodeFactoryMetadata.cs" />
     <Compile Include="UI\TreeNodes\TreeNodeFactoryAttribute.cs" />
     <Compile Include="UIThread.cs" />
     <Compile Include="UI\InputBox.xaml.cs">
@@ -365,7 +343,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
-    <Compile Include="Patterns\Adapter\AdapterService.Custom.cs" />
+    <Compile Include="Patterns\AdapterService.cs" />
     <None Include="Properties\Resources.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Resources.Strings.cs</LastGenOutput>

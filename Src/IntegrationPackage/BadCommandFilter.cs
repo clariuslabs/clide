@@ -20,7 +20,7 @@ namespace IntegrationPackage
     using System.Linq;
     using System.Text;
 
-    [CommandFilter(Constants.PackageGuid, Constants.PackageGuid, "{5efc7975-14bc-11cf-9b2b-00aa00573819}", 99999999)]
+    [CommandFilter(Constants.PackageGuid, "{5efc7975-14bc-11cf-9b2b-00aa00573819}", 99999999)]
     public class BadCommandFilter : ICommandFilter
     {
         public static bool QueryStatusCalled;

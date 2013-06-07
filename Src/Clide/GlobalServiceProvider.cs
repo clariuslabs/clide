@@ -15,6 +15,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide
 {
     using System;
+    using System.ComponentModel.Composition;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
@@ -22,9 +23,10 @@ namespace Clide
     using Microsoft.VisualStudio.Shell;
 
     /// <summary>
-    /// Locates global services inside Visual Studio.
+    /// Locates global services inside Visual Studio, in a thread-safe way, unlike 
+    /// the VS Shell version.
     /// </summary>
-    public static class ServiceLocator
+    public static class GlobalServiceProvider
     {
         private static readonly IServiceProvider dteProvider = new DteServiceProvider();
         private static readonly VsServiceProvider vsProvider = new VsServiceProvider();
@@ -36,7 +38,10 @@ namespace Clide
                 cmProvider, 
                     vsProvider));
 
-        public static IServiceProvider GlobalProvider
+        /// <summary>
+        /// Gets the global service provider.
+        /// </summary>
+        public static IServiceProvider Instance
         {
             get { return globalProvider; }
         }
@@ -71,7 +76,7 @@ namespace Clide
             {
                 var dte = Package.GetGlobalService(typeof(EnvDTE.DTE));
                 var ole = dte as Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
-                return new ServiceProvider(ole);
+                return new Microsoft.VisualStudio.Shell.ServiceProvider(ole);
             }
         }
 
@@ -88,7 +93,14 @@ namespace Clide
             public object GetService(Type serviceType)
             {
                 // TODO: cache delegates per service type for performance.
-                return getService.MakeGenericMethod(serviceType).Invoke(componentModel, null);
+                try
+                {
+                    return getService.MakeGenericMethod(serviceType).Invoke(componentModel, null);
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
             }
         }
 

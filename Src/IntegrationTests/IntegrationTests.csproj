@@ -48,6 +48,9 @@
     <Reference Include="Autofac.Configuration">
       <HintPath>..\..\packages\Autofac.3.0.2\lib\net40\Autofac.Configuration.dll</HintPath>
     </Reference>
+    <Reference Include="Autofac.Extras.Attributed">
+      <HintPath>..\..\packages\Autofac.Extras.Attributed.3.0.0\lib\net40\Autofac.Extras.Attributed.dll</HintPath>
+    </Reference>
     <Reference Include="Autofac.Extras.CommonServiceLocator">
       <HintPath>..\..\packages\Autofac.Extras.CommonServiceLocator.3.0.1\lib\net40\Autofac.Extras.CommonServiceLocator.dll</HintPath>
     </Reference>
@@ -94,9 +97,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\IntegrationPackage\Constants.cs">
-      <Link>Constants.cs</Link>
-    </Compile>
     <Compile Include="CommandsSpec.cs" />
     <Content Include="Content\SampleSolution\ClassLibrary\Class1.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -131,7 +131,7 @@
     <Compile Include="Solution\SolutionTreeNodeSpec.cs" />
     <Compile Include="Solution\VsSolutionHierarchyNodeIteratorSpec.cs" />
     <Compile Include="Solution\VsSolutionHierarchyNodeSpec.cs" />
-    <Compile Include="VsExportedServicesSpec.cs" />
+    <Compile Include="VsExposedServicesSpec.cs" />
     <Compile Include="VsHostedSpec.cs" />
   </ItemGroup>
   <ItemGroup>
