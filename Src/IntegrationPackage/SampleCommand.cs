@@ -13,11 +13,11 @@ namespace IntegrationPackage
 	[Command(Constants.CommandSet, Constants.cmdHelloClide)]
 	public class SampleCommand : ICommandExtension
 	{
-        private IServiceProvider serviceProvider;
+        private IDevEnv devEnv;
 
-        public SampleCommand(IServiceProvider serviceProvider)
+        public SampleCommand(IDevEnv devEnv)
         {
-            this.serviceProvider = serviceProvider;
+            this.devEnv = devEnv;
         }
 
 		public string Text
@@ -27,10 +27,7 @@ namespace IntegrationPackage
 
 		public void Execute(IMenuCommand command)
 		{
-            DevEnv
-                .Get(this.serviceProvider)
-                .MessageBoxService
-                .ShowInformation(string.Format(
+            devEnv.MessageBoxService.ShowInformation(string.Format(
                     "Clide Version: {0}", typeof(IDevEnv).Assembly.GetName().Version));
         }
 

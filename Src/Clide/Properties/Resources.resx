@@ -172,13 +172,13 @@
     <value>Clide</value>
   </data>
   <data name="SettingsManager_CannotSaveAsString" xml:space="preserve">
-    <value>Cannot persist setting value of type '{0}' from property '{1}.{2}'. An appropriate type converter that can convert the value to a string is required.</value>
+    <value>Cannot persist setting value of type '{valueType}' from property '{owningType}.{propertyName}'. An appropriate type converter that can convert the value to a string is required.</value>
   </data>
   <data name="SettingsManager_FailedToRead" xml:space="preserve">
-    <value>Failed to read settings class '{0}' from the settings store.</value>
+    <value>Failed to read settings class '{settingsType}' from the settings store.</value>
   </data>
   <data name="SettingsManager_InvalidValue" xml:space="preserve">
-    <value>Cannot assign value of type '{0}' to property '{1}.{2}' of type '{3}'. An appropriate type converter is required.</value>
+    <value>Cannot assign value of type '{valueType}' to property '{owningType}.{propertyName}' of type '{propertyType}'. An appropriate type converter is required.</value>
   </data>
   <data name="Settings_AlreadyInitialized" xml:space="preserve">
     <value>Object has already been initialized.</value>
@@ -217,7 +217,7 @@
     <value>Selecting element '{itemPath}' is not supported by the underlying project type.</value>
   </data>
   <data name="IProjectNodeExtensions_BuildNoSolution" xml:space="preserve">
-    <value>The specified project '{0}' does not have a valid owning solution.</value>
+    <value>The specified project '{project}' does not have a valid owning solution.</value>
   </data>
   <data name="IProjectNodeExtensions_FailedToLoadAssembly" xml:space="preserve">
     <value>Failed to load assemly reference '{reference}' from path '{path}'.</value>
@@ -293,9 +293,6 @@
   </data>
   <data name="DevEnvFactory_ExtensionManifestNotFound" xml:space="preserve">
     <value>Extension manifest for hosting package not found at expected location '{manifestFile}'.</value>
-  </data>
-  <data name="ShellAssembly_NotFound" xml:space="preserve">
-    <value>Microsoft.VisualStudio.Shell assembly was not found in the current application domain.</value>
   </data>
   <data name="ComponentModelExtensions_ExportProviderIsNotCompositionService" xml:space="preserve">
     <value>The given export provider '{provider}' does not implement the required ICompositionService interface.</value>

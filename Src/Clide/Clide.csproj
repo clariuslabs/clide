@@ -158,6 +158,7 @@
     <Compile Include="netfx\System\StringFormatWith.cs" />
     <Compile Include="netfx\System\Windows\Threading\DispatcherInvokeExtensions.cs" />
     <Compile Include="Patterns\AdapterAttribute.cs" />
+    <Compile Include="Patterns\Adapters.cs" />
     <Compile Include="Patterns\Adapter\Adapters.cs" />
     <Compile Include="Commands\CommandAttribute.cs" />
     <Compile Include="Commands\CommandFilterAttribute.cs" />

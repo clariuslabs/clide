@@ -38,7 +38,7 @@ namespace Clide.Commands
 
             var interceptor = new Mock<ICommandInterceptor>();
             var commands = this.ServiceLocator.GetInstance<ICommandManager>();
-            Debugger.Launch();
+
             commands.AddInterceptor(interceptor.Object, new CommandInterceptorAttribute(
                 Constants.PackageGuid, "{5efc7975-14bc-11cf-9b2b-00aa00573819}", 0x372));
 

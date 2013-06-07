@@ -59,7 +59,7 @@ public abstract class VsHostedSpec
 
     protected IServiceProvider ServiceProvider
     {
-        get { return GlobalServiceProvider.Instance; }
+        get { return GlobalServiceProvider.Instance.GetLoadedPackage(new Guid(IntegrationPackage.Constants.PackageGuid)); }
     }
 
     protected IServiceLocator ServiceLocator

@@ -388,42 +388,42 @@ namespace Clide.Properties
 		{
 			/// <summary>
 			/// Looks up a localized string similar to: 
-			///	Cannot persist setting value of type '{0}' from property '{1}.{2}'. An appropriate type converter that can convert the value to a string is required.
+			///	Cannot persist setting value of type '{valueType}' from property '{owningType}.{propertyName}'. An appropriate type converter that can convert the value to a string is required.
 			/// </summary>
-			public static string CannotSaveAsString(object arg0, object arg1, object arg2)
+			public static string CannotSaveAsString(object valueType, object owningType, object propertyName)
 			{
 				return Resources.SettingsManager_CannotSaveAsString.FormatWith(new 
 				{
-					arg0 = arg0,
-					arg1 = arg1,
-					arg2 = arg2,
+					valueType = valueType,
+					owningType = owningType,
+					propertyName = propertyName,
 				});
 			}
 		
 			/// <summary>
 			/// Looks up a localized string similar to: 
-			///	Failed to read settings class '{0}' from the settings store.
+			///	Failed to read settings class '{settingsType}' from the settings store.
 			/// </summary>
-			public static string FailedToRead(object arg0)
+			public static string FailedToRead(object settingsType)
 			{
 				return Resources.SettingsManager_FailedToRead.FormatWith(new 
 				{
-					arg0 = arg0,
+					settingsType = settingsType,
 				});
 			}
 		
 			/// <summary>
 			/// Looks up a localized string similar to: 
-			///	Cannot assign value of type '{0}' to property '{1}.{2}' of type '{3}'. An appropriate type converter is required.
+			///	Cannot assign value of type '{valueType}' to property '{owningType}.{propertyName}' of type '{propertyType}'. An appropriate type converter is required.
 			/// </summary>
-			public static string InvalidValue(object arg0, object arg1, object arg2, object arg3)
+			public static string InvalidValue(object valueType, object owningType, object propertyName, object propertyType)
 			{
 				return Resources.SettingsManager_InvalidValue.FormatWith(new 
 				{
-					arg0 = arg0,
-					arg1 = arg1,
-					arg2 = arg2,
-					arg3 = arg3,
+					valueType = valueType,
+					owningType = owningType,
+					propertyName = propertyName,
+					propertyType = propertyType,
 				});
 			}
 		}
@@ -575,13 +575,13 @@ namespace Clide.Properties
 		{
 			/// <summary>
 			/// Looks up a localized string similar to: 
-			///	The specified project '{0}' does not have a valid owning solution.
+			///	The specified project '{project}' does not have a valid owning solution.
 			/// </summary>
-			public static string BuildNoSolution(object arg0)
+			public static string BuildNoSolution(object project)
 			{
 				return Resources.IProjectNodeExtensions_BuildNoSolution.FormatWith(new 
 				{
-					arg0 = arg0,
+					project = project,
 				});
 			}
 		
@@ -780,20 +780,6 @@ namespace Clide.Properties
 					packageType = packageType,
 				});
 			}
-		}
-		
-		///	<summary>
-		///	Provides access to string resources.
-		///	</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
-		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-		public static partial class ShellAssembly
-		{
-			/// <summary>
-			/// Looks up a localized string similar to: 
-			///	Microsoft.VisualStudio.Shell assembly was not found in the current application domain.
-			/// </summary>
-			public static string NotFound { get { return Resources.ShellAssembly_NotFound; } }
 		}
 		
 		///	<summary>

@@ -45,11 +45,11 @@ namespace Clide.Solution
             Assert.NotNull(node);
         }
 
-
         [HostType("VS IDE")]
         [TestMethod]
         public void WhenSolutionIsOpened_ThenCanAdaptTypes()
         {
+            //System.Diagnostics.Debugger.Launch();
             var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
 
             base.OpenSolution("SampleSolution\\SampleSolution.sln");

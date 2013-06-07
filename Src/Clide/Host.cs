@@ -80,9 +80,6 @@ namespace Clide
                     var host = devEnv.ServiceLocator.GetInstance<Host>();
                     host.Initialize(packageId, tracingPaneTitle, rootTraceSource);
 
-                    // Initialize the default adapter service for the smart cast extension method.
-                    Clide.Patterns.Adapter.AdaptersInitializer.SetService(devEnv.ServiceLocator.GetInstance<IAdapterService>());
-
                     tracer.Info("Package initialization finished successfully");
 
                     return host;

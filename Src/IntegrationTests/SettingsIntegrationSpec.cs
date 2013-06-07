@@ -177,7 +177,9 @@ namespace Clide
 
 namespace Clide.IntegrationTests.OtherNamespace
 {
-	public class FooSettings : Settings
+    using System.ComponentModel;
+    
+    public class FooSettings : Settings
 	{
 		public string StringProperty { get; set; }
 		[DefaultValue("Hello")]

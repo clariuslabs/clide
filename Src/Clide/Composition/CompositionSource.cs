@@ -50,7 +50,19 @@ namespace Clide.Composition
             if (swt == null)
                 yield break;
 
-            var serviceType = GetElementType(swt.ServiceType);
+            // NOTE: removed support for enumerables since it would never return 
+            // null and we'd effectively take over the resolution of ALL enumerables.
+            // In addition, at this point we have no way of knowing if MEF should be 
+            // resolving the import many or Autofac, so we just don't support it.
+            // If the user wants MEF to resolve an ImportMany, he will have to do 
+            // it in a property/field with [ImportMany] annotation, which works fine.
+            // Note that deciding whether to provide the registration or not based 
+            // on wether we find or not actual instances for the enumeration is also 
+            // not ideal. What we'd really need is to aggregate on top of an existing 
+            // registration.
+
+            //var serviceType = GetElementType(swt.ServiceType);
+            var serviceType = swt.ServiceType;
             var exportMethod = (serviceType == swt.ServiceType) ?
                 // If the two are the same, this is a single export retrieval.
                 getExport.MakeGenericMethod(serviceType) :
