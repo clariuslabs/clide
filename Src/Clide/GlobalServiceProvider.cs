@@ -33,10 +33,11 @@ namespace Clide
         private static readonly ComponentModelProvider cmProvider = new ComponentModelProvider(vsProvider);
 
         private static IServiceProvider globalProvider = new FallbackServiceProvider(
-            // DTE, ComponentModel, Global Package
-            dteProvider, new FallbackServiceProvider(
-                cmProvider, 
-                    vsProvider));
+            // DTE, /*ComponentModel*/, Global Package
+            dteProvider, vsProvider);
+            //new FallbackServiceProvider(
+            //    cmProvider, 
+            //        vsProvider));
 
         /// <summary>
         /// Gets the global service provider.

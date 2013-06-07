@@ -194,6 +194,7 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="Composition\ComponentAttribute.cs" />
+    <Compile Include="ServiceLocator.cs" />
     <Compile Include="Solution\Adapters\VsLangToSolutionAdapter.cs" />
     <Compile Include="Solution\Adapters\VsHierarchyItemToSolutionAdapter.cs" />
     <Compile Include="Solution\Adapters\VsToSolutionAdapter.cs" />

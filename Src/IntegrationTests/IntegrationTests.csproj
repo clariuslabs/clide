@@ -116,6 +116,7 @@
     <Compile Include="Misc.cs" />
     <Compile Include="netfx\Testing\Assertions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceLocatorSpec.cs" />
     <Compile Include="SettingsIntegrationSpec.cs" />
     <Compile Include="SettingsManagerSpec.cs" />
     <Compile Include="Solution\AdaptersSpec.cs" />

@@ -31,6 +31,7 @@ namespace Clide.Composition
     internal class CompositionSource : IRegistrationSource
     {
         private static readonly MethodInfo getExport = typeof(ExportProvider).GetMethod("GetExportedValueOrDefault", new Type[0]);
+        private static readonly MethodInfo getExports = typeof(ExportProvider).GetMethod("GetExportedValues", new Type[0]);
 
         private ComposablePartCatalog catalog;
         private ExportProvider exports;
@@ -49,17 +50,34 @@ namespace Clide.Composition
             if (swt == null)
                 yield break;
 
+            var serviceType = GetElementType(swt.ServiceType);
+            var exportMethod = (serviceType == swt.ServiceType) ?
+                // If the two are the same, this is a single export retrieval.
+                getExport.MakeGenericMethod(serviceType) :
+                // Otherwise, this is an import many type service.
+                getExports.MakeGenericMethod(serviceType);
+
             // Unfortunately, VSMEF rewrote the logic of how exports are retrieved 
             // and the catalog doesn't have everything that can be retrieved, so we 
             // have to resort to actually invoking the GetExportedValueOrDefault 
             // to really know if the export is there or not :(
             var contractName = AttributedModelServices.GetContractName(swt.ServiceType);
+            // We short-circuit anyways for things that are in the catalog so that we 
+            // don't retrieve the part at this time.
             if (!catalog.Parts.SelectMany(part => part.ExportDefinitions).Any(e => e.ContractName.Equals(contractName)) && 
-                getExport.MakeGenericMethod(swt.ServiceType).Invoke(exports, null) == null)
+                exportMethod.Invoke(exports, null) == null)
                 yield break;
-
+            
             yield return RegistrationBuilder.CreateRegistration(RegistrationBuilder.ForDelegate(
-                swt.ServiceType, (c, p) => getExport.MakeGenericMethod(swt.ServiceType).Invoke(exports, null)));
+                swt.ServiceType, (c, p) => exportMethod.Invoke(exports, null)));
+        }
+
+        private Type GetElementType(Type type)
+        {
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+                return type.GetGenericArguments()[0];
+
+            return type;
         }
     }
 }
