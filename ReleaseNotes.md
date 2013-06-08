@@ -1,3 +1,10 @@
+v2.0
+* Reworked internals to avoid depending on VS-MEF extensibility, which is problematic and may 
+  cause interference with VS composition.
+* Core DI now provided by Autofac, which gives us a performance boost in addition.
+* Components now don't need any [Import] or [ImportingConstructor] in order for constructor
+  dependencies to work, even for core VS services like IServiceProvider or IVsShell, DTE, etc.
+
 v1.4
 
 * Fixes some performance issues due to MEF (lack of) caching
