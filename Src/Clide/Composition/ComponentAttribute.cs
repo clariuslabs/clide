@@ -97,5 +97,11 @@ namespace Clide.Composition
         /// Gets the type to register the component as, if any.
         /// </summary>
         public Type[] RegisterAs { get; private set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this component should be treated as a singleton 
+        /// or single instance within the container.
+        /// </summary>
+        public bool IsSingleton { get; set; }
     }
 }

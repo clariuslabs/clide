@@ -119,6 +119,7 @@ namespace Clide
                 builder.RegisterAssemblyComponents(assembly)
                     .WithImports(composition.DefaultExportProvider)
                     .WithKeyFilter()
+                    .PropertiesAutowired(PropertyWiringOptions.PreserveSetValues)
                     .WithMetadataFilter();
                 
                 addedAssemblies.Add(assemblyFile);

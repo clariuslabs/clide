@@ -4,6 +4,9 @@ v2.0
 * Core DI now provided by Autofac, which gives us a performance boost in addition.
 * Components now don't need any [Import] or [ImportingConstructor] in order for constructor
   dependencies to work, even for core VS services like IServiceProvider or IVsShell, DTE, etc.
+* Types that have the ComponentAttribute applied are automatically registered. 
+* Supports registering with a certain type (like [Export(typeof(IMyService))]): [Component(typeof(IMyService))]
+* Added support for registering components as single instance (singletons) using [Component(IsSingleton = true)]
 
 v1.4
 

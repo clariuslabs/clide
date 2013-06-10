@@ -63,6 +63,7 @@ namespace Clide.Composition
         /// </summary>
         public static IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> RegisterAssemblyComponents(this ContainerBuilder builder, params Assembly[] assemblies)
         {
+            // Allow non-public types just like MEF does.
             return RegisterComponents(builder, assemblies.SelectMany(x => x.GetTypes()));
         }
 
@@ -79,8 +80,9 @@ namespace Clide.Composition
         /// </summary>
         public static IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> RegisterComponents(this ContainerBuilder builder, IEnumerable<Type> types)
         {
-            return builder
+            var registration = builder
                 .RegisterTypes(types.Where(t => t.GetCustomAttribute<ComponentAttribute>() != null).ToArray())
+                // Allow non-public constructors just like MEF does.
                 .FindConstructorsWith(t => t.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
                 .As(t =>
                 {
@@ -99,6 +101,15 @@ namespace Clide.Composition
 
                     return attr.RegisterAs.Select(reg => new TypedService(reg));
                 });
+
+            // Optionally set the SingleInstance behavior.
+            registration.ActivatorData.ConfigurationActions.Add((t, rb) =>
+            {
+                if (rb.ActivatorData.ImplementationType.GetCustomAttribute<ComponentAttribute>().IsSingleton)
+                    rb.SingleInstance();
+            });
+
+            return registration;
         }
 
         public static IRegistrationBuilder<TLimit, TReflectionActivatorData, TStyle>
@@ -139,6 +150,154 @@ namespace Clide.Composition
                 return type.GetGenericArguments()[0];
 
             return type;
+        }
+
+        private class CompositeRegistration : IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle>
+        {
+            public ScanningActivatorData ActivatorData
+            {
+                get { throw new NotImplementedException(); }
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> As(params Service[] services)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> As(params Type[] services)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> As<TService1, TService2, TService3>()
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> As<TService1, TService2>()
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> As<TService>()
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> ExternallyOwned()
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> InstancePerDependency()
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> InstancePerLifetimeScope()
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> InstancePerMatchingLifetimeScope(params object[] lifetimeScopeTag)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> InstancePerOwned(object serviceKey, Type serviceType)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> InstancePerOwned<TService>(object serviceKey)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> InstancePerOwned(Type serviceType)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> InstancePerOwned<TService>()
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> Keyed<TService>(object serviceKey)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> Keyed(object serviceKey, Type serviceType)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> Named<TService>(string serviceName)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> Named(string serviceName, Type serviceType)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> OnActivated(Action<IActivatedEventArgs<object>> handler)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> OnActivating(Action<IActivatingEventArgs<object>> handler)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> OnPreparing(Action<PreparingEventArgs> handler)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> OwnedByLifetimeScope()
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> PropertiesAutowired(PropertyWiringOptions options = PropertyWiringOptions.None)
+            {
+                throw new NotImplementedException();
+            }
+
+            public RegistrationData RegistrationData
+            {
+                get { throw new NotImplementedException(); }
+            }
+
+            public DynamicRegistrationStyle RegistrationStyle
+            {
+                get { throw new NotImplementedException(); }
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> SingleInstance()
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> WithMetadata<TMetadata>(Action<MetadataConfiguration<TMetadata>> configurationAction)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> WithMetadata(IEnumerable<KeyValuePair<string, object>> properties)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> WithMetadata(string key, object value)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }
