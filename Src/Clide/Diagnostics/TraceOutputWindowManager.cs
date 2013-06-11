@@ -137,8 +137,11 @@ namespace Clide.Diagnostics
                 var outputWindow = (IVsOutputWindow)this.serviceProvider.GetService(typeof(SVsOutputWindow));
                 tracer.ShieldUI(() =>
                 {
-                    ErrorHandler.ThrowOnFailure(outputWindow.CreatePane(ref this.outputPaneGuid, this.outputPaneTitle, 1, 1));
-                    ErrorHandler.ThrowOnFailure(outputWindow.GetPane(ref this.outputPaneGuid, out this.outputWindowPane));
+                    if (!ErrorHandler.Succeeded(outputWindow.GetPane(ref this.outputPaneGuid, out this.outputWindowPane)) || this.outputWindowPane == null)
+                    {
+                        ErrorHandler.ThrowOnFailure(outputWindow.CreatePane(ref this.outputPaneGuid, this.outputPaneTitle, 1, 1));
+                        ErrorHandler.ThrowOnFailure(outputWindow.GetPane(ref this.outputPaneGuid, out this.outputWindowPane));
+                    }
                 },
                 Strings.Diagnostics.FailedToCreateOutputWindow);
                 tracer.Info("Trace output window created");
