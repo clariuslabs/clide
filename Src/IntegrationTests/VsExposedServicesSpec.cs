@@ -9,6 +9,7 @@ using System.ComponentModel.Composition.Hosting;
 using Clide.Composition;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.ExtensionManager;
 
 namespace Clide
 {
