@@ -25,6 +25,9 @@
                  Properties="VisualStudioVersion=11.0;NuGet=true"
                  />-->                 
 
+        <!-- Fix for improper Microsoft.Practices.ServiceLocation.pdb in CommonServiceLocator package -->
+        <Delete Files="nuget\lib\net40\Microsoft.Practices.ServiceLocation.pdb" ContinueOnError="false" />
+        
         <!-- Finally build the package -->
         <Exec Command="$(NuGetExe) pack -NoPackageAnalysis nuget\Clide.nuspec -Symbols -OutputDirectory $(DropDirectory) -Version $(PackageVersion)"
               ContinueOnError="false" />

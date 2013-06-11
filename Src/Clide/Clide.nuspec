@@ -11,7 +11,28 @@
         <iconUrl>http://clarius.io/clide-48x48</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>High-level, composable and testable APIs for working with Visual Studio.</description>
-        <releaseNotes>v1.3
+        <releaseNotes>v2.0
+* Reworked internals to avoid depending on VS-MEF extensibility, which is problematic and may 
+  cause interference with VS composition.
+* Core DI now provided by Autofac, which gives us a performance boost in addition.
+* Components now don't need any [Import] or [ImportingConstructor] in order for constructor
+  dependencies to work, even for core VS services like IServiceProvider or IVsShell, DTE, etc.
+* Types that have the ComponentAttribute applied are automatically registered. 
+* Supports registering with a certain type (like [Export(typeof(IMyService))]): [Component(typeof(IMyService))]
+* Added support for registering components as single instance (singletons) using [Component(IsSingleton = true)]
+
+v1.4
+
+* Fixes some performance issues due to MEF (lack of) caching
+* Tracing of MEF composition off by default (can be turned on for diagnostics via the registry)
+* Exposed ServiceLocator.GlobalProvider to get access to a thread-safe IServiceProvider for the entire Visual Studio IDE. 
+* Removed usage of the problematic ServiceProvider.GlobalProvider (see above)
+* Removed usage of the problematic ThreadHelper for UI thread marshaling (now leveraging the WPF Dispatcher)
+* Added support for customizing what kinds of traces you want to receive on your output window via Host.Initialize
+* Fixed a potential hang when using the Tracer from a background thread
+* Fixed issue when a command filter was improperly configured.
+
+v1.3
 
 * Expose CompositionContainer directly on IDevEnv. This simplifies many scenarios where you want to interact with the container. Users can still import ICompositionService.
 * Added support for intercepting arbitrary commands in the IDE via simple exports of ICommandInterceptor components, automatically registered when the host is initialized. 
@@ -42,7 +63,8 @@ v1.0
 
 * Full support for MEF-exported commands (ICommandExtension) and command filters
 * ToolWindow support
-* Tools options pages support</releaseNotes>
+* Tools options pages support
+</releaseNotes>
         <copyright>Copyright 2012</copyright>
         <tags>visualstudio vsx extensibility</tags>
         <dependencies />
