@@ -33,7 +33,7 @@ namespace Clide.Composition
     /// Provides automatic component registration by scanning assemblies and types for 
     /// those that have the <see cref="ComponentAttribute"/> annotation.
     /// </summary>
-    internal static class CompositionExtensions
+    public static class CompositionExtensions
     {
         /// <summary>
         /// Registers the composition component model extensions with the builder.
@@ -61,24 +61,24 @@ namespace Clide.Composition
         /// <summary>
         /// Registers the components found in the given assemblies.
         /// </summary>
-        public static IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> RegisterAssemblyComponents(this ContainerBuilder builder, params Assembly[] assemblies)
+        public static IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> RegisterAssemblyComponents(this ContainerBuilder builder, ExportProvider exports, params Assembly[] assemblies)
         {
             // Allow non-public types just like MEF does.
-            return RegisterComponents(builder, assemblies.SelectMany(x => x.GetTypes()));
+            return RegisterComponents(builder, exports, assemblies.SelectMany(x => x.GetTypes()));
         }
 
         /// <summary>
         /// Registers the components found in the given set of types.
         /// </summary>
-        public static IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> RegisterComponents(this ContainerBuilder builder, params Type[] types)
+        public static IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> RegisterComponents(this ContainerBuilder builder, ExportProvider exports, params Type[] types)
         {
-            return RegisterComponents(builder, (IEnumerable<Type>)types);
+            return RegisterComponents(builder, exports, (IEnumerable<Type>)types);
         }
 
         /// <summary>
         /// Registers the components found in the given set of types.
         /// </summary>
-        public static IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> RegisterComponents(this ContainerBuilder builder, IEnumerable<Type> types)
+        public static IRegistrationBuilder<object, ScanningActivatorData, DynamicRegistrationStyle> RegisterComponents(this ContainerBuilder builder, ExportProvider exports, IEnumerable<Type> types)
         {
             var registration = builder
                 .RegisterTypes(types.Where(t => t.GetCustomAttribute<ComponentAttribute>() != null).ToArray())
@@ -100,7 +100,11 @@ namespace Clide.Composition
                         return new Service[] { new TypedService(t) };
 
                     return attr.RegisterAs.Select(reg => new TypedService(reg));
-                });
+                })
+                .WithImports(exports)
+                .WithKeyFilter()
+                .PropertiesAutowired(PropertyWiringOptions.PreserveSetValues)
+                .WithMetadataFilter();
 
             // Optionally set the SingleInstance behavior.
             registration.ActivatorData.ConfigurationActions.Add((t, rb) =>
@@ -112,6 +116,10 @@ namespace Clide.Composition
             return registration;
         }
 
+        /// <summary>
+        /// Specifies that the registered components may have MEF imports as 
+        /// constructor parameters.
+        /// </summary>
         public static IRegistrationBuilder<TLimit, TReflectionActivatorData, TStyle>
             WithImports<TLimit, TReflectionActivatorData, TStyle>(
                 this IRegistrationBuilder<TLimit, TReflectionActivatorData, TStyle> registration,

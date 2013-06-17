@@ -37,7 +37,6 @@ namespace Clide
         [TestMethod]
         public void WhenUsingGlobalLocator_ThenCanGetManyExportedVsComponents()
         {
-            System.Diagnostics.Debugger.Launch();
             Assert.IsTrue(ServiceLocator.GlobalLocator.GetAllInstances<IWpfTextViewCreationListener>().Any());
         }
 

@@ -22,11 +22,16 @@ namespace Clide.Composition
     /// <summary>
     /// Provides component location from a primary and a fallback locator.
     /// </summary>
-    internal class FallbackServiceLocator : ServiceLocatorImplBase
+    public class FallbackServiceLocator : ServiceLocatorImplBase
     {
         private IServiceLocator primary;
         private IServiceLocator fallback;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FallbackServiceLocator"/> class.
+        /// </summary>
+        /// <param name="primary">The primary service locator.</param>
+        /// <param name="fallback">The fallback service locator.</param>
         public FallbackServiceLocator(IServiceLocator primary, IServiceLocator fallback)
         {
             this.primary = primary;
@@ -42,7 +47,7 @@ namespace Clide.Composition
         }
 
         /// <summary>
-        /// Returns the primary instance if any, otherwise, the fallback.
+        /// Returns the instance from the primary locator if any, otherwise, from the fallback.
         /// </summary>
         protected override object DoGetInstance(Type serviceType, string key)
         {

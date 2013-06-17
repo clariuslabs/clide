@@ -19,6 +19,7 @@ namespace UnitTests
     using Autofac;
     using Clide.Composition;
     using Xunit;
+    using System.ComponentModel.Composition.Hosting;
 
     public class CompositionSpec
     {
@@ -26,7 +27,7 @@ namespace UnitTests
         public void when_registering_singleton_component_then_returns_same_instance()
         {
             var builder = new ContainerBuilder();
-            builder.RegisterComponents(typeof(RegularComponent), typeof(SingletonComponent));
+            builder.RegisterComponents(new CompositionContainer(), typeof(RegularComponent), typeof(SingletonComponent));
 
             var container = builder.Build();
 

@@ -116,12 +116,7 @@ namespace Clide
             var assemblyFile = assembly.Location.ToLowerInvariant();
             if (!addedAssemblies.Contains(assemblyFile))
             {
-                builder.RegisterAssemblyComponents(assembly)
-                    .WithImports(composition.DefaultExportProvider)
-                    .WithKeyFilter()
-                    .PropertiesAutowired(PropertyWiringOptions.PreserveSetValues)
-                    .WithMetadataFilter();
-                
+                builder.RegisterAssemblyComponents(composition.DefaultExportProvider, assembly);
                 addedAssemblies.Add(assemblyFile);
             }
         }
