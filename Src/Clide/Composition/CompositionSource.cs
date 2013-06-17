@@ -62,6 +62,7 @@ namespace Clide.Composition
             // registration.
 
             //var serviceType = GetElementType(swt.ServiceType);
+
             var serviceType = swt.ServiceType;
             var exportMethod = (serviceType == swt.ServiceType) ?
                 // If the two are the same, this is a single export retrieval.
@@ -76,7 +77,7 @@ namespace Clide.Composition
             var contractName = AttributedModelServices.GetContractName(swt.ServiceType);
             // We short-circuit anyways for things that are in the catalog so that we 
             // don't retrieve the part at this time.
-            if (!catalog.Parts.SelectMany(part => part.ExportDefinitions).Any(e => e.ContractName.Equals(contractName)) && 
+            if (!catalog.Parts.SelectMany(part => part.ExportDefinitions).Any(e => e.ContractName.Equals(contractName)) || 
                 exportMethod.Invoke(exports, null) == null)
                 yield break;
             

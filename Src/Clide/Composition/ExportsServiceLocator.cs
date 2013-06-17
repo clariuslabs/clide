@@ -12,40 +12,35 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
-namespace UnitTests
+namespace Clide.Composition
 {
     using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.Composition;
+    using System.ComponentModel.Composition.Hosting;
     using System.Linq;
-    using Autofac;
-    using Clide.Composition;
-    using Xunit;
+    using Microsoft.Practices.ServiceLocation;
 
-    public class CompositionSpec
+    internal class ExportsServiceLocator : ServiceLocatorImplBase
     {
-        [Fact]
-        public void when_registering_singleton_component_then_returns_same_instance()
+        private ExportProvider provider;
+
+        public ExportsServiceLocator(ExportProvider provider)
         {
-            var builder = new ContainerBuilder();
-            builder.RegisterComponents(typeof(RegularComponent), typeof(SingletonComponent));
-
-            var container = builder.Build();
-
-            var component1 = container.Resolve<SingletonComponent>();
-            var component2 = container.Resolve<SingletonComponent>();
-
-            Assert.Same(component1, component2);
-
-            Assert.NotSame(container.Resolve<RegularComponent>(), container.Resolve<RegularComponent>());
+            this.provider = provider;
         }
 
-        [Component(IsSingleton = false)]
-        public class RegularComponent
+        protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
         {
+            return this.provider.GetExportedValues<object>(AttributedModelServices.GetContractName(serviceType));
         }
 
-        [Component(IsSingleton = true)]
-        public class SingletonComponent
+        protected override object DoGetInstance(Type serviceType, string key)
         {
+            if (key == null)
+                key = AttributedModelServices.GetContractName(serviceType);
+
+            return this.provider.GetExports<object>(key).Select(e => e.Value).FirstOrDefault();
         }
     }
 }

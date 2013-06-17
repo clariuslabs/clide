@@ -47,23 +47,6 @@ namespace Clide
             get { return globalProvider; }
         }
 
-        private class FallbackServiceProvider : IServiceProvider
-        {
-            private IServiceProvider primary;
-            private IServiceProvider fallback;
-
-            public FallbackServiceProvider(IServiceProvider primary, IServiceProvider fallback)
-            {
-                this.primary = primary;
-                this.fallback = fallback;
-            }
-
-            public object GetService(Type serviceType)
-            {
-                return primary.GetService(serviceType) ?? fallback.GetService(serviceType);
-            }
-        }
-
         private class DteServiceProvider : IServiceProvider
         {
             private static Lazy<IServiceProvider> globalProvider = new Lazy<IServiceProvider>(GetGlobalProvider);

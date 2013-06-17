@@ -17,6 +17,8 @@ namespace Clide
     using System;
     using System.Linq;
     using Microsoft.Practices.ServiceLocation;
+using Clide.Composition;
+    using Microsoft.VisualStudio.ComponentModelHost;
 
     /// <summary>
     /// Locates global services and components inside Visual Studio, in a thread-safe way, 
@@ -31,7 +33,9 @@ namespace Clide
     public static class ServiceLocator
     {
         private static readonly Lazy<IServiceLocator> globalLocator = new Lazy<IServiceLocator>(() =>
-            DevEnv.Get(GlobalServiceProvider.Instance).ServiceLocator);
+            new FallbackServiceLocator(
+                DevEnv.Get(GlobalServiceProvider.Instance).ServiceLocator, 
+                new ExportsServiceLocator(GlobalServiceProvider.Instance.GetService<SComponentModel, IComponentModel>().DefaultExportProvider)));
 
         /// <summary>
         /// Gets the global locator.

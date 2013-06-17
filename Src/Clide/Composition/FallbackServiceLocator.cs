@@ -14,27 +14,39 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Composition
 {
+    using Microsoft.Practices.ServiceLocation;
     using System;
-    using System.ComponentModel.Composition.Hosting;
+    using System.Collections.Generic;
     using System.Linq;
 
-    internal class ServiceProviderLocator : MefServiceLocator
+    /// <summary>
+    /// Provides component location from a primary and a fallback locator.
+    /// </summary>
+    internal class FallbackServiceLocator : ServiceLocatorImplBase
     {
-        private IServiceProvider services;
+        private IServiceLocator primary;
+        private IServiceLocator fallback;
 
-        public ServiceProviderLocator(IServiceProvider serviceProvider, ExportProvider exportProvider)
-            : base(exportProvider)
+        public FallbackServiceLocator(IServiceLocator primary, IServiceLocator fallback)
         {
-            this.services = serviceProvider;
+            this.primary = primary;
+            this.fallback = fallback;
         }
 
+        /// <summary>
+        /// Aggregates the results of the primary and secondary locators.
+        /// </summary>
+        protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
+        {
+            return primary.GetAllInstances(serviceType).Concat(fallback.GetAllInstances(serviceType));
+        }
+
+        /// <summary>
+        /// Returns the primary instance if any, otherwise, the fallback.
+        /// </summary>
         protected override object DoGetInstance(Type serviceType, string key)
         {
-            object value;
-            if (key == null && (value = services.GetService(serviceType)) != null)
-                return value;
-
-            return base.DoGetInstance(serviceType, key);
+            return primary.GetInstance(serviceType, key) ?? fallback.GetInstance(serviceType, key);
         }
     }
 }

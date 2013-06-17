@@ -21,7 +21,8 @@ namespace Clide.Composition
 
     /// <summary>
     /// Marks the decorated class as a component that will be available from 
-    /// the service locator / component container.
+    /// the service locator / component container, by default as a singleton 
+    /// component (see <see cref="IsSingleton"/>).
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class ComponentAttribute : Attribute
@@ -35,6 +36,7 @@ namespace Clide.Composition
         public ComponentAttribute()
         {
             this.RegisterAs = new Type[0];
+            this.IsSingleton = true;
         }
 
         /// <summary>
@@ -47,6 +49,7 @@ namespace Clide.Composition
         public ComponentAttribute(params Type[] registerAs)
         {
             this.RegisterAs = registerAs;
+            this.IsSingleton = true;
         }
 
         /// <summary>
@@ -60,6 +63,7 @@ namespace Clide.Composition
         {
             this.RegisterKey = registerKey;
             this.RegisterAs = new Type[0];
+            this.IsSingleton = true;
         }
 
         /// <summary>
@@ -74,18 +78,22 @@ namespace Clide.Composition
         {
             this.RegisterKey = registerKey;
             this.RegisterAs = new [] { registerAs };
+            this.IsSingleton = true;
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
         public ComponentAttribute(IDictionary<string, object> metadata)
         {
             this.RegisterAs = new Type[0];
+            this.IsSingleton = true;
 
             object value;
             if (metadata.TryGetValue("RegisterKey", out value))
                 this.RegisterKey = value;
             if (metadata.TryGetValue("RegisterAs", out value))
                 this.RegisterAs = (Type[])value;
+            if (metadata.TryGetValue("IsSingleton", out value))
+                this.IsSingleton = (bool)value;
         }
 
         /// <summary>
@@ -100,8 +108,9 @@ namespace Clide.Composition
 
         /// <summary>
         /// Gets or sets a value indicating whether this component should be treated as a singleton 
-        /// or single instance within the container.
+        /// or single instance within the container. Defaults to <see langword="true"/>.
         /// </summary>
+        [DefaultValue(true)]
         public bool IsSingleton { get; set; }
     }
 }

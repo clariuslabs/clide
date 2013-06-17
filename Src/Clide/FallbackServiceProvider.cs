@@ -12,37 +12,43 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
-namespace Clide.Composition
+namespace Clide
 {
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
     using System.Linq;
-    using Microsoft.Practices.ServiceLocation;
 
-    internal class MefServiceLocator : ServiceLocatorImplBase
+    /// <summary>
+    /// A service provider that will try a primary service provider and 
+    /// if the requested service type is not found, will fall back to 
+    /// a secondary one.
+    /// </summary>
+    internal class FallbackServiceProvider : IServiceProvider
     {
-        private ExportProvider provider;
+        private IServiceProvider primary;
+        private IServiceProvider fallback;
 
-        public MefServiceLocator(ExportProvider provider)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FallbackServiceProvider"/> class.
+        /// </summary>
+        /// <param name="primary">The primary service provider.</param>
+        /// <param name="fallback">The fallback service provider.</param>
+        public FallbackServiceProvider(IServiceProvider primary, IServiceProvider fallback)
         {
-            this.provider = provider;
+            this.primary = primary;
+            this.fallback = fallback;
         }
 
-        protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
+        /// <summary>
+        /// Gets the service object of the specified type.
+        /// </summary>
+        /// <param name="serviceType">An object that specifies the type of service object to get.</param>
+        /// <returns>
+        /// A service object of type <paramref name="serviceType" />.-or- null if there is no service object of type <paramref name="serviceType" />.
+        /// </returns>
+        public object GetService(Type serviceType)
         {
-            return this.provider.GetExportedValues<object>(AttributedModelServices.GetContractName(serviceType));
-        }
-
-        protected override object DoGetInstance(Type serviceType, string key)
-        {
-            if (key == null)
-            {
-                key = AttributedModelServices.GetContractName(serviceType);
-            }
-
-            return this.provider.GetExports<object>(key).Select(e => e.Value).FirstOrDefault();
+            return primary.GetService(serviceType) ?? fallback.GetService(serviceType);
         }
     }
+
 }

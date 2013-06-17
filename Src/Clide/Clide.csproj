@@ -135,8 +135,8 @@
     <Compile Include="Composition\CompositionExtensions.cs" />
     <Compile Include="Composition\CompositionModule.cs" />
     <Compile Include="Composition\CompositionSource.cs" />
-    <Compile Include="Composition\MefServiceLocator.cs" />
-    <Compile Include="Composition\ServiceProviderLocator.cs" />
+    <Compile Include="Composition\FallbackServiceLocator.cs" />
+    <Compile Include="Composition\ExportsServiceLocator.cs" />
     <Compile Include="Composition\ServiceProviderSource.cs" />
     <Compile Include="Composition\AutofacContrib\WithMetadataAttribute.cs" />
     <Compile Include="Diagnostics\TracerManager.cs" />
@@ -150,6 +150,7 @@
     <Compile Include="Diagnostics\Tracer\TracerManager.cs" />
     <Compile Include="Diagnostics\Tracer\Visibility.cs" />
     <Compile Include="Diagnostics\Tracer.cs" />
+    <Compile Include="FallbackServiceProvider.cs" />
     <Compile Include="IOptionsPageWindowFactory.cs" />
     <Compile Include="netfx\System\AmbientSingleton.cs" />
     <Compile Include="netfx\System\Collections\Generic\IEnumerable\TraverseKind.cs" />

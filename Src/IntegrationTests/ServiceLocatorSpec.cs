@@ -35,11 +35,10 @@ namespace Clide
 
         [HostType("VS IDE")]
         [TestMethod]
-        public void WhenGettingGlobalLocator_ThenCanGetInstancesVsFactories()
+        public void WhenUsingGlobalLocator_ThenCanGetManyExportedVsComponents()
         {
-            var listeners = ServiceLocator.GlobalLocator.GetAllInstances<IWpfTextViewCreationListener>();
-
-            Assert.IsTrue(listeners.Any());
+            System.Diagnostics.Debugger.Launch();
+            Assert.IsTrue(ServiceLocator.GlobalLocator.GetAllInstances<IWpfTextViewCreationListener>().Any());
         }
 
         [HostType("VS IDE")]
