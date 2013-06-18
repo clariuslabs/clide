@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -11,6 +12,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture("")]
 
 [assembly: ComVisible(false)]
+[assembly: CLSCompliant(true)]
 [assembly: Guid("84d7eb01-bbad-4bd0-8c70-cd5720e33f8d")]
 
 [assembly: AssemblyVersion("2.0.1306.1118")]
