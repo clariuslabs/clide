@@ -18,7 +18,7 @@ namespace Clide.Patterns.Adapter
 
     /// <summary>
     /// Provides the entry point for setting the implementation of the 
-    /// <see cref="IAdapterService"/> as well as the <see cref="As"/> 
+    /// <see cref="IAdapterService"/> as well as the <see cref="Adapt"/> 
     /// extension method for consumers.
     /// </summary>
     public static partial class Adapters

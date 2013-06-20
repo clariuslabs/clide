@@ -49,6 +49,9 @@ namespace Clide.Commands
             this.BeforeQueryStatus += this.OnBeforeQueryStatus;
         }
 
+        /// <summary>
+        /// Gets the command implementation.
+        /// </summary>
         protected ICommandExtension Implementation { get; private set; }
 
         private static void OnExecute(object sender, EventArgs e)

@@ -43,6 +43,18 @@ namespace Clide.Composition
         /// Initializes a new instance of the <see cref="ComponentAttribute"/> class, 
         /// marking the decorated class as a component that will be available from 
         /// the service locator / component container using the specified 
+        /// <paramref name="registerAs"/> type.
+        /// </summary>
+        /// <param name="registerAs">The type to use to register the decorated component.</param>
+        public ComponentAttribute(Type registerAs)
+            : this(new [] { registerAs })
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ComponentAttribute"/> class, 
+        /// marking the decorated class as a component that will be available from 
+        /// the service locator / component container using the specified 
         /// <paramref name="registerAs"/> type or types.
         /// </summary>
         /// <param name="registerAs">The type or types to use to register the decorated component.</param>
@@ -81,6 +93,11 @@ namespace Clide.Composition
             this.IsSingleton = true;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ComponentAttribute"/> class 
+        /// from a metadata dictionary.
+        /// </summary>
+        /// <param name="metadata">The metadata to initialize the attribute from.</param>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public ComponentAttribute(IDictionary<string, object> metadata)
         {

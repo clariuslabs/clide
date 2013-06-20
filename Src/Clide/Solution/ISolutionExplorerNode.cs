@@ -14,9 +14,19 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
+    /// <summary>
+    /// Interface implemented by all nodes in the solution explorer tree.
+    /// </summary>
     public interface ISolutionExplorerNode : ITreeNode
     {
+        /// <summary>
+        /// Gets the kind of node.
+        /// </summary>
         SolutionNodeKind Kind { get; }
+
+        /// <summary>
+        /// Gets the owning solution.
+        /// </summary>
         ISolutionNode OwningSolution { get; }
     }
 }

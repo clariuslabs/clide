@@ -15,8 +15,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 using System;
-using System.Linq.Expressions;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Reflection;
+using System.Linq.Expressions;
 
 /* Overloads for static invocation patterns */
 
@@ -358,6 +361,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <exception cref="ArgumentNullException">The <paramref name="method"/> is null.</exception>
 	/// <exception cref="ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
@@ -371,6 +375,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <exception cref="ArgumentNullException">The <paramref name="method"/> is null.</exception>
@@ -385,6 +390,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -400,6 +406,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -416,6 +423,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -433,6 +441,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -451,6 +460,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -470,6 +480,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -490,6 +501,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -511,6 +523,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -533,6 +546,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -556,6 +570,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -580,6 +595,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -605,6 +621,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -631,6 +648,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -658,6 +676,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -686,6 +705,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <exception cref="ArgumentNullException">The <paramref name="method"/> is null.</exception>
 	/// <exception cref="ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
@@ -699,6 +719,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <exception cref="ArgumentNullException">The <paramref name="method"/> is null.</exception>
@@ -713,6 +734,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -728,6 +750,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -744,6 +767,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -761,6 +785,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -779,6 +804,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -798,6 +824,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -818,6 +845,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -839,6 +867,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -861,6 +890,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -884,6 +914,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -908,6 +939,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -933,6 +965,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -959,6 +992,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -986,6 +1020,7 @@ internal static partial class Reflect
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -1345,7 +1380,6 @@ internal static partial class Reflect
 /// Generated overloads for available Func/Action generic types 
 /// for current target framework version 4.0.
 /// </devdoc>
-/// <typeparam name="TTarget">Type to reflect.</typeparam>
 internal static partial class Reflect<TTarget>
 { 
 	/// <summary>
@@ -1652,6 +1686,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <exception cref="ArgumentNullException">The <paramref name="method"/> is null.</exception>
 	/// <exception cref="ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
@@ -1665,6 +1700,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <exception cref="ArgumentNullException">The <paramref name="method"/> is null.</exception>
@@ -1679,6 +1715,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -1694,6 +1731,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -1710,6 +1748,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -1727,6 +1766,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -1745,6 +1785,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -1764,6 +1805,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -1784,6 +1826,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -1805,6 +1848,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -1827,6 +1871,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -1850,6 +1895,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -1874,6 +1920,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -1899,6 +1946,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -1925,6 +1973,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -1952,6 +2001,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <exception cref="ArgumentNullException">The <paramref name="method"/> is null.</exception>
 	/// <exception cref="ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
@@ -1965,6 +2015,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <exception cref="ArgumentNullException">The <paramref name="method"/> is null.</exception>
@@ -1979,6 +2030,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -1994,6 +2046,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -2010,6 +2063,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -2027,6 +2081,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -2045,6 +2100,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -2064,6 +2120,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -2084,6 +2141,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -2105,6 +2163,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -2127,6 +2186,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -2150,6 +2210,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -2174,6 +2235,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -2199,6 +2261,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>
@@ -2225,6 +2288,7 @@ internal static partial class Reflect<TTarget>
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <typeparam name="T1">The type of the first argument.</typeparam>
 	/// <typeparam name="T2">The type of the second argument.</typeparam>
 	/// <typeparam name="T3">The type of the third argument.</typeparam>

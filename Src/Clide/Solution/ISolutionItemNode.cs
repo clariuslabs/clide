@@ -14,9 +14,19 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
+    /// <summary>
+    /// Interface implemented by solution item nodes.
+    /// </summary>
     public interface ISolutionItemNode : ISolutionExplorerNode
 	{
+        /// <summary>
+        /// Gets the owning solution folder.
+        /// </summary>
         ISolutionFolderNode OwningSolutionFolder { get; }
-		string PhysicalPath { get; }
+
+        /// <summary>
+        /// Gets the physical path of the solution item.
+        /// </summary>
+        string PhysicalPath { get; }
 	}
 }

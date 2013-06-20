@@ -26,23 +26,29 @@ namespace Clide.Commands
     /// </summary>
     public abstract class VsCommand : OleMenuCommand
     {
-        private IServiceProvider serviceProvider;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VsCommand"/> class.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="onExecute">The on execute delegate.</param>
+        /// <param name="id">The command id.</param>
         public VsCommand(IServiceProvider serviceProvider, EventHandler onExecute, CommandID id)
             : base(onExecute, id)
         {
-            this.serviceProvider = serviceProvider;            
+            this.ServiceProvider = serviceProvider;            
             this.BeforeQueryStatus += OnBeforeQueryStatus;            
         }
 
-        protected IServiceProvider ServiceProvider
-        {
-            get
-            {
-                return serviceProvider;
-            }
-        }
+        /// <summary>
+        /// Gets the service provider.
+        /// </summary>
+        protected IServiceProvider ServiceProvider { get; private set; }
 
+        /// <summary>
+        /// Called to query the command status.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected void OnBeforeQueryStatus(object sender, EventArgs e)
         {
             OleMenuCommand command = sender as OleMenuCommand;
@@ -50,6 +56,13 @@ namespace Clide.Commands
             command.Enabled = command.Visible = command.Supported = CanExecute(command);
         }
 
+        /// <summary>
+        /// Determines whether this instance can execute the specified command.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <returns>
+        ///   <c>true</c> if this instance can execute the specified command; otherwise, <c>false</c>.
+        /// </returns>
         protected virtual bool CanExecute(OleMenuCommand command)
         {
             return true;

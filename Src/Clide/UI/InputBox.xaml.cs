@@ -24,23 +24,38 @@ namespace Clide
 	/// </summary>
 	public partial class InputBox : Window
 	{
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InputBox"/> class.
+        /// </summary>
 		public InputBox()
 		{
 			InitializeComponent();
 		}
 
+        /// <summary>
+        /// Gets or sets the response text.
+        /// </summary>
 		public string ResponseText
 		{
 			get { return this.ResponseTextBox.Text; }
 			set { this.ResponseTextBox.Text = value; }
 		}
 
+        /// <summary>
+        /// Gets or sets the message.
+        /// </summary>
 		public string Message
 		{
 			get { return this.MessageText.Text; }
 			set { this.MessageText.Text = value; }
 		}
 
+        /// <summary>
+        /// Shows the input box to the user with the specified message.
+        /// </summary>
+        /// <param name="message">The message to show.</param>
+        /// <param name="owner">The window owner.</param>
+        /// <returns></returns>
 		public static string Show(string message, Window owner = null)
 		{
 			var dialog = new InputBox() { Message = message };

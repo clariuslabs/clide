@@ -75,8 +75,7 @@ namespace Clide.Composition
     /// <para>
     /// When registering your components, the associated metadata on the
     /// dependencies will be used. Be sure to specify the
-    /// <see cref="Autofac.Extras.Attributed.AutofacAttributeExtensions.WithMetadataFilter{TLimit, TReflectionActivatorData, TStyle}" />
-    /// extension on the type with the filtered constructor parameters.
+    /// <c>WithMetadataFilter</c> extension on the type with the filtered constructor parameters.
     /// </para>
     /// <code lang="C#">
     /// var builder = new ContainerBuilder();

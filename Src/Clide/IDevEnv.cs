@@ -24,13 +24,39 @@ namespace Clide
     using Clide.Events;
     using Microsoft.Practices.ServiceLocation;
 
+    /// <summary>
+    /// Entry point interface for the environment components.
+    /// </summary>
     public interface IDevEnv : IShellEvents, IFluentInterface
 	{
+        /// <summary>
+        /// Gets the service locator.
+        /// </summary>
         IServiceLocator ServiceLocator { get; }
-		IDialogWindowFactory DialogWindowFactory { get; }
+
+        /// <summary>
+        /// Gets the dialog window factory.
+        /// </summary>
+        IDialogWindowFactory DialogWindowFactory { get; }
+
+        /// <summary>
+        /// Gets the message box service.
+        /// </summary>
         IMessageBoxService MessageBoxService { get; }
-		IStatusBar StatusBar { get; }
-		IEnumerable<IToolWindow> ToolWindows { get; }
-		IUIThread UIThread { get; }
+
+        /// <summary>
+        /// Gets the status bar.
+        /// </summary>
+        IStatusBar StatusBar { get; }
+
+        /// <summary>
+        /// Gets the tool windows.
+        /// </summary>
+        IEnumerable<IToolWindow> ToolWindows { get; }
+
+        /// <summary>
+        /// Gets the UI thread.
+        /// </summary>
+        IUIThread UIThread { get; }
 	}
 }

@@ -17,8 +17,14 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
+    /// <summary>
+    /// Interface implemented by solution folder nodes.
+    /// </summary>
     public interface ISolutionFolderNode : ISolutionExplorerNode
 	{
+        /// <summary>
+        /// Creates a nested solution folder.
+        /// </summary>
 		ISolutionFolderNode CreateSolutionFolder(string name);
 	}
 }

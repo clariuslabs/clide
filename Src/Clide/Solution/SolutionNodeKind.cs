@@ -17,16 +17,55 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
+    /// <summary>
+    /// The kind of solution node.
+    /// </summary>
 	public enum SolutionNodeKind
 	{
+        /// <summary>
+        /// The node is the solution node.
+        /// </summary>
 		Solution,
+
+        /// <summary>
+        /// The node is a solution folder.
+        /// </summary>
 		SolutionFolder,
+
+        /// <summary>
+        /// The node is a solution item, meaning it 
+        /// exists in a solution folder, not  a project.
+        /// </summary>
         SolutionItem,
+
+        /// <summary>
+        /// The node is a project.
+        /// </summary>
         Project,
+
+        /// <summary>
+        /// The node is a project folder.
+        /// </summary>
 		Folder,
+
+        /// <summary>
+        /// The node is a project item.
+        /// </summary>
         Item,
+
+        /// <summary>
+        /// The node is a reference in a project.
+        /// </summary>
 		Reference,
+
+        /// <summary>
+        /// The node is the references folder.
+        /// </summary>
 		ReferencesFolder,
+
+        /// <summary>
+        /// The node is of a custom kind.
+        /// </summary>
 		Custom,
 	}
 }

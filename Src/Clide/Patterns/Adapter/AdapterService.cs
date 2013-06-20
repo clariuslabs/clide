@@ -69,6 +69,14 @@ namespace Clide.Patterns.Adapter
                         string.Format("{0}->{1}: {2}", adapter.From, adapter.To, adapter.Adapter))));
 		}
 
+        /// <summary>
+        /// Returns an adaptable object for the given <paramref name="source" />.
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <returns>
+        /// The adaptable object for the given source type.
+        /// </returns>
         public IAdaptable<TSource> Adapt<TSource>(TSource source)
             where TSource : class
         {

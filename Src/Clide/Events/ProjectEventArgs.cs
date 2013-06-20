@@ -20,10 +20,17 @@ namespace Clide.Events
     using System.Text;
     using Clide.Solution;
 
+    /// <summary>
+    /// Events argument data for project-related events.
+    /// </summary>
     public class ProjectEventArgs : EventArgs
 	{
 		private Lazy<IProjectNode> project;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProjectEventArgs"/> class.
+        /// </summary>
+        /// <param name="project">The project.</param>
 		public ProjectEventArgs(Lazy<IProjectNode> project)
 		{
 			Guard.NotNull(() => project, project);
@@ -31,6 +38,9 @@ namespace Clide.Events
 			this.project = project;
 		}
 
+        /// <summary>
+        /// Gets the project that the event applies to or that raised the event.
+        /// </summary>
 		public IProjectNode Project { get { return this.project.Value; } }
 	}
 }

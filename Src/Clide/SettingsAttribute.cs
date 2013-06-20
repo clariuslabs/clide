@@ -24,8 +24,8 @@ namespace Clide
     /// <summary>
 	/// Attribute to apply to classes that implement the <see cref="ISettings"/> interface.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-	public class SettingsAttribute : ComponentAttribute
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+    public class SettingsAttribute : ComponentAttribute
 	{
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingsAttribute"/> class, 

@@ -29,8 +29,13 @@ namespace Clide
 	/// Any solution item should be able to smart-cast to this interface using 
 	/// the As&lt;T&gt; method.
 	/// </summary>
-	public class VsHierarchyItem
+    public class VsHierarchyItem
 	{
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VsHierarchyItem"/> class.
+        /// </summary>
+        /// <param name="hierarchy">The hierarchy.</param>
+        /// <param name="itemId">The item id.</param>
         public VsHierarchyItem(IVsHierarchy hierarchy, uint itemId)
         {
             this.VsHierarchy = hierarchy;

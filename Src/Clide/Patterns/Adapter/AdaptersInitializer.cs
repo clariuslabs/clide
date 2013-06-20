@@ -38,7 +38,7 @@ namespace Clide.Patterns.Adapter
 
         /// <summary>
         /// Sets the singleton adapter service instance to use to implement the 
-        /// <see cref="As"/> extension method for the entire lifetime of the 
+        /// <see cref="Adapters.Adapt"/> extension method for the entire lifetime of the 
         /// current application domain.
         /// </summary>
         public static void SetService(IAdapterService service)

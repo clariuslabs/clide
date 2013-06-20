@@ -18,9 +18,16 @@ namespace Clide.Patterns.Adapter
     using System.Linq;
     using Clide.Composition;
 
+    /// <summary>
+    /// Attributes an adapter component that should be automatically 
+    /// registered with the adapter service.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class AdapterAttribute : ComponentAttribute
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdapterAttribute"/> class.
+        /// </summary>
         public AdapterAttribute()
             : base(typeof(IAdapter))
         {

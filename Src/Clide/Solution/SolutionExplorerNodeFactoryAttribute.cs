@@ -27,6 +27,9 @@ namespace Clide.Solution
     /// </summary>
     public class SolutionExplorerNodeFactoryAttribute : TreeNodeFactoryAttribute
 	{
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SolutionExplorerNodeFactoryAttribute"/> class.
+        /// </summary>
 		public SolutionExplorerNodeFactoryAttribute()
 			: base("SolutionExplorer", typeof(IVsSolutionHierarchyNode), false)
 		{

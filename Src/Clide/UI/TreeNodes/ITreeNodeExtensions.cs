@@ -27,11 +27,11 @@ namespace Clide
         /// <summary>
         /// Traverses the specified node and all its descendents. The node itself 
         /// also exists in the returned enumeration. To traverse only the 
-        /// descendents, traverse its <see cref="ISolutionExplorerNode.Nodes"/> 
+        /// descendents, traverse its <see cref="ITreeNode.Nodes"/> 
         /// property instead.
         /// </summary>
         /// <param name="node">The node to traverse.</param>
-        /// <returns>The <see cref="node"/> itself and all of its descendent nodes.</returns>
+        /// <returns>The <paramref name="node"/> itself and all of its descendent nodes.</returns>
         public static IEnumerable<ITreeNode> Traverse(this ITreeNode node)
         {
             return new[] { node }.Traverse(TraverseKind.DepthFirst, x => x.Nodes);
@@ -42,7 +42,7 @@ namespace Clide
         /// in the list are included in the returned enumeration.
         /// </summary>
         /// <param name="nodes">The nodes to traverse.</param>
-        /// <returns>The <see cref="nodes"/> themselves and all of their descendent nodes.</returns>
+        /// <returns>The <paramref name="nodes"/> themselves and all of their descendent nodes.</returns>
         public static IEnumerable<ITreeNode> Traverse(this IEnumerable<ITreeNode> nodes)
         {
             return nodes.Traverse(TraverseKind.DepthFirst, x => x.Nodes);

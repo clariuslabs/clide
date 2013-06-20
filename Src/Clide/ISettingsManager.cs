@@ -25,7 +25,8 @@ namespace Clide
 	public interface ISettingsManager
 	{
 		/// <summary>
-		/// Reads all saved properties of the given object. Default values are populated from <see cref="DefaultValueAttribute"/> too.
+		/// Reads all saved properties of the given object. Default values are populated from 
+        /// <see cref="System.ComponentModel.DefaultValueAttribute"/> too.
 		/// </summary>
 		void Read(object settings);
 

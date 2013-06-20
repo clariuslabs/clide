@@ -83,8 +83,9 @@ namespace Clide
 
         /// <summary>
         /// Gets or sets the factory that will create instances of 
-        /// <see cref="IDevEnv"/> when the <see cref="Get"/> method 
-        /// is invoked by consumers. This is an ambient singleton, so 
+        /// <see cref="IDevEnv"/> when the <see cref="Get(Guid)"/>
+        /// or <see cref="Get(IServiceProvider)"/> methods 
+        /// are invoked by consumers. This is an ambient singleton, so 
         /// it is safe to replace it in multi-threaded test runs.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]

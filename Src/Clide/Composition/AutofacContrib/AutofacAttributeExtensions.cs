@@ -25,13 +25,13 @@ namespace Clide.Composition
     internal static class AutofacAttributeExtensions
     {
         /// <summary>
-        /// Reference to the <see cref="Autofac.Extras.Attributed.AutofacAttributeExtensions.FilterOne{T}"/>
+        /// Reference to the 
         /// method used in creating a closed generic reference during registration.
         /// </summary>
         private static readonly MethodInfo filterOne = typeof(AutofacAttributeExtensions).GetMethod("FilterOne", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.InvokeMethod);
 
         /// <summary>
-        /// Reference to the <see cref="Autofac.Extras.Attributed.AutofacAttributeExtensions.FilterAll{T}"/>
+        /// Reference to the 
         /// method used in creating a closed generic reference during registration.
         /// </summary>
         private static readonly MethodInfo filterAll = typeof(AutofacAttributeExtensions).GetMethod("FilterAll", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.InvokeMethod);
@@ -39,7 +39,6 @@ namespace Clide.Composition
 
         /// <summary>
         /// Applies metadata filtering on constructor dependencies for use with the
-        /// <see cref="Autofac.Extras.Attributed.WithMetadataAttribute"/>.
         /// </summary>
         /// <typeparam name="TLimit">The type of the registration limit.</typeparam>
         /// <typeparam name="TReflectionActivatorData">Activator data type.</typeparam>
@@ -52,13 +51,10 @@ namespace Clide.Composition
         /// <remarks>
         /// <para>
         /// Apply this metadata filter to component registrations that use the
-        /// <see cref="Autofac.Extras.Attributed.WithMetadataAttribute"/> in their constructors.
         /// Doing so will allow the metadata filtering to occur. See
-        /// <see cref="Autofac.Extras.Attributed.WithMetadataAttribute"/> for an
         /// example on how to use the filter and attribute together.
         /// </para>
         /// </remarks>
-        /// <seealso cref="Autofac.Extras.Attributed.WithMetadataAttribute"/>
         public static IRegistrationBuilder<TLimit, TReflectionActivatorData, TRegistrationStyle>
             WithMetadataFilter<TLimit, TReflectionActivatorData, TRegistrationStyle>(
                 this IRegistrationBuilder<TLimit, TReflectionActivatorData, TRegistrationStyle> builder)
@@ -92,7 +88,6 @@ namespace Clide.Composition
 
         /// <summary>
         /// Applies key filtering on constructor dependencies for use with the
-        /// <see cref="Autofac.Extras.Attributed.WithKeyAttribute"/>.
         /// </summary>
         /// <typeparam name="TLimit">The type of the registration limit.</typeparam>
         /// <typeparam name="TReflectionActivatorData">Activator data type.</typeparam>
@@ -105,13 +100,10 @@ namespace Clide.Composition
         /// <remarks>
         /// <para>
         /// Apply this key filter to component registrations that use the
-        /// <see cref="Autofac.Extras.Attributed.WithKeyAttribute"/> in their constructors.
         /// Doing so will allow the key filtering to occur. See
-        /// <see cref="Autofac.Extras.Attributed.WithKeyAttribute"/> for an
         /// example on how to use the filter and attribute together.
         /// </para>
         /// </remarks>
-        /// <seealso cref="Autofac.Extras.Attributed.WithKeyAttribute"/>
         public static IRegistrationBuilder<TLimit, TReflectionActivatorData, TRegistrationStyle>
             WithKeyFilter<TLimit, TReflectionActivatorData, TRegistrationStyle>(
                 this IRegistrationBuilder<TLimit, TReflectionActivatorData, TRegistrationStyle> builder)

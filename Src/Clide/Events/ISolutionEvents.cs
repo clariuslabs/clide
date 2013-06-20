@@ -16,12 +16,34 @@ namespace Clide.Events
 {
     using System;
 
+    /// <summary>
+    /// Exposes solution-level events.
+    /// </summary>
     public interface ISolutionEvents : IGlobalEvents
 	{
+        /// <summary>
+        /// Occurs when a project is opened.
+        /// </summary>
         event EventHandler<ProjectEventArgs> ProjectOpened;
+
+        /// <summary>
+        /// Occurs when a project is being closed.
+        /// </summary>
         event EventHandler<ProjectEventArgs> ProjectClosing;
-		event EventHandler SolutionOpened;
-		event EventHandler SolutionClosing;
-		event EventHandler SolutionClosed;
+
+        /// <summary>
+        /// Occurs when a solution is opened.
+        /// </summary>
+        event EventHandler SolutionOpened;
+
+        /// <summary>
+        /// Occurs when a solution is being closed.
+        /// </summary>
+        event EventHandler SolutionClosing;
+
+        /// <summary>
+        /// Occurs when a solution was closed.
+        /// </summary>
+        event EventHandler SolutionClosed;
 	}
 }

@@ -28,6 +28,12 @@ namespace Clide
     using System.Windows.Threading;
     using Clide.Composition;
 
+    /// <summary>
+    /// Core host implementation, to be cached while the 
+    /// hosting package remains loaded, to prevent 
+    /// garbage collection of the exposed components and 
+    /// services.
+    /// </summary>
     [Component]
     public class Host : IDisposable
     {
@@ -138,6 +144,9 @@ namespace Clide
             this.options.AddPages();
         }
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
         public void Dispose()
         {
             // Do nothing for now.

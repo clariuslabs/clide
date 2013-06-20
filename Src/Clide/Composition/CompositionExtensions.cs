@@ -49,10 +49,10 @@ namespace Clide.Composition
         }
 
         /// <summary>
-        /// Registers the composition component model extensions with the builder.
+        /// Registers the service provider with the builder.
         /// </summary>
         /// <param name="builder">The builder.</param>
-        /// <param name="composition">The composition.</param>
+        /// <param name="services">The services.</param>
         public static void RegisterServiceProvider(this ContainerBuilder builder, IServiceProvider services)
         {
             builder.RegisterSource(new ServiceProviderSource(services));

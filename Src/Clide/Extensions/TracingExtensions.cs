@@ -30,6 +30,9 @@ namespace System.Diagnostics
     /// </summary>
     public static class TracingExtensions
     {
+        /// <summary>
+        /// Gets or sets the default behavior for showing exceptions.
+        /// </summary>
         public static Action<Exception, string, string[]> ShowExceptionAction { get; set; }
 
         static TracingExtensions()

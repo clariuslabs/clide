@@ -26,6 +26,11 @@ namespace Clide
     using System.ComponentModel.Composition;
     using Microsoft.VisualStudio.Shell;
 
+    /// <summary>
+    /// Base class for options pages.
+    /// </summary>
+    /// <typeparam name="TControl">The type of the control implementing the user interface.</typeparam>
+    /// <typeparam name="TSettings">The type of the settings that persist the values of the page.</typeparam>
     [DesignerCategory("Code")]
 	[ComVisible(true)]
 	public abstract class OptionsPage<TControl, TSettings> : Component, IOptionsPage
@@ -38,6 +43,11 @@ namespace Clide
 
         private IOptionsPageWindowFactory windowFactory;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OptionsPage{TControl, TSettings}"/> class.
+        /// </summary>
+        /// <param name="windowFactory">The window factory.</param>
+        /// <param name="settings">The settings.</param>
 		protected OptionsPage(IOptionsPageWindowFactory windowFactory, TSettings settings)
 		{
             this.windowFactory = windowFactory;
@@ -49,6 +59,10 @@ namespace Clide
 				this.windowFactory.CreateWindow(this.settings, this.userControl.Value));
 		}
 
+        /// <summary>
+        /// Gets the handle to the window represented by the implementer.
+        /// </summary>
+        /// <returns>A handle to the window represented by the implementer.</returns>
 		public IntPtr Handle
 		{
 			get { return this.windowHandle.Value.Handle; }

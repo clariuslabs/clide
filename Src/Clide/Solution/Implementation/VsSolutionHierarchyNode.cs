@@ -27,7 +27,7 @@ namespace Clide.Solution
     using Clide.VisualStudio;
 
     /// <summary>
-	/// A general-purpose <see cref="SolutionExplorerNode"/> that relies on 
+    /// A general-purpose <see cref="IVsSolutionHierarchyNode"/> that relies on 
 	/// <see cref="IVsHierarchy"/> for its behavior and can be reused for most 
 	/// project types.
 	/// </summary>

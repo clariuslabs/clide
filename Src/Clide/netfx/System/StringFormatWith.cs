@@ -29,7 +29,7 @@ internal static class StringFormatWithExtension
 	/// Formats the string with the given source object. 
 	/// Expression like {Id} are replaced with the corresponding 
 	/// property value in the <paramref name="source"/>. Supports 
-	/// all <see cref="DataBinder.Eval"/> expressions formats 
+	/// all <see cref="DataBinder.Eval(object, string)"/> expressions formats 
 	/// for property access.
 	/// </summary>
 	/// <nuget id="netfx-System.StringFormatWith" />

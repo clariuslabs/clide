@@ -72,6 +72,7 @@ for (var typeCount = 1; typeCount <= maxTypeArgs; typeCount++)
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 <#
 	for (var typeIndex = 1; typeIndex <= typeCount; typeIndex++)
 	{
@@ -99,6 +100,7 @@ for (var typeCount = 1; typeCount <= maxTypeArgs; typeCount++)
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 <#
 	for (var typeIndex = 1; typeIndex <= typeCount; typeIndex++)
 	{
@@ -153,7 +155,6 @@ for (var typeCount = 1; typeCount <= maxTypeArgs; typeCount++)
 /// Generated overloads for available Func/Action generic types 
 /// for current target framework version <#= this.TargetFramework.Version #>.
 /// </devdoc>
-/// <typeparam name="TTarget">Type to reflect.</typeparam>
 internal static partial class Reflect<TTarget>
 { <#
 // TTarget on Reflect<> already consumes one of the type args from the max.
@@ -193,6 +194,7 @@ for (var typeCount = 1; typeCount < maxTypeArgs; typeCount++)
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 <#
 	for (var typeIndex = 1; typeIndex <= typeCount; typeIndex++)
 	{
@@ -220,6 +222,7 @@ for (var typeCount = 1; typeCount < maxTypeArgs; typeCount++)
 	/// Gets the method represented by the lambda expression.
 	/// </summary>
 	/// <param name="method">An expression that invokes a method.</param>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
 <#
 	for (var typeIndex = 1; typeIndex <= typeCount; typeIndex++)
 	{

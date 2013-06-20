@@ -41,15 +41,18 @@ namespace Clide.Diagnostics
         private IVsOutputWindowPane outputWindowPane;
         private Guid outputPaneGuid;
         private string outputPaneTitle;
+        private string rootTraceSource;
 
         private TraceListener listener;
         private StringWriter temporaryWriter;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TraceOutputWindowManager"/> class.
+        /// Initializes a new instance of the <see cref="TraceOutputWindowManager" /> class.
         /// </summary>
         /// <param name="serviceProvider">The service provider.</param>
         /// <param name="shellEvents">The shell events.</param>
+        /// <param name="uiThread">The UI thread.</param>
+        /// <param name="tracerManager">The tracer manager.</param>
         /// <param name="outputPaneId">The output pane GUID, which must be unique and remain constant for a given pane.</param>
         /// <param name="outputPaneTitle">The output pane title.</param>
         /// <param name="rootTraceSource">Root trace source to hook the output window trace listener to.</param>
@@ -147,7 +150,5 @@ namespace Clide.Diagnostics
                 tracer.Info("Trace output window created");
             }
         }
-
-        public string rootTraceSource { get; set; }
     }
 }

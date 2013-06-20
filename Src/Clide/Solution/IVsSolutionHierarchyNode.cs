@@ -27,12 +27,39 @@ namespace Clide
     /// </summary>
     public interface IVsSolutionHierarchyNode
 	{
+        /// <summary>
+        /// Gets the service provider.
+        /// </summary>
 		IServiceProvider ServiceProvider { get; }
+        
+        /// <summary>
+        /// Gets the node hierarchy.
+        /// </summary>
 		IVsHierarchy VsHierarchy { get; }
+
+        /// <summary>
+        /// Gets the extensibility object.
+        /// </summary>
         object ExtensibilityObject { get; }
-		uint ItemId { get; }
-		string DisplayName { get; }
-		IVsSolutionHierarchyNode Parent { get; }
-		IEnumerable<IVsSolutionHierarchyNode> Children { get; }
+
+        /// <summary>
+        /// Gets the item id.
+        /// </summary>
+        uint ItemId { get; }
+
+        /// <summary>
+        /// Gets the display name.
+        /// </summary>
+        string DisplayName { get; }
+
+        /// <summary>
+        /// Gets the parent node.
+        /// </summary>
+        IVsSolutionHierarchyNode Parent { get; }
+
+        /// <summary>
+        /// Gets the child nodes.
+        /// </summary>
+        IEnumerable<IVsSolutionHierarchyNode> Children { get; }
 	}
 }

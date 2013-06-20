@@ -38,6 +38,11 @@ namespace Clide.Solution
     {
         private static readonly ITracer tracer = Tracer.Get(typeof(IProjectNodeExtensions));
 
+        /// <summary>
+        /// Builds the specified project.
+        /// </summary>
+        /// <param name="project">The project to build.</param>
+        /// <exception cref="System.ArgumentException">The project has no <see cref="ISolutionExplorerNode.OwningSolution"/>.</exception>
         public static void Build(this IProjectNode project)
         {
             var solution = project.OwningSolution;
@@ -53,6 +58,12 @@ namespace Clide.Solution
             dte.SolutionBuild.BuildProject(build.ActiveConfiguration.Name, project.As<EnvDTE.Project>().UniqueName, true);
         }
 
+        /// <summary>
+        /// Gets the output assembly of the given project. If the project 
+        /// was never built before, it's built before returning the output 
+        /// assembly.
+        /// </summary>
+        /// <param name="project">The project to get the output assembly from.</param>
         public static Assembly GetOutputAssembly(this IProjectNode project)
         {
             var fileName = (string)project.Properties.TargetFileName;
@@ -121,6 +132,10 @@ namespace Clide.Solution
             return provider.GetReflectionAssembly(assemblyName);
         }
 
+        /// <summary>
+        /// Gets the referenced assemblies from the given project.
+        /// </summary>
+        /// <param name="project">The project containing references.</param>
         public static IEnumerable<Assembly> GetReferencedAssemblies(this IProjectNode project)
         {
             var vsProject = project.As<IVsHierarchy>();

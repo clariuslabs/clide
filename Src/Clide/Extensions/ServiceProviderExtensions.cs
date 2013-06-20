@@ -79,7 +79,6 @@ namespace System
         /// Retrieves an existing loaded package or loads it 
         /// automatically if needed.
         /// </summary>
-        /// <typeparam name="TPackage">The type of the package to load.</typeparam>
         /// <returns>The fully loaded and initialized package.</returns>
         public static IServiceProvider GetLoadedPackage(this IServiceProvider serviceProvider, Guid packageId)
         {

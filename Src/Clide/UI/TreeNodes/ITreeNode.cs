@@ -19,22 +19,68 @@ namespace Clide
 {
     using System.Collections.Generic;
 
+    /// <summary>
+    /// General-purpose tree node interface used by all supported tree structures in VS.
+    /// </summary>
     public interface ITreeNode : IFluentInterface
 	{
+        /// <summary>
+        /// Gets the node display name.
+        /// </summary>
 		string DisplayName { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether this node is hidden.
+        /// </summary>
         bool IsHidden { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether this node is visible.
+        /// </summary>
 		bool IsVisible { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether this node is selected.
+        /// </summary>
 		bool IsSelected { get; }
-		bool IsExpanded { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether this node is expanded.
+        /// </summary>
+        bool IsExpanded { get; }
+
+        /// <summary>
+        /// Gets the parent of this node.
+        /// </summary>
 		ITreeNode Parent { get; }
-		IEnumerable<ITreeNode> Nodes { get; }
 
+        /// <summary>
+        /// Gets the child nodes.
+        /// </summary>
+        IEnumerable<ITreeNode> Nodes { get; }
+
+        /// <summary>
+        /// Tries to smart-cast this node to the give type.
+        /// </summary>
+        /// <typeparam name="T">Type to smart-cast to.</typeparam>
+        /// <returns>The casted value or null if it cannot be converted to that type.</returns>
 		T As<T>() where T : class;
 
+        /// <summary>
+        /// Collapses this node.
+        /// </summary>
 		void Collapse();
+
+        /// <summary>
+        /// Expands the node, optionally in a recursive fashion.
+        /// </summary>
+        /// <param name="recursively">if set to <c>true</c>, expands recursively</param>
 		void Expand(bool recursively = false);
-		void Select(bool allowMultiple = false);
+
+        /// <summary>
+        /// Selects the node, optionally allowing multiple selection.
+        /// </summary>
+        /// <param name="allowMultiple">if set to <c>true</c>, adds this node to the current selection.</param>
+        void Select(bool allowMultiple = false);
 	}
 }

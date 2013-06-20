@@ -56,7 +56,15 @@ namespace Clide
     public abstract class Settings : ISettings, INotifyPropertyChanged, ISupportInitialize, ISupportInitializeNotification
     {
         private ITracer tracer;
+
+        /// <summary>
+        /// Occurs when initialization of the component is completed.
+        /// </summary>
         public event EventHandler Initialized = (sender, args) => { };
+
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged = (sender, args) => { };
 
         private bool editing;

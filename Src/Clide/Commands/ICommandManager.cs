@@ -47,7 +47,7 @@ namespace Clide.Commands
         /// Adds the specified command filter implementation to the manager, 
         /// with the specified explicit metadata.
         /// </summary>
-        /// <param name="command">The command filter instance, which does not need to 
+        /// <param name="filter">The command filter instance, which does not need to 
         /// be annotated with the <see cref="CommandFilterAttribute"/> attribute since 
         /// it's provided explicitly.</param>
         /// <param name="metadata">Explicit metadata to use for the command, 
@@ -66,7 +66,7 @@ namespace Clide.Commands
         /// Adds the specified command interceptor implementation to the manager, 
         /// with the specified explicit metadata.
         /// </summary>
-        /// <param name="command">The command interceptor instance, which does not need to 
+        /// <param name="interceptor">The command interceptor instance, which does not need to 
         /// be annotated with the <see cref="CommandInterceptorAttribute"/> attribute since 
         /// it's provided explicitly.</param>
         /// <param name="metadata">Explicit metadata to use for the interceptor, 

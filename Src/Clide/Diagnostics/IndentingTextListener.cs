@@ -28,7 +28,7 @@ namespace Clide.Diagnostics
     public class IndentingTextListener : TextWriterTraceListener
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TraceRecordTextListener"/> class.
+        /// Initializes a new instance of the <see cref="IndentingTextListener"/> class.
         /// </summary>
         public IndentingTextListener(TextWriter writer)
             : base(writer)
@@ -36,7 +36,7 @@ namespace Clide.Diagnostics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TraceRecordTextListener"/> class.
+        /// Initializes a new instance of the <see cref="IndentingTextListener"/> class.
         /// </summary>
         public IndentingTextListener(TextWriter writer, string name)
             : base(writer, name)

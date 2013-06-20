@@ -17,8 +17,14 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
+    /// <summary>
+    /// Interface implemented by the references node in a project.
+    /// </summary>
     public interface IReferencesNode : ISolutionExplorerNode
 	{
+        /// <summary>
+        /// Gets the owning project.
+        /// </summary>
         IProjectNode OwningProject { get; }
     }
 }

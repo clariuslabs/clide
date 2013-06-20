@@ -14,6 +14,7 @@
     <AssemblyName>Clide</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <OutputPath>nuget\lib\$(NugetTarget)\</OutputPath>
+    <DocumentationFile>$(OutputPath)\Clide.xml</DocumentationFile>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
@@ -32,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
     <VSSDK>$(VSSDK100Install)VisualStudioIntegration\Common\Assemblies\v4.0\</VSSDK>

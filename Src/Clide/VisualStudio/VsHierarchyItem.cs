@@ -15,16 +15,33 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide.VisualStudio
 {
     using Microsoft.VisualStudio.Shell.Interop;
+    using System;
 
+    /// <summary>
+    /// Represents the combination of a Visual Studio hierarchy 
+    /// and an item identifier.
+    /// </summary>
     public class VsHierarchyItem
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VsHierarchyItem"/> class.
+        /// </summary>
+        /// <param name="hierarchy">The hierarchy.</param>
+        /// <param name="itemId">The item id.</param>
         public VsHierarchyItem(IVsHierarchy hierarchy, uint itemId)
         {
             this.Hierarchy = hierarchy;
             this.ItemId = itemId;
         }
 
+        /// <summary>
+        /// Gets the hierarchy.
+        /// </summary>
         public IVsHierarchy Hierarchy { get; private set; }
+
+        /// <summary>
+        /// Gets the item id.
+        /// </summary>
         public uint ItemId { get; private set; }
     }
 }

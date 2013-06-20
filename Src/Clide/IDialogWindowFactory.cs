@@ -24,11 +24,11 @@ namespace Clide
 	public interface IDialogWindowFactory : IFluentInterface
 	{
 		/// <summary>
-		/// Creates a <see cref="Window"/> dialog as child of the main Visual Studio window.
+        /// Creates a <see cref="IDialogWindow"/> dialog as child of the main Visual Studio window.
 		/// </summary>
 		/// <typeparam name="TView">The type of the window to create.</typeparam>
 		/// <returns>
-		/// The created <see cref="Window"/> dialog.
+        /// The created <see cref="IDialogWindow"/> dialog.
 		/// </returns>
 		TView CreateDialog<TView>() where TView : IDialogWindow, new();
 	}
