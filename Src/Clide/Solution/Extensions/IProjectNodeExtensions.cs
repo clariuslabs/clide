@@ -32,7 +32,7 @@ namespace Clide.Solution
     using System.Threading;
 
     /// <summary>
-    /// Provides usability extensions to the <see cref="IProjectNode"/>.
+    /// Provides usability extensions to the <see cref="IProjectNode"/> interface.
     /// </summary>
     public static class IProjectNodeExtensions
     {

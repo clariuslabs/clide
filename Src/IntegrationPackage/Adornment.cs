@@ -8,6 +8,7 @@ using System.ComponentModel.Composition;
 using Clide;
 using System.Windows;
 using Microsoft.VisualStudio.Shell;
+using System.Diagnostics;
 
 namespace IntegrationPackage
 {
@@ -27,7 +28,7 @@ namespace IntegrationPackage
 
         public void TextViewCreated(IWpfTextView textView)
         {
-            Clide.DevEnv.Get(services).MessageBoxService.ShowInformation("Clide Adornment");
+            Debug.Assert(Clide.DevEnv.Get(services) != null);
         }
     }
 }
