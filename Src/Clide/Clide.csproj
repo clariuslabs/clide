@@ -217,6 +217,7 @@
     <Compile Include="OptionsPageWindowFactory.cs" />
     <Compile Include="Solution\Extensions\IProjectNodeExtensions.cs" />
     <Compile Include="Solution\Extensions\ISolutionExplorerNodeExtensions.cs" />
+    <Compile Include="Solution\Extensions\ISolutionNodeExtensions.cs" />
     <Compile Include="UI\TreeNodes\ITreeNodeExtensions.cs" />
     <Compile Include="Solution\Factories\ISolutionExplorerNodeFactory.cs" />
     <Compile Include="Solution\Factories\SolutionItemNodeFactory.cs" />

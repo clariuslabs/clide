@@ -1,4 +1,9 @@
+v2.1
+
+* Added FindProjects extension method for ISolutionNode, which is more efficient than traversing the entire solution.
+
 v2.0
+
 * Reworked internals to avoid depending on VS-MEF extensibility, which is problematic and may 
   cause interference with VS composition.
 * Core DI now provided by Autofac, which gives us a performance boost in addition.

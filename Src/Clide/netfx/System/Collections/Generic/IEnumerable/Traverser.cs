@@ -63,7 +63,7 @@ internal static class Traverser
 			var children = traverser(current);
 			if (children != null)
 			{
-				foreach (var child in traverser(current))
+				foreach (var child in children)
 				{
 					queue.Enqueue(child);
 				}
@@ -88,7 +88,7 @@ internal static class Traverser
 			var children = traverser(current);
 			if (children != null)
 			{
-				foreach (var child in traverser(current))
+				foreach (var child in children)
 				{
 					stack.Push(child);
 				}
