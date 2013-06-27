@@ -1,6 +1,7 @@
 v2.1
 
 * Added FindProjects extension method for ISolutionNode, which is more efficient than traversing the entire solution.
+* Improved support for side-by-side versioning of Clide assemblies deployed by multiple extensions
 
 v2.0
 
