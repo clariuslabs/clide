@@ -28,6 +28,11 @@
         private ITracer tracer;
         private IDisposable host;
 
+        static ClideIntegrationPackage()
+        {
+            LocalResolver.Initialize(Path.GetDirectoryName(typeof(ClideIntegrationPackage).Assembly.Location));
+        }
+
         protected override void Initialize()
         {
             base.Initialize();

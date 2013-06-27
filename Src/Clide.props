@@ -3,6 +3,9 @@
     <PropertyGroup>
         <OutputPath>bin\$(VisualStudioVersion)\</OutputPath>
     </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
     <PropertyGroup Condition="'$(VisualStudioVersion)' == '11.0'">
         <DefineConstants>$(DefineConstants);v11</DefineConstants>
         <NugetTarget>net40</NugetTarget>

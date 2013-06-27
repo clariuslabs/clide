@@ -1,3 +1,17 @@
+#region BSD License
+/* 
+Copyright (c) 2012, Clarius Consulting
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+* Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+#endregion
+
 using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -5,28 +19,10 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Clide")]
 [assembly: AssemblyDescription("Provides high-level, composable and testable APIs for working with Visual Studio.")]
-[assembly: AssemblyCompany("Clarius Consulting")]
-[assembly: AssemblyProduct("Clide")]
-[assembly: AssemblyCopyright("Copyright 2012")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
 
 [assembly: ComVisible(false)]
 [assembly: Guid("84d7eb01-bbad-4bd0-8c70-cd5720e33f8d")]
 
-[assembly: AssemblyVersion("2.1.1306.1118")]
-[assembly: AssemblyFileVersion("2.1.1306.1118")]
-
 [assembly: InternalsVisibleTo("Clide.UnitTests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100d9776e258bdf5f7c38f3c880404b9861ebbd235d8198315cdfda0f0c25b18608bdfd03e34bac9d0ec95766e8c3928140c6eda581a9448066af7dfaf88d3b6cb71d45a094011209ff6e76713151b4f2ce469cd2886285f1bf565b7fa63dada9d2e9573b743d26daa608b4d0fdebc9daa907a52727448316816f9c05c6e5529b9f")]
 [assembly: InternalsVisibleTo("Clide.IntegrationTests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100d9776e258bdf5f7c38f3c880404b9861ebbd235d8198315cdfda0f0c25b18608bdfd03e34bac9d0ec95766e8c3928140c6eda581a9448066af7dfaf88d3b6cb71d45a094011209ff6e76713151b4f2ce469cd2886285f1bf565b7fa63dada9d2e9573b743d26daa608b4d0fdebc9daa907a52727448316816f9c05c6e5529b9f")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2,PublicKey=0024000004800000940000000602000000240000525341310004000001000100c547cac37abd99c8db225ef2f6c8a3602f3b3606cc9891605d02baa56104f4cfc0734aa39b93bf7852f7d9266654753cc297e7d2edfe0bac1cdcf9f717241550e0a7b191195b7667bb4f64bcb8e2121380fd1d9d46ad2d92d2d15605093924cceaf74c4861eff62abf69b9291ed0a340e113be11e6a7d3113e92484cf7045cc7")]
-
-[assembly: AssemblyConfiguration(ThisAssembly.Configuration)]
-internal class ThisAssembly
-{
-#if DEBUG
-    public const string Configuration = "DEBUG";
-#else    
-    public const string Configuration = "RELEASE";
-#endif
-}

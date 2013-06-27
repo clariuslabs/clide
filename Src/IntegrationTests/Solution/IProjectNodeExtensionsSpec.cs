@@ -75,5 +75,28 @@ namespace Clide.Solution
             Assert.Equal(1 + refs.Count, asm.Count);
             Assert.True(refs.All(r => asm.Any(a => a.GetName().Name == r)));
         }
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void WhenGettingOutputAssembly_ThenCanInstantiateTypeWithoutLocking()
+        {
+            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
+            var lib = explorer.Solution.Traverse().OfType<IProjectNode>()
+                .FirstOrDefault(node => node.DisplayName == "ClassLibrary");
+            var asm = lib.GetOutputAssembly();
+            var type = asm.GetTypes().First(t => t.GetConstructor(new Type[0]) != null);
+
+            var instance = Activator.CreateInstance(type);
+
+            lib.Build();
+
+            var dte = explorer.Solution.As<EnvDTE.Solution>();
+            var build = (EnvDTE80.SolutionBuild2)dte.SolutionBuild;
+
+            Assert.Equal(EnvDTE.vsBuildState.vsBuildStateDone, build.BuildState);
+            Assert.Equal(0, build.LastBuildInfo);
+        }
     }
 }

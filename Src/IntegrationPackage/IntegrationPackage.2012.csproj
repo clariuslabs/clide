@@ -186,6 +186,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Clide.Resolver\Clide.Resolver.csproj">
+      <Project>{a023a27b-2aa8-4461-932a-25a6dd17fea6}</Project>
+      <Name>Clide.Resolver</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Clide\Clide.csproj">
       <Project>{eaf59c6d-a973-48e6-a90a-5e894ecec3f6}</Project>
       <Name>Clide</Name>
