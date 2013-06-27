@@ -12,23 +12,29 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
-using System.Reflection;
-
-[assembly: AssemblyProduct("Clide")]
-[assembly: AssemblyCompany("Clarius Consulting")]
-[assembly: AssemblyCopyright("Copyright 2012")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-
-[assembly: AssemblyVersion("2.2.1306.1118")]
-[assembly: AssemblyFileVersion("2.2.1306.1118")]
-
-[assembly: AssemblyConfiguration(ThisAssembly.Configuration)]
-internal class ThisAssembly
+namespace Clide
 {
-#if DEBUG
-    public const string Configuration = "DEBUG";
-#else
-    public const string Configuration = "RELEASE";
-#endif
+    using System;
+
+    /// <summary>
+    /// Provides a registration mechanism for reference providers 
+    /// that are used by the <see cref="IReferenceService"/>.
+    /// </summary>
+    public interface IReferenceProviderRegistry
+    {
+        /// <summary>
+        /// Registers the specified provider with the service.
+        /// </summary>
+        /// <param name="provider">The reference provider to register.</param>
+        /// <exception cref="ArgumentException">A provider has already been registered 
+        /// for the same <see cref="IReferenceProvider.Scheme"/> scheme.</exception>
+        void Register(IReferenceProvider provider);
+
+        /// <summary>
+        /// Checks if the reference scheme is registered as a valid provider.
+        /// </summary>
+        /// <param name="scheme">The reference scheme to be checked, such as "vsix" or "project", with or without the trailing ":" or "://".</param>
+        /// <returns><see langword="true"/>, if a reference provider exists for the scheme; otherwise <see langword="false"/></returns>
+        bool IsRegistered(string scheme);
+   }
 }

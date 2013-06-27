@@ -78,7 +78,7 @@ namespace Clide.Solution
 
         [HostType("VS IDE")]
         [TestMethod]
-        public void WhenGettingOutputAssembly_ThenCanInstantiateTypeWithoutLocking()
+        public void WhenGettingOutputAssembly_ThenTryingToInstantiateTypeThrows()
         {
             base.OpenSolution("SampleSolution\\SampleSolution.sln");
 
@@ -88,15 +88,7 @@ namespace Clide.Solution
             var asm = lib.GetOutputAssembly();
             var type = asm.GetTypes().First(t => t.GetConstructor(new Type[0]) != null);
 
-            var instance = Activator.CreateInstance(type);
-
-            lib.Build();
-
-            var dte = explorer.Solution.As<EnvDTE.Solution>();
-            var build = (EnvDTE80.SolutionBuild2)dte.SolutionBuild;
-
-            Assert.Equal(EnvDTE.vsBuildState.vsBuildStateDone, build.BuildState);
-            Assert.Equal(0, build.LastBuildInfo);
+            Assert.Throws<ArgumentException>(() => Activator.CreateInstance(type));
         }
     }
 }

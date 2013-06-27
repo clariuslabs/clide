@@ -182,6 +182,21 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="Composition\ComponentAttribute.cs" />
+    <Compile Include="References\IReferenceProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="References\IReferenceProviderRegistry.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="References\IReferenceProvider`1.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="References\IReferenceService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="References\ReferenceService.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ServiceLocator.cs" />
     <Compile Include="Solution\Adapters\VsLangToSolutionAdapter.cs" />
     <Compile Include="Solution\Adapters\VsHierarchyItemToSolutionAdapter.cs" />

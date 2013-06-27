@@ -42,6 +42,7 @@ namespace Clide
 		private IEnumerable<Lazy<IToolWindow>> toolWindows;
 		private Lazy<IUIThread> uiThread;
         private Lazy<IMessageBoxService> messageBox;
+        private Lazy<IReferenceService> references;
         private TraceOutputWindowManager outputWindowManager;
 
 		public DevEnvImpl(
@@ -50,7 +51,8 @@ namespace Clide
 			Lazy<IDialogWindowFactory> dialogFactory,
 			Lazy<IUIThread> uiThread,
             Lazy<IMessageBoxService> messageBox,
-			IShellEvents shellEvents)
+			IShellEvents shellEvents, 
+            Lazy<IReferenceService> references)
 		{
             this.ServiceLocator = serviceLocator;
 			this.dialogFactory = dialogFactory;
@@ -59,6 +61,7 @@ namespace Clide
 			this.uiThread = uiThread;
             this.messageBox = messageBox;
             this.status = new Lazy<IStatusBar>(() => new StatusBar(this.ServiceLocator));
+            this.references = references;
 
             this.outputWindowManager = new TraceOutputWindowManager(
                 serviceLocator,
@@ -95,6 +98,11 @@ namespace Clide
 		{
 			get { return this.toolWindows.Select(lazy => lazy.Value); }
 		}
+
+        public IReferenceService ReferenceService
+        {
+            get { return this.references.Value; }
+        }
 
 		public bool IsInitialized { get { return this.shellEvents.IsInitialized; } }
 

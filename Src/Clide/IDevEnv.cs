@@ -58,5 +58,10 @@ namespace Clide
         /// Gets the UI thread.
         /// </summary>
         IUIThread UIThread { get; }
+
+        /// <summary>
+        /// Gets the reference service.
+        /// </summary>
+        IReferenceService ReferenceService { get; }
 	}
 }

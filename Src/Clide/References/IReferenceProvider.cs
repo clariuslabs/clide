@@ -12,23 +12,28 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
-using System.Reflection;
-
-[assembly: AssemblyProduct("Clide")]
-[assembly: AssemblyCompany("Clarius Consulting")]
-[assembly: AssemblyCopyright("Copyright 2012")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-
-[assembly: AssemblyVersion("2.2.1306.1118")]
-[assembly: AssemblyFileVersion("2.2.1306.1118")]
-
-[assembly: AssemblyConfiguration(ThisAssembly.Configuration)]
-internal class ThisAssembly
+namespace Clide
 {
-#if DEBUG
-    public const string Configuration = "DEBUG";
-#else
-    public const string Configuration = "RELEASE";
-#endif
+    /// <summary>
+    /// Provides the basic non-generic protocol for the reference provider.
+    /// Implementations should inherit from <see cref="IReferenceProvider{T}"/>.
+    /// </summary>
+    /// <remarks>
+    /// A reference provider is responsible for converting from object instances 
+    /// to references like file://foo.txt. The <see cref="Scheme"/> determines 
+    /// which provider will be invoked to resolve which references, as well 
+    /// as the type to be resolved. 
+    /// </remarks>
+    public interface IReferenceProvider
+    {
+        /// <summary>
+        /// Gets the scheme of the provider. All created references 
+        /// from this provider must use this scheme followed by a colon.
+        /// </summary>
+        /// <remarks>
+        /// The scheme is case-sensitive when locating the provider for 
+        /// a given reference.
+        /// </remarks>
+        string Scheme { get; }
+    }
 }

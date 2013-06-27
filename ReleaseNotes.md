@@ -1,3 +1,7 @@
+v2.2
+
+* Added general-purpose referencing service
+
 v2.1
 
 * Added FindProjects extension method for ISolutionNode, which is more efficient than traversing the entire solution.
