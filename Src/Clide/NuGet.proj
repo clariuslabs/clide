@@ -34,7 +34,7 @@
     </Target>
 
     <Target Name="ReplaceCurrentVersions">
-        <ReadAssemblyVersion File="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs">
+        <ReadAssemblyVersion File="$(MSBuildThisFileDirectory)Properties\GlobalAssemblyInfo.cs">
             <Output PropertyName="Major"
                     TaskParameter="Major"/>
             <Output PropertyName="Minor"
@@ -56,11 +56,11 @@
         </PropertyGroup>
 
         <ItemGroup>
-            <_VersionRegexTransform Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs">
+            <_VersionRegexTransform Include="$(MSBuildThisFileDirectory)Properties\GlobalAssemblyInfo.cs">
                 <Find>AssemblyFileVersion\(".*?"\)</Find>
                 <ReplaceWith>AssemblyFileVersion("$(FileVersion)")</ReplaceWith>
             </_VersionRegexTransform>
-            <_VersionRegexTransform Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs">
+            <_VersionRegexTransform Include="$(MSBuildThisFileDirectory)Properties\GlobalAssemblyInfo.cs">
                 <Find>AssemblyVersion\(".*?"\)</Find>
                 <ReplaceWith>AssemblyVersion("$(FileVersion)")</ReplaceWith>
             </_VersionRegexTransform>
