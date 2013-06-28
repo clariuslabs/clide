@@ -7,7 +7,6 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.ComponentModel.Composition.Hosting;
     using System.ComponentModel.Composition;
-    using Microsoft.VisualStudio.ComponentModelHost;
     using System.IO;
     using System.Xml;
     using System.ComponentModel.Composition.Primitives;
@@ -18,6 +17,7 @@
     using System.Diagnostics;
     using Clide.Composition;
     using System.Xml.Linq;
+    using Microsoft.VisualStudio.ComponentModelHost;
 
     [TestClass]
     public class HostingSpec : VsHostedSpec

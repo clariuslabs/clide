@@ -24,7 +24,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading;
 using System.IO;
 using System.Windows.Forms;
-using Microsoft.VisualStudio.ComponentModelHost;
 using System.ComponentModel.Composition.Hosting;
 using Clide;
 using Microsoft.VisualStudio.Shell.Interop;

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.ComponentModel.Composition;
-using Microsoft.VisualStudio.ComponentModelHost;
 using System.ComponentModel.Composition.Hosting;
 using Clide.Composition;
 using EnvDTE;

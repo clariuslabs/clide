@@ -20,8 +20,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <VSSDK>$(VSSDK100Install)VisualStudioIntegration\Common\Assemblies\v4.0\</VSSDK>
-    <PrivateAssemblies>$(VS100COMNTOOLS)..\IDE\PublicAssemblies\</PrivateAssemblies>
-    <PublicAssemblies>$(VS100COMNTOOLS)..\IDE\PrivateAssemblies\</PublicAssemblies>
+    <PublicAssemblies>$(VS100COMNTOOLS)..\IDE\PublicAssemblies\</PublicAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac">
@@ -51,10 +50,7 @@
       <SpecificVersion>True</SpecificVersion>
       <HintPath>$(PublicAssemblies)Microsoft.VisualStudio.ComponentModelHost.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <SpecificVersion>True</SpecificVersion>
-      <HintPath>$(PrivateAssemblies)Microsoft.VisualStudio.OLE.Interop.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Settings, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=x86">
       <SpecificVersion>True</SpecificVersion>
       <HintPath>$(VSSDK)Microsoft.VisualStudio.Settings.dll</HintPath>

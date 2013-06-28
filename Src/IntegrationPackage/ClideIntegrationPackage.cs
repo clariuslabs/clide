@@ -4,7 +4,6 @@
     using System.ComponentModel.Design;
     using System.Runtime.InteropServices;
     using System.Linq;
-    using Microsoft.VisualStudio.ComponentModelHost;
     using Microsoft.VisualStudio.Shell;
     using System.ComponentModel.Composition;
     using Microsoft.VisualStudio.Shell.Interop;
