@@ -1,4 +1,4 @@
-﻿#region BSD License
+#region BSD License
 /* 
 Copyright (c) 2012, Clarius Consulting
 All rights reserved.
@@ -20,8 +20,8 @@ using System.Reflection;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("2.2.1306.1118")]
-[assembly: AssemblyFileVersion("2.2.1306.1118")]
+[assembly: AssemblyVersion("2.2.1307.2418")]
+[assembly: AssemblyFileVersion("2.2.1307.2418")]
 
 [assembly: AssemblyConfiguration(ThisAssembly.Configuration)]
 internal class ThisAssembly

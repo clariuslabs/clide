@@ -25,15 +25,19 @@
   <ItemGroup>
     <Reference Include="Autofac">
       <HintPath>..\..\packages\Autofac.3.0.2\lib\net40\Autofac.dll</HintPath>
+      <IlMerge>true</IlMerge>
     </Reference>
     <Reference Include="Autofac.Configuration">
       <HintPath>..\..\packages\Autofac.3.0.2\lib\net40\Autofac.Configuration.dll</HintPath>
+      <IlMerge>true</IlMerge>
     </Reference>
     <Reference Include="Autofac.Extras.Attributed">
       <HintPath>..\..\packages\Autofac.Extras.Attributed.3.0.0\lib\net40\Autofac.Extras.Attributed.dll</HintPath>
+      <IlMerge>true</IlMerge>
     </Reference>
     <Reference Include="Autofac.Extras.CommonServiceLocator">
       <HintPath>..\..\packages\Autofac.Extras.CommonServiceLocator.3.0.1\lib\net40\Autofac.Extras.CommonServiceLocator.dll</HintPath>
+      <IlMerge>true</IlMerge>
     </Reference>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <SpecificVersion>True</SpecificVersion>
@@ -45,6 +49,7 @@
     </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <IlMerge>true</IlMerge>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>True</SpecificVersion>
@@ -385,7 +390,7 @@
   <Import Project="$(MSBuildThisFileDirectory)..\Clide.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- No longer needed since we're not using external library for MEF diagnostics anymore -->
-  <Target Name="IlMerge" BeforeTargets="AfterBuild" Condition="false">
+  <Target Name="IlMerge" BeforeTargets="AfterBuild" Condition="$(NuGet) == 'true'">
     <ItemGroup>
       <AssembliesToMerge Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)'=='.dll' And '%(IlMerge)'=='true'" />
       <LibDir Include="@(ReferencePath-&gt;'%(RootDir)%(Directory)'-&gt;Distinct())" />
