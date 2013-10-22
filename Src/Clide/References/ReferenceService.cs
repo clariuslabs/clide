@@ -200,9 +200,9 @@ namespace Clide
             return compatibleProviders;
         }
 
-        private static IEnumerable<Type> GetImplementedProviderInterfaces(Type type)
+        private static IEnumerable<Type> GetImplementedProviderInterfaces(Type providerType)
         {
-            return type.GetInterfaces()
+            return providerType.GetInterfaces()
                 .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IReferenceProvider<>));
         }
     }
