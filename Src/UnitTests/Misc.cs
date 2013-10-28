@@ -24,22 +24,10 @@ namespace UnitTests
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.IO;
     using System.Text.RegularExpressions;
+    using System.Xml.Linq;
 
     [TestClass]
     public class Misc
     {
-        [TestMethod]
-        public void WhenAction_ThenAssert()
-        {
-            string foo = null;
-            var lazy = new Lazy<string>(() => foo);
-
-            foo = "foo";
-            Console.WriteLine(lazy.Value);
-
-            foo = "bar";
-
-            Console.WriteLine(lazy.Value);
-        }
     }
 }

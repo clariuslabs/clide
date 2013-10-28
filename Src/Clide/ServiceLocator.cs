@@ -17,7 +17,7 @@ namespace Clide
     using System;
     using System.Linq;
     using Microsoft.Practices.ServiceLocation;
-using Clide.Composition;
+    using Clide.Composition;
     using Microsoft.VisualStudio.ComponentModelHost;
 
     /// <summary>
@@ -34,7 +34,7 @@ using Clide.Composition;
     {
         private static readonly Lazy<IServiceLocator> globalLocator = new Lazy<IServiceLocator>(() =>
             new FallbackServiceLocator(
-                DevEnv.Get(GlobalServiceProvider.Instance).ServiceLocator, 
+                DevEnv.Get(GlobalServiceProvider.Instance).ServiceLocator,
                 new ExportsServiceLocator(GlobalServiceProvider.Instance.GetService<SComponentModel, IComponentModel>().DefaultExportProvider)));
 
         /// <summary>

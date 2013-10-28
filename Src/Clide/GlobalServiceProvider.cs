@@ -24,20 +24,15 @@ namespace Clide
 
     /// <summary>
     /// Locates global services inside Visual Studio, in a thread-safe way, unlike 
-    /// the VS Shell version.
+    /// the VS Shell version. To also retrieve components exposed via MEF, 
+    /// use the <see cref="ServiceLocator"/> instead.
     /// </summary>
     public static class GlobalServiceProvider
     {
         private static readonly IServiceProvider dteProvider = new DteServiceProvider();
         private static readonly VsServiceProvider vsProvider = new VsServiceProvider();
-        private static readonly ComponentModelProvider cmProvider = new ComponentModelProvider(vsProvider);
 
-        private static IServiceProvider globalProvider = new FallbackServiceProvider(
-            // DTE, /*ComponentModel*/, Global Package
-            dteProvider, vsProvider);
-            //new FallbackServiceProvider(
-            //    cmProvider, 
-            //        vsProvider));
+        private static IServiceProvider globalProvider = new FallbackServiceProvider(dteProvider, vsProvider);
 
         /// <summary>
         /// Gets the global service provider.
@@ -64,6 +59,14 @@ namespace Clide
             }
         }
 
+        private class VsServiceProvider : IServiceProvider
+        {
+            public object GetService(Type serviceType)
+            {
+                return Package.GetGlobalService(serviceType);
+            }
+        }
+
         private class ComponentModelProvider : IServiceProvider
         {
             private static MethodInfo getService = typeof(IComponentModel).GetMethod("GetService");
@@ -85,14 +88,6 @@ namespace Clide
                 {
                     return null;
                 }
-            }
-        }
-
-        private class VsServiceProvider : IServiceProvider
-        {
-            public object GetService(Type serviceType)
-            {
-                return Package.GetGlobalService(serviceType);
             }
         }
     }
