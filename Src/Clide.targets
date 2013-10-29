@@ -1,10 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    
     <Target Name="BeforeBuild">
         <Error Condition="'$(VisualStudioVersion)' == ''"
                ContinueOnError="false"
                Text="Please provide the VisualStudioVersion property as a parameter to MSBuild to specify the target version of VS to build the extension for (i.e. '10.0' or '11.0')." />
         <Message Text="Building for Visual Studio $(VisualStudioVersion), Target Framework $(TargetFrameworkVersion), Platform $(Platform)"
                  Importance="high" />
+    </Target>
+    
+    <!-- Merges references that are CopyLocal and have an <IlMerge>true</IlMerge> item metadata -->
+    <Target Name="IlMerge" BeforeTargets="AfterBuild" Condition="$(NuGet) == 'true'">
+        <ItemGroup>
+            <AssembliesToMerge Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll' And '%(IlMerge)' == 'true'" />
+            <LibDir Include="@(ReferencePath-&gt;'%(RootDir)%(Directory)'-&gt;Distinct())" />
+            <MergedAssemblies Include="@(AssembliesToMerge->'$(OutDir)%(Filename)%(Extension)')" />
+        </ItemGroup>
+        <Message Text="IL merging assemblies: @(AssembliesToMerge)" />
+        <Exec Command="&quot;$(SolutionDir)Lib\ILMerge.exe&quot; @(LibDir->'/lib:&quot;%(FullPath)\&quot;', ' ') /internalize /ndebug /keyfile:&quot;$(AssemblyOriginatorKeyFile)&quot; /targetplatform:v4,&quot;$(MSBuildToolsPath)&quot; /out:&quot;@(MainAssembly)&quot; &quot;@(IntermediateAssembly)&quot; @(AssembliesToMerge->'&quot;%(FullPath)&quot;', ' ')" ContinueOnError="false" />
+        <Delete Files="@(MergedAssemblies)" ContinueOnError="false" TreatErrorsAsWarnings="true" />
+    </Target>
+    
+    <Target Name="CleanLib" AfterTargets="Clean">
+        <Delete Files="$(OutputPath)**\*.*" ContinueOnError="false" />
+        <RemoveDir Directories="$(OutputPath)" Condition="false" />
+    </Target>
+
+    <Target Name="BuildPackage" AfterTargets="Build" Condition="$(NuGet) == 'true' And '@(NuSpec)' != ''">
+        <Copy SourceFiles="@(NuSpec)" DestinationFiles="@(NuSpec->'nuget\%(Filename)%(Extension)')" DestinationFolder="nuget" ContinueOnError="false">
+            <Output TaskParameter="DestinationFiles" ItemName="@(NuSpecOut)" />
+        </Copy>
+        <Copy SourceFiles="@(SymbolSource)" DestinationFiles="@(SymbolSource->'nuget\src\%(RecursiveDir)%(Filename)%(Extension)')" ContinueOnError="false" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+        <Exec Command="$(NuGetExe) pack -NoPackageAnalysis %(NuSpecOut.FullPath) -Symbols -OutputDirectory $(DropDirectory) -Version $(PackageVersion)"
+              ContinueOnError="false" />
     </Target>
 </Project>

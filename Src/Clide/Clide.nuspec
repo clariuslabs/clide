@@ -3,14 +3,17 @@
     <metadata>
         <id>Clide</id>
         <version>1.1</version>
-        <title>Clide: An Enjoyable Visual Studio Automation API</title>
+        <title>Clide: An Enjoyable IDE Automation API</title>
         <authors>Daniel Cazzulino</authors>
         <owners>Daniel Cazzulino</owners>
         <licenseUrl>http://clarius.io/clide-license</licenseUrl>
         <projectUrl>http://clarius.io/clide</projectUrl>
         <iconUrl>http://clarius.io/clide-48x48</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>High-level, composable and testable APIs for working with Visual Studio.</description>
+        <description>High-level, composable and testable APIs for working with IDEs. 
+This package provides the core APIs so that your automation can remain IDE-agnostic. 
+See also Clide.VisualStudio and Clide.XamarinStudio.
+</description>
         <releaseNotes>v2.2
 
 * Added general-purpose referencing service

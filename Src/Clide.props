@@ -1,21 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
     <PropertyGroup>
-        <OutputPath>bin\$(VisualStudioVersion)\</OutputPath>
+        <PackageVersion Condition="'$(PackageVersion)' == ''">1.0</PackageVersion>
+        <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+        <BuildRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .gitignore))</BuildRoot>
+        <BuildRoot Condition="!HasTrailingSlash('$(BuildRoot)')">$(BuildRoot)\</BuildRoot>
+        <DropDirectory>$(BuildRoot)Drops\</DropDirectory>
+        <NuGetExe>$(BuildRoot).nuget\NuGet.exe</NuGetExe>
+        <NugetTarget>net40</NugetTarget>
+
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+
     </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
+    </PropertyGroup>
+
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(VisualStudioVersion)' == '11.0'">
-        <DefineConstants>$(DefineConstants);v11</DefineConstants>
-        <NugetTarget>net40</NugetTarget>
-        <Vs11>True</Vs11>
-        <Vs10>False</Vs10>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(VisualStudioVersion)' != '11.0'">
-        <DefineConstants>$(DefineConstants);v10</DefineConstants>
-        <NugetTarget>net40</NugetTarget>
-        <Vs11>False</Vs11>
+
+    <PropertyGroup Condition="'$(VisualStudioVersion)' == '10.0'">
+        <DefineConstants>$(DefineConstants);Vs10</DefineConstants>
         <Vs10>True</Vs10>
+        <Vs11>False</Vs11>
+        <Vs12>False</Vs12>
     </PropertyGroup>
+
+    <PropertyGroup Condition="'$(VisualStudioVersion)' == '11.0'">
+        <DefineConstants>$(DefineConstants);Vs11</DefineConstants>
+        <Vs10>False</Vs10>
+        <Vs11>True</Vs11>
+        <Vs12>False</Vs12>
+    </PropertyGroup>
+    
+    <PropertyGroup Condition="'$(VisualStudioVersion)' == '12.0'">
+        <DefineConstants>$(DefineConstants);Vs12</DefineConstants>
+        <Vs10>False</Vs10>
+        <Vs11>False</Vs11>
+        <Vs12>True</Vs12>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- If we don't make these invisible, they show up in VS as missing files :S -->
+        <AvailableItemName Include="NuSpec">
+            <Visible>False</Visible>
+        </AvailableItemName>
+    </ItemGroup>
 </Project>

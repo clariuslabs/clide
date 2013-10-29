@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0"
+         DefaultTargets="Build"
+         xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="$(MSBuildThisFileDirectory)..\..\Common\ClariusLabs.tasks" />
+    <Import Project="$(MSBuildThisFileDirectory)Clide.props" />
+
+    <PropertyGroup>
+        <ReleaseNotes>$([System.IO.File]::ReadAllText('$(BuildRoot)..\ReleaseNotes.md'))</ReleaseNotes>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectToBuild Include="Clide\Clide.csproj">
+            <AdditionalProperties>VisualStudioVersion=10.0;</AdditionalProperties>
+        </ProjectToBuild>
+        <ProjectToBuild Include="Clide.VisualStudio\Clide.VisualStudio.csproj">
+            <AdditionalProperties>VisualStudioVersion=10.0;</AdditionalProperties>
+        </ProjectToBuild>
+        <ProjectToBuild Include="Clide.XamarinStudio\Clide.XamarinStudio.csproj">
+            <!-- These properties will be passed to the build task below automatically -->
+            <AdditionalProperties>XamarinStudioVersion=1.0;</AdditionalProperties>
+        </ProjectToBuild>
+    </ItemGroup>
+
+    <Target Name="Build" DependsOnTargets="ReplaceCurrentVersions">
+        <MSBuild Projects="@(ProjectToBuild)"
+                 Targets="Clean"
+                 />
+        <MSBuild Projects="@(ProjectToBuild)"
+                 Properties="Configuration=Release;NuGet=true;PackageVersion=$(PackageVersion)"
+                 Targets="Rebuild"
+                 />
+    </Target>
+
+    <Target Name="ReplaceCurrentVersions">
+        <ReadAssemblyVersion File="$(MSBuildThisFileDirectory)Properties\GlobalAssemblyInfo.cs">
+            <Output PropertyName="Major"
+                    TaskParameter="Major"/>
+            <Output PropertyName="Minor"
+                    TaskParameter="Minor"/>
+        </ReadAssemblyVersion>
+
+        <PropertyGroup Condition="'$(FileVersion)' == ''">
+            <!-- Build number is of the format (2 digit year)(2 digit month) -->
+            <Build>$([System.DateTime]::UtcNow.ToString("yyMM"))</Build>
+            <!-- Revision number is of the format (2 digit hour)(2 digit minutes) -->
+            <Revision>$([System.DateTime]::UtcNow.ToString("ddHH"))</Revision>
+            <FileVersion>$(Major).$(Minor).$(Build).$(Revision)</FileVersion>
+            <!-- TODO: maybe we should have two builds, one that builds the public simplified version
+                 and one with the full build/revision -->
+        </PropertyGroup>
+    
+        <PropertyGroup>
+            <PackageVersion>$(FileVersion)</PackageVersion>
+        </PropertyGroup>
+
+        <ItemGroup>
+            <_VersionRegexTransform Include="$(MSBuildThisFileDirectory)Properties\GlobalAssemblyInfo.cs">
+                <Find>AssemblyFileVersion\(".*?"\)</Find>
+                <ReplaceWith>AssemblyFileVersion("$(FileVersion)")</ReplaceWith>
+            </_VersionRegexTransform>
+            <_VersionRegexTransform Include="$(MSBuildThisFileDirectory)Properties\GlobalAssemblyInfo.cs">
+                <Find>AssemblyVersion\(".*?"\)</Find>
+                <ReplaceWith>AssemblyVersion("$(FileVersion)")</ReplaceWith>
+            </_VersionRegexTransform>
+            <_VersionRegexTransform Include="$(BuildRoot)**\*.nuspec"
+                            Condition="'$(ReleaseNotes)' != ''">
+                <Find><![CDATA[<releaseNotes />|<releaseNotes/>|<releaseNotes>.*</releaseNotes>]]></Find>
+                <ReplaceWith><![CDATA[<releaseNotes>$(ReleaseNotes)</releaseNotes>]]></ReplaceWith>
+                <Options>Singleline</Options>
+            </_VersionRegexTransform>
+        </ItemGroup>
+
+        <RegexTransform Items="@(_VersionRegexTransform)" />
+    </Target>
+
+</Project>

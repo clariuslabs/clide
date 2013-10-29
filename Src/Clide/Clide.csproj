@@ -14,7 +14,7 @@
     <AssemblyName>Clide</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <OutputPath>nuget\lib\$(NugetTarget)\</OutputPath>
-    <DocumentationFile>$(OutputPath)\Clide.xml</DocumentationFile>
+    <DocumentationFile>$(OutputPath)Clide.xml</DocumentationFile>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
@@ -113,6 +113,9 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="ClideSettings.cs" />
     <Compile Include="Commands\CommandInterceptorAttribute.cs" />
     <Compile Include="Commands\ICommandInterceptor.cs" />
@@ -137,7 +140,6 @@
     <Compile Include="Diagnostics\Tracer\Visibility.cs" />
     <Compile Include="Diagnostics\Tracer.cs" />
     <Compile Include="FallbackServiceProvider.cs" />
-    <Compile Include="Properties\GlobalAssemblyInfo.cs" />
     <Compile Include="IOptionsPageWindowFactory.cs" />
     <Compile Include="netfx\System\AmbientSingleton.cs" />
     <Compile Include="netfx\System\Collections\Generic\IEnumerable\TraverseKind.cs" />
@@ -337,17 +339,14 @@
     <None Include="..\..\Common\ClariusLabs.licenseheader">
       <Link>ClariusLabs.licenseheader</Link>
     </None>
-    <None Include="Clide.nuspec">
+    <NuSpec Include="Clide.nuspec">
       <SubType>Designer</SubType>
-    </None>
+    </NuSpec>
     <None Include="netfx\System\Reflection\Reflect.Overloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Reflect.Overloads.cs</LastGenOutput>
     </None>
     <None Include="netfx\System\Reflection\TargetFramework.ttinclude" />
-    <None Include="NuGet.proj">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="packages.config" />
     <Compile Include="Patterns\AdapterService.cs" />
     <None Include="Properties\Resources.tt">
@@ -381,26 +380,12 @@
       <Visible>False</Visible>
     </SymbolSource>
   </ItemGroup>
-  <PropertyGroup>
-    <StartAction>Program</StartAction>
-    <StartProgram>C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\devenv.exe</StartProgram>
-    <StartArguments>/rootSuffix Exp /log</StartArguments>
-  </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildThisFileDirectory)..\Clide.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
-  <!-- No longer needed since we're not using external library for MEF diagnostics anymore -->
-  <Target Name="IlMerge" BeforeTargets="AfterBuild" Condition="$(NuGet) == 'true'">
-    <ItemGroup>
-      <AssembliesToMerge Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)'=='.dll' And '%(IlMerge)'=='true'" />
-      <LibDir Include="@(ReferencePath-&gt;'%(RootDir)%(Directory)'-&gt;Distinct())" />
-      <MergedAssemblies Include="@(AssembliesToMerge->'$(OutDir)%(Filename)%(Extension)')" />
-    </ItemGroup>
-    <Message Text="IL merging assemblies: @(AssembliesToMerge)" />
-    <Exec Command="&quot;$(SolutionDir)Lib\ILMerge.exe&quot; @(LibDir->'/lib:&quot;%(FullPath)\&quot;', ' ') /internalize /ndebug /keyfile:&quot;$(AssemblyOriginatorKeyFile)&quot; /targetplatform:v4,&quot;$(MSBuildToolsPath)&quot; /out:&quot;@(MainAssembly)&quot; &quot;@(IntermediateAssembly)&quot; @(AssembliesToMerge->'&quot;%(FullPath)&quot;', ' ')" ContinueOnError="false" />
-    <Delete Files="@(MergedAssemblies)" ContinueOnError="false" TreatErrorsAsWarnings="true" />
-  </Target>
   <Target Name="AfterBuild" Condition="$(NuGet) == 'true'">
+    <!-- Fix for improper Microsoft.Practices.ServiceLocation.pdb in CommonServiceLocator package -->
+    <Delete Files="$(OutputPath)Microsoft.Practices.ServiceLocation.pdb" ContinueOnError="false" />
     <!-- Copy spec file and sources to destination as needed -->
     <Copy SourceFiles="Clide.nuspec" DestinationFolder="nuget" ContinueOnError="false" />
     <Copy SourceFiles="@(SymbolSource)" DestinationFiles="@(SymbolSource->'nuget\src\%(RecursiveDir)%(Filename)%(Extension)')" ContinueOnError="false" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
