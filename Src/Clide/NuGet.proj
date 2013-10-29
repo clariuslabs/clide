@@ -20,10 +20,6 @@
                  Properties="VisualStudioVersion=10.0;NuGet=true"
                  Targets="Rebuild"
                  />
-        <!-- We don't have a separate version anymore for v11 -->
-        <!--<MSBuild Projects="Clide.csproj"
-                 Properties="VisualStudioVersion=11.0;NuGet=true"
-                 />-->                 
 
         <!-- Fix for improper Microsoft.Practices.ServiceLocation.pdb in CommonServiceLocator package -->
         <Delete Files="nuget\lib\net40\Microsoft.Practices.ServiceLocation.pdb" ContinueOnError="false" />
