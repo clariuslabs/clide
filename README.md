@@ -1,7 +1,7 @@
 What is Clide?
 =====
 
-Provides a managed, intuitive, modern and composable API for Visual Studio extensibility and automation. It leverages MEF in Visual Studio, supports unit testing of automation and extensibility code, and provides useful primitives for both consuming VS services and tools as well as providing your own.
+Provides a managed, intuitive, modern and composable API for Visual Studio extensibility and automation. It leverages dependency injection in Visual Studio, supports unit testing of automation and extensibility code, and provides useful primitives for both consuming VS services and tools as well as providing your own.
 
 How do I get it?
 =====
