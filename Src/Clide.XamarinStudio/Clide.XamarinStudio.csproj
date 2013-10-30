@@ -58,6 +58,7 @@
     <ProjectReference Include="..\Clide\Clide.csproj">
       <Project>{eaf59c6d-a973-48e6-a90a-5e894ecec3f6}</Project>
       <Name>Clide</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
@@ -67,11 +68,4 @@
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildThisFileDirectory)..\Clide.targets" />
-  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
-  <!-- No longer needed since we're not using external library for MEF diagnostics anymore -->
-  <Target Name="AfterBuild" Condition="$(NuGet) == 'true'">
-    <!-- Copy spec file and sources to destination as needed -->
-    <Copy SourceFiles="Clide.nuspec" DestinationFolder="nuget" ContinueOnError="false" />
-    <Copy SourceFiles="@(SymbolSource)" DestinationFiles="@(SymbolSource->'nuget\src\%(RecursiveDir)%(Filename)%(Extension)')" ContinueOnError="false" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
-  </Target>
 </Project>

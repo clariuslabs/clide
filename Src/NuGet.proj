@@ -2,14 +2,15 @@
 <Project ToolsVersion="4.0"
          DefaultTargets="Build"
          xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildThisFileDirectory)..\..\Common\ClariusLabs.tasks" />
+    <Import Project="$(MSBuildThisFileDirectory)..\Common\ClariusLabs.tasks" />
     <Import Project="$(MSBuildThisFileDirectory)Clide.props" />
 
     <PropertyGroup>
-        <ReleaseNotes>$([System.IO.File]::ReadAllText('$(BuildRoot)..\ReleaseNotes.md'))</ReleaseNotes>
+        <ReleaseNotes>$([System.IO.File]::ReadAllText('$(BuildRoot)ReleaseNotes.md'))</ReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
+        <!-- AdditionalProperties are passed to the build task below automatically -->
         <ProjectToBuild Include="Clide\Clide.csproj">
             <AdditionalProperties>VisualStudioVersion=10.0;</AdditionalProperties>
         </ProjectToBuild>
@@ -17,7 +18,6 @@
             <AdditionalProperties>VisualStudioVersion=10.0;</AdditionalProperties>
         </ProjectToBuild>
         <ProjectToBuild Include="Clide.XamarinStudio\Clide.XamarinStudio.csproj">
-            <!-- These properties will be passed to the build task below automatically -->
             <AdditionalProperties>XamarinStudioVersion=1.0;</AdditionalProperties>
         </ProjectToBuild>
     </ItemGroup>
@@ -26,6 +26,9 @@
         <MSBuild Projects="@(ProjectToBuild)"
                  Targets="Clean"
                  />
+
+        <MakeDir Directories="$(DropDirectory)" Condition="!Exists('$(DropDirectory)')" />
+        
         <MSBuild Projects="@(ProjectToBuild)"
                  Properties="Configuration=Release;NuGet=true;PackageVersion=$(PackageVersion)"
                  Targets="Rebuild"
@@ -33,7 +36,7 @@
     </Target>
 
     <Target Name="ReplaceCurrentVersions">
-        <ReadAssemblyVersion File="$(MSBuildThisFileDirectory)Properties\GlobalAssemblyInfo.cs">
+        <ReadAssemblyVersion File="$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs">
             <Output PropertyName="Major"
                     TaskParameter="Major"/>
             <Output PropertyName="Minor"
@@ -55,11 +58,11 @@
         </PropertyGroup>
 
         <ItemGroup>
-            <_VersionRegexTransform Include="$(MSBuildThisFileDirectory)Properties\GlobalAssemblyInfo.cs">
+            <_VersionRegexTransform Include="$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs">
                 <Find>AssemblyFileVersion\(".*?"\)</Find>
                 <ReplaceWith>AssemblyFileVersion("$(FileVersion)")</ReplaceWith>
             </_VersionRegexTransform>
-            <_VersionRegexTransform Include="$(MSBuildThisFileDirectory)Properties\GlobalAssemblyInfo.cs">
+            <_VersionRegexTransform Include="$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs">
                 <Find>AssemblyVersion\(".*?"\)</Find>
                 <ReplaceWith>AssemblyVersion("$(FileVersion)")</ReplaceWith>
             </_VersionRegexTransform>

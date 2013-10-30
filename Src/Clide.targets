@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    
+
     <Target Name="BeforeBuild">
         <Error Condition="'$(VisualStudioVersion)' == ''"
                ContinueOnError="false"
@@ -8,30 +8,45 @@
         <Message Text="Building for Visual Studio $(VisualStudioVersion), Target Framework $(TargetFrameworkVersion), Platform $(Platform)"
                  Importance="high" />
     </Target>
-    
+
     <!-- Merges references that are CopyLocal and have an <IlMerge>true</IlMerge> item metadata -->
     <Target Name="IlMerge" BeforeTargets="AfterBuild" Condition="$(NuGet) == 'true'">
         <ItemGroup>
-            <AssembliesToMerge Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll' And '%(IlMerge)' == 'true'" />
+            <AssembliesToMerge Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll' And '%(ReferenceCopyLocalPaths.IlMerge)' == 'true'" />
             <LibDir Include="@(ReferencePath-&gt;'%(RootDir)%(Directory)'-&gt;Distinct())" />
             <MergedAssemblies Include="@(AssembliesToMerge->'$(OutDir)%(Filename)%(Extension)')" />
+            <MergedDocFiles Include="@(AssembliesToMerge->'$(OutDir)%(Filename).xml')" />
+            <FilesToDelete Include="@(MergedAssemblies)" />
+            <FilesToDelete Include="@(MergedDocFiles)" Condition="Exists(%(FullPath))" />
         </ItemGroup>
         <Message Text="IL merging assemblies: @(AssembliesToMerge)" />
         <Exec Command="&quot;$(SolutionDir)Lib\ILMerge.exe&quot; @(LibDir->'/lib:&quot;%(FullPath)\&quot;', ' ') /internalize /ndebug /keyfile:&quot;$(AssemblyOriginatorKeyFile)&quot; /targetplatform:v4,&quot;$(MSBuildToolsPath)&quot; /out:&quot;@(MainAssembly)&quot; &quot;@(IntermediateAssembly)&quot; @(AssembliesToMerge->'&quot;%(FullPath)&quot;', ' ')" ContinueOnError="false" />
-        <Delete Files="@(MergedAssemblies)" ContinueOnError="false" TreatErrorsAsWarnings="true" />
+        <Delete Files="@(FilesToDelete)" ContinueOnError="false" TreatErrorsAsWarnings="true" />
     </Target>
-    
+
+    <Target Name="CleanCopyLocal" AfterTargets="IlMerge" Condition="$(NuGet) == 'true'">
+        <ItemGroup>
+            <AssembliesToBundle Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll' And '%(ReferenceCopyLocalPaths.Bundle)' != 'true'" />
+            <AssembliesToClean Include="@(AssembliesToBundle->'$(OutDir)%(Filename)%(Extension)')" />
+        </ItemGroup>
+        <Delete Files="@(AssembliesToClean)" ContinueOnError="false" TreatErrorsAsWarnings="true" />
+    </Target>
+
     <Target Name="CleanLib" AfterTargets="Clean">
-        <Delete Files="$(OutputPath)**\*.*" ContinueOnError="false" />
+        <ItemGroup>
+            <ItemsToClean Include="$(OutputPath)**\*.*" />
+        </ItemGroup>
+        <!--<Exec Command="rmdir /s &quot;$(OutputPath)&quot;" ContinueOnError="false" />-->
+        <Delete Files="@(ItemsToClean)" ContinueOnError="false" />
         <RemoveDir Directories="$(OutputPath)" Condition="false" />
     </Target>
 
-    <Target Name="BuildPackage" AfterTargets="Build" Condition="$(NuGet) == 'true' And '@(NuSpec)' != ''">
-        <Copy SourceFiles="@(NuSpec)" DestinationFiles="@(NuSpec->'nuget\%(Filename)%(Extension)')" DestinationFolder="nuget" ContinueOnError="false">
-            <Output TaskParameter="DestinationFiles" ItemName="@(NuSpecOut)" />
+    <Target Name="BuildPackage" AfterTargets="AfterBuild" Condition="$(NuGet) == 'true'">
+        <Copy SourceFiles="@(NuSpec)" DestinationFiles="@(NuSpec->'nuget\%(Filename)%(Extension)')" SkipUnchangedFiles="true" ContinueOnError="false">
+            <Output TaskParameter="DestinationFiles" ItemName="NuSpecOut" />
         </Copy>
         <Copy SourceFiles="@(SymbolSource)" DestinationFiles="@(SymbolSource->'nuget\src\%(RecursiveDir)%(Filename)%(Extension)')" ContinueOnError="false" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
-        <Exec Command="$(NuGetExe) pack -NoPackageAnalysis %(NuSpecOut.FullPath) -Symbols -OutputDirectory $(DropDirectory) -Version $(PackageVersion)"
+        <Exec Command="&quot;$(NuGetExe)&quot; pack -NoPackageAnalysis &quot;%(NuSpecOut.FullPath)&quot; -Symbols -OutputDirectory &quot;$(DropDirectory.TrimEnd('\'))&quot; -Version &quot;$(PackageVersion)&quot;"
               ContinueOnError="false" />
     </Target>
 </Project>
