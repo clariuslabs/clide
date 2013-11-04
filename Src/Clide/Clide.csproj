@@ -388,5 +388,4 @@
     <!-- Fix for improper Microsoft.Practices.ServiceLocation.pdb in CommonServiceLocator package -->
     <Delete Files="$(OutputPath)Microsoft.Practices.ServiceLocation.pdb" ContinueOnError="false" />
   </Target>
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>

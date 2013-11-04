@@ -22,13 +22,21 @@
         </ProjectToBuild>
     </ItemGroup>
 
+    <ItemGroup>
+        <PackagesConfig Include="**\packages.config" />
+    </ItemGroup>
+
     <Target Name="Build" DependsOnTargets="ReplaceCurrentVersions">
         <MSBuild Projects="@(ProjectToBuild)"
                  Targets="Clean"
                  />
 
         <MakeDir Directories="$(DropDirectory)" Condition="!Exists('$(DropDirectory)')" />
-        
+
+        <Exec Command="&quot;$(NuGetExe)&quot; install &quot;%(PackagesConfig.FullPath)&quot; -solutionDir &quot;$(BuildRoot.TrimEnd('\'))&quot;"
+              LogStandardErrorAsError="true" />
+
+
         <MSBuild Projects="@(ProjectToBuild)"
                  Properties="Configuration=Release;NuGet=true;PackageVersion=$(PackageVersion)"
                  Targets="Rebuild"
@@ -52,7 +60,7 @@
             <!-- TODO: maybe we should have two builds, one that builds the public simplified version
                  and one with the full build/revision -->
         </PropertyGroup>
-    
+
         <PropertyGroup>
             <PackageVersion>$(FileVersion)</PackageVersion>
         </PropertyGroup>
