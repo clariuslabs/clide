@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:TraverseKind">
+            <nuget id="netfx-System.Collections.Generic.IEnumerable.Traverse" />
+        </member>
+        <member name="T:Guard">
+            <summary>
+            Common guard class for argument validation.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+            <summary>
+            Ensures the given <paramref name="value"/> is not null.
+            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
+            <summary>
+            Ensures the given string <paramref name="value"/> is not null or empty.
+            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
+            <see cref="T:System.ArgumentException"/> in the latter.
+            </summary>
+        </member>
+        <member name="T:Traverser">
+            <summary>
+            Traverses a tree (without checking for circular references) using 
+            a stack or queue based approach (no recursion), allowing infinitely 
+            deep trees.
+            </summary>
+            <nuget id="netfx-System.Collections.Generic.IEnumerable.Traverse" />
+        </member>
+        <member name="M:Traverser.Traverse``1(System.Collections.Generic.IEnumerable{``0},TraverseKind,System.Func{``0,System.Collections.Generic.IEnumerable{``0}})">
+            <summary>
+            Traverses a tree using the given traversal <paramref name="kind"/>.
+            </summary>
+            <nuget id="netfx-System.Collections.Generic.IEnumerable.Traverse"/>
+            <typeparam name="T">Type of the items to traverse, which can be inferred by the compiler so it's not necessary to specify it.</typeparam>
+            <param name="source" this="true">The root items for the traversal, which are always included in the result of the traversal.</param>
+            <param name="kind">Traversal style to use. See <see cref="T:TraverseKind"/>.</param>
+            <param name="traverser">The traversing function that is applied to the current item of the type <typeparamref name="T"/>.</param>
+            <returns>A flattened enumeration of the traversal, lazily evaluated.</returns>
+        </member>
+    </members>
+</doc>

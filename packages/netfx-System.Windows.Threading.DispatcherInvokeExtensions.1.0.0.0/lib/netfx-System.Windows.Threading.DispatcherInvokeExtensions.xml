@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:DispatcherInvokeExtensions">
+            <summary>
+            Helpers for easily invoking via the <see cref="T:System.Windows.Threading.Dispatcher"/> using 
+            an <see cref="T:System.Action"/> or a <see cref="T:System.Func`1"/> delegate or lambda.
+            </summary>
+            <netfx id="netfx-System.Windows.Threading.DispatcherInvokeExtensions"/>
+        </member>
+        <member name="M:DispatcherInvokeExtensions.BeginInvoke(System.Windows.Threading.Dispatcher,System.Action)">
+            <summary>
+            Executes the specified delegate asynchronously with the specified arguments
+            on the thread that the System.Windows.Threading.Dispatcher was created on.
+            </summary>
+            <param name="dispatcher">The dispatcher to invoke the action on.</param>
+            <param name="action">The action to execute via the dispatcher.</param>
+        </member>
+        <member name="M:DispatcherInvokeExtensions.BeginInvoke(System.Windows.Threading.Dispatcher,System.Action,System.Windows.Threading.DispatcherPriority)">
+            <summary>
+            Executes the specified delegate asynchronously with the specified arguments
+            on the thread that the System.Windows.Threading.Dispatcher was created on.
+            </summary>
+            <param name="dispatcher">The dispatcher to invoke the action on.</param>
+            <param name="action">The action to execute via the dispatcher.</param>
+            <param name="priority">The priority to execute the action with.</param>
+        </member>
+        <member name="M:DispatcherInvokeExtensions.Invoke(System.Windows.Threading.Dispatcher,System.Action)">
+            <summary>
+            Executes the specified delegate with the specified arguments synchronously
+            on the thread the System.Windows.Threading.Dispatcher is associated with.
+            </summary>
+            <param name="dispatcher">The dispatcher to invoke the action on.</param>
+            <param name="action">The action to execute via the dispatcher.</param>
+        </member>
+        <member name="M:DispatcherInvokeExtensions.Invoke(System.Windows.Threading.Dispatcher,System.Action,System.Windows.Threading.DispatcherPriority)">
+            <summary>
+            Executes the specified delegate with the specified arguments synchronously
+            on the thread the System.Windows.Threading.Dispatcher is associated with.
+            </summary>
+            <param name="dispatcher">The dispatcher to invoke the action on.</param>
+            <param name="action">The action to execute via the dispatcher.</param>
+            <param name="priority">The priority to execute the action with.</param>
+        </member>
+        <member name="M:DispatcherInvokeExtensions.Invoke``1(System.Windows.Threading.Dispatcher,System.Func{``0})">
+            <summary>
+            Executes the specified delegate with the specified arguments synchronously
+            on the thread the System.Windows.Threading.Dispatcher is associated with.
+            </summary>
+            <param name="dispatcher">The dispatcher to invoke the action on.</param>
+            <param name="action">The action to execute via the dispatcher.</param>
+            <returns>The return value from the delegate being invoked</returns>
+        </member>
+        <member name="M:DispatcherInvokeExtensions.Invoke``1(System.Windows.Threading.Dispatcher,System.Func{``0},System.Windows.Threading.DispatcherPriority)">
+            <summary>
+            Executes the specified delegate with the specified arguments synchronously
+            on the thread the System.Windows.Threading.Dispatcher is associated with.
+            </summary>
+            <param name="dispatcher">The dispatcher to invoke the action on.</param>
+            <param name="action">The action to execute via the dispatcher.</param>
+            <param name="priority">The priority to execute the action with.</param>
+            <returns>The return value from the delegate being invoked</returns>
+        </member>
+        <member name="T:Guard">
+            <summary>
+            Common guard class for argument validation.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+            <summary>
+            Ensures the given <paramref name="value"/> is not null.
+            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
+            <summary>
+            Ensures the given string <paramref name="value"/> is not null or empty.
+            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
+            <see cref="T:System.ArgumentException"/> in the latter.
+            </summary>
+        </member>
+    </members>
+</doc>

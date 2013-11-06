@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:ComponentModelAttributes">
+            <summary>
+            Provides strong typed access to ComponentModel attributes by using the ComponentModel() extension method over a type, method, property, etc.
+            </summary>
+            <nuget id="netfx-System.ComponentModel.Attributes" />
+        </member>
+        <member name="M:ComponentModelAttributes.ComponentModel(System.Reflection.ICustomAttributeProvider,System.Boolean)">
+            <summary>
+            Provides strong typed access to System.ComponentModel attributes for a type, method, property, etc.
+            </summary>
+            <param name="reflectionObject" this="true">The object this extension method applies to.</param>
+            <param name="inherit">Whether to retrieve attributes from base types.</param>
+        </member>
+        <member name="T:IComponentModelAttributes">
+            <summary>
+            Provides strong typed access to ComponentModel attributes.
+            </summary>
+            <nuget id="netfx-System.ComponentModel.Attributes" />
+        </member>
+        <member name="P:IComponentModelAttributes.AmbientValue">
+            <summary>
+            Gets the value of <see cref="P:System.ComponentModel.AmbientValueAttribute.Value"/> if present.
+            </summary>
+        </member>
+        <member name="P:IComponentModelAttributes.AttributeProvider">
+            <summary>
+            Gets the <see cref="T:System.ComponentModel.AttributeProviderAttribute"/> if present.
+            </summary>
+        </member>
+        <member name="P:IComponentModelAttributes.Bindable">
+            <summary>
+            Gets the value of <see cref="P:System.ComponentModel.BindableAttribute.Bindable"/> if present.
+            </summary>
+        </member>
+        <member name="P:IComponentModelAttributes.BindingDirection">
+            <summary>
+            Gets the value of <see cref="P:System.ComponentModel.BindableAttribute.Direction"/> if present.
+            </summary>
+        </member>
+        <member name="P:IComponentModelAttributes.Browsable">
+            <summary>
+            Gets the value of <see cref="P:System.ComponentModel.BrowsableAttribute.Browsable"/> if present.
+            </summary>
+        </member>
+        <member name="P:IComponentModelAttributes.Category">
+            <summary>
+            Gets the value of <see cref="P:System.ComponentModel.CategoryAttribute.Category"/> if present.
+            </summary>
+        </member>
+        <member name="P:IComponentModelAttributes.ComplexBindingDataMember">
+            <summary>
+            Gets the value of <see cref="P:System.ComponentModel.ComplexBindingPropertiesAttribute.DataMember"/> if present.
+            </summary>
+        </member>
+        <member name="P:IComponentModelAttributes.ComplexBindingDataSource">
+            <summary>
+            Gets the value of <see cref="P:System.ComponentModel.ComplexBindingPropertiesAttribute.DataSource"/> if present.
+            </summary>
+        </member>
+        <member name="P:IComponentModelAttributes.DefaultValue">
+            <summary>
+            Gets the value of <see cref="P:System.ComponentModel.DefaultValueAttribute.Value"/> if present.
+            </summary>
+        </member>
+        <member name="P:IComponentModelAttributes.Description">
+            <summary>
+            Gets the value of <see cref="P:System.ComponentModel.DescriptionAttribute.Description"/> if present.
+            </summary>
+        </member>
+        <member name="P:IComponentModelAttributes.DisplayName">
+            <summary>
+            Gets the value of <see cref="P:System.ComponentModel.DisplayNameAttribute.DisplayName"/> if present.
+            </summary>
+        </member>
+        <member name="P:IComponentModelAttributes.EditorBrowsable">
+            <summary>
+            Gets the value of <see cref="P:System.ComponentModel.EditorBrowsableAttribute.State"/> if present.
+            </summary>
+        </member>
+        <member name="P:IComponentModelAttributes.IsDesignOnly">
+            <summary>
+            Gets the value of <see cref="P:System.ComponentModel.DesignOnlyAttribute.IsDesignOnly"/> if present.
+            </summary>
+        </member>
+        <member name="P:IComponentModelAttributes.IsImmutable">
+            <summary>
+            Gets the value of <see cref="P:System.ComponentModel.ImmutableObjectAttribute.Immutable"/> if present.
+            </summary>
+        </member>
+        <member name="P:IComponentModelAttributes.IsLocalizable">
+            <summary>
+            Gets the value of <see cref="P:System.ComponentModel.LocalizableAttribute.IsLocalizable"/> if present.
+            </summary>
+        </member>
+        <member name="P:IComponentModelAttributes.IsReadOnly">
+            <summary>
+            Gets the value of <see cref="P:System.ComponentModel.ReadOnlyAttribute.IsReadOnly"/> if present.
+            </summary>
+        </member>
+        <member name="P:IComponentModelAttributes.SettingsBindable">
+            <summary>
+            Gets the value of <see cref="P:System.ComponentModel.SettingsBindableAttribute.Bindable"/> if present.
+            </summary>
+        </member>
+        <member name="T:Guard">
+            <summary>
+            Common guard class for argument validation.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+            <summary>
+            Ensures the given <paramref name="value"/> is not null.
+            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
+            <summary>
+            Ensures the given string <paramref name="value"/> is not null or empty.
+            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
+            <see cref="T:System.ArgumentException"/> in the latter.
+            </summary>
+        </member>
+        <member name="T:GetCustomAttributeExtension">
+            <summary>
+            Allows retrieving custom attributes from assemblies, types, methods, properties, etc. using a generic method.
+            </summary>
+            <nuget id="netfx-System.Reflection.GetCustomAttribute" />
+        </member>
+        <member name="M:GetCustomAttributeExtension.GetCustomAttribute``1(System.Reflection.ICustomAttributeProvider,System.Boolean)">
+            <summary>
+            Retrieves the first defined attribute of the given type from the provider if any.
+            </summary>
+            <typeparam name="TAttribute">Type of the attribute, which must inherit from <see cref="T:System.Attribute"/>.</typeparam>
+            <param name="provider" this="true">Any type implementing the interface, which can be an assembly, type, 
+            property, method, etc.</param>
+            <param name="inherit">Optionally, whether the attribute will be looked in base classes.</param>
+            <returns>The attribute instance if defined; <see langword="null"/> otherwise.</returns>
+        </member>
+        <member name="M:GetCustomAttributeExtension.GetCustomAttributes``1(System.Reflection.ICustomAttributeProvider,System.Boolean)">
+            <summary>
+            Retrieves the first defined attribute of the given type from the provider if any.
+            </summary>
+            <typeparam name="TAttribute">Type of the attribute, which must inherit from <see cref="T:System.Attribute"/>.</typeparam>
+            <param name="provider" this="true">Any type implementing the interface, which can be an assembly, type, 
+            property, method, etc.</param>
+            <param name="inherit">Optionally, whether the attribute will be looked in base classes.</param>
+            <returns>The attribute instance if defined; <see langword="null"/> otherwise.</returns>
+        </member>
+    </members>
+</doc>

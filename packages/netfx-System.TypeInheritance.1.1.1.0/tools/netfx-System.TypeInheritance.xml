@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:TypeInheritance">
+            <summary>
+            Provides type inheritance information for a type.
+            </summary>
+        </member>
+        <member name="M:TypeInheritance.#ctor(System.Type,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:TypeInheritance"/> class for the given 
+            type and distance from the type root.
+            </summary>
+        </member>
+        <member name="M:TypeInheritance.Equals(TypeInheritance)">
+            <summary>
+            Compares the current instance with the value provided.
+            </summary>
+        </member>
+        <member name="M:TypeInheritance.Equals(System.Object)">
+            <summary>
+            Compares the current instance with the value provided.
+            </summary>
+        </member>
+        <member name="M:TypeInheritance.Equals(TypeInheritance,TypeInheritance)">
+            <summary>
+            Compares two instances for equality.
+            </summary>
+        </member>
+        <member name="M:TypeInheritance.GetHashCode">
+            <summary>
+            Returns a hash code for this instance.
+            </summary>
+        </member>
+        <member name="P:TypeInheritance.Distance">
+            <summary>
+            Gets the distance from the current type inheritance to the root that was used 
+            to build the hierarchy.
+            </summary>
+        </member>
+        <member name="P:TypeInheritance.Type">
+            <summary>
+            Gets the type that owns the <see cref="P:TypeInheritance.Inheritance"/>.
+            </summary>
+        </member>
+        <member name="P:TypeInheritance.Inheritance">
+            <summary>
+            Gets the inherited types from <see cref="P:TypeInheritance.Type"/>.
+            </summary>
+        </member>
+        <member name="T:Guard">
+            <summary>
+            Common guard class for argument validation.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNull``1(System.Linq.Expressions.Expression{System.Func{``0}},``0)">
+            <summary>
+            Ensures the given <paramref name="value"/> is not null.
+            Throws <see cref="T:System.ArgumentNullException"/> otherwise.
+            </summary>
+        </member>
+        <member name="M:Guard.NotNullOrEmpty(System.Linq.Expressions.Expression{System.Func{System.String}},System.String)">
+            <summary>
+            Ensures the given string <paramref name="value"/> is not null or empty.
+            Throws <see cref="T:System.ArgumentNullException"/> in the first case, or 
+            <see cref="T:System.ArgumentException"/> in the latter.
+            </summary>
+        </member>
+        <member name="T:Traverser">
+            <summary>
+            Traverses a tree (without checking for circular references) using 
+            a stack or queue based approach (no recursion), allowing infinitely 
+            deep trees.
+            </summary>
+        </member>
+        <member name="M:Traverser.Traverse``1(System.Collections.Generic.IEnumerable{``0},TraverseKind,System.Func{``0,System.Collections.Generic.IEnumerable{``0}})">
+            <summary>
+            Traverses a tree using the given traversal <paramref name="kind"/>.
+            </summary>
+            <typeparam name="T">Type of the items to traverse, which can be inferred by the compiler so it's not necessary to specify it.</typeparam>
+            <param name="source">The root items for the traversal, which are always included in the result of the traversal.</param>
+            <param name="traverser">The traversing function that is applied to the current item of the type <typeparamref name="T"/>.</param>
+            <returns>A flattened enumeration of the traversal, lazily evaluated.</returns>
+        </member>
+        <member name="T:TypeInheritanceExtension">
+            <summary>
+            Provides the <see cref="M:TypeInheritanceExtension.GetInheritanceTree(System.Type)"/> extension method to retrieve 
+            inheritance tree information for a type.
+            </summary>
+        </member>
+        <member name="M:TypeInheritanceExtension.GetInheritanceTree(System.Type)">
+            <summary>
+            Gets the exact inheritance tree information for the given type. The first element 
+            in the inheritance is the received type itself.
+            </summary>
+        </member>
+    </members>
+</doc>

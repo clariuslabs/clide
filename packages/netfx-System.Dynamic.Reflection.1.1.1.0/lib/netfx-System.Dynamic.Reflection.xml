@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:System.Dynamic.OutValue">
+            <summary>
+            Allows output parameters to be passed to reflection dynamic.
+            This support does not exist in C# 4.0 dynamic out of the box.
+            </summary>
+        </member>
+        <member name="M:System.Dynamic.OutValue.Create``1(System.Action{``0})">
+            <summary>
+            Creates a value setter delegating reference
+            to be used as an output parameter when invoking the 
+            dynamic object.
+            </summary>
+            <param name="setter">The value to pass as out to the dynamic invocation.</param>
+        </member>
+        <member name="P:System.Dynamic.OutValue.Value">
+            <summary>
+            Sets the value.
+            </summary>
+        </member>
+        <member name="T:System.Dynamic.OutValue`1">
+            <summary>
+            Allows output parameters to be passed to reflection dynamic.
+            This support does not exist in C# 4.0 dynamic out of the box.
+            </summary>
+        </member>
+        <member name="M:System.Dynamic.OutValue`1.#ctor(System.Action{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Dynamic.OutValue`1"/> class.
+            </summary>
+        </member>
+        <member name="P:System.Dynamic.OutValue`1.Value">
+            <summary>
+            Gets or sets the value.
+            </summary>
+        </member>
+        <member name="T:System.Dynamic.DynamicReflection">
+            <summary>
+            Provides reflection-based dynamic syntax for objects and types. 
+            This class provides the extension methods <see cref="M:System.Dynamic.DynamicReflection.AsDynamicReflection(System.Object)"/> 
+            and <see cref="M:System.Dynamic.DynamicReflection.AsDynamicReflection(System.Type)"/> as entry points.
+            </summary>
+            <nuget id="netfx-System.Dynamic.Reflection"/>
+        </member>
+        <member name="M:System.Dynamic.DynamicReflection.AsDynamicReflection(System.Object)">
+            <summary>
+            Provides dynamic syntax for accessing the given object members.
+            </summary>
+            <nuget id="netfx-System.Dynamic.Reflection" />
+            <param name="obj" this="true">The object to access dinamically</param>
+        </member>
+        <member name="M:System.Dynamic.DynamicReflection.AsDynamicReflection(System.Type)">
+            <summary>
+            Provides dynamic syntax for accessing the given type members.
+            </summary>
+            <nuget id="netfx-System.Dynamic.Reflection" />
+            <param name="type" this="true">The type to access dinamically</param>
+        </member>
+        <member name="M:System.Dynamic.DynamicReflection.AsGenericTypeParameter(System.Type)">
+            <summary>
+            Converts the type to a <see cref="T:System.Dynamic.TypeParameter"/> that 
+            the reflection dynamic must use to make a generic 
+            method invocation.
+            </summary>
+            <nuget id="netfx-System.Dynamic.Reflection"/>
+            <param name="type" this="true">The type to convert</param>
+        </member>
+        <member name="M:System.Dynamic.DynamicReflection.DynamicReflectionObject.UnboxDynamic(System.Object)">
+            <summary>
+            Converts dynamic objects to object, which may cause unboxing 
+            of the wrapped dynamic such as in our own DynamicReflectionObject type.
+            </summary>
+        </member>
+        <member name="M:System.Dynamic.DynamicReflection.DynamicReflectionObject.FindBestMatchImpl(System.Dynamic.DynamicMetaObjectBinder,System.Object[],System.Int32,System.Collections.Generic.IEnumerable{System.Dynamic.DynamicReflection.DynamicReflectionObject.IInvocable},System.Boolean)">
+            <summary>
+            Finds the best match among the candidates.
+            </summary>
+            <param name="binder">The binder that is requesting the match.</param>
+            <param name="args">The args passed in to the invocation.</param>
+            <param name="genericArgs">The generic args if any.</param>
+            <param name="candidates">The candidate methods to use for the match..</param>
+            <param name="assignableFrom">if set to <c>true</c>, uses a more lax matching approach for arguments, with IsAssignableFrom instead of == for arg type.</param>
+        </member>
+        <member name="T:System.Dynamic.RefValue">
+            <summary>
+            Allows by-ref values to be passed to reflection dynamic.
+            This support does not exist in C# 4.0 dynamic out of the box.
+            </summary>
+        </member>
+        <member name="M:System.Dynamic.RefValue.Create``1(System.Func{``0},System.Action{``0})">
+            <summary>
+            Creates a value getter/setter delegating reference
+            to be used by reference when invoking the 
+            dynamic object.
+            </summary>
+            <param name="getter">The getter of the by-ref value to the dynamic invocation.</param>
+            <param name="setter">The setter of the by-ref value to the dynamic invocation.</param>
+        </member>
+        <member name="P:System.Dynamic.RefValue.Value">
+            <summary>
+            Gets or sets the value.
+            </summary>
+        </member>
+        <member name="T:System.Dynamic.RefValue`1">
+            <summary>
+            Allows by-ref values to be passed to reflection dynamic.
+            This support does not exist in C# 4.0 dynamic out of the box.
+            </summary>
+        </member>
+        <member name="M:System.Dynamic.RefValue`1.#ctor(System.Func{`0},System.Action{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Dynamic.RefValue`1"/> class.
+            </summary>
+        </member>
+        <member name="P:System.Dynamic.RefValue`1.Value">
+            <summary>
+            Gets or sets the value.
+            </summary>
+        </member>
+        <member name="T:System.Dynamic.TypeParameter">
+            <summary>
+            Represents a runtime type parameter to use to 
+            make a generic method invocation.
+            </summary>
+        </member>
+        <member name="M:System.Dynamic.TypeParameter.#ctor(System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Dynamic.TypeParameter"/> class.
+            </summary>
+        </member>
+        <member name="P:System.Dynamic.TypeParameter.Type">
+            <summary>
+            Gets the type.
+            </summary>
+        </member>
+    </members>
+</doc>

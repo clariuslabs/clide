@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Autofac.Extras.CommonServiceLocator</name>
+    </assembly>
+    <members>
+        <member name="T:Autofac.Extras.CommonServiceLocator.AutofacServiceLocator">
+            <summary>
+            Autofac implementation of the Microsoft CommonServiceLocator.
+            </summary>
+        </member>
+        <member name="F:Autofac.Extras.CommonServiceLocator.AutofacServiceLocator._container">
+            <summary>
+            The <see cref="T:Autofac.IComponentContext"/> from which services
+            should be located.
+            </summary>
+        </member>
+        <member name="M:Autofac.Extras.CommonServiceLocator.AutofacServiceLocator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Extras.CommonServiceLocator.AutofacServiceLocator"/> class.
+            </summary>
+        </member>
+        <member name="M:Autofac.Extras.CommonServiceLocator.AutofacServiceLocator.#ctor(Autofac.IComponentContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Extras.CommonServiceLocator.AutofacServiceLocator"/> class.
+            </summary>
+            <param name="container">
+            The <see cref="T:Autofac.IComponentContext"/> from which services
+            should be located.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="container"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:Autofac.Extras.CommonServiceLocator.AutofacServiceLocator.DoGetInstance(System.Type,System.String)">
+            <summary>
+            Resolves the requested service instance.
+            </summary>
+            <param name="serviceType">Type of instance requested.</param>
+            <param name="key">Name of registered service you want. May be <see langword="null"/>.</param>
+            <returns>The requested service instance.</returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="serviceType"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:Autofac.Extras.CommonServiceLocator.AutofacServiceLocator.DoGetAllInstances(System.Type)">
+            <summary>
+            Resolves all requested service instances.
+            </summary>
+            <param name="serviceType">Type of instance requested.</param>
+            <returns>Sequence of service instance objects.</returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="serviceType"/> is <see langword="null"/>.
+            </exception>
+        </member>
+    </members>
+</doc>

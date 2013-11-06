@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:StringFormatWithExtension">
+            <summary>
+            Requires a reference to System.Web.
+            </summary>
+        </member>
+        <member name="M:StringFormatWithExtension.FormatWith(System.String,System.Object)">
+            <summary>
+            Formats the string with the given source object. 
+            Expression like {Id} are replaced with the corresponding 
+            property value in the <paramref name="source"/>. Supports 
+            all <see cref="M:System.Web.UI.DataBinder.Eval(System.Object,System.String)"/> expressions formats 
+            for property access.
+            </summary>
+            <nuget id="netfx-System.StringFormatWith"/>
+            <param name="format" this="true">The string to format</param>
+            <param name="source">The source object to apply to format</param>
+        </member>
+    </members>
+</doc>

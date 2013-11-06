@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Source</name>
+    </assembly>
+    <members>
+        <member name="T:AppDomainData">
+            <summary>
+            Provides strong-typed access to AppDomain storage data.
+            </summary>
+            <nuget id="netfx-System.AppDomainData" />
+        </member>
+        <member name="M:AppDomainData.SetData``1(``0)">
+            <summary>
+            Sets the given data in the <see cref="T:System.AppDomain"/> storage. The returned 
+            <see cref="T:System.IDisposable"/> can be used to remove the state 
+            when disposed.
+            </summary>
+        </member>
+        <member name="M:AppDomainData.GetData``1">
+            <summary>
+            Gets the data from the <see cref="T:System.AppDomain"/> storage.
+            </summary>
+        </member>
+        <member name="M:AppDomainData.SetData``1(System.AppDomain,``0)">
+            <summary>
+            Sets the given data in the <see cref="T:System.AppDomain"/> storage. The returned 
+            <see cref="T:System.IDisposable"/> can be used to remove the state 
+            when disposed.
+            </summary>
+            <param name="domain" this="true">The domain to set the data on.</param>
+            <param name="data">The data to save.</param>
+        </member>
+        <member name="M:AppDomainData.GetData``1(System.AppDomain)">
+            <summary>
+            Gets the data from the <see cref="T:System.AppDomain"/> storage.
+            </summary>
+            <param name="domain" this="true">The domain to get the data.</param>
+        </member>
+    </members>
+</doc>
