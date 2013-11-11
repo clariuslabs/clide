@@ -116,6 +116,19 @@ namespace Clide.Properties
 		
 			/// <summary>
 			/// Looks up a localized string similar to: 
+			///	Command with id '{id}' and group '{group}' has already been registered with the menu command service.
+			/// </summary>
+			public static string DuplicateCommand(object id, object group)
+			{
+				return Resources.CommandManager_DuplicateCommand.FormatWith(new 
+				{
+					id = id,
+					group = group,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
 			///	Command filter {filter} caused an unexpected exception: {exception}.
 			/// </summary>
 			public static string FilterFailed(object filter, object exception)

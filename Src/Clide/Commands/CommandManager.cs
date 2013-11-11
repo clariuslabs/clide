@@ -89,8 +89,13 @@ namespace Clide.Commands
             Guard.NotNull(() => metadata, metadata);
 
             var menuService = serviceProvider.GetService<IMenuCommandService>();
+            var commandId = new CommandID(new Guid(metadata.GroupId), metadata.CommandId);
+            var existing = menuService.FindCommand(commandId);
 
-            menuService.AddCommand(new VsCommandExtensionAdapter(new CommandID(new Guid(metadata.GroupId), metadata.CommandId), command));
+            if (existing != null)
+                throw new ArgumentException(Strings.CommandManager.DuplicateCommand(metadata.CommandId, metadata.GroupId));
+
+            menuService.AddCommand(new VsCommandExtensionAdapter(commandId, command));
             tracer.Info(Strings.CommandManager.CommandRegistered(command.Text, command.GetType()));
         }
 

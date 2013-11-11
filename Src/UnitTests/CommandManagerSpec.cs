@@ -14,11 +14,34 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace UnitTests
 {
+    using Clide.Commands;
+    using Moq;
     using System;
     using System.Linq;
+    using Xunit;
+    using System.ComponentModel.Design;
+    using Microsoft.VisualStudio.Shell.Interop;
+    using EnvDTE;
 
     public class CommandManagerSpec
     {
         // TODO: start adding tests for the manager.
+        [Fact]
+        public void when_added_command_exists_then_throws()
+        {
+            var manager = new CommandManager(
+                Mock.Of<IServiceProvider>(x =>
+                    x.GetService(typeof(SVsShell)) == Mock.Of<IVsShell>() &&
+                    x.GetService(typeof(DTE)) == Mock.Of<DTE>(dte =>
+                        dte.Events.get_CommandEvents(It.IsAny<string>(), It.IsAny<int>()) == Mock.Of<CommandEvents>()) &&
+                    x.GetService(typeof(IMenuCommandService)) == Mock.Of<IMenuCommandService>(mcs =>
+                        mcs.FindCommand(It.IsAny<CommandID>()) == new MenuCommand(null, new CommandID(Guid.Empty, 0)))),
+                Enumerable.Empty<Lazy<ICommandExtension, CommandAttribute>>(),
+                Enumerable.Empty<Lazy<ICommandFilter, CommandFilterAttribute>>(),
+                Enumerable.Empty<Lazy<ICommandInterceptor, CommandInterceptorAttribute>>());
+
+            Assert.Throws<ArgumentException>(() =>
+                manager.AddCommand(Mock.Of<ICommandExtension>(), new CommandAttribute(Guid.NewGuid().ToString(), 5)));
+        }
     }
 }

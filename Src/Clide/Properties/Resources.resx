@@ -297,4 +297,7 @@
   <data name="ComponentModelExtensions_ExportProviderIsNotCompositionService" xml:space="preserve">
     <value>The given export provider '{provider}' does not implement the required ICompositionService interface.</value>
   </data>
+  <data name="CommandManager_DuplicateCommand" xml:space="preserve">
+    <value>Command with id '{id}' and group '{group}' has already been registered with the menu command service.</value>
+  </data>
 </root>
