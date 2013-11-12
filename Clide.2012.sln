@@ -33,7 +33,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clide.VisualStudio", "Src\C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clide.XamarinStudio", "Src\Clide.XamarinStudio\Clide.XamarinStudio.csproj", "{D5F09395-76B0-4B3F-8ABE-82516883E8F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clide.Common", "Clide.Common\Clide.Common.csproj", "{15BB76C4-C6D8-4D51-8276-FB7A94AAE377}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clide.Common", "Src\Clide.Common\Clide.Common.csproj", "{15BB76C4-C6D8-4D51-8276-FB7A94AAE377}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution

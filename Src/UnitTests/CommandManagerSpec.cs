@@ -25,7 +25,8 @@ namespace UnitTests
 
     public class CommandManagerSpec
     {
-        // TODO: start adding tests for the manager.
+
+
         [Fact]
         public void when_added_command_exists_then_throws()
         {

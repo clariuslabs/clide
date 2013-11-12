@@ -74,7 +74,7 @@
                 <Find>AssemblyVersion\(".*?"\)</Find>
                 <ReplaceWith>AssemblyVersion("$(FileVersion)")</ReplaceWith>
             </_VersionRegexTransform>
-            <_VersionRegexTransform Include="$(BuildRoot)**\*.nuspec"
+            <_VersionRegexTransform Include="$(BuildRoot)Src\**\*.nuspec"
                             Condition="'$(ReleaseNotes)' != ''">
                 <Find><![CDATA[<releaseNotes />|<releaseNotes/>|<releaseNotes>.*</releaseNotes>]]></Find>
                 <ReplaceWith><![CDATA[<releaseNotes>$(ReleaseNotes)</releaseNotes>]]></ReplaceWith>
