@@ -127,15 +127,14 @@
     <Compile Include="Composition\FallbackServiceLocator.cs" />
     <Compile Include="Composition\ExportsServiceLocator.cs" />
     <Compile Include="Composition\ServiceProviderSource.cs" />
-    <Compile Include="Diagnostics\TracerManager.cs" />
     <Compile Include="Diagnostics\Tracer\ITracer.cs" />
     <Compile Include="Diagnostics\Tracer\ITracerExtensions.cs" />
     <Compile Include="Diagnostics\Tracer\ITracerManager.cs" />
+    <Compile Include="Diagnostics\Tracer\StartActivityExtension.cs" />
     <Compile Include="Diagnostics\Tracer\Tracer.cs" />
     <Compile Include="Diagnostics\Tracer\Visibility.cs" />
     <Compile Include="Diagnostics\Visibility.cs" />
     <Compile Include="Diagnostics\ITracerManager.cs" />
-    <Compile Include="Diagnostics\Tracer\StartActivityExtension.cs" />
     <Compile Include="Diagnostics\Tracer\TracerManager.cs" />
     <Compile Include="Diagnostics\Tracer.cs" />
     <Compile Include="FallbackServiceProvider.cs" />

@@ -273,7 +273,7 @@ namespace $rootnamespace$.Diagnostics
             /// </summary>
             public void Trace(TraceEventType type, object message)
             {
-                manager.Enqueue(() => tracers.ForEach(tracer => tracer.Trace(name, type, message)));
+                manager.Enqueue(() => tracers.AsParallel().ForAll(tracer => tracer.Trace(name, type, message)));
             }
 
             /// <summary>
@@ -281,7 +281,7 @@ namespace $rootnamespace$.Diagnostics
             /// </summary>
             public void Trace(TraceEventType type, string format, params object[] args)
             {
-                manager.Enqueue(() => tracers.ForEach(tracer => tracer.Trace(name, type, format, args)));
+                manager.Enqueue(() => tracers.AsParallel().ForAll(tracer => tracer.Trace(name, type, format, args)));
             }
 
             /// <summary>
@@ -289,7 +289,7 @@ namespace $rootnamespace$.Diagnostics
             /// </summary>
             public void Trace(TraceEventType type, Exception exception, object message)
             {
-                manager.Enqueue(() => tracers.ForEach(tracer => tracer.Trace(name, type, exception, message)));
+                manager.Enqueue(() => tracers.AsParallel().ForAll(tracer => tracer.Trace(name, type, exception, message)));
             }
 
             /// <summary>
@@ -297,7 +297,7 @@ namespace $rootnamespace$.Diagnostics
             /// </summary>
             public void Trace(TraceEventType type, Exception exception, string format, params object[] args)
             {
-                manager.Enqueue(() => tracers.ForEach(tracer => tracer.Trace(name, type, exception, format, args)));
+                manager.Enqueue(() => tracers.AsParallel().ForAll(tracer => tracer.Trace(name, type, exception, format, args)));
             }
 
             public override string ToString()

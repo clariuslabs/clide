@@ -33,14 +33,23 @@ DAMAGE.
 namespace Clide.Diagnostics
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Configuration;
+    using System.Xml.Linq;
+    using System.IO;
 
     /// <summary>
     /// Implements the common tracer interface using <see cref="TraceSource"/> instances. 
     /// </summary>
+    /// <remarks>
+    /// All tracing is performed asynchronously transparently for faster speed.
+    /// </remarks>
     ///	<nuget id="Tracer.SystemDiagnostics" />
     partial class TracerManager : ITracerManager, IDisposable
     {
@@ -50,14 +59,58 @@ namespace Clide.Diagnostics
         /// </summary>
         public const string DefaultSourceName = "*";
 
+        // To handle concurrency for the async tracing.
+        private BlockingCollection<Tuple<ExecutionContext, Action>> traceQueue = new BlockingCollection<Tuple<ExecutionContext, Action>>();
+        private CancellationTokenSource cancellation = new CancellationTokenSource();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TracerManager"/> class.
+        /// </summary>
+        public TracerManager()
+        {
+            // Note we have only one async task to perform all tracing. This 
+            // is an optimization, so that we don't consume too much resources
+            // from the running app for this.
+            Task.Factory.StartNew(DoTrace, cancellation.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current);
+
+            InitializeConfiguredSources();
+        }
+
+        private void InitializeConfiguredSources()
+        {
+            var configFile = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;
+            if (!File.Exists(configFile))
+                return;
+
+            var sourceNames = from diagnostics in XDocument.Load(configFile).Root.Elements("system.diagnostics")
+                              from sources in diagnostics.Elements("sources")
+                              from source in sources.Elements("source")
+                              select source.Attribute("name").Value;
+
+            foreach (var sourceName in sourceNames)
+            {
+                // Cause eager initialization, which is needed for the trace source configuration 
+                // to be properly read.
+                GetSource(sourceName);
+            }
+        }
+
         /// <summary>
         /// Gets a tracer instance with the specified name.
         /// </summary>
         public ITracer Get(string name)
         {
-            return new AggregateTracer(name, CompositeFor(name)
+            return new AggregateTracer(this, name, CompositeFor(name)
                 .Select(tracerName => new DiagnosticsTracer(
                     this.GetOrAdd(tracerName, sourceName => CreateSource(sourceName)))));
+        }
+
+        /// <summary>
+        /// Gets the underlying <see cref="TraceSource"/> for the given name.
+        /// </summary>
+        public TraceSource GetSource(string name)
+        {
+            return this.GetOrAdd(name, sourceName => CreateSource(sourceName));
         }
 
         /// <summary>
@@ -93,17 +146,46 @@ namespace Clide.Diagnostics
         }
 
         /// <summary>
-        /// Cleans up the manager.
+        /// Cleans up the manager, cancelling any pending tracing 
+        /// messages.
         /// </summary>
         public void Dispose()
         {
+            cancellation.Cancel();
+            traceQueue.Dispose();
+        }
+
+        /// <summary>
+        /// Enqueues the specified trace action to be executed by the trace 
+        /// async task.
+        /// </summary>
+        internal void Enqueue(Action traceAction)
+        {
+            traceQueue.Add(Tuple.Create(ExecutionContext.Capture(), traceAction));
         }
 
         private TraceSource CreateSource(string name)
         {
             var source = new TraceSource(name);
-            source.TraceInformation("Initialized trace source {0} with initial level {1}", name, source.Switch.Level);
+            source.TraceInformation("Initialized with initial level {0}", source.Switch.Level);
             return source;
+        }
+
+        private void DoTrace()
+        {
+            foreach (var action in traceQueue.GetConsumingEnumerable())
+            {
+                if (cancellation.IsCancellationRequested)
+                    break;
+
+                // Tracing should never cause the app to fail. 
+                // Since this is async, it might if we don't catch.
+                try
+                {
+                    ExecutionContext.Run(action.Item1, state => action.Item2(), null);
+                }
+                catch { }
+            }
         }
 
         /// <summary>
@@ -175,11 +257,13 @@ namespace Clide.Diagnostics
         /// </summary>
         private class AggregateTracer : ITracer
         {
+            private TracerManager manager;
             private List<DiagnosticsTracer> tracers;
             private string name;
 
-            public AggregateTracer(string name, IEnumerable<DiagnosticsTracer> tracers)
+            public AggregateTracer(TracerManager manager, string name, IEnumerable<DiagnosticsTracer> tracers)
             {
+                this.manager = manager;
                 this.name = name;
                 this.tracers = tracers.ToList();
             }
@@ -189,7 +273,7 @@ namespace Clide.Diagnostics
             /// </summary>
             public void Trace(TraceEventType type, object message)
             {
-                tracers.ForEach(tracer => tracer.Trace(name, type, message));
+                manager.Enqueue(() => tracers.AsParallel().ForAll(tracer => tracer.Trace(name, type, message)));
             }
 
             /// <summary>
@@ -197,7 +281,7 @@ namespace Clide.Diagnostics
             /// </summary>
             public void Trace(TraceEventType type, string format, params object[] args)
             {
-                tracers.ForEach(tracer => tracer.Trace(name, type, format, args));
+                manager.Enqueue(() => tracers.AsParallel().ForAll(tracer => tracer.Trace(name, type, format, args)));
             }
 
             /// <summary>
@@ -205,7 +289,7 @@ namespace Clide.Diagnostics
             /// </summary>
             public void Trace(TraceEventType type, Exception exception, object message)
             {
-                tracers.ForEach(tracer => tracer.Trace(name, type, exception, message));
+                manager.Enqueue(() => tracers.AsParallel().ForAll(tracer => tracer.Trace(name, type, exception, message)));
             }
 
             /// <summary>
@@ -213,20 +297,16 @@ namespace Clide.Diagnostics
             /// </summary>
             public void Trace(TraceEventType type, Exception exception, string format, params object[] args)
             {
-                tracers.ForEach(tracer => tracer.Trace(name, type, exception, format, args));
+                manager.Enqueue(() => tracers.AsParallel().ForAll(tracer => tracer.Trace(name, type, exception, format, args)));
             }
 
             public override string ToString()
             {
-                return "Aggregate sources for " + this.name;
+                return "Aggregate for " + this.name;
             }
         }
 
-        /// <summary>
-        /// Implements the <see cref="ITracer"/> interface on top of 
-        /// <see cref="TraceSource"/>.
-        /// </summary>
-        private class DiagnosticsTracer
+        partial class DiagnosticsTracer
         {
             private TraceSource source;
 
@@ -237,65 +317,35 @@ namespace Clide.Diagnostics
 
             public void Trace(string sourceName, TraceEventType type, object message)
             {
-                lock (source)
+                // Because we know there is a single tracer thread executing these, 
+                // we know it's safe to replace the name without locking.
+                using (new SourceNameReplacer(source, sourceName))
                 {
-                    using (new SourceNameReplacer(source, sourceName))
-                    {
-                        // This is the only overload where we expect to get Transfer type.
-                        if (type == TraceEventType.Transfer)
-                        {
-                            if (!(message is Guid))
-                                throw new ArgumentException("message must be a Guid for the transfered activity.");
-
-                            source.TraceTransfer(0, " > " + message, (Guid)message);
-                        }
-                        else
-                        {
-                            source.TraceEvent(type, 0, message.ToString());
-                        }
-                    }
+                    source.TraceEvent(type, 0, message.ToString());
                 }
             }
 
             public void Trace(string sourceName, TraceEventType type, string format, params object[] args)
             {
-                if (type == TraceEventType.Transfer)
-                    throw new NotSupportedException("For Transfer event types, use the overload receiving just an object message, which must be the new activity ID to transfer to.");
-
-                lock (source)
+                using (new SourceNameReplacer(source, sourceName))
                 {
-                    using (new SourceNameReplacer(source, sourceName))
-                    {
-                        source.TraceEvent(type, 0, format, args);
-                    }
+                    source.TraceEvent(type, 0, format, args);
                 }
             }
 
             public void Trace(string sourceName, TraceEventType type, Exception exception, object message)
             {
-                if (type == TraceEventType.Transfer)
-                    throw new NotSupportedException("For Transfer event types, use the overload receiving just an object message, which must be the new activity ID to transfer to.");
-
-                lock (source)
+                using (new SourceNameReplacer(source, sourceName))
                 {
-                    using (new SourceNameReplacer(source, sourceName))
-                    {
-                        source.TraceEvent(type, 0, message.ToString() + Environment.NewLine + exception);
-                    }
+                    source.TraceEvent(type, 0, message.ToString() + Environment.NewLine + exception);
                 }
             }
 
             public void Trace(string sourceName, TraceEventType type, Exception exception, string format, params object[] args)
             {
-                if (type == TraceEventType.Transfer)
-                    throw new NotSupportedException("For Transfer event types, use the overload receiving just an object message, which must be the new activity ID to transfer to.");
-
-                lock (source)
+                using (new SourceNameReplacer(source, sourceName))
                 {
-                    using (new SourceNameReplacer(source, sourceName))
-                    {
-                        source.TraceEvent(type, 0, string.Format(format, args) + Environment.NewLine + exception);
-                    }
+                    source.TraceEvent(type, 0, string.Format(format, args) + Environment.NewLine + exception);
                 }
             }
 
@@ -314,7 +364,8 @@ namespace Clide.Diagnostics
             /// we need to fix the source name right before tracing, so that a configured 
             /// listener at "*" still receives as the source name the original (aggregate) one, 
             /// and not "*". This requires some private reflection, and a lock to guarantee 
-            /// proper logging, but this decreases its performance.
+            /// proper logging, but this decreases its performance. However, since we log 
+            /// asynchronously, it's fine.
             /// </summary>
             private class SourceNameReplacer : IDisposable
             {
