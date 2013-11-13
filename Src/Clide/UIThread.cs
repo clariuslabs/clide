@@ -61,10 +61,7 @@ namespace Clide
 
         public void BeginInvoke(Action action)
         {
-            if (dispatcher.CheckAccess())
-                action();
-            else
-                dispatcher.BeginInvoke(action);
+            dispatcher.BeginInvoke(action);
         }
     }
 }
