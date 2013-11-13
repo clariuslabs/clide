@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Adapter.Implementation.Source</id>
+    <version>1.1.1301.1418</version>
+    <title>Adapter Pattern - Implementation (Source Code)</title>
+    <authors>Daniel Cazzulino</authors>
+    <owners>Daniel Cazzulino</owners>
+    <licenseUrl>http://opensource.org/licenses/BSD-2-Clause</licenseUrl>
+    <projectUrl>https://github.org/clariuslabs/adapter</projectUrl>
+    <iconUrl>https://github.com/clariuslabs/adapter/raw/master/Common/ClariusLabsIcon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>The provided adapter pattern allows to convert any object to any other supported type, as provided by the registered adapters.
+            
+            This package provides the actual implementation of the service. It should only be added to the bootstrapping component of your application.
+            
+            ======= Example =======
+            IProject project = GetCurrentProject();
+            // say we need to use it as an MSBuild project, if possible
+            IMSBuildProject msbuild = project.As&lt;IMSBuildProject&gt;();
+            if (msbuild != null)
+                // do MSBuild stuff with it.
+            ======= Adapters =======
+            public class ProjectToMsBuildAdapter : IAdapter&lt;IProject, IMSBuildProject&gt;
+            {
+                // Implement actual conversion.
+            }
+
+            The conversion behavior is now decoupled from the usage.
+            Note that to create adapter implementations, you need to install the Adapter.Sdk package.</description>
+    <summary>Provides the implementation of an adapter pattern service in a lightweight reusable binary component.</summary>
+    <releaseNotes>v1.1
+* Additional support for source packages, like Adapter.Interfaces.Source,
+  which also use token replacement and adopt the containing project 
+  root namespace.
+
+v1.0
+* Initial version, with support for flexible matching of from and to types
+* Support for MEF in separate Adapter.Composition package
+* Proper split of: Adapter.Interfaces, Adapter.Sdk and Adapter (implementation).</releaseNotes>
+    <tags>patterns adapter</tags>
+    <dependencies>
+      <dependency id="netfx-Guard" version="1.3.3.0" />
+      <dependency id="netfx-System.AmbientSingleton" version="1.2.0.0" />
+      <dependency id="netfx-System.Collections.Generic.IEnumerable.Traverse" version="1.0.0.17" />
+      <dependency id="netfx-System.TypeInheritance" version="1.1.1.0" />
+    </dependencies>
+  </metadata>
+</package>

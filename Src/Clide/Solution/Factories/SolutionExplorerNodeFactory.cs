@@ -17,6 +17,7 @@ namespace Clide.Solution.Factories
     using System;
     using System.ComponentModel.Composition;
     using Clide.Composition;
+    using Autofac.Extras.Attributed;
 
     [Component(typeof(ISolutionExplorerNodeFactory))]
     internal class SolutionExplorerNodeFactory : ISolutionExplorerNodeFactory

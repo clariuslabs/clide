@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Tracer.SystemDiagnostics</id>
+    <version>1.1.2</version>
+    <title>Tracer: System.Diagnostics</title>
+    <authors>Daniel Cazzulino,  kzu,  Clarius</authors>
+    <owners>Daniel Cazzulino,  kzu,  Clarius</owners>
+    <licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
+    <projectUrl>http://netfx.codeplex.com/</projectUrl>
+    <iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Implements the tracing interface on top of the System.Diagnostics.TraceSource capabilities, extending it with log4net-style hierarchical logging and runtime dynamic configurability of trace sources.</description>
+    <summary>Adapter based on the System.Diagnostics classes for the general tracer interface.</summary>
+    <language>en-US</language>
+    <tags>netfx diagnostics tracing</tags>
+    <dependencies>
+      <dependency id="netfx-System.AppDomainData" version="1.1" />
+      <dependency id="netfx-System.Collections.Generic.DictionaryGetOrAdd" version="1.1" />
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Configuration" targetFramework=".NETFramework4.0" />
+      <frameworkAssembly assemblyName="System.Xml" targetFramework=".NETFramework4.0" />
+      <frameworkAssembly assemblyName="System.Xml.Linq" targetFramework=".NETFramework4.0" />
+    </frameworkAssemblies>
+  </metadata>
+</package>

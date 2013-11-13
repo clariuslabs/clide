@@ -121,25 +121,22 @@
     <Compile Include="ClideSettings.cs" />
     <Compile Include="Commands\CommandInterceptorAttribute.cs" />
     <Compile Include="Commands\ICommandInterceptor.cs" />
-    <Compile Include="Composition\AutofacContrib\AutofacAttributeExtensions.cs" />
-    <Compile Include="Composition\AutofacContrib\WithKeyAttribute.cs" />
     <Compile Include="Composition\CompositionExtensions.cs" />
     <Compile Include="Composition\CompositionModule.cs" />
     <Compile Include="Composition\CompositionSource.cs" />
     <Compile Include="Composition\FallbackServiceLocator.cs" />
     <Compile Include="Composition\ExportsServiceLocator.cs" />
     <Compile Include="Composition\ServiceProviderSource.cs" />
-    <Compile Include="Composition\AutofacContrib\WithMetadataAttribute.cs" />
     <Compile Include="Diagnostics\TracerManager.cs" />
-    <Compile Include="Diagnostics\Visibility.cs" />
-    <Compile Include="Diagnostics\ITracerManager.cs" />
     <Compile Include="Diagnostics\Tracer\ITracer.cs" />
     <Compile Include="Diagnostics\Tracer\ITracerExtensions.cs" />
     <Compile Include="Diagnostics\Tracer\ITracerManager.cs" />
-    <Compile Include="Diagnostics\Tracer\StartActivityExtension.cs" />
     <Compile Include="Diagnostics\Tracer\Tracer.cs" />
-    <Compile Include="Diagnostics\Tracer\TracerManager.cs" />
     <Compile Include="Diagnostics\Tracer\Visibility.cs" />
+    <Compile Include="Diagnostics\Visibility.cs" />
+    <Compile Include="Diagnostics\ITracerManager.cs" />
+    <Compile Include="Diagnostics\Tracer\StartActivityExtension.cs" />
+    <Compile Include="Diagnostics\Tracer\TracerManager.cs" />
     <Compile Include="Diagnostics\Tracer.cs" />
     <Compile Include="FallbackServiceProvider.cs" />
     <Compile Include="IOptionsPageWindowFactory.cs" />
@@ -344,6 +341,7 @@
     <NuSpec Include="Clide.nuspec">
       <SubType>Designer</SubType>
     </NuSpec>
+    <None Include="ilmerge.exclude" />
     <None Include="netfx\System\Reflection\Reflect.Overloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Reflect.Overloads.cs</LastGenOutput>

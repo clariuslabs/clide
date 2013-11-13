@@ -26,6 +26,7 @@ namespace Clide.Events
     using EnvDTE;
     using Clide.Solution;
     using Clide.Composition;
+    using Autofac.Extras.Attributed;
 
     [Component(typeof(IGlobalEvents), typeof(ISolutionEvents))]
 	internal class SolutionEvents : IDisposable, IVsSolutionEvents, ISolutionEvents

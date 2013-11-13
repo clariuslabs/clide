@@ -28,6 +28,7 @@ namespace Clide.Composition
     using Autofac.Features.Metadata;
     using Autofac.Features.Scanning;
     using Microsoft.VisualStudio.ComponentModelHost;
+    using Autofac.Extras.Attributed;
 
     /// <summary>
     /// Provides automatic component registration by scanning assemblies and types for 
@@ -102,9 +103,8 @@ namespace Clide.Composition
                     return attr.RegisterAs.Select(reg => new TypedService(reg));
                 })
                 .WithImports(exports)
-                .WithKeyFilter()
-                .PropertiesAutowired(PropertyWiringOptions.PreserveSetValues)
-                .WithMetadataFilter();
+                .WithAttributeFilter()
+                .PropertiesAutowired(PropertyWiringOptions.PreserveSetValues);
 
             // Optionally set the SingleInstance behavior.
             registration.ActivatorData.ConfigurationActions.Add((t, rb) =>

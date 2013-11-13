@@ -23,6 +23,7 @@ namespace Clide.Solution
     using Clide.Patterns.Adapter;
     using Clide.VisualStudio;
     using Clide.Composition;
+    using Autofac.Extras.Attributed;
 
     [FallbackFactory]
     internal class ReferenceNodeFactory : ITreeNodeFactory<IVsSolutionHierarchyNode>

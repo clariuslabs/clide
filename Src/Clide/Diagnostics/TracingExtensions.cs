@@ -89,17 +89,3 @@ namespace Clide
         }
     }
 }
-
-namespace Clide.Diagnostics
-{
-    partial class Tracer
-    {
-        /// <summary>
-        /// Gets the tracer name for the given type.
-        /// </summary>
-        public static string NameFor<T>()
-        {
-            return NameFor(typeof(T));
-        }
-    }
-}

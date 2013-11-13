@@ -19,6 +19,7 @@ namespace Clide.Solution
     using System.ComponentModel.Composition;
     using System.Linq;
     using Clide.Composition;
+    using Autofac.Extras.Attributed;
 
     /// <summary>
     /// This factory is the one that serves as the single dependency 

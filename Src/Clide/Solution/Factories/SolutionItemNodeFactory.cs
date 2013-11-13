@@ -20,6 +20,7 @@ namespace Clide.Solution
     using Clide.VisualStudio;
     using EnvDTE;
     using Clide.Composition;
+    using Autofac.Extras.Attributed;
 
     [FallbackFactory]
     internal class SolutionItemNodeFactory : ITreeNodeFactory<IVsSolutionHierarchyNode>

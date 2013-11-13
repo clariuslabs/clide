@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>netfx-System.StringResources</id>
+    <version>1.0.0.10</version>
+    <title>NETFx Smart String Resources</title>
+    <authors>Daniel Cazzulino,  kzu,  Clarius</authors>
+    <owners>Daniel Cazzulino,  kzu,  Clarius</owners>
+    <licenseUrl>http://netfx.codeplex.com/license</licenseUrl>
+    <projectUrl>http://netfx.codeplex.com/</projectUrl>
+    <iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=netfx&amp;DownloadId=199201</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Suplements the built-in Resources .resx C# generator by generating a strong-typed class named Strings from the 
+same .resx file, but exposing format parameters as method parameters and organizing strings in classes according to the resource name 
+if it uses underscores. i.e. User_InvalidCredentials can be accessed with Strings.User.InvalidCredentials, and as a method if it had 
+parameter replacements, which can even be named, like "Invalid email '{email}'". This makes it easier to refactor strings too.</description>
+    <language>en-US</language>
+    <tags>netfx resources format string resx C#</tags>
+    <dependencies>
+      <dependency id="netfx-System.StringFormatWith" version="1.0" />
+    </dependencies>
+  </metadata>
+</package>

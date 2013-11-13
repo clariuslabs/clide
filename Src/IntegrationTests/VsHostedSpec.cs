@@ -44,7 +44,6 @@ using Microsoft.Practices.ServiceLocation;
 [TestClass]
 public abstract class VsHostedSpec
 {
-    private Lazy<IServiceProvider> package;
     private ITracer tracer;
     private StringBuilder strings; 
     private TraceListener listener;

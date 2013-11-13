@@ -20,7 +20,10 @@
             <FilesToDelete Include="@(MergedDocFiles)" Condition="Exists(%(FullPath))" />
         </ItemGroup>
         <Message Text="IL merging assemblies: @(AssembliesToMerge)" />
-        <Exec Command="&quot;$(SolutionDir)Lib\ILMerge.exe&quot; @(LibDir->'/lib:&quot;%(FullPath)\&quot;', ' ') /internalize /ndebug /keyfile:&quot;$(AssemblyOriginatorKeyFile)&quot; /targetplatform:v4,&quot;$(MSBuildToolsPath)&quot; /out:&quot;@(MainAssembly)&quot; &quot;@(IntermediateAssembly)&quot; @(AssembliesToMerge->'&quot;%(FullPath)&quot;', ' ')" ContinueOnError="false" />
+        <PropertyGroup>
+            <ExcludeFile Condition="Exists('$(MSBuildProjectPath)ilmerge.exclude')">:"$(MSBuildProjectPath)ilmerge.exclude"</ExcludeFile>
+        </PropertyGroup>
+        <Exec Command="&quot;$(SolutionDir)Lib\ILMerge.exe&quot; @(LibDir->'/lib:&quot;%(FullPath)\&quot;', ' ') /internalize$(ExcludeFile) /ndebug /keyfile:&quot;$(AssemblyOriginatorKeyFile)&quot; /targetplatform:v4,&quot;$(MSBuildToolsPath)&quot; /out:&quot;@(MainAssembly)&quot; &quot;@(IntermediateAssembly)&quot; @(AssembliesToMerge->'&quot;%(FullPath)&quot;', ' ')" ContinueOnError="false" />
         <Delete Files="@(FilesToDelete)" ContinueOnError="false" TreatErrorsAsWarnings="true" />
     </Target>
 
