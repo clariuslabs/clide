@@ -51,5 +51,10 @@ namespace Clide.Solution
 
 			return this.CreateNode(newFolder) as IFolderNode;
 		}
+
+        public override bool Accept(ISolutionVisitor visitor)
+        {
+            return SolutionVisitable.Accept(this, visitor);
+        }
 	}
 }

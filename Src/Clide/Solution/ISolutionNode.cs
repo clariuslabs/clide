@@ -65,5 +65,5 @@ namespace Clide.Solution
         /// Creates a solution folder under the solution root.
         /// </summary>
 		ISolutionFolderNode CreateSolutionFolder(string name);
-	}
+    }
 }

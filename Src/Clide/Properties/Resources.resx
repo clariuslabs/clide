@@ -300,4 +300,7 @@
   <data name="CommandManager_DuplicateCommand" xml:space="preserve">
     <value>Command with id '{id}' and group '{group}' has already been registered with the menu command service.</value>
   </data>
+  <data name="IProjectNodeExtensions_BuildException" xml:space="preserve">
+    <value>Failed to invoke build.</value>
+  </data>
 </root>

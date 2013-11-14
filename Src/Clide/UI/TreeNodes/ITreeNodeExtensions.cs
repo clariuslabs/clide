@@ -16,14 +16,29 @@ namespace Clide
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
     using System.Text;
 
     /// <summary>
     /// Provides node traversal extensions.
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Advanced)]
     public static class ITreeNodeExtensions
     {
+        /// <summary>
+        /// Traverses upwards the ancestors of the specified node.
+        /// </summary>
+        public static IEnumerable<ITreeNode> Ancestors(this ITreeNode @this)
+        {
+            var parent = @this.Parent;
+            while (parent != null)
+            {
+                yield return parent;
+                parent = parent.Parent;
+            }
+        }
+
         /// <summary>
         /// Traverses the specified node and all its descendents. The node itself 
         /// also exists in the returned enumeration. To traverse only the 

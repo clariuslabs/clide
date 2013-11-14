@@ -95,5 +95,10 @@ namespace Clide.Solution
         {
             return new ConfigProjectProperties(this, configurationAndPlatform);
         }
+
+        public override bool Accept(ISolutionVisitor visitor)
+        {
+            return SolutionVisitable.Accept(this, visitor);
+        }
 	}
 }

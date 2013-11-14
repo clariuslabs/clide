@@ -588,6 +588,12 @@ namespace Clide.Properties
 		{
 			/// <summary>
 			/// Looks up a localized string similar to: 
+			///	Failed to invoke build.
+			/// </summary>
+			public static string BuildException { get { return Resources.IProjectNodeExtensions_BuildException; } }
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
 			///	The specified project '{project}' does not have a valid owning solution.
 			/// </summary>
 			public static string BuildNoSolution(object project)

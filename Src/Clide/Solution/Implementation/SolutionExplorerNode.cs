@@ -32,7 +32,7 @@ namespace Clide.Solution
     using Clide.Properties;
 
     [DebuggerDisplay("{debuggerDisplay,nq}")]
-    internal class SolutionTreeNode : ISolutionExplorerNode
+    internal abstract class SolutionTreeNode : ISolutionExplorerNode
     {
         private string debuggerDisplay;
         private IVsSolutionHierarchyNode hierarchyNode;
@@ -43,7 +43,7 @@ namespace Clide.Solution
         private Lazy<bool> isHidden;
         private Lazy<ISolutionNode> solutionNode;
 
-        public SolutionTreeNode(
+        protected SolutionTreeNode(
             SolutionNodeKind nodeKind,
             IVsSolutionHierarchyNode hierarchyNode,
             Lazy<ITreeNode> parentNode,
@@ -137,7 +137,7 @@ namespace Clide.Solution
 
         public virtual SolutionNodeKind Kind { get; private set; }
 
-        public virtual IEnumerable<ITreeNode> Nodes
+        public virtual IEnumerable<ISolutionExplorerNode> Nodes
         {
             get
             {
@@ -145,13 +145,9 @@ namespace Clide.Solution
                     .Select(node => CreateNode(node))
                     // Skip null nodes which is what the factory may return if the hierarchy 
                     // node is unsupported.
+                    .OfType<ISolutionExplorerNode>()
                     .Where(n => n != null);
             }
-        }
-
-        protected virtual ITreeNode CreateNode(IVsSolutionHierarchyNode hierarchyNode)
-        {
-            return this.factory.CreateNode(new Lazy<ITreeNode>(() => this), hierarchyNode);
         }
 
         public virtual T As<T>() where T : class
@@ -216,6 +212,18 @@ namespace Clide.Solution
                     throw new NotSupportedException(Strings.SolutionTreeNode.SelectionUnsupported(path));
                 }
             }
+        }
+
+        public abstract bool Accept(ISolutionVisitor visitor);
+
+        protected virtual ITreeNode CreateNode(IVsSolutionHierarchyNode hierarchyNode)
+        {
+            return this.factory.CreateNode(new Lazy<ITreeNode>(() => this), hierarchyNode);
+        }
+
+        IEnumerable<ITreeNode> ITreeNode.Nodes
+        {
+            get { return Nodes; }
         }
 
         private static T GetProperty<T>(IVsHierarchy hierarchy, __VSHPROPID propId, uint itemid)

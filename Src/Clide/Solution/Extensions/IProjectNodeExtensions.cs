@@ -43,19 +43,45 @@ namespace Clide.Solution
         /// </summary>
         /// <param name="project">The project to build.</param>
         /// <exception cref="System.ArgumentException">The project has no <see cref="ISolutionExplorerNode.OwningSolution"/>.</exception>
-        public static void Build(this IProjectNode project)
+        /// <returns><see langword="true"/> if the build succeeded; <see langword="false"/> otherwise.</returns>
+        public static Task<bool> Build(this IProjectNode project)
         {
             var solution = project.OwningSolution;
             if (solution == null)
                 throw new ArgumentException(Strings.IProjectNodeExtensions.BuildNoSolution(project.DisplayName));
 
-            var dte = solution.As<EnvDTE.Solution>();
-            if (dte == null)
+            var sln = solution.As<EnvDTE.Solution>();
+            if (sln == null)
                 throw new ArgumentException(Strings.IProjectNodeExtensions.BuildNoSolution(project.DisplayName));
 
-            var build = (EnvDTE80.SolutionBuild2)dte.SolutionBuild;
-            
-            dte.SolutionBuild.BuildProject(build.ActiveConfiguration.Name, project.As<EnvDTE.Project>().UniqueName, true);
+            return System.Threading.Tasks.Task.Factory.StartNew<bool>(() => 
+            {
+                var mre = new ManualResetEventSlim();
+                var events = sln.DTE.Events.BuildEvents;
+                EnvDTE._dispBuildEvents_OnBuildDoneEventHandler done = (scope, action) => mre.Set();
+                events.OnBuildDone += done;
+                try
+                {
+                    // Let build run async.
+                    sln.SolutionBuild.BuildProject(sln.SolutionBuild.ActiveConfiguration.Name, project.As<EnvDTE.Project>().UniqueName, false);
+
+                    // Wait until it's done.
+                    mre.Wait();
+
+                    // LastBuildInfo == # of projects that failed to build.
+                    return sln.SolutionBuild.LastBuildInfo == 0;
+                }
+                catch (Exception ex)
+                {
+                    tracer.Error(ex, Strings.IProjectNodeExtensions.BuildException);
+                    return false;
+                }
+                finally
+                {
+                    // Cleanup handler.
+                    events.OnBuildDone -= done;
+                }
+            });
         }
 
         /// <summary>

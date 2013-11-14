@@ -216,8 +216,10 @@
     <Compile Include="OptionsPageAttribute.cs" />
     <Compile Include="OptionsPageWindowFactory.cs" />
     <Compile Include="Solution\Extensions\IProjectNodeExtensions.cs" />
-    <Compile Include="Solution\Extensions\ISolutionExplorerNodeExtensions.cs" />
     <Compile Include="Solution\Extensions\ISolutionNodeExtensions.cs" />
+    <Compile Include="Solution\Implementation\SolutionVisitable.cs" />
+    <Compile Include="Solution\ISolutionVisitor.cs" />
+    <Compile Include="Solution\SolutionVisitor.cs" />
     <Compile Include="UI\TreeNodes\ITreeNodeExtensions.cs" />
     <Compile Include="Solution\Factories\ISolutionExplorerNodeFactory.cs" />
     <Compile Include="Solution\Factories\SolutionItemNodeFactory.cs" />

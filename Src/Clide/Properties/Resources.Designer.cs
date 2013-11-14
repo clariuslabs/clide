@@ -349,6 +349,15 @@ namespace Clide.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to invoke build..
+        /// </summary>
+        internal static string IProjectNodeExtensions_BuildException {
+            get {
+                return ResourceManager.GetString("IProjectNodeExtensions_BuildException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified project &apos;{project}&apos; does not have a valid owning solution..
         /// </summary>
         internal static string IProjectNodeExtensions_BuildNoSolution {

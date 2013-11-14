@@ -38,5 +38,10 @@ namespace Clide.Solution
 		}
 
         public Lazy<Reference> Reference { get; private set; }
+
+        public override bool Accept(ISolutionVisitor visitor)
+        {
+            return SolutionVisitable.Accept(this, visitor);
+        }
 	}
 }

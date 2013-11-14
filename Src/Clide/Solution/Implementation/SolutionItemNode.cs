@@ -59,6 +59,11 @@ namespace Clide.Solution
             get { return this.owningFolder.Value; }
         }
 
+        public override bool Accept(ISolutionVisitor visitor)
+        {
+            return SolutionVisitable.Accept(this, visitor);
+        }
+
         private Lazy<ITreeNode> GetParent(IVsSolutionHierarchyNode hierarchy)
         {
             return hierarchy.Parent == null ? null :

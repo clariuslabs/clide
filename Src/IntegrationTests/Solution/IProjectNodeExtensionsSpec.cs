@@ -90,5 +90,19 @@ namespace Clide.Solution
 
             Assert.Throws<ArgumentException>(() => Activator.CreateInstance(type));
         }
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void WhenBuildingProject_ThenCanWaitForSuccees()
+        {
+            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
+            var lib = explorer.Solution.FindProjects(project => project.DisplayName == "ClassLibrary");
+            var asm = lib.GetOutputAssembly();
+            var type = asm.GetTypes().First(t => t.GetConstructor(new Type[0]) != null);
+
+            Assert.Throws<ArgumentException>(() => Activator.CreateInstance(type));
+        }
     }
 }

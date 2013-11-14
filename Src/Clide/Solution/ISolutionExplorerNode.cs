@@ -14,6 +14,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Interface implemented by all nodes in the solution explorer tree.
     /// </summary>
@@ -28,5 +30,16 @@ namespace Clide.Solution
         /// Gets the owning solution.
         /// </summary>
         ISolutionNode OwningSolution { get; }
+
+        /// <summary>
+        /// Gets the child nodes.
+        /// </summary>
+        new IEnumerable<ISolutionExplorerNode> Nodes { get; }
+
+        /// <summary>
+        /// Accepts the specified visitor for traversal.
+        /// </summary>
+        /// <returns><see langword="true"/> if the operation should continue with other sibling or child nodes; <see langword="false"/> otherwise.</returns>
+        bool Accept(ISolutionVisitor visitor);
     }
 }

@@ -54,5 +54,10 @@ namespace Clide.Solution
         {
             get { return this.properties.Value; }
         }
+
+        public override bool Accept(ISolutionVisitor visitor)
+        {
+            return SolutionVisitable.Accept(this, visitor);
+        }
     }
 }

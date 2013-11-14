@@ -30,16 +30,241 @@ namespace Clide.Solution
         /// <returns>All project nodes that were found.</returns>
         public static IEnumerable<IProjectNode> FindProjects(this ISolutionNode solution)
         {
-            return solution.Nodes.OfType<ISolutionExplorerNode>()
-                .Traverse(TraverseKind.DepthFirst, node =>
-                    // Note: we only keep traversing if the node is a solution folder.
-                    // This will significantly improve performance since it will not 
-                    // traverse project items unnecessarily, since projects cannot 
-                    // in turn contain other projects, just like items and other nodes.
-                    node.Kind == SolutionNodeKind.SolutionFolder ?
-                        node.Nodes.OfType<ISolutionExplorerNode>() :
-                        Enumerable.Empty<ISolutionExplorerNode>())
-                .OfType<IProjectNode>();
+            var visitor = new ProjectsVisitor();
+
+            solution.Accept(visitor);
+
+            return visitor.Projects;
+        }
+
+        /// <summary>
+        /// Finds all projects in the solution matching the given predicate.
+        /// </summary>
+        /// <param name="solution">The solution to traverse.</param>
+        /// <param name="predicate">Predicate used to match projects.</param>
+        /// <returns>All project nodes matching the given predicate that were found.</returns>
+        public static IEnumerable<IProjectNode> FindProjects(this ISolutionNode solution, Func<IProjectNode, bool> predicate)
+        {
+            var visitor = new FilteringProjectsVisitor(predicate);
+
+            solution.Accept(visitor);
+
+            return visitor.Projects;
+        }
+
+        /// <summary>
+        /// Finds the first project in the solution matching the given predicate.
+        /// </summary>
+        /// <param name="solution">The solution to traverse.</param>
+        /// <param name="predicate">Predicate used to match projects.</param>
+        /// <returns>The first project matching the given predicate, or <see langword="null"/>.</returns>
+        public static IProjectNode FindProject(this ISolutionNode solution, Func<IProjectNode, bool> predicate)
+        {
+            var visitor = new FilteringProjectsVisitor(predicate, true);
+
+            solution.Accept(visitor);
+
+            return visitor.Projects.FirstOrDefault();
+        }
+
+        private class ProjectsVisitor : ISolutionVisitor
+        {
+            public ProjectsVisitor()
+            {
+                this.Projects = new List<IProjectNode>();
+            }
+
+            public List<IProjectNode> Projects { get; private set; }
+
+            public bool VisitEnter(ISolutionNode solution)
+            {
+                return true;
+            }
+
+            public bool VisitLeave(ISolutionNode solution)
+            {
+                return true;
+            }
+
+            public bool VisitEnter(ISolutionItemNode solutionItem)
+            {
+                return false;
+            }
+
+            public bool VisitLeave(ISolutionItemNode solutionItem)
+            {
+                return true;
+            }
+
+            public bool VisitEnter(ISolutionFolderNode solutionFolder)
+            {
+                return true;
+            }
+
+            public bool VisitLeave(ISolutionFolderNode solutionFolder)
+            {
+                return true;
+            }
+
+            public bool VisitEnter(IProjectNode project)
+            {
+                Projects.Add(project);
+                // Don't visit child nodes of a project since a 
+                // project can't contain further projects.
+                return false;
+            }
+
+            public bool VisitLeave(IProjectNode project)
+            {
+                return true;
+            }
+
+            public bool VisitEnter(IFolderNode folder)
+            {
+                throw new NotSupportedException();
+            }
+
+            public bool VisitLeave(IFolderNode folder)
+            {
+                throw new NotSupportedException();
+            }
+
+            public bool VisitEnter(IItemNode item)
+            {
+                throw new NotSupportedException();
+            }
+
+            public bool VisitLeave(IItemNode item)
+            {
+                throw new NotSupportedException();
+            }
+
+            public bool VisitEnter(IReferencesNode references)
+            {
+                throw new NotSupportedException();
+            }
+
+            public bool VisitLeave(IReferencesNode references)
+            {
+                throw new NotSupportedException();
+            }
+
+            public bool VisitEnter(IReferenceNode reference)
+            {
+                throw new NotSupportedException();
+            }
+
+            public bool VisitLeave(IReferenceNode reference)
+            {
+                throw new NotSupportedException();
+            }
+        }
+
+        private class FilteringProjectsVisitor : ISolutionVisitor
+        {
+            private Func<IProjectNode, bool> predicate;
+            private bool firstOnly;
+            private bool done;
+
+            public FilteringProjectsVisitor(Func<IProjectNode, bool> predicate, bool firstOnly = false)
+            {
+                this.predicate = predicate;
+                this.firstOnly = firstOnly;
+                this.Projects = new List<IProjectNode>();
+            }
+
+            public List<IProjectNode> Projects { get; private set; }
+
+            /// <summary>
+            /// Don't traverse project child elements.
+            /// </summary>
+            public bool VisitEnter(IProjectNode project)
+            {
+                if (!done && predicate(project))
+                {
+                    Projects.Add(project);
+                    if (firstOnly)
+                        done = true;
+                }
+
+                return false;
+            }
+
+            public bool VisitLeave(IProjectNode project)
+            {
+                return !done;
+            }
+
+            // Don't traverse child items of a solution item.
+            public bool VisitEnter(ISolutionItemNode solutionItem)
+            {
+                return false;
+            }
+
+            public bool VisitLeave(ISolutionItemNode solutionItem)
+            {
+                return true;
+            }
+
+            public bool VisitEnter(ISolutionFolderNode solutionFolder)
+            {
+                return !done;
+            }
+
+            public bool VisitLeave(ISolutionFolderNode solutionFolder)
+            {
+                return !done;
+            }
+
+            public bool VisitEnter(ISolutionNode solution)
+            {
+                return true;
+            }
+
+            public bool VisitLeave(ISolutionNode solution)
+            {
+                return true;
+            }
+
+            public bool VisitEnter(IFolderNode folder)
+            {
+                throw new NotSupportedException();
+            }
+
+            public bool VisitLeave(IFolderNode folder)
+            {
+                throw new NotSupportedException();
+            }
+
+            public bool VisitEnter(IItemNode item)
+            {
+                throw new NotSupportedException();
+            }
+
+            public bool VisitLeave(IItemNode item)
+            {
+                throw new NotSupportedException();
+            }
+
+            public bool VisitEnter(IReferencesNode references)
+            {
+                throw new NotSupportedException();
+            }
+
+            public bool VisitLeave(IReferencesNode references)
+            {
+                throw new NotSupportedException();
+            }
+
+            public bool VisitEnter(IReferenceNode reference)
+            {
+                throw new NotSupportedException();
+            }
+
+            public bool VisitLeave(IReferenceNode reference)
+            {
+                throw new NotSupportedException();
+            }
         }
     }
 }
