@@ -303,4 +303,10 @@
   <data name="IProjectNodeExtensions_BuildException" xml:space="preserve">
     <value>Failed to invoke build.</value>
   </data>
+  <data name="ISolutionNodeExtensions_BuildException" xml:space="preserve">
+    <value>Failed to invoke build.</value>
+  </data>
+  <data name="ISolutionNodeExtensions_BuildNotSupported" xml:space="preserve">
+    <value>The specified solution does not support builds.</value>
+  </data>
 </root>

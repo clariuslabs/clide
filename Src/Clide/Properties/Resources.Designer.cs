@@ -421,6 +421,24 @@ namespace Clide.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to invoke build..
+        /// </summary>
+        internal static string ISolutionNodeExtensions_BuildException {
+            get {
+                return ResourceManager.GetString("ISolutionNodeExtensions_BuildException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified solution does not support builds..
+        /// </summary>
+        internal static string ISolutionNodeExtensions_BuildNotSupported {
+            get {
+                return ResourceManager.GetString("ISolutionNodeExtensions_BuildNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to register page &apos;{pageType}&apos;..
         /// </summary>
         internal static string OptionsManager_FailedToRegisterPage {

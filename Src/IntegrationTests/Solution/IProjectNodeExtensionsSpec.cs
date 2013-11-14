@@ -98,11 +98,9 @@ namespace Clide.Solution
             base.OpenSolution("SampleSolution\\SampleSolution.sln");
 
             var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
-            var lib = explorer.Solution.FindProjects(project => project.DisplayName == "ClassLibrary");
-            var asm = lib.GetOutputAssembly();
-            var type = asm.GetTypes().First(t => t.GetConstructor(new Type[0]) != null);
+            var lib = explorer.Solution.FindProject(project => project.DisplayName == "ClassLibrary");
 
-            Assert.Throws<ArgumentException>(() => Activator.CreateInstance(type));
+            Assert.True(lib.Build().Result);
         }
     }
 }

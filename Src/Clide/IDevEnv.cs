@@ -63,5 +63,11 @@ namespace Clide
         /// Gets the reference service.
         /// </summary>
         IReferenceService ReferenceService { get; }
-	}
+
+        /// <summary>
+        /// Exits Visual Studio.
+        /// </summary>
+        /// <param name="saveAll">Saves all pending changes before exiting.</param>
+        void Exit(bool saveAll = true);
+    }
 }

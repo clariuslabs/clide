@@ -23,6 +23,8 @@ namespace Clide
     using System.Text;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Threading;
+    using System.Diagnostics;
+    using Clide.Solution;
 
     [TestClass]
 	public class DevEnvSpec : VsHostedSpec
@@ -57,5 +59,26 @@ namespace Clide
 			Assert.True(devenv.IsInitialized);
 			Assert.True(called);
 		}
-	}
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void when_quitting_vs_then_ends_process()
+        {
+            var devenv = ServiceLocator.GetInstance<IDevEnv>();
+
+            devenv.Exit();
+        }
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void when_quitting_vs_while_building_then_cancels_build_and_ends_process()
+        {
+            var devenv = ServiceLocator.GetInstance<IDevEnv>();
+            OpenSolution("SampleSolution\\SampleSolution.sln");
+
+            devenv.SolutionExplorer().Solution.Build();
+
+            devenv.Exit();
+        }
+    }
 }

@@ -19,6 +19,7 @@ namespace Clide.Solution
 {
     using Clide.Events;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Represents the solution root node in the solution explorer tree.

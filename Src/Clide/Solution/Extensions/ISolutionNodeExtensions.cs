@@ -14,15 +14,60 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
+    using Clide.Diagnostics;
+    using Clide.Properties;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Provides usability extensions to the <see cref="ISolutionNode"/> interface.
     /// </summary>
     public static class ISolutionNodeExtensions
     {
+        private static ITracer tracer = Tracer.Get(typeof(ISolutionNodeExtensions));
+
+        /// <summary>
+        /// Starts a build of the solution.
+        /// </summary>
+        public static Task<bool> Build(this ISolutionNode solution)
+        {
+            var sln = solution.As<EnvDTE.Solution>();
+            if (sln == null)
+                throw new ArgumentException(Strings.ISolutionNodeExtensions.BuildNotSupported);
+
+            return System.Threading.Tasks.Task.Factory.StartNew<bool>(() =>
+            {
+                var mre = new ManualResetEventSlim();
+                var events = sln.DTE.Events.BuildEvents;
+                EnvDTE._dispBuildEvents_OnBuildDoneEventHandler done = (scope, action) => mre.Set();
+                events.OnBuildDone += done;
+                try
+                {
+                    // Let build run async.
+                    sln.SolutionBuild.Build(false);
+
+                    // Wait until it's done.
+                    mre.Wait();
+
+                    // LastBuildInfo == # of projects that failed to build.
+                    return sln.SolutionBuild.LastBuildInfo == 0;
+                }
+                catch (Exception ex)
+                {
+                    tracer.Error(ex, Strings.ISolutionNodeExtensions.BuildException);
+                    return false;
+                }
+                finally
+                {
+                    // Cleanup handler.
+                    events.OnBuildDone -= done;
+                }
+            });
+        }
+
         /// <summary>
         /// Finds all the project nodes in the solution.
         /// </summary>

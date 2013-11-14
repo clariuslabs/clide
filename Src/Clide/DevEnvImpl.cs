@@ -30,35 +30,37 @@ namespace Clide
     using Clide.Events;
     using Microsoft.Practices.ServiceLocation;
     using Clide.Composition;
+    using EnvDTE;
+    using EnvDTE80;
 
     [Component(typeof(IDevEnv))]
-	internal class DevEnvImpl : IDevEnv, IShellEvents
-	{
+    internal class DevEnvImpl : IDevEnv, IShellEvents
+    {
         private static readonly Guid OutputWindowId = new Guid("{66893206-0EF5-4A16-AA10-6EC6B6319F92}");
 
         private Lazy<IStatusBar> status;
-		private IShellEvents shellEvents;
-		private Lazy<IDialogWindowFactory> dialogFactory;
-		private IEnumerable<Lazy<IToolWindow>> toolWindows;
-		private Lazy<IUIThread> uiThread;
+        private IShellEvents shellEvents;
+        private Lazy<IDialogWindowFactory> dialogFactory;
+        private IEnumerable<Lazy<IToolWindow>> toolWindows;
+        private Lazy<IUIThread> uiThread;
         private Lazy<IMessageBoxService> messageBox;
         private Lazy<IReferenceService> references;
         private TraceOutputWindowManager outputWindowManager;
 
-		public DevEnvImpl(
-			IServiceLocator serviceLocator,
-			IEnumerable<Lazy<IToolWindow>> toolWindows,
-			Lazy<IDialogWindowFactory> dialogFactory,
-			Lazy<IUIThread> uiThread,
+        public DevEnvImpl(
+            IServiceLocator serviceLocator,
+            IEnumerable<Lazy<IToolWindow>> toolWindows,
+            Lazy<IDialogWindowFactory> dialogFactory,
+            Lazy<IUIThread> uiThread,
             Lazy<IMessageBoxService> messageBox,
-			IShellEvents shellEvents, 
+            IShellEvents shellEvents,
             Lazy<IReferenceService> references)
-		{
+        {
             this.ServiceLocator = serviceLocator;
-			this.dialogFactory = dialogFactory;
-			this.toolWindows = toolWindows;
-			this.shellEvents = shellEvents;
-			this.uiThread = uiThread;
+            this.dialogFactory = dialogFactory;
+            this.toolWindows = toolWindows;
+            this.shellEvents = shellEvents;
+            this.uiThread = uiThread;
             this.messageBox = messageBox;
             this.status = new Lazy<IStatusBar>(() => new StatusBar(this.ServiceLocator));
             this.references = references;
@@ -70,46 +72,66 @@ namespace Clide
                 Tracer.Manager,
                 OutputWindowId,
                 Strings.DevEnv.OutputPaneTitle);
-		}
+        }
 
         public IServiceLocator ServiceLocator { get; private set; }
 
-		public IStatusBar StatusBar
-		{
-			get { return this.status.Value; }
-		}
-         
-		public IUIThread UIThread
-		{
-			get { return this.uiThread.Value; }
-		}
+        public IStatusBar StatusBar
+        {
+            get { return this.status.Value; }
+        }
 
-		public IDialogWindowFactory DialogWindowFactory
-		{
-			get { return this.dialogFactory.Value; }
-		}
+        public IUIThread UIThread
+        {
+            get { return this.uiThread.Value; }
+        }
+
+        public IDialogWindowFactory DialogWindowFactory
+        {
+            get { return this.dialogFactory.Value; }
+        }
 
         public IMessageBoxService MessageBoxService
         {
             get { return this.messageBox.Value; }
         }
 
-		public IEnumerable<IToolWindow> ToolWindows
-		{
-			get { return this.toolWindows.Select(lazy => lazy.Value); }
-		}
+        public IEnumerable<IToolWindow> ToolWindows
+        {
+            get { return this.toolWindows.Select(lazy => lazy.Value); }
+        }
 
         public IReferenceService ReferenceService
         {
             get { return this.references.Value; }
         }
 
-		public bool IsInitialized { get { return this.shellEvents.IsInitialized; } }
+        public bool IsInitialized { get { return this.shellEvents.IsInitialized; } }
 
-		public event EventHandler Initialized
-		{
-			add { this.shellEvents.Initialized += value; }
-			remove { this.shellEvents.Initialized -= value; }
-		}
-	}
+        public event EventHandler Initialized
+        {
+            add { this.shellEvents.Initialized += value; }
+            remove { this.shellEvents.Initialized -= value; }
+        }
+
+        public void Exit(bool saveAll = true)
+        {
+            var dte = ServiceLocator.GetInstance<DTE>();
+
+            if (saveAll)
+                dte.ExecuteCommand("File.SaveAll");
+
+            // Just to be clean on exit, wait for pending builds to cancel.
+            // VS will exit anyway if we don't, but this is safer.
+            while (dte.Solution.SolutionBuild.BuildState == vsBuildState.vsBuildStateInProgress)
+            {
+                // Sometimes when in the middle of some long-running build, the cancel command 
+                // may not kick in immediately. We re-issue it after a bit.
+                dte.ExecuteCommand("Build.Cancel");
+                System.Threading.Thread.Sleep(100);
+            }
+
+            dte.Quit();
+        }
+    }
 }

@@ -820,6 +820,26 @@ namespace Clide.Properties
 				});
 			}
 		}
+		
+		///	<summary>
+		///	Provides access to string resources.
+		///	</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		public static partial class ISolutionNodeExtensions
+		{
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Failed to invoke build.
+			/// </summary>
+			public static string BuildException { get { return Resources.ISolutionNodeExtensions_BuildException; } }
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	The specified solution does not support builds.
+			/// </summary>
+			public static string BuildNotSupported { get { return Resources.ISolutionNodeExtensions_BuildNotSupported; } }
+		}
 	}
 }
 

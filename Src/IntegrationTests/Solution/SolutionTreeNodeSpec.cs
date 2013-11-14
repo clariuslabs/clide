@@ -52,15 +52,13 @@ namespace Clide.Solution
 				var factory = new Mock<ITreeNodeFactory<IVsSolutionHierarchyNode>>();
 				factory.Setup(x => x.Supports(It.IsAny<IVsSolutionHierarchyNode>())).Returns(true);
 				factory.Setup(x => x.CreateNode(It.IsAny<Lazy<ITreeNode>>(), It.IsAny<IVsSolutionHierarchyNode>()))
-					.Returns<Lazy<ITreeNode>, IVsSolutionHierarchyNode>((parent, node) => new SolutionTreeNode(
-						SolutionNodeKind.Custom,
+					.Returns<Lazy<ITreeNode>, IVsSolutionHierarchyNode>((parent, node) => new CustomSolutionNode(
 						node,
 						parent,
 						factory.Object,
 						adapter.Object));
 
-				this.node = new SolutionTreeNode(
-					SolutionNodeKind.Custom,
+                this.node = new CustomSolutionNode(
                     new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT), null,
 					factory.Object,
 					Mock.Of<IAdapterService>());
@@ -174,5 +172,21 @@ namespace Clide.Solution
 				Assert.True(file.IsSelected);
 			}
 		}
+
+        public class CustomSolutionNode : SolutionTreeNode
+        {
+            public CustomSolutionNode(IVsSolutionHierarchyNode node, 
+                Lazy<ITreeNode> parent, 
+                ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory, 
+                IAdapterService adapterService)
+                : base(SolutionNodeKind.Custom, node, parent, nodeFactory, adapterService)
+            {
+            }
+
+            public override bool Accept(ISolutionVisitor visitor)
+            {
+                return true;
+            }
+        }
 	}
 }
