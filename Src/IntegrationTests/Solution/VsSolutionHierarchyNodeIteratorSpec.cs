@@ -86,7 +86,8 @@ namespace Clide.Solution
                     .FirstOrDefault(n => n.VsHierarchy.Properties(n.ItemId).DisplayName == "ClassLibrary");
 
                 var count = project.Children.Count();
-				Assert.Equal(4, count, "Expected 4 child nodes for project, but instead got {0}", count);
+				Assert.Equal(4, count, "Expected 4 child nodes for project, but instead got {0}: {1}", count, 
+                    string.Join(", ", project.Children.Select(x => x.DisplayName).ToArray()));
 			}
 
 			[HostType("VS IDE")]

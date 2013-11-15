@@ -1,41 +1,40 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clide", "Src\Clide\Clide.csproj", "{EAF59C6D-A973-48E6-A90A-5E894ECEC3F6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "Src\IntegrationTests\IntegrationTests.csproj", "{DA6BC069-580E-4248-9E38-F20BDE688271}"
-EndProject
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{779AC312-94DE-4CCA-BEF6-22F568107B98}"
 	ProjectSection(SolutionItems) = preProject
 		build.bat = build.bat
-		Common\ClariusLabs.props = Common\ClariusLabs.props
-		Common\ClariusLabs.targets = Common\ClariusLabs.targets
-		Common\ClariusLabs.tasks = Common\ClariusLabs.tasks
 		Src\Clide.props = Src\Clide.props
 		Src\Clide.targets = Src\Clide.targets
 		Clide.vsmdi = Clide.vsmdi
 		Src\Local.2010.testsettings = Src\Local.2010.testsettings
 		Src\Local.2012.testsettings = Src\Local.2012.testsettings
+		Src\Local.2013.testsettings = Src\Local.2013.testsettings
+		Src\NuGet.proj = Src\NuGet.proj
 		Common\nuspec.xsd = Common\nuspec.xsd
 		README.md = README.md
 		ReleaseNotes.md = ReleaseNotes.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "Src\UnitTests\UnitTests.csproj", "{3B640876-2510-4EED-8157-1ACB417C758D}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7E86060C-D118-46F5-8731-06C4B67AC195}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationPackage.2010", "Src\IntegrationPackage\IntegrationPackage.2010.csproj", "{53810C4A-FAB5-41E8-AF54-39742A7D1435}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clide", "Src\Clide\Clide.csproj", "{EAF59C6D-A973-48E6-A90A-5E894ECEC3F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "Src\IntegrationTests\IntegrationTests.csproj", "{DA6BC069-580E-4248-9E38-F20BDE688271}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "Src\UnitTests\UnitTests.csproj", "{3B640876-2510-4EED-8157-1ACB417C758D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationPackage", "Src\IntegrationPackage\IntegrationPackage.csproj", "{41C96C7D-BC81-489C-A60E-97CF431B7608}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clide.Resolver", "Src\Clide.Resolver\Clide.Resolver.csproj", "{A023A27B-2AA8-4461-932A-25A6DD17FEA6}"
 EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = Clide.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -75,18 +74,31 @@ Global
 		{3B640876-2510-4EED-8157-1ACB417C758D}.Release|Mixed Platforms.Build.0 = Release|x86
 		{3B640876-2510-4EED-8157-1ACB417C758D}.Release|x86.ActiveCfg = Release|x86
 		{3B640876-2510-4EED-8157-1ACB417C758D}.Release|x86.Build.0 = Release|x86
-		{53810C4A-FAB5-41E8-AF54-39742A7D1435}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{53810C4A-FAB5-41E8-AF54-39742A7D1435}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{53810C4A-FAB5-41E8-AF54-39742A7D1435}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{53810C4A-FAB5-41E8-AF54-39742A7D1435}.Debug|x86.ActiveCfg = Debug|x86
-		{53810C4A-FAB5-41E8-AF54-39742A7D1435}.Debug|x86.Build.0 = Debug|x86
-		{53810C4A-FAB5-41E8-AF54-39742A7D1435}.Release|Any CPU.ActiveCfg = Release|x86
-		{53810C4A-FAB5-41E8-AF54-39742A7D1435}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{53810C4A-FAB5-41E8-AF54-39742A7D1435}.Release|Mixed Platforms.Build.0 = Release|x86
-		{53810C4A-FAB5-41E8-AF54-39742A7D1435}.Release|x86.ActiveCfg = Release|x86
-		{53810C4A-FAB5-41E8-AF54-39742A7D1435}.Release|x86.Build.0 = Release|x86
+		{41C96C7D-BC81-489C-A60E-97CF431B7608}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{41C96C7D-BC81-489C-A60E-97CF431B7608}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{41C96C7D-BC81-489C-A60E-97CF431B7608}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{41C96C7D-BC81-489C-A60E-97CF431B7608}.Debug|x86.ActiveCfg = Debug|x86
+		{41C96C7D-BC81-489C-A60E-97CF431B7608}.Debug|x86.Build.0 = Debug|x86
+		{41C96C7D-BC81-489C-A60E-97CF431B7608}.Release|Any CPU.ActiveCfg = Release|x86
+		{41C96C7D-BC81-489C-A60E-97CF431B7608}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{41C96C7D-BC81-489C-A60E-97CF431B7608}.Release|Mixed Platforms.Build.0 = Release|x86
+		{41C96C7D-BC81-489C-A60E-97CF431B7608}.Release|x86.ActiveCfg = Release|x86
+		{41C96C7D-BC81-489C-A60E-97CF431B7608}.Release|x86.Build.0 = Release|x86
+		{A023A27B-2AA8-4461-932A-25A6DD17FEA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A023A27B-2AA8-4461-932A-25A6DD17FEA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A023A27B-2AA8-4461-932A-25A6DD17FEA6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A023A27B-2AA8-4461-932A-25A6DD17FEA6}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A023A27B-2AA8-4461-932A-25A6DD17FEA6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A023A27B-2AA8-4461-932A-25A6DD17FEA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A023A27B-2AA8-4461-932A-25A6DD17FEA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A023A27B-2AA8-4461-932A-25A6DD17FEA6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A023A27B-2AA8-4461-932A-25A6DD17FEA6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{A023A27B-2AA8-4461-932A-25A6DD17FEA6}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Clide.vsmdi
 	EndGlobalSection
 EndGlobal

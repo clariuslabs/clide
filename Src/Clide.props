@@ -10,12 +10,12 @@
         <NuGetExe>$(BuildRoot).nuget\NuGet.exe</NuGetExe>
         <NugetTarget>net40</NugetTarget>
 
+        <OutputPath>bin\$(Configuration)\</OutputPath>
         <DebugSymbols>true</DebugSymbols>
         <DebugType>full</DebugType>
         <Optimize>false</Optimize>
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
-
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -27,25 +27,21 @@
         <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(VisualStudioVersion)' == ''">
+        <VisualStudioVersion>10.0</VisualStudioVersion>
+        <VSToolsPath>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    </PropertyGroup>
+    
     <PropertyGroup Condition="'$(VisualStudioVersion)' == '10.0'">
         <DefineConstants>$(DefineConstants);Vs10</DefineConstants>
-        <Vs10>True</Vs10>
-        <Vs11>False</Vs11>
-        <Vs12>False</Vs12>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(VisualStudioVersion)' == '11.0'">
         <DefineConstants>$(DefineConstants);Vs11</DefineConstants>
-        <Vs10>False</Vs10>
-        <Vs11>True</Vs11>
-        <Vs12>False</Vs12>
     </PropertyGroup>
     
     <PropertyGroup Condition="'$(VisualStudioVersion)' == '12.0'">
         <DefineConstants>$(DefineConstants);Vs12</DefineConstants>
-        <Vs10>False</Vs10>
-        <Vs11>False</Vs11>
-        <Vs12>True</Vs12>
     </PropertyGroup>
 
     <ItemGroup>
