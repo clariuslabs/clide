@@ -32,6 +32,8 @@ namespace Clide
     using Clide.Composition;
     using EnvDTE;
     using EnvDTE80;
+    using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio;
 
     [Component(typeof(IDevEnv))]
     internal class DevEnvImpl : IDevEnv, IShellEvents
@@ -135,6 +137,28 @@ namespace Clide
             }
 
             dte.Quit();
+        }
+
+        public bool Restart(bool saveAll = true)
+        {
+            var dte = ServiceLocator.GetInstance<DTE>();
+
+            if (saveAll)
+                dte.ExecuteCommand("File.SaveAll");
+
+            // Just to be clean on exit, wait for pending builds to cancel.
+            while (dte.Solution.SolutionBuild.BuildState == vsBuildState.vsBuildStateInProgress)
+            {
+                // Sometimes when in the middle of some long-running build, the cancel command 
+                // may not kick in immediately. We re-issue it after a bit.
+                dte.ExecuteCommand("Build.Cancel");
+                System.Threading.Thread.Sleep(100);
+            }
+
+            var shell = ServiceLocator.GetService<SVsShell, IVsShell4>();
+            var result = shell.Restart((uint)__VSRESTARTTYPE.RESTART_Normal);
+
+            return ErrorHandler.Succeeded(result);
         }
     }
 }

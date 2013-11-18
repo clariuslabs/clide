@@ -27,15 +27,6 @@ namespace Clide.Diagnostics
         private static ITracerManager manager;
 
         /// <summary>
-        /// Initializes the <see cref="Tracer"/> class by specifying the 
-        /// diagnostics tracer as the default implementation.
-        /// </summary>
-        static Tracer()
-        {
-			manager = new DefaultManager();
-        }
-
-        /// <summary>
         /// Provides the implementation for managing tracers.
         /// </summary>
         internal static void Initialize(ITracerManager manager)

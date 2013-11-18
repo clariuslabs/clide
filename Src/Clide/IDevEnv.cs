@@ -67,7 +67,14 @@ namespace Clide
         /// <summary>
         /// Exits Visual Studio.
         /// </summary>
-        /// <param name="saveAll">Saves all pending changes before exiting.</param>
+        /// <param name="saveAll">Whether to save all pending changes before exiting.</param>
         void Exit(bool saveAll = true);
+
+        /// <summary>
+        /// Restarts Visual Studio.
+        /// </summary>
+        /// <param name="saveAll">Whether to save all pending changes before exiting.</param>
+        /// <returns><see langword="true"/> if the operation succeeded; <see langword="false"/> otherwise.</returns>
+        bool Restart(bool saveAll = true);
     }
 }

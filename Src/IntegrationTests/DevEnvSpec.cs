@@ -82,5 +82,24 @@ namespace Clide
 
             devenv.Exit();
         }
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        // The test dies before it can catch the exception :)
+        // This is because the tested instance of VS just restarted, so it's expected.
+        [ExpectedException(typeof(System.Runtime.Remoting.RemotingException))]
+        [Ignore]
+        public void when_restarting_vs_while_building_then_cancels_build_and_restarts()
+        {
+            var devenv = ServiceLocator.GetInstance<IDevEnv>();
+            OpenSolution("SampleSolution\\SampleSolution.sln");
+
+            devenv.SolutionExplorer().Solution.Build();
+
+            Assert.True(devenv.Restart(true));
+
+            // If we sleep enough here we will see VS starting to come up again.
+            Thread.Sleep(50000);
+        }
     }
 }
