@@ -278,6 +278,18 @@ namespace Clide.Solution
                 Assert.NotNull(target);
                 Assert.Equal("Solution Items", target.OwningSolutionFolder.DisplayName);
             }
+
+            [HostType("VS IDE")]
+            [TestMethod]
+            public void WhenProjectIsSelected_ThenCanRetrieveSelectedNode()
+            {
+                var project = explorer.Solution.FindProjects().First();
+                project.Select();
+
+                var selection = explorer.SelectedNodes.OfType<IProjectNode>().First();
+
+                Assert.Equal(project.PhysicalPath, selection.PhysicalPath);
+            }
         }
 	}
 }

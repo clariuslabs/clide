@@ -24,6 +24,7 @@ namespace Clide.Solution
     using Clide.Patterns.Adapter;
     using Moq;
     using Microsoft.VisualStudio;
+    using Microsoft.Practices.ServiceLocation;
 
     public class SolutionNodeSpec
 	{
@@ -43,7 +44,7 @@ namespace Clide.Solution
 					new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT),
                     Mock.Of<ITreeNodeFactory<IVsSolutionHierarchyNode>>(),
                     Mock.Of<ISolutionExplorerNodeFactory>(),
-                    Mock.Of<IServiceProvider>(),
+                    Mock.Of<IServiceLocator>(),
                     Mock.Of<IAdapterService>(),
 					Mock.Of<ISolutionEvents>());
 
@@ -63,7 +64,7 @@ namespace Clide.Solution
                     new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT),
 					Mock.Of<ITreeNodeFactory<IVsSolutionHierarchyNode>>(),
                     Mock.Of<ISolutionExplorerNodeFactory>(),
-                    Mock.Of<IServiceProvider>(),
+                    Mock.Of<IServiceLocator>(),
                     Mock.Of<IAdapterService>(),
 					Mock.Of<ISolutionEvents>());
 
@@ -81,7 +82,7 @@ namespace Clide.Solution
                     new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT),
                     Mock.Of<ITreeNodeFactory<IVsSolutionHierarchyNode>>(),
                     Mock.Of<ISolutionExplorerNodeFactory>(),
-                    Mock.Of<IServiceProvider>(),
+                    Mock.Of<IServiceLocator>(),
                     Mock.Of<IAdapterService>(),
 					Mock.Of<ISolutionEvents>());
 
@@ -100,7 +101,7 @@ namespace Clide.Solution
                     new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT),
                     Mock.Of<ITreeNodeFactory<IVsSolutionHierarchyNode>>(),
                     Mock.Of<ISolutionExplorerNodeFactory>(),
-                    Mock.Of<IServiceProvider>(),
+                    Mock.Of<IServiceLocator>(),
                     Mock.Of<IAdapterService>(),
                     Mock.Of<ISolutionEvents>());
 

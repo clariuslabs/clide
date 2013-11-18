@@ -34,11 +34,13 @@ namespace Clide.VisualStudio
         public static IEnumerable<Tuple<IVsHierarchy, uint>> GetSelection(this IServiceProvider serviceProvider)
         {
             var monitorSelection = serviceProvider.GetService<SVsShellMonitorSelection, IVsMonitorSelection>();
+            var uiThread = serviceProvider.GetService<IUIThread>();
 
             var hierarchyPtr = IntPtr.Zero;
             var selectionContainer = IntPtr.Zero;
+            
 
-            return UIThread.Default.Invoke<IEnumerable<Tuple<IVsHierarchy, uint>>>(() =>
+            return uiThread.Invoke<IEnumerable<Tuple<IVsHierarchy, uint>>>(() =>
             {
                 try
                 {

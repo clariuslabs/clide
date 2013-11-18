@@ -25,6 +25,7 @@ namespace Clide.Solution
     using Microsoft.VisualStudio.Shell;
     using Clide.Composition;
     using Autofac.Extras.Attributed;
+    using Microsoft.Practices.ServiceLocation;
 
     [FallbackFactory]
 	internal class SolutionNodeFactory : ITreeNodeFactory<IVsSolutionHierarchyNode>
@@ -32,17 +33,17 @@ namespace Clide.Solution
 		private Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory;
 		private ISolutionEvents solutionEvents;
 		private IAdapterService adapter;
-        private IServiceProvider serviceProvider;
+        private IServiceLocator locator;
         private ISolutionExplorerNodeFactory explorerNodeFactory;
 
 		public SolutionNodeFactory(
-            IServiceProvider serviceProvider,
+            IServiceLocator serviceLocator,
 			[WithKey(DefaultHierarchyFactory.RegisterKey)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory,
             ISolutionExplorerNodeFactory explorerNodeFactory,
 			ISolutionEvents solutionEvents,
 			IAdapterService adapter)
 		{
-            this.serviceProvider = serviceProvider;
+            this.locator = serviceLocator;
 			this.nodeFactory = nodeFactory;
             this.explorerNodeFactory = explorerNodeFactory;
 			this.solutionEvents = solutionEvents;
@@ -57,7 +58,7 @@ namespace Clide.Solution
 		public ITreeNode CreateNode(Lazy<ITreeNode> parent, IVsSolutionHierarchyNode hierarchy)
 		{
 			return Supports(hierarchy) ?
-				new SolutionNode(hierarchy, this.nodeFactory.Value, this.explorerNodeFactory, this.serviceProvider,  this.adapter, this.solutionEvents) : null;
+				new SolutionNode(hierarchy, this.nodeFactory.Value, this.explorerNodeFactory, this.locator,  this.adapter, this.solutionEvents) : null;
 		}
 	}
 }

@@ -17,22 +17,22 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    using System;
-    using System.IO;
-    using System.Linq;
     using Clide.Events;
-    using System.Dynamic;
     using Clide.Patterns.Adapter;
     using Clide.Properties;
     using Clide.VisualStudio;
+    using Microsoft.Practices.ServiceLocation;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
+    using System;
     using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
 
     internal class SolutionNode : SolutionTreeNode, ISolutionNode
     {
         private ISolutionEvents events;
-        private IServiceProvider serviceProvider;
+        private IServiceLocator locator;
         private ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory;
         private ISolutionExplorerNodeFactory explorerNodeFactory;
 
@@ -40,7 +40,7 @@ namespace Clide.Solution
             IVsSolutionHierarchyNode hierarchyNode,
             ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
             ISolutionExplorerNodeFactory explorerNodeFactory,
-            IServiceProvider serviceProvider,
+            IServiceLocator locator,
             IAdapterService adapter,
             ISolutionEvents solutionEvents)
             : base(SolutionNodeKind.Solution, hierarchyNode, null, nodeFactory, adapter)
@@ -48,7 +48,7 @@ namespace Clide.Solution
             this.Solution = new Lazy<EnvDTE.Solution>(() => hierarchyNode.ServiceProvider.GetService<EnvDTE.DTE>().Solution);
             this.nodeFactory = nodeFactory;
             this.explorerNodeFactory = explorerNodeFactory;
-            this.serviceProvider = serviceProvider;
+            this.locator = locator;
             this.events = solutionEvents;
         }
 
@@ -63,7 +63,7 @@ namespace Clide.Solution
         {
             get
             {
-                return this.serviceProvider.GetSelection()
+                return this.locator.GetSelection()
                     .Select(sel => this.explorerNodeFactory.Create(new VsSolutionHierarchyNode(sel.Item1, sel.Item2)));
             }
         }

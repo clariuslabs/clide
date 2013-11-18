@@ -78,7 +78,7 @@ namespace Clide.Solution
 
         [HostType("VS IDE")]
         [TestMethod]
-        public async void WhenGettingOutputAssembly_ThenTryingToInstantiateTypeThrows()
+        public async Task WhenGettingOutputAssembly_ThenTryingToInstantiateTypeThrows()
         {
             base.OpenSolution("SampleSolution\\SampleSolution.sln");
 
