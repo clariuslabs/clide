@@ -17,23 +17,17 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
+    using Clide.Composition;
+    using Clide.Diagnostics;
+    using Clide.Events;
+    using Clide.Properties;
+    using EnvDTE;
+    using Microsoft.Practices.ServiceLocation;
+    using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.Shell.Interop;
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.Composition;
     using System.Linq;
-    using Clide.Commands;
-    using Microsoft.VisualStudio.Shell;
-    using Clide.Diagnostics;
-    using System.Diagnostics;
-    using Clide.Properties;
-    using System.ComponentModel.Composition.Hosting;
-    using Clide.Events;
-    using Microsoft.Practices.ServiceLocation;
-    using Clide.Composition;
-    using EnvDTE;
-    using EnvDTE80;
-    using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio;
 
     [Component(typeof(IDevEnv))]
     internal class DevEnvImpl : IDevEnv, IShellEvents

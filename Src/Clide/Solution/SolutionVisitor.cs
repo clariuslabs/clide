@@ -14,8 +14,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    using System;
-    using System.Linq;
 
     /// <summary>
     /// Convenience default implementation of <see cref="ISolutionVisitor"/> that 

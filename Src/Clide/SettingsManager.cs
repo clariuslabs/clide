@@ -17,20 +17,17 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
+    using Clide.Composition;
+    using Clide.Diagnostics;
+    using Clide.Properties;
+    using Microsoft.VisualStudio.Settings;
+    using Microsoft.VisualStudio.Shell.Settings;
     using System;
     using System.ComponentModel;
-    using System.ComponentModel.Composition;
     using System.ComponentModel.DataAnnotations;
-    using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
-    using Clide.Diagnostics;
-    using Clide.Properties;
-    using Clide.Composition;
-    using Microsoft.VisualStudio.Settings;
-    using Microsoft.VisualStudio.Shell;
-    using Microsoft.VisualStudio.Shell.Settings;
 
     /// <summary>
 	/// Default implementation of <see cref="ISettingsManager"/> which uses <see cref="ShellSettingsManager"/>.

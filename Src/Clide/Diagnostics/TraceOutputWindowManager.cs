@@ -17,14 +17,14 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Diagnostics
 {
-    using System;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.IO;
     using Clide.Events;
     using Clide.Properties;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
+    using System;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.IO;
 
     /// <summary>
     ///  Manages the output of trace messages to an output window pane.

@@ -15,17 +15,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide.Solution
 {
     using Microsoft.Build.Evaluation;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Dynamic;
-    using System.IO;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using System;
+    using System.Dynamic;
+    using System.IO;
+    using System.Linq;
 
     [TestClass]
     public class ProjectDataSpec : VsHostedSpec

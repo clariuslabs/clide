@@ -17,15 +17,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    using System;
-    using System.Linq;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System.Collections.Generic;
-    using Microsoft.VisualStudio.Shell;
-    using Moq;
-    using System.Diagnostics;
-    using Clide.Composition;
     using Autofac.Features.Metadata;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Moq;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
     public class SolutionExplorerSpec
 	{

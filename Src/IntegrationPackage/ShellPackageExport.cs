@@ -14,10 +14,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace IntegrationPackage
 {
-    using Microsoft.VisualStudio.Shell;
+    using Clide;
     using System;
     using System.ComponentModel.Composition;
-    using Clide;
 
     [PartCreationPolicy(CreationPolicy.Shared)]
     internal class ShellPackageExport

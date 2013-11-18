@@ -14,14 +14,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.VisualStudio
 {
+    using Clide.Solution;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Clide.Solution;
 
     internal class VsHierarchyProperties 
     {

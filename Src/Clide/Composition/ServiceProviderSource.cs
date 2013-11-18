@@ -14,15 +14,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Composition
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
-    using System.ComponentModel.Composition.Primitives;
-    using System.Linq;
-    using System.Reflection;
     using Autofac.Builder;
     using Autofac.Core;
+    using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Exposes services provided by an <see cref="IServiceProvider"/> to 

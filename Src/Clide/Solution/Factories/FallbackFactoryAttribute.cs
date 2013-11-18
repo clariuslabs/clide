@@ -17,9 +17,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    using System;
     using System.ComponentModel.Composition;
-    using Clide.Composition;
 
     [MetadataAttribute]
     internal class FallbackFactoryAttribute : TreeNodeFactoryAttribute

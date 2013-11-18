@@ -15,7 +15,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide.Solution.Adapters
 {
     using Clide.Patterns.Adapter;
-    using Microsoft.VisualStudio.Shell.Interop;
 
     [Adapter]
     internal class VsSolutionHierarchyAdapter : 

@@ -14,10 +14,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Collections;
 
     internal class ProjectConfiguration : IProjectConfiguration
     {

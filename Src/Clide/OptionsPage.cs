@@ -15,16 +15,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Runtime.InteropServices;
-    using System.Windows;
-    using System.Windows.Input;
-    using System.Windows.Controls;
     using System.ComponentModel;
-    using System.ComponentModel.Composition;
-    using Microsoft.VisualStudio.Shell;
+    using System.Runtime.InteropServices;
+    using System.Windows.Controls;
 
     /// <summary>
     /// Base class for options pages.

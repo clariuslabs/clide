@@ -17,17 +17,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using System;
-    using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
-    using System.Linq;
-    using System.Reflection;
-    using System.Windows;
-    using System.Windows.Interop;
     using Clide.Composition;
     using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.ComponentModelHost;
     using Microsoft.VisualStudio.Shell.Interop;
+    using System;
+    using System.Windows;
+    using System.Windows.Interop;
 
     /// <summary>
     /// Implements dialog creation in Visual Studio.

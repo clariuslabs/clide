@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.VisualStudio.Text.Editor;
+﻿using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
+using System;
 using System.ComponentModel.Composition;
-using Clide;
-using System.Windows;
-using Microsoft.VisualStudio.Shell;
 using System.Diagnostics;
 
 namespace IntegrationPackage

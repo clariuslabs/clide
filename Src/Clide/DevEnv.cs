@@ -16,8 +16,6 @@ namespace Clide
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
-    using Clide.Diagnostics;
 
     /// <summary>
     /// Entry point to the Clide developer environment APIs.

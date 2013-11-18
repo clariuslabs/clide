@@ -14,9 +14,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace System
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
 
     internal static class ExceptionExtensions

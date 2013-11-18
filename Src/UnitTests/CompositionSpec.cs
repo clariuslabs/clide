@@ -14,12 +14,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace UnitTests
 {
-    using System;
-    using System.Linq;
     using Autofac;
     using Clide.Composition;
-    using Xunit;
     using System.ComponentModel.Composition.Hosting;
+    using Xunit;
 
     public class CompositionSpec
     {

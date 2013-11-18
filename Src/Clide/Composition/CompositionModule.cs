@@ -14,13 +14,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Composition
 {
-    using System;
-    using System.ComponentModel.Composition.Hosting;
-    using System.Linq;
     using Autofac;
     using Autofac.Core;
     using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.AttributedModel;
 
     /// <summary>
     /// Automatically satisfies imports on Autofac components when 

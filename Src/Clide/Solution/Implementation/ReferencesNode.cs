@@ -18,11 +18,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide.Solution
 {
     using Clide.Patterns.Adapter;
-    using System;
-    using VSLangProj;
     using Clide.VisualStudio;
     using EnvDTE;
     using Microsoft.VisualStudio;
+    using System;
+    using VSLangProj;
 
     internal class ReferencesNode : ProjectItemNode, IReferencesNode
 	{

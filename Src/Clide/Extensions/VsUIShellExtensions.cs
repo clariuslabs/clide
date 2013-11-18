@@ -17,11 +17,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
+    using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.Shell.Interop;
     using System;
     using System.Windows;
     using System.Windows.Interop;
-    using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.Shell.Interop;
 
     /// <summary>
     /// Defines extension methods related to <see cref="IVsUIShell"/>.

@@ -14,27 +14,21 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using System;
-    using System.Diagnostics;
-    using System.Dynamic;
-    using System.Linq;
-    using Clide.Properties;
-    using Microsoft.VisualStudio.ComponentModelHost;
-    using System.ComponentModel.Composition.Hosting;
-    using System.ComponentModel.Composition;
-    using System.IO;
-    using System.Collections.Generic;
-    using System.ComponentModel.Composition.Primitives;
-    using System.Collections.Concurrent;
-    using System.Xml.Linq;
-    using System.Threading.Tasks;
-    using Clide.Diagnostics;
-    using Microsoft.Practices.ServiceLocation;
     using Autofac;
-    using Autofac.Extras.CommonServiceLocator;
-    using System.Reflection;
-    using Clide.Composition;
     using Autofac.Extras.Attributed;
+    using Autofac.Extras.CommonServiceLocator;
+    using Clide.Composition;
+    using Clide.Diagnostics;
+    using Clide.Properties;
+    using Microsoft.Practices.ServiceLocation;
+    using Microsoft.VisualStudio.ComponentModelHost;
+    using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Xml.Linq;
 
     internal class DevEnvFactory
     {

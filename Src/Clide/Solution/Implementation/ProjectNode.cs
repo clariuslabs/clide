@@ -17,15 +17,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    using System;
-    using System.Linq;
-    using System.Dynamic;
     using Clide.Patterns.Adapter;
     using Clide.VisualStudio;
-    using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.VisualStudio;
-    using System.Collections.Generic;
-    using System.Collections;
+    using Microsoft.VisualStudio.Shell.Interop;
+    using System;
+    using System.Linq;
 
     internal class ProjectNode : SolutionTreeNode, IProjectNode
 	{

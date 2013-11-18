@@ -17,12 +17,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Commands
 {
-    using System;
-    using System.ComponentModel.Design;
-    using System.Diagnostics;
     using Clide.Diagnostics;
     using Clide.Properties;
     using Microsoft.VisualStudio.Shell;
+    using System;
+    using System.ComponentModel.Design;
+    using System.Diagnostics;
 
     /// <summary>
     /// Base Visual Studio adapter command that invokes an <see cref="ICommandExtension"/> implementation, 

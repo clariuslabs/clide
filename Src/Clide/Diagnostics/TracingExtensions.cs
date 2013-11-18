@@ -17,14 +17,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
+    using Clide.Diagnostics;
+    using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.Shell.Interop;
     using System;
     using System.Diagnostics;
     using System.Windows;
-    using Clide.Diagnostics;
-    using Clide.VisualStudio;
-    using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.Shell;
-    using Microsoft.VisualStudio.Shell.Interop;
 
     /// <summary>
     /// Provides tracing extensions on top of <see cref="ITracer"/>.

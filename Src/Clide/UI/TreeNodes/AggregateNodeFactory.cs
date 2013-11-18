@@ -17,9 +17,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System;
 
     /// <summary>
     /// An aggregate factory that delegates the <see cref="Supports"/> and 

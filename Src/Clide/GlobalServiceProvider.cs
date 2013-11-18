@@ -14,13 +14,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using System;
-    using System.ComponentModel.Composition;
-    using System.Globalization;
-    using System.Linq;
-    using System.Reflection;
     using Microsoft.VisualStudio.ComponentModelHost;
     using Microsoft.VisualStudio.Shell;
+    using System;
+    using System.Reflection;
 
     /// <summary>
     /// Locates global services inside Visual Studio, in a thread-safe way, unlike 

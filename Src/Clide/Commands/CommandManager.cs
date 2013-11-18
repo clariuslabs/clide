@@ -17,24 +17,20 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Commands
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.Composition;
-    using System.ComponentModel.Design;
-    using System.Dynamic;
-    using System.Linq;
-    using System.Reflection;
-    using System.Runtime.InteropServices;
+    using Clide.Composition;
+    using Clide.Diagnostics;
     using Clide.Properties;
+    using EnvDTE;
+    using Microsoft.CSharp.RuntimeBinder;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
-    using Microsoft.CSharp.RuntimeBinder;
-    using EnvDTE;
+    using System;
     using System.Collections.Concurrent;
-    using System.Diagnostics;
-    using Clide.Diagnostics;
-    using Clide.Composition;
+    using System.Collections.Generic;
+    using System.ComponentModel.Design;
+    using System.Dynamic;
+    using System.Linq;
 
     /// <summary>
     /// Implements the command registration mechanism.

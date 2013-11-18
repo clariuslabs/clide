@@ -15,7 +15,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide
 {
     using System;
-    using System.Linq;
 
     /// <summary>
     /// A service provider that will try a primary service provider and 

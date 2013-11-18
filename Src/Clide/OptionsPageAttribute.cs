@@ -14,9 +14,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using System;
-    using System.ComponentModel.Composition;
     using Clide.Composition;
+    using System;
 
     /// <summary>
     /// Marks a component as an options page for registration purposes.

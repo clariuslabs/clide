@@ -15,31 +15,17 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Dynamic;
-using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Threading;
-using System.IO;
-using System.Windows.Forms;
-using System.ComponentModel.Composition.Hosting;
 using Clide;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio;
-using IntegrationPackage;
-using EnvDTE;
-using System.ComponentModel.Composition;
-using System.Diagnostics;
-using System.Runtime.Remoting.Messaging;
-using System.Collections;
-using System.ComponentModel.Composition.Primitives;
 using Clide.Diagnostics;
-using Microsoft.VisualStudio.Shell;
 using Clide.Events;
-using Clide.VisualStudio;
+using EnvDTE;
 using Microsoft.Practices.ServiceLocation;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Text;
+using System.Windows.Forms;
 
 [TestClass]
 public abstract class VsHostedSpec

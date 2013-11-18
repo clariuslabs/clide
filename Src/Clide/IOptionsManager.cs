@@ -14,12 +14,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.Composition;
-    using System.Linq;
-    using System.Text;
-    using System.Windows.Controls;
 
     /// <summary>
 	/// Manages extensions to the <c>Tools | Options</c> dialog in the environment

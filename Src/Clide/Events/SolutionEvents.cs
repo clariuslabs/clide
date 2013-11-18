@@ -14,19 +14,14 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Events
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.ComponentModel.Composition;
-    using Microsoft.VisualStudio.Shell;
+    using Autofac.Extras.Attributed;
+    using Clide.Composition;
+    using Clide.Solution;
+    using EnvDTE;
+    using EnvDTE80;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
-    using EnvDTE80;
-    using EnvDTE;
-    using Clide.Solution;
-    using Clide.Composition;
-    using Autofac.Extras.Attributed;
+    using System;
 
     [Component(typeof(IGlobalEvents), typeof(ISolutionEvents))]
 	internal class SolutionEvents : IDisposable, IVsSolutionEvents, ISolutionEvents

@@ -14,12 +14,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Windows.Forms;
     using System.ComponentModel;
+    using System.Windows.Forms;
 
     /// <summary>
 	/// Basic contract for pages that plug into the Tools | Options dialog.

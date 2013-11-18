@@ -13,12 +13,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.UI;
-using System.Web;
 using System.IO;
+using System.Text;
+using System.Web;
+using System.Web.UI;
 
 /// <summary>
 /// Requires a reference to System.Web.

@@ -1,23 +1,12 @@
 ﻿namespace Clide
 {
+    using IntegrationPackage;
+    using Microsoft.VisualStudio.ComponentModelHost;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Microsoft.VisualStudio.Text.Editor;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System.ComponentModel.Composition.Hosting;
-    using System.ComponentModel.Composition;
-    using System.IO;
-    using System.Xml;
-    using System.ComponentModel.Composition.Primitives;
-    using Clide;
-    using Microsoft.VisualStudio.Text.Editor;
-    using IntegrationPackage;
-    using System.Dynamic;
-    using System.Diagnostics;
-    using Clide.Composition;
-    using System.Xml.Linq;
-    using Microsoft.VisualStudio.ComponentModelHost;
 
     [TestClass]
     public class HostingSpec : VsHostedSpec

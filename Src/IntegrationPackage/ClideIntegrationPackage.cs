@@ -1,19 +1,12 @@
 ﻿namespace IntegrationPackage
 {
-    using System;
-    using System.ComponentModel.Design;
-    using System.Runtime.InteropServices;
-    using System.Linq;
-    using Microsoft.VisualStudio.Shell;
-    using System.ComponentModel.Composition;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using System.ComponentModel;
-    using System.Collections.Generic;
-    using System.ComponentModel.Composition.Hosting;
     using Clide;
-    using System.Diagnostics;
-    using System.IO;
     using Clide.Diagnostics;
+    using Microsoft.VisualStudio.Shell;
+    using Microsoft.VisualStudio.Shell.Interop;
+    using System;
+    using System.IO;
+    using System.Runtime.InteropServices;
 
     [Guid(Constants.PackageGuid)]
     [ProvideAutoLoad(UIContextGuids.NoSolution)]

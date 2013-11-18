@@ -14,14 +14,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Commands
 {
+    using Clide.Composition;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.ComponentModel.Composition;
-    using Clide.Commands;
     using System.ComponentModel;
-    using Clide.Composition;
+    using System.ComponentModel.Composition;
 
     /// <summary>
     /// Attribute that must be placed on command interceptors in order to 

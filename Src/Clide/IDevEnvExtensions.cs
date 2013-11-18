@@ -17,8 +17,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
+    using Clide.Solution;
     using System.Linq;
-using Clide.Solution;
 
     /// <summary>
     /// Usability extensions for <see cref="IDevEnv"/>.

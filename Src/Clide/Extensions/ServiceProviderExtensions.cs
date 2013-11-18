@@ -14,13 +14,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace System
 {
+    using Clide;
+    using Clide.Properties;
+    using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.Shell.Interop;
     using System.Linq;
     using System.Runtime.InteropServices;
-    using Clide.Properties;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.Shell;
-    using Clide;
 
     /// <summary>
     /// Provides useful extensions to the IDE service provider.

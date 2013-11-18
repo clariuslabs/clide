@@ -18,7 +18,6 @@ namespace Clide
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
 
     /// <summary>
     /// Default implementation of the reference service.

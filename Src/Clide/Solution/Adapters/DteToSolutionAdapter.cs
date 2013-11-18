@@ -16,13 +16,9 @@ namespace Clide.Solution.Adapters
 {
     using Clide.Patterns.Adapter;
     using EnvDTE;
-    using EnvDTE80;
-    using VSLangProj;
-    using System;
-    using System.ComponentModel.Composition;
-    using Microsoft.VisualStudio.Shell;
-    using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.Shell.Interop;
+    using System;
 
     [Adapter]
     internal class DteToSolutionAdapter :

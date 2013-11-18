@@ -17,7 +17,6 @@ namespace Clide.Solution.Adapters
     using Clide.Patterns.Adapter;
     using EnvDTE;
     using EnvDTE80;
-    using VSLangProj;
 
     [Adapter]
     internal class SolutionToDteAdapter :

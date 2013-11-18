@@ -17,8 +17,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using System;
     using Microsoft.VisualStudio.Shell.Interop;
+    using System;
 
     internal class StatusBar : IStatusBar
 	{

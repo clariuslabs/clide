@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.ComponentModel.Composition;
+﻿using Clide;
 using Clide.Commands;
-using Clide;
-using Microsoft.VisualStudio.Shell;
 
 namespace IntegrationPackage
 {

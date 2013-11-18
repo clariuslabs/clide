@@ -1,6 +1,5 @@
 ﻿namespace Clide.Diagnostics
 {
-    using System;
     using System.Diagnostics;
 
     /// <devdoc>

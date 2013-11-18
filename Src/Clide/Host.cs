@@ -14,19 +14,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using System;
-    using System.Linq;
-    using System.Diagnostics;
-    using System.ComponentModel.Composition;
-    using Clide.Diagnostics;
-    using Clide.Properties;
     using Clide.Commands;
-    using System.Runtime.InteropServices;
-    using System.ComponentModel.Composition.Hosting;
-    using Clide.Patterns.Adapter;
-    using Clide.Events;
-    using System.Windows.Threading;
     using Clide.Composition;
+    using Clide.Diagnostics;
+    using Clide.Events;
+    using Clide.Properties;
+    using System;
+    using System.Windows.Threading;
 
     /// <summary>
     /// Core host implementation, to be cached while the 

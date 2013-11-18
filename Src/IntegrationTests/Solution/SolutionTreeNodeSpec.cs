@@ -17,13 +17,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    using System;
-    using System.Linq;
+    using Clide.Patterns.Adapter;
+    using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
-    using Clide.Patterns.Adapter;
-    using Microsoft.VisualStudio;
+    using System;
+    using System.Linq;
 
     internal class SolutionTreeNodeSpec
 	{

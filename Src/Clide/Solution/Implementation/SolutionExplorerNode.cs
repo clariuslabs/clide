@@ -17,19 +17,17 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    using Clide.Patterns.Adapter;
+    using Clide.Properties;
+    using Clide.VisualStudio;
+    using EnvDTE;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
-    using Clide.Patterns.Adapter;
-    using Clide.VisualStudio;
-    using System.Text;
+    using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.VisualStudio.Shell;
-    using EnvDTE;
     using System.IO;
-    using Clide.Properties;
+    using System.Linq;
 
     [DebuggerDisplay("{debuggerDisplay,nq}")]
     internal abstract class SolutionTreeNode : ISolutionExplorerNode

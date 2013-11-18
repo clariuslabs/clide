@@ -15,10 +15,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace IntegrationPackage
 {
     using Clide.Commands;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
     [CommandFilter(Constants.PackageGuid, "{5efc7975-14bc-11cf-9b2b-00aa00573819}", 99999999)]
     public class BadCommandFilter : ICommandFilter

@@ -17,16 +17,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    using System;
-    using System.ComponentModel.Composition;
-    using System.ComponentModel.Design;
-    using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.Shell;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Clide.VisualStudio;
     using Clide.Composition;
+    using Clide.VisualStudio;
+    using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.Shell.Interop;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.Design;
 
     [Component(typeof(IToolWindow), typeof(ISolutionExplorer))]
     internal class SolutionExplorer : ISolutionExplorer

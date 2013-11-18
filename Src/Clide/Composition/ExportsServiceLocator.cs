@@ -14,12 +14,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Composition
 {
+    using Microsoft.Practices.ServiceLocation;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
     using System.Linq;
-    using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
     /// Exposes MEF exports as a service locator.

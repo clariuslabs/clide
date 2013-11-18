@@ -15,9 +15,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace UnitTests.Solution.ISolutionNodeExtensionsSpec
 {
     using Clide.Solution;
-    using Moq;
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
     using Xunit;
 

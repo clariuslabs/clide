@@ -14,10 +14,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution.Adapters
 {
-    using Clide.Patterns.Adapter;
-    using EnvDTE;
-    using EnvDTE80;
-    using VSLangProj;
 
     // TODO: implement VSLang -> Solution nodes adapter
     //[Adapter]

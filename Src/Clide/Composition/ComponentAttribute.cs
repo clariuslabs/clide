@@ -17,7 +17,6 @@ namespace Clide.Composition
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Linq;
 
     /// <summary>
     /// Marks the decorated class as a component that will be available from 

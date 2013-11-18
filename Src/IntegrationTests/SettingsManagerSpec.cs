@@ -17,14 +17,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System.ComponentModel;
-    using Microsoft.VisualStudio.Shell.Settings;
     using Microsoft.VisualStudio.Settings;
+    using Microsoft.VisualStudio.Shell.Settings;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using System;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
 
     public class SettingsManagerSpec : VsHostedSpec

@@ -14,21 +14,18 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Composition
 {
+    using Autofac;
+    using Autofac.Builder;
+    using Autofac.Core;
+    using Autofac.Extras.Attributed;
+    using Autofac.Features.Scanning;
+    using Microsoft.VisualStudio.ComponentModelHost;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
-    using System.ComponentModel.Composition.Primitives;
-    using System.ComponentModel.Composition.ReflectionModel;
     using System.Linq;
     using System.Reflection;
-    using Autofac;
-    using Autofac.Builder;
-    using Autofac.Core;
-    using Autofac.Features.Metadata;
-    using Autofac.Features.Scanning;
-    using Microsoft.VisualStudio.ComponentModelHost;
-    using Autofac.Extras.Attributed;
 
     /// <summary>
     /// Provides automatic component registration by scanning assemblies and types for 

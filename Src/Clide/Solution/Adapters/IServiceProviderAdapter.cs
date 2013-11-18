@@ -14,13 +14,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution.Adapters
 {
-    using System;
     using Clide.Patterns.Adapter;
+    using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
-    using Microsoft.VisualStudio;
+    using System;
     using Ole = Microsoft.VisualStudio.OLE.Interop;
-    using Clide.VisualStudio;
 
     [Adapter]
     internal class IServiceProviderAdapter : 

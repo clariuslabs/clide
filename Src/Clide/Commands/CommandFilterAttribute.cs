@@ -17,11 +17,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Commands
 {
+    using Clide.Composition;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.Composition;
-    using Clide.Composition;
 
     /// <summary>
     /// Attribute that must be placed on command implementations in order to 

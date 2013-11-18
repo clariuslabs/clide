@@ -14,9 +14,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution.Adapters
 {
-    using System;
     using Clide.Patterns.Adapter;
     using Microsoft.VisualStudio.Shell.Interop;
+    using System;
 
     [Adapter]
     internal class SolutionToVsAdapter : 

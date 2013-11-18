@@ -14,9 +14,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    using System.Linq;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System.Diagnostics;
+    using System.Linq;
 
     [TestClass]
     public class GivenASolution : VsHostedSpec

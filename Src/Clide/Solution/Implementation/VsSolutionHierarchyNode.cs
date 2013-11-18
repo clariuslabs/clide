@@ -17,14 +17,14 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
+    using Clide.VisualStudio;
+    using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.Shell;
+    using Microsoft.VisualStudio.Shell.Interop;
     using System;
     using System.Collections.Generic;
-    using System.Runtime.InteropServices;
-    using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.Shell.Interop;
     using System.Diagnostics;
-    using Microsoft.VisualStudio.Shell;
-    using Clide.VisualStudio;
+    using System.Runtime.InteropServices;
 
     /// <summary>
     /// A general-purpose <see cref="IVsSolutionHierarchyNode"/> that relies on 

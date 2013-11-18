@@ -14,33 +14,25 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Dynamic;
-    using System.Linq;
-    using System.Text;
-    using System.ComponentModel.Composition;
-    using System.Windows.Controls;
-    using Microsoft.VisualStudio.Shell;
-    using System.Runtime.InteropServices;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using Clide.Properties;
-    using System.Diagnostics;
-    using Microsoft.Win32;
-    using System.ComponentModel;
-    using System.Linq.Expressions;
-    using System.Reflection;
-    using Microsoft.VisualStudio;
     using Clide.Composition;
-    using Microsoft.CSharp.RuntimeBinder;
-    using System.Reflection.Emit;
-    using System.CodeDom;
-    using Microsoft.CSharp;
-    using System.CodeDom.Compiler;
-    using System.IO;
-    using System.Text.RegularExpressions;
-    using System.Collections.Concurrent;
     using Clide.Diagnostics;
+    using Clide.Properties;
+    using Microsoft.CSharp;
+    using Microsoft.CSharp.RuntimeBinder;
+    using Microsoft.VisualStudio.Shell;
+    using Microsoft.VisualStudio.Shell.Interop;
+    using Microsoft.Win32;
+    using System;
+    using System.CodeDom.Compiler;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Dynamic;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text.RegularExpressions;
 
     [Component(typeof(IOptionsManager))]
     internal class OptionsManager : IOptionsManager

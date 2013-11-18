@@ -16,9 +16,7 @@ namespace Clide.Solution
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.Composition;
     using System.Linq;
-    using Clide.Composition;
 
     /// <summary>
     /// This factory caches the map between hierarchy items and the concrete 

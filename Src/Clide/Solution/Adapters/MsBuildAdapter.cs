@@ -15,8 +15,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide.Solution.Adapters
 {
     using Clide.Patterns.Adapter;
-    using System.Linq;
     using System.IO;
+    using System.Linq;
     using MsBuild = Microsoft.Build.Evaluation;
 
     [Adapter]

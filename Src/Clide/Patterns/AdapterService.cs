@@ -14,10 +14,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Patterns.Adapter
 {
+    using Clide.Composition;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Clide.Composition;
 
     [Component(typeof(IAdapterService))]
     partial class AdapterService

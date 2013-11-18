@@ -14,10 +14,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution.Factories
 {
-    using System;
-    using System.ComponentModel.Composition;
-    using Clide.Composition;
     using Autofac.Extras.Attributed;
+    using Clide.Composition;
+    using System;
 
     [Component(typeof(ISolutionExplorerNodeFactory))]
     internal class SolutionExplorerNodeFactory : ISolutionExplorerNodeFactory

@@ -18,10 +18,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide.Solution
 {
     using Clide.Patterns.Adapter;
-    using System;
-    using System.Linq;
     using Clide.VisualStudio;
     using EnvDTE;
+    using System;
+    using System.Linq;
 
     internal class FolderNode : ProjectItemNode, IFolderNode
 	{

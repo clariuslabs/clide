@@ -14,17 +14,14 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
+    using Clide.Diagnostics;
     using EnvDTE;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Dynamic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Clide.Diagnostics;
 
     internal class ItemProperties : DynamicObject
     {

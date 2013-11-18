@@ -15,8 +15,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #pragma warning disable 0436
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 /// <summary>
 /// Traverses a tree (without checking for circular references) using 

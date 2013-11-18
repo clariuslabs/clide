@@ -17,9 +17,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Commands
 {
+    using Microsoft.VisualStudio.Shell;
     using System;
     using System.ComponentModel.Design;
-    using Microsoft.VisualStudio.Shell;
 
     /// <summary>
     /// Base class for all VS Commands    

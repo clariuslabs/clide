@@ -17,13 +17,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
+    using Clide.Diagnostics;
+    using Clide.Properties;
     using System;
     using System.ComponentModel;
     using System.Linq;
-    using System.Linq.Expressions;
-    using Clide.Properties;
-    using System.Diagnostics;
-    using Clide.Diagnostics;
 
     /// <summary>
     /// Helper base class that can be used to provide transparent loading and saving of settings. 

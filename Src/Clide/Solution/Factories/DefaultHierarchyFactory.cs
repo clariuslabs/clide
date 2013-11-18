@@ -14,12 +14,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
+    using Autofac.Extras.Attributed;
+    using Clide.Composition;
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.Composition;
     using System.Linq;
-    using Clide.Composition;
-    using Autofac.Extras.Attributed;
 
     /// <summary>
     /// This factory is the one that serves as the single dependency 

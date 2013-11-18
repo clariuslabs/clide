@@ -17,15 +17,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    using System.ComponentModel.Composition;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using System;
+    using Autofac.Extras.Attributed;
     using Clide.Events;
     using Clide.Patterns.Adapter;
-    using Microsoft.VisualStudio.Shell;
-    using Clide.Composition;
-    using Autofac.Extras.Attributed;
     using Microsoft.Practices.ServiceLocation;
+    using Microsoft.VisualStudio.Shell.Interop;
+    using System;
 
     [FallbackFactory]
 	internal class SolutionNodeFactory : ITreeNodeFactory<IVsSolutionHierarchyNode>

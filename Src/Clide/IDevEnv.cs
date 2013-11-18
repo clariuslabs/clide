@@ -17,12 +17,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using System.Collections.Generic;
-    using Clide.Commands;
-    using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
     using Clide.Events;
     using Microsoft.Practices.ServiceLocation;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Entry point interface for the environment components.

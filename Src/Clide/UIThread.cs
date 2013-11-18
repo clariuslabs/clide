@@ -17,12 +17,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using System;
-    using System.ComponentModel.Composition;
-    using System.Windows;
-    using System.Windows.Threading;
     using Clide.Composition;
-    using Microsoft.VisualStudio.Shell;
+    using System;
+    using System.Windows.Threading;
 
     /// <summary>
     /// Default UI thread invoker implementation, which uses the 

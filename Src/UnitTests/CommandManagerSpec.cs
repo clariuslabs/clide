@@ -15,13 +15,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace UnitTests
 {
     using Clide.Commands;
+    using EnvDTE;
+    using Microsoft.VisualStudio.Shell.Interop;
     using Moq;
     using System;
+    using System.ComponentModel.Design;
     using System.Linq;
     using Xunit;
-    using System.ComponentModel.Design;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using EnvDTE;
 
     public class CommandManagerSpec
     {

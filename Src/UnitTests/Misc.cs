@@ -17,14 +17,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace UnitTests
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System.IO;
-    using System.Text.RegularExpressions;
-    using System.Xml.Linq;
 
     [TestClass]
     public class Misc

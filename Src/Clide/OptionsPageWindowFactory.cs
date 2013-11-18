@@ -14,19 +14,15 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
+    using Clide.Composition;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.ComponentModel.Composition;
-    using System.Windows.Controls;
+    using System.ComponentModel;
     using System.Runtime.InteropServices;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Forms.Integration;
-    using System.Windows.Interop;
     using System.Windows.Input;
-    using System.ComponentModel;
-    using Clide.Composition;
+    using System.Windows.Interop;
 
     [Component(typeof(IOptionsPageWindowFactory))]
 	internal class OptionsPageWindowFactory : IOptionsPageWindowFactory

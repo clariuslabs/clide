@@ -17,9 +17,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    using System;
-    using System.ComponentModel.Composition;
-    using Clide.Composition;
 
     /// <summary>
     /// Attribute used by implementations of <see cref="ITreeNodeFactory{TModel}"/> 

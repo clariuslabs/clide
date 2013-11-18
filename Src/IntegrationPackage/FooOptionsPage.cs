@@ -16,8 +16,6 @@ namespace IntegrationPackage
 {
     using Clide;
     using System.ComponentModel;
-    using System.ComponentModel.Composition;
-    using System.Runtime.InteropServices;
 
     [Category("Clide")]
     [DisplayName("Integration Package")]

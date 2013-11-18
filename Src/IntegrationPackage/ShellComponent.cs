@@ -14,10 +14,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace IntegrationPackage
 {
+    using Clide;
+    using Microsoft.VisualStudio.Shell;
     using System;
     using System.ComponentModel.Composition;
-    using Microsoft.VisualStudio.Shell;
-    using Clide;
 
     [Export(typeof(IShellComponent))]
     public class ShellComponent : IShellComponent

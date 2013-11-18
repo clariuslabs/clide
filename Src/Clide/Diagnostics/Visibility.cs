@@ -32,8 +32,6 @@ DAMAGE.
 
 namespace Clide.Diagnostics
 {
-    using System;
-    using System.Diagnostics;
 
     // Changes to this file will not be overwritten by NuGet when updating.
     // To make the entire API public, just uncomment the following code:

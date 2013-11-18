@@ -14,11 +14,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using System;
     using System.ComponentModel;
-    using System.ComponentModel.Composition;
     using System.Diagnostics;
-    using System.Linq;
 
     [Settings]
     internal class ClideSettings : Settings
