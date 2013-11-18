@@ -15,24 +15,24 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide.Solution.Adapters
 {
     using Clide.Patterns.Adapter;
+    using Microsoft.Build.Evaluation;
     using System.IO;
     using System.Linq;
-    using MsBuild = Microsoft.Build.Evaluation;
 
     [Adapter]
     internal class MsBuildAdapter :
-        IAdapter<ProjectNode, MsBuild.Project>,
-        IAdapter<ItemNode, MsBuild.ProjectItem>
+        IAdapter<ProjectNode, Project>,
+        IAdapter<ItemNode, ProjectItem>
     {
-        public MsBuild.Project Adapt(ProjectNode from)
+        public Project Adapt(ProjectNode from)
         {
             return from == null || from.Project.Value == null ? null :
-                MsBuild.ProjectCollection.GlobalProjectCollection
+                ProjectCollection.GlobalProjectCollection
                     .GetLoadedProjects(from.Project.Value.FullName)
                     .FirstOrDefault();
         }
 
-        public MsBuild.ProjectItem Adapt(ItemNode from)
+        public ProjectItem Adapt(ItemNode from)
         {
             if (from == null || from.Item.Value == null || from.Item.Value.ContainingProject == null)
                 return null;
@@ -43,7 +43,7 @@ namespace Clide.Solution.Adapters
 
             var projectName = item.ContainingProject.FullName;
             var projectDir = Path.GetDirectoryName(projectName);
-            var project = MsBuild.ProjectCollection.GlobalProjectCollection.GetLoadedProjects(projectName).FirstOrDefault();
+            var project = ProjectCollection.GlobalProjectCollection.GetLoadedProjects(projectName).FirstOrDefault();
 
             if (project != null)
             {
