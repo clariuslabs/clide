@@ -104,6 +104,7 @@
     <Compile Include="SettingsManagerSpec.cs" />
     <Compile Include="Solution\AdaptersSpec.cs" />
     <Compile Include="Solution\ISolutionNodeExtensionsSpec.cs" />
+    <Compile Include="Solution\PerformanceSpec.cs" />
     <Compile Include="Solution\ProjectNodeSpec.cs" />
     <Compile Include="Solution\IProjectNodeExtensionsSpec.cs" />
     <Compile Include="Solution\ItemDataSpec.cs" />
