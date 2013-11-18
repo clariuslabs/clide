@@ -28,19 +28,6 @@ namespace Clide
         private static AmbientSingleton<Func<IServiceProvider, IDevEnv>> devEnvFactory =
             new AmbientSingleton<Func<IServiceProvider, IDevEnv>>(services => defaultFactory.Value.Get(services));
 
-        static DevEnv()
-        {
-            Tracer.Initialize(new TracerManager());
-
-#if DEBUG
-            Tracer.Manager.SetTracingLevel(TracerManager.DefaultSourceName, SourceLevels.All);
-            Tracer.Manager.AddListener(TracerManager.DefaultSourceName, new ConsoleTraceListener());
-#endif
-
-            if (Debugger.IsAttached)
-                Tracer.Manager.SetTracingLevel(TracerManager.DefaultSourceName, SourceLevels.All);
-        }
-
         /// <summary>
         /// Gets the developer environment for the given service provider. 
         /// Make sure you pass your package to get your scoped dev env.

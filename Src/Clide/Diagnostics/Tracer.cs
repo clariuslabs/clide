@@ -40,6 +40,11 @@ namespace Clide.Diagnostics
     /// </devdoc>
     partial class Tracer
     {
+        static Tracer()
+        {
+            Tracer.Initialize(new TracerManager());
+        }
+
         /// <summary>
         /// Gets the trace manager to manipulate the tracing level and listeners.
         /// </summary>

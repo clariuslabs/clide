@@ -17,6 +17,7 @@ namespace Clide
     using System;
     using System.ComponentModel;
     using System.ComponentModel.Composition;
+    using System.Diagnostics;
     using System.Linq;
 
     [Settings]
@@ -28,6 +29,11 @@ namespace Clide
             Save(true);
         }
 
-        public bool LogComposition { get; set; }
+#if DEBUG
+        [DefaultValue(SourceLevels.All)]
+#else
+        [DefaultValue(SourceLevels.Warning)]
+#endif
+        public SourceLevels TracingLevel { get; set; }
     }
 }

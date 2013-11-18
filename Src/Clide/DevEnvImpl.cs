@@ -48,6 +48,7 @@ namespace Clide
         private TraceOutputWindowManager outputWindowManager;
 
         public DevEnvImpl(
+            ClideSettings settings,
             IServiceLocator serviceLocator,
             IEnumerable<Lazy<IToolWindow>> toolWindows,
             Lazy<IDialogWindowFactory> dialogFactory,
@@ -72,6 +73,8 @@ namespace Clide
                 Tracer.Manager,
                 OutputWindowId,
                 Strings.DevEnv.OutputPaneTitle);
+
+            Tracer.Manager.SetTracingLevel(TracerManager.DefaultSourceName, settings.TracingLevel);
         }
 
         public IServiceLocator ServiceLocator { get; private set; }

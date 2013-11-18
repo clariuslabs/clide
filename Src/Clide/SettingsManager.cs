@@ -90,7 +90,7 @@ namespace Clide
 					}
 					else
 					{
-						if (!ShouldSaveValue(property, value))
+						if (!ShouldSaveValue(property, value, saveDefaults))
 							continue;
 
 						if (property.Converter.CanConvertTo(typeof(string)))
