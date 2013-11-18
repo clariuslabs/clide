@@ -14,12 +14,14 @@
         <ProjectToBuild Include="Clide\Clide.csproj">
             <AdditionalProperties>VisualStudioVersion=10.0;</AdditionalProperties>
         </ProjectToBuild>
+        <!--
         <ProjectToBuild Include="Clide.VisualStudio\Clide.VisualStudio.csproj">
             <AdditionalProperties>VisualStudioVersion=10.0;</AdditionalProperties>
         </ProjectToBuild>
         <ProjectToBuild Include="Clide.XamarinStudio\Clide.XamarinStudio.csproj">
             <AdditionalProperties>XamarinStudioVersion=1.0;</AdditionalProperties>
         </ProjectToBuild>
+        -->
     </ItemGroup>
 
     <ItemGroup>

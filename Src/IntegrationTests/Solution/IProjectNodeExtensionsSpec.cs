@@ -78,14 +78,14 @@ namespace Clide.Solution
 
         [HostType("VS IDE")]
         [TestMethod]
-        public void WhenGettingOutputAssembly_ThenTryingToInstantiateTypeThrows()
+        public async void WhenGettingOutputAssembly_ThenTryingToInstantiateTypeThrows()
         {
             base.OpenSolution("SampleSolution\\SampleSolution.sln");
 
             var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
             var lib = explorer.Solution.Traverse().OfType<IProjectNode>()
                 .FirstOrDefault(node => node.DisplayName == "ClassLibrary");
-            var asm = lib.GetOutputAssembly();
+            var asm = await lib.GetOutputAssembly();
             var type = asm.GetTypes().First(t => t.GetConstructor(new Type[0]) != null);
 
             Assert.Throws<ArgumentException>(() => Activator.CreateInstance(type));

@@ -90,11 +90,13 @@ namespace Clide.Solution
         /// assembly.
         /// </summary>
         /// <param name="project">The project to get the output assembly from.</param>
-        public static Assembly GetOutputAssembly(this IProjectNode project)
+        public static async Task<Assembly> GetOutputAssembly(this IProjectNode project)
         {
             var fileName = (string)project.Properties.TargetFileName;
             var outDir = (string)Path.Combine(
                 project.Properties.MSBuildProjectDirectory,
+                // NOTE: we load from the obj/Debug|Release folder, which is 
+                // the one built in the background by VS continuously.
                 project.Properties.BaseIntermediateOutputPath,
                 project.Configuration.ActiveConfiguration);
 
@@ -108,13 +110,17 @@ namespace Clide.Solution
 
             if (!File.Exists(assemblyFile))
             {
-                project.Build();
-                for (int i = 0; i < 5; i++)
+                var success = await project.Build();
+                if (success)
                 {
-                    if (File.Exists(assemblyFile))
-                        break;
+                    // Let the build finish writing the file
+                    for (int i = 0; i < 5; i++)
+                    {
+                        if (File.Exists(assemblyFile))
+                            break;
 
-                    Thread.Sleep(200);
+                        Thread.Sleep(200);
+                    }
                 }
 
                 if (!File.Exists(assemblyFile))
