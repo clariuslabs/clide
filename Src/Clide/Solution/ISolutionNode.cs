@@ -31,6 +31,16 @@ namespace Clide.Solution
         bool IsOpen { get; }
 
         /// <summary>
+        /// Gets the currently active project (if single), which can be the selected project, or 
+        /// the project owning the currently selected item or opened designer file.
+        /// </summary>
+        /// <remarks>
+        /// If there are multiple active projects, this property will be null. This can happen 
+        /// when multiple selection is enabled for items across more than one project
+        /// </remarks>
+        IProjectNode ActiveProject { get; }
+
+        /// <summary>
         /// Gets the currently selected nodes in the solution.
         /// </summary>
         IEnumerable<ISolutionExplorerNode> SelectedNodes { get; }

@@ -16,19 +16,33 @@ namespace Clide.Solution.Factories
 {
     using Autofac.Extras.Attributed;
     using Clide.Composition;
+    using Clide.Events;
+    using Microsoft.VisualStudio.Shell.Interop;
     using System;
+    using System.Collections.Concurrent;
 
     [Component(typeof(ISolutionExplorerNodeFactory))]
     internal class SolutionExplorerNodeFactory : ISolutionExplorerNodeFactory
     {
         private Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory;
+        private ConcurrentDictionary<Tuple<IVsHierarchy, uint>, ISolutionExplorerNode> nodeCache = new ConcurrentDictionary<Tuple<IVsHierarchy,uint>,ISolutionExplorerNode>();
 
-        public SolutionExplorerNodeFactory([WithKey(DefaultHierarchyFactory.RegisterKey)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory)
+        public SolutionExplorerNodeFactory(
+            [WithKey(DefaultHierarchyFactory.RegisterKey)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory,
+            ISolutionEvents solutionEvents)
         {
             this.nodeFactory = nodeFactory;
+            solutionEvents.SolutionClosed += (sender, args) => nodeCache.Clear();
         }
 
         public ISolutionExplorerNode Create(IVsSolutionHierarchyNode hierarchyNode)
+        {
+            var cacheKey = Tuple.Create(hierarchyNode.VsHierarchy, hierarchyNode.ItemId);
+
+            return nodeCache.GetOrAdd(cacheKey, _ => CreateNode(hierarchyNode));
+        }
+
+        private ISolutionExplorerNode CreateNode(IVsSolutionHierarchyNode hierarchyNode)
         {
             Func<IVsSolutionHierarchyNode, Lazy<ITreeNode>> getParent = null;
             Func<IVsSolutionHierarchyNode, ITreeNode> getNode = null;
@@ -39,7 +53,7 @@ namespace Clide.Solution.Factories
             getParent = hierarchy => hierarchy.Parent == null ? null :
                 new Lazy<ITreeNode>(() => this.nodeFactory.Value.CreateNode(getParent(hierarchy.Parent), hierarchy.Parent));
 
-            return getNode(hierarchyNode) as ISolutionExplorerNode;        
+            return getNode(hierarchyNode) as ISolutionExplorerNode;
         }
     }
 }

@@ -32,9 +32,13 @@ namespace Clide.Solution
     internal class SolutionNode : SolutionTreeNode, ISolutionNode
     {
         private ISolutionEvents events;
-        private IServiceLocator locator;
         private ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory;
         private ISolutionExplorerNodeFactory explorerNodeFactory;
+        private Lazy<IVsMonitorSelection> selection;
+
+        // Optimize code path when the active project hierarchy didn't change.
+        private IProjectNode lastActiveProject;
+        private IVsHierarchy lastActiveHierarchy;
 
         public SolutionNode(
             IVsSolutionHierarchyNode hierarchyNode,
@@ -48,23 +52,40 @@ namespace Clide.Solution
             this.Solution = new Lazy<EnvDTE.Solution>(() => hierarchyNode.ServiceProvider.GetService<EnvDTE.DTE>().Solution);
             this.nodeFactory = nodeFactory;
             this.explorerNodeFactory = explorerNodeFactory;
-            this.locator = locator;
             this.events = solutionEvents;
+            this.selection = new Lazy<IVsMonitorSelection>(() => locator.GetService<SVsShellMonitorSelection, IVsMonitorSelection>());
         }
 
         public Lazy<EnvDTE.Solution> Solution { get; private set; }
 
+        public IProjectNode ActiveProject
+        {
+            get
+            {
+                var selected = this.selection.Value.GetSelectedHierarchy();
+                if (selected == null)
+                    return null;
+                if (selected == lastActiveHierarchy)
+                    return lastActiveProject;
+
+                lastActiveHierarchy = selected;
+                lastActiveProject = explorerNodeFactory.Create(new VsSolutionHierarchyNode(selected, VSConstants.VSITEMID_ROOT)) as IProjectNode;
+                return lastActiveProject;
+            }
+        }
+
         public bool IsOpen
         {
-            get { return this.Solution.Value.IsOpen; }
+            get { return Solution.Value.IsOpen; }
         }
 
         public IEnumerable<ISolutionExplorerNode> SelectedNodes
         {
             get
             {
-                return this.locator.GetSelection()
-                    .Select(sel => this.explorerNodeFactory.Create(new VsSolutionHierarchyNode(sel.Item1, sel.Item2)));
+                return this.selection.Value
+                    .GetSelection(HierarchyNode.VsHierarchy)
+                    .Select(sel => explorerNodeFactory.Create(new VsSolutionHierarchyNode(sel.Item1, sel.Item2)));
             }
         }
 

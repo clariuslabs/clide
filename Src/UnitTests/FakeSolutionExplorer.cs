@@ -53,6 +53,8 @@ namespace UnitTests
             OwningSolution = this;
         }
 
+        public IProjectNode ActiveProject { get; private set; }
+
         public virtual bool IsOpen { get; set; }
 
         public virtual IEnumerable<ISolutionExplorerNode> SelectedNodes { get; set; }
