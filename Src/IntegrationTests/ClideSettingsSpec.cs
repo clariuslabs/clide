@@ -3,6 +3,10 @@
     using Microsoft.VisualStudio.Settings;
     using Microsoft.VisualStudio.Shell.Settings;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using System;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Linq;
 
     [TestClass]
     public class ClideSettingsSpec : VsHostedSpec
@@ -24,7 +28,7 @@
 
         [HostType("VS IDE")]
         [TestMethod]
-        public void WhenRetrievingSettings_ThenSavesLogCompositionDefaultValue()
+        public void WhenRetrievingSettings_ThenSavesDefaultTracingLevelValue()
         {
             var devEnv = DevEnv.Get(Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider);
 
@@ -32,10 +36,15 @@
 
             Assert.NotNull(settings);
 
+            var defaultValue = Reflect<ClideSettings>.GetProperty(x => x.TracingLevel)
+                .GetCustomAttributes(typeof(DefaultValueAttribute), true)
+                .OfType<DefaultValueAttribute>()
+                .Select(d => (SourceLevels)d.Value)
+                .First();
+
             var collection = SettingsManager.GetSettingsCollectionName(typeof(ClideSettings));
             Assert.True(settingsStore.CollectionExists(collection));
-            Assert.False(bool.Parse(
-                settingsStore.GetString(collection, Reflect<ClideSettings>.GetPropertyName(x => x.TracingLevel), "True")));
+            Assert.Equal(defaultValue, (SourceLevels)Enum.Parse(typeof(SourceLevels), settingsStore.GetString(collection, Reflect<ClideSettings>.GetPropertyName(x => x.TracingLevel), "-1")));
         }
 
     }

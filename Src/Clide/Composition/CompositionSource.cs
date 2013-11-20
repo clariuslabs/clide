@@ -23,6 +23,7 @@ namespace Clide.Composition
     using System.ComponentModel.Composition.Primitives;
     using System.Linq;
     using System.Reflection;
+    using Clide.Properties;
 
     /// <summary>
     /// Exposes MEF exports as services in the Autofac container automatically, 
@@ -63,12 +64,14 @@ namespace Clide.Composition
 
             //var serviceType = GetElementType(swt.ServiceType);
 
-            var serviceType = swt.ServiceType;
-            var exportMethod = (serviceType == swt.ServiceType) ?
-                // If the two are the same, this is a single export retrieval.
-                getExport.MakeGenericMethod(serviceType) :
-                // Otherwise, this is an import many type service.
-                getExports.MakeGenericMethod(serviceType);
+            //var serviceType = swt.ServiceType;
+            //var exportMethod = (serviceType == swt.ServiceType) ?
+            //    // If the two are the same, this is a single export retrieval.
+            //    getExport.MakeGenericMethod(serviceType) :
+            //    // Otherwise, this is an import many type service.
+            //    getExports.MakeGenericMethod(serviceType);
+
+            var getExportOrDefault = getExport.MakeGenericMethod(swt.ServiceType);
 
             // Unfortunately, VSMEF rewrote the logic of how exports are retrieved 
             // and the catalog doesn't have everything that can be retrieved, so we 
@@ -77,12 +80,23 @@ namespace Clide.Composition
             var contractName = AttributedModelServices.GetContractName(swt.ServiceType);
             // We short-circuit anyways for things that are in the catalog so that we 
             // don't retrieve the part at this time.
-            if (!catalog.Parts.SelectMany(part => part.ExportDefinitions).Any(e => e.ContractName.Equals(contractName)) || 
-                exportMethod.Invoke(exports, null) == null)
-                yield break;
-            
+
+            try
+            {
+                if (!catalog.Parts.SelectMany(part => part.ExportDefinitions).Any(e => e.ContractName.Equals(contractName)) ||
+                    getExportOrDefault.Invoke(exports, null) == null)
+                    yield break;
+            }
+            catch (TargetInvocationException tie)
+            {
+                if (tie.InnerException != null && tie.InnerException is ImportCardinalityMismatchException)
+                    // Means that there are multiple exports in the MEF composition. See NOTE above. 
+                    // This is an unsupported scenario.
+                    throw new NotSupportedException(Strings.CompositionSource.ImportManyRequired(swt.ServiceType), tie);
+            }
+
             yield return RegistrationBuilder.CreateRegistration(RegistrationBuilder.ForDelegate(
-                swt.ServiceType, (c, p) => exportMethod.Invoke(exports, null)));
+                swt.ServiceType, (c, p) => getExportOrDefault.Invoke(exports, null)));
         }
 
         private Type GetElementType(Type type)

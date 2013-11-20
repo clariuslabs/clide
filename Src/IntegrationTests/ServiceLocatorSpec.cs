@@ -15,6 +15,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide
 {
     using EnvDTE;
+    using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Microsoft.VisualStudio.Text.Editor;
@@ -24,6 +25,8 @@ namespace Clide
     [TestClass]
     public class ServiceLocatorSpec
     {
+        
+
         [HostType("VS IDE")]
         [TestMethod]
         public void WhenGettingGlobalLocator_ThenCanGetInstanceVsServices()
@@ -35,18 +38,9 @@ namespace Clide
 
         [HostType("VS IDE")]
         [TestMethod]
-        public void WhenUsingGlobalLocator_ThenCanGetManyExportedVsComponents()
+        public void WhenUsingGlobalLocator_ThenCanGetExportedVsServiceProvider()
         {
-            Assert.IsTrue(ServiceLocator.GlobalLocator.GetAllInstances<IWpfTextViewCreationListener>().Any());
-        }
-
-        [HostType("VS IDE")]
-        [TestMethod]
-        public void WhenGettingGlobalLocator_ThenCanGetServiceForVsServices()
-        {
-            Assert.IsNotNull(ServiceLocator.GlobalLocator.GetService<IServiceProvider>());
-            Assert.IsNotNull(ServiceLocator.GlobalLocator.GetService<IVsShell>());
-            Assert.IsNotNull(ServiceLocator.GlobalLocator.GetService<DTE>());
+            Assert.IsNotNull(ServiceLocator.GlobalLocator.GetInstance<SVsServiceProvider>());
         }
     }
 }

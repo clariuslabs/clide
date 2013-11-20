@@ -35,6 +35,7 @@ namespace Clide.Solution
         private ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory;
         private ISolutionExplorerNodeFactory explorerNodeFactory;
         private Lazy<IVsMonitorSelection> selection;
+        private IUIThread uiThread;
 
         // Optimize code path when the active project hierarchy didn't change.
         private IProjectNode lastActiveProject;
@@ -42,11 +43,16 @@ namespace Clide.Solution
 
         public SolutionNode(
             IVsSolutionHierarchyNode hierarchyNode,
+            // This is the regular node factory for trees, that receives a lazy 
+            // pointer to the parent tree node.
             ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
+            // This factory is used to create "loose" nodes from solution explorer
             ISolutionExplorerNodeFactory explorerNodeFactory,
             IServiceLocator locator,
             IAdapterService adapter,
-            ISolutionEvents solutionEvents)
+            ISolutionEvents solutionEvents, 
+            // Retrieving current selection must be done on the UI thread.
+            IUIThread uiThread)
             : base(SolutionNodeKind.Solution, hierarchyNode, null, nodeFactory, adapter)
         {
             this.Solution = new Lazy<EnvDTE.Solution>(() => hierarchyNode.ServiceProvider.GetService<EnvDTE.DTE>().Solution);
@@ -54,6 +60,7 @@ namespace Clide.Solution
             this.explorerNodeFactory = explorerNodeFactory;
             this.events = solutionEvents;
             this.selection = new Lazy<IVsMonitorSelection>(() => locator.GetService<SVsShellMonitorSelection, IVsMonitorSelection>());
+            this.uiThread = uiThread;
         }
 
         public Lazy<EnvDTE.Solution> Solution { get; private set; }
@@ -62,7 +69,7 @@ namespace Clide.Solution
         {
             get
             {
-                var selected = this.selection.Value.GetSelectedHierarchy();
+                var selected = selection.Value.GetSelectedHierarchy(uiThread);
                 if (selected == null)
                     return null;
                 if (selected == lastActiveHierarchy)
@@ -84,7 +91,7 @@ namespace Clide.Solution
             get
             {
                 return this.selection.Value
-                    .GetSelection(HierarchyNode.VsHierarchy)
+                    .GetSelection(uiThread, HierarchyNode.VsHierarchy)
                     .Select(sel => explorerNodeFactory.Create(new VsSolutionHierarchyNode(sel.Item1, sel.Item2)));
             }
         }

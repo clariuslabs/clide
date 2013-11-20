@@ -87,7 +87,7 @@ namespace Clide.Solution
         /// assembly.
         /// </summary>
         /// <param name="project">The project to get the output assembly from.</param>
-        public static async Task<Assembly> GetOutputAssembly(this IProjectNode project)
+        public static Task<Assembly> GetOutputAssembly(this IProjectNode project)
         {
             var fileName = (string)project.Properties.TargetFileName;
             var outDir = (string)Path.Combine(
@@ -100,65 +100,68 @@ namespace Clide.Solution
             if (string.IsNullOrEmpty(fileName) || string.IsNullOrEmpty(outDir))
             {
                 tracer.Warn(Strings.IProjectNodeExtensions.NoTargetAssemblyName(project.DisplayName));
-                return null;
+                return TaskHelpers.FromResult<Assembly>(null);
             }
 
             var assemblyFile = Path.Combine(outDir, fileName);
 
-            if (!File.Exists(assemblyFile))
+            return Task.Factory.StartNew<Assembly>(() =>
             {
-                var success = await project.Build();
-                if (success)
+                if (!File.Exists(assemblyFile))
                 {
-                    // Let the build finish writing the file
-                    for (int i = 0; i < 5; i++)
+                    var success = project.Build().Result;
+                    if (success)
                     {
-                        if (File.Exists(assemblyFile))
-                            break;
+                        // Let the build finish writing the file
+                        for (int i = 0; i < 5; i++)
+                        {
+                            if (File.Exists(assemblyFile))
+                                break;
 
-                        Thread.Sleep(200);
+                            Thread.Sleep(200);
+                        }
+                    }
+
+                    if (!File.Exists(assemblyFile))
+                    {
+                        tracer.Warn(Strings.IProjectNodeExtensions.NoBuildOutput(project.DisplayName, assemblyFile));
+                        return null;
                     }
                 }
 
-                if (!File.Exists(assemblyFile))
+                var assemblyName = AssemblyName.GetAssemblyName(assemblyFile);
+                var vsProject = project.As<IVsHierarchy>();
+                var localServices = project.As<IServiceProvider>();
+                var globalServices = GlobalServiceProvider.Instance;
+
+                if (vsProject == null ||
+                    localServices == null ||
+                    globalServices == null)
                 {
-                    tracer.Warn(Strings.IProjectNodeExtensions.NoBuildOutput(project.DisplayName, assemblyFile));
+                    tracer.Warn(Strings.IProjectNodeExtensions.InvalidVsContext);
                     return null;
                 }
-            }
 
-            var assemblyName = AssemblyName.GetAssemblyName(assemblyFile);
-            var vsProject = project.As<IVsHierarchy>();
-            var localServices = project.As<IServiceProvider>();
-            var globalServices = GlobalServiceProvider.Instance;
+                var openScope = globalServices.GetService<SVsSmartOpenScope, IVsSmartOpenScope>();
+                var dtar = localServices.GetService<SVsDesignTimeAssemblyResolution, IVsDesignTimeAssemblyResolution>();
 
-            if (vsProject == null ||
-                localServices == null ||
-                globalServices == null)
-            {
-                tracer.Warn(Strings.IProjectNodeExtensions.InvalidVsContext);
-                return null;
-            }
+                // As suggested by Christy Henriksson, we reuse the type discovery service 
+                // but just for the IDesignTimeAssemblyLoader interface. The actual 
+                // assembly reading is done by the TFP using metadata only :)
+                var dts = globalServices.GetService<DynamicTypeService>();
+                var ds = dts.GetTypeDiscoveryService(vsProject);
+                var dtal = ds as IDesignTimeAssemblyLoader;
 
-            var openScope = globalServices.GetService<SVsSmartOpenScope, IVsSmartOpenScope>();
-            var dtar = localServices.GetService<SVsDesignTimeAssemblyResolution, IVsDesignTimeAssemblyResolution>();
+                if (openScope == null || dtar == null || dts == null || ds == null || dtal == null)
+                {
+                    tracer.Warn(Strings.IProjectNodeExtensions.InvalidTypeContext);
+                    return null;
+                }
 
-            // As suggested by Christy Henriksson, we reuse the type discovery service 
-            // but just for the IDesignTimeAssemblyLoader interface. The actual 
-            // assembly reading is done by the TFP using metadata only :)
-            var dts = globalServices.GetService<DynamicTypeService>();
-            var ds = dts.GetTypeDiscoveryService(vsProject);
-            var dtal = ds as IDesignTimeAssemblyLoader;
+                var provider = new VsTargetFrameworkProvider(dtar, dtal, openScope);
 
-            if (openScope == null || dtar == null || dts == null || ds == null || dtal == null)
-            {
-                tracer.Warn(Strings.IProjectNodeExtensions.InvalidTypeContext);
-                return null;
-            }
-
-            var provider = new VsTargetFrameworkProvider(dtar, dtal, openScope);
-
-            return provider.GetReflectionAssembly(assemblyName);
+                return provider.GetReflectionAssembly(assemblyName);
+            });
         }
 
         /// <summary>

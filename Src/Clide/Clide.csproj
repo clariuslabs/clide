@@ -53,15 +53,6 @@
       <HintPath>..\..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
       <IlMerge>true</IlMerge>
     </Reference>
-    <Reference Include="Microsoft.Threading.Tasks">
-      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.165\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Threading.Tasks.Extensions">
-      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.165\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop">
-      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.165\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>True</SpecificVersion>
       <HintPath>$(PublicAssemblies)Microsoft.VisualStudio.ComponentModelHost.dll</HintPath>
@@ -101,16 +92,7 @@
     </Reference>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Configuration" />
-    <Reference Include="System.IO">
-      <HintPath>..\..\packages\Microsoft.Bcl.1.1.6\lib\net40\System.IO.dll</HintPath>
-    </Reference>
     <Reference Include="System.Net" />
-    <Reference Include="System.Runtime">
-      <HintPath>..\..\packages\Microsoft.Bcl.1.1.6\lib\net40\System.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Threading.Tasks">
-      <HintPath>..\..\packages\Microsoft.Bcl.1.1.6\lib\net40\System.Threading.Tasks.dll</HintPath>
-    </Reference>
     <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <SpecificVersion>True</SpecificVersion>
       <HintPath>$(PublicAssemblies)VSLangProj.dll</HintPath>
@@ -137,6 +119,8 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="App_Packages\TaskHelpers.Sources.0.3\TaskHelpers.cs" />
+    <Compile Include="App_Packages\TaskHelpers.Sources.0.3\TaskHelpersExtensions.cs" />
     <Compile Include="ClideSettings.cs" />
     <Compile Include="Commands\CommandInterceptorAttribute.cs" />
     <Compile Include="Commands\ICommandInterceptor.cs" />
@@ -405,10 +389,5 @@
   <Target Name="AfterBuild">
     <!-- Fix for improper Microsoft.Practices.ServiceLocation.pdb in CommonServiceLocator package -->
     <Delete Files="$(OutputPath)Microsoft.Practices.ServiceLocation.pdb" ContinueOnError="false" />
-  </Target>
-  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets')" />
-  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
-    <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
-    <Error Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
   </Target>
 </Project>

@@ -165,7 +165,7 @@
                     return null;
                 }
             }
-            catch (COMException ex)
+            catch (COMException)
             {
                 //tracer.Warn (ex, "Failed to retrieve current project.");
             }

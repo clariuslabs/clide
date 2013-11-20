@@ -32,19 +32,22 @@ namespace Clide.Solution
 		private IAdapterService adapter;
         private IServiceLocator locator;
         private ISolutionExplorerNodeFactory explorerNodeFactory;
+        private IUIThread uiThread;
 
 		public SolutionNodeFactory(
             IServiceLocator serviceLocator,
 			[WithKey(DefaultHierarchyFactory.RegisterKey)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory,
             ISolutionExplorerNodeFactory explorerNodeFactory,
 			ISolutionEvents solutionEvents,
-			IAdapterService adapter)
+			IAdapterService adapter, 
+            IUIThread uiThread)
 		{
             this.locator = serviceLocator;
 			this.nodeFactory = nodeFactory;
             this.explorerNodeFactory = explorerNodeFactory;
 			this.solutionEvents = solutionEvents;
 			this.adapter = adapter;
+            this.uiThread = uiThread;
 		}
 
 		public bool Supports(IVsSolutionHierarchyNode hierarchy)
@@ -55,7 +58,7 @@ namespace Clide.Solution
 		public ITreeNode CreateNode(Lazy<ITreeNode> parent, IVsSolutionHierarchyNode hierarchy)
 		{
 			return Supports(hierarchy) ?
-				new SolutionNode(hierarchy, this.nodeFactory.Value, this.explorerNodeFactory, this.locator,  this.adapter, this.solutionEvents) : null;
+				new SolutionNode(hierarchy, nodeFactory.Value, explorerNodeFactory, locator,  adapter, solutionEvents, uiThread) : null;
 		}
 	}
 }

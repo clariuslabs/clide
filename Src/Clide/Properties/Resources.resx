@@ -309,4 +309,7 @@
   <data name="ISolutionNodeExtensions_BuildNotSupported" xml:space="preserve">
     <value>The specified solution does not support builds.</value>
   </data>
+  <data name="CompositionSource_ImportManyRequired" xml:space="preserve">
+    <value>In order to retrieve the multiple components of type {componentType} from Visual Studio composition, the [ImportMany] annotation has to be used.</value>
+  </data>
 </root>

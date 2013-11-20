@@ -35,14 +35,14 @@
         <Delete Files="@(AssembliesToClean)" ContinueOnError="false" TreatErrorsAsWarnings="true" />
     </Target>
 
-    <Target Name="CleanLib" AfterTargets="Clean">
+    <!--<Target Name="CleanLib" AfterTargets="Clean">
         <ItemGroup>
             <ItemsToClean Include="$(OutputPath)**\*.*" />
         </ItemGroup>
-        <!--<Exec Command="rmdir /s &quot;$(OutputPath)&quot;" ContinueOnError="false" />-->
+        --><!--<Exec Command="rmdir /s &quot;$(OutputPath)&quot;" ContinueOnError="false" />--><!--
         <Delete Files="@(ItemsToClean)" ContinueOnError="false" />
         <RemoveDir Directories="$(OutputPath)" Condition="false" />
-    </Target>
+    </Target>-->
 
     <Target Name="BuildPackage" AfterTargets="AfterBuild" Condition="$(NuGet) == 'true'">
         <Copy SourceFiles="@(NuSpec)" DestinationFiles="@(NuSpec->'nuget\%(Filename)%(Extension)')" SkipUnchangedFiles="true" ContinueOnError="false">

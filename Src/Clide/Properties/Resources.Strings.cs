@@ -6,6 +6,8 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+using System;
+using System.Globalization;
 
 namespace Clide.Properties
 {
@@ -837,6 +839,26 @@ namespace Clide.Properties
 			///	The specified solution does not support builds.
 			/// </summary>
 			public static string BuildNotSupported { get { return Resources.ISolutionNodeExtensions_BuildNotSupported; } }
+		}
+		
+		///	<summary>
+		///	Provides access to string resources.
+		///	</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		public static partial class CompositionSource
+		{
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	In order to retrieve the multiple components of type {componentType} from Visual Studio composition, the [ImportMany] annotation has to be used.
+			/// </summary>
+			public static string ImportManyRequired(object componentType)
+			{
+				return Resources.CompositionSource_ImportManyRequired.FormatWith(new 
+				{
+					componentType = componentType,
+				});
+			}
 		}
 	}
 }

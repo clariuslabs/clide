@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>TaskHelpers.Sources</id>
+    <version>0.3</version>
+    <title>TaskHelpers</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <licenseUrl>http://aspnetwebstack.codeplex.com/license</licenseUrl>
+    <projectUrl>http://aspnetwebstack.codeplex.com/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Internal classes to assist in using Task efficiently server-side.</description>
+    <releaseNotes>Forked from the aspnetwebstack git repo.</releaseNotes>
+    <copyright>Copyright 2012</copyright>
+  </metadata>
+</package>

@@ -28,118 +28,128 @@ namespace Clide.VisualStudio
             return new VsToolWindow(serviceProvider, toolWindowId);
         }
 
-        public static IVsHierarchy GetSelectedHierarchy(this IVsMonitorSelection monitorSelection)
+        public static IVsHierarchy GetSelectedHierarchy(this IVsMonitorSelection monitorSelection, IUIThread uiThread)
         {
             var hierarchyPtr = IntPtr.Zero;
             var selectionContainer = IntPtr.Zero;
 
-            try
+            return uiThread.Invoke(() =>
             {
-                // Get the current project hierarchy, project item, and selection container for the current selection
-                // If the selection spans multiple hierarchies, hierarchyPtr is Zero. 
-                // So fast path is for non-zero result (most common case of single active project/item).
-                uint itemid;
-                IVsMultiItemSelect multiItemSelect = null;
-                ErrorHandler.ThrowOnFailure(monitorSelection.GetCurrentSelection(out hierarchyPtr, out itemid, out multiItemSelect, out selectionContainer));
-
-                // There may be no selection at all.
-                if (itemid == VSConstants.VSITEMID_NIL)
-                    return null;
-
-                if (itemid == VSConstants.VSITEMID_ROOT)
+                try
                 {
-                    // The root selection could be the solution itself, so no project is active.
-                    if (hierarchyPtr == IntPtr.Zero)
+                    // Get the current project hierarchy, project item, and selection container for the current selection
+                    // If the selection spans multiple hierarchies, hierarchyPtr is Zero. 
+                    // So fast path is for non-zero result (most common case of single active project/item).
+                    uint itemid;
+                    IVsMultiItemSelect multiItemSelect = null;
+                    ErrorHandler.ThrowOnFailure(monitorSelection.GetCurrentSelection(out hierarchyPtr, out itemid, out multiItemSelect, out selectionContainer));
+
+                    // There may be no selection at all.
+                    if (itemid == VSConstants.VSITEMID_NIL)
                         return null;
-                    else
+
+                    if (itemid == VSConstants.VSITEMID_ROOT)
+                    {
+                        // The root selection could be the solution itself, so no project is active.
+                        if (hierarchyPtr == IntPtr.Zero)
+                            return null;
+                        else
+                            return (IVsHierarchy)Marshal.GetTypedObjectForIUnknown(hierarchyPtr, typeof(IVsHierarchy));
+                    }
+
+                    // We may have a single item selection, so we can safely pick its owning project/hierarchy.
+                    if (itemid != VSConstants.VSITEMID_SELECTION)
                         return (IVsHierarchy)Marshal.GetTypedObjectForIUnknown(hierarchyPtr, typeof(IVsHierarchy));
+
+                    // Otherwise, this is a multiple item selection within the same hierarchy,
+                    // we select he hierarchy.
+                    uint numberOfSelectedItems;
+                    int isSingleHierarchyInt;
+                    ErrorHandler.ThrowOnFailure(multiItemSelect.GetSelectionInfo(out numberOfSelectedItems, out isSingleHierarchyInt));
+                    var isSingleHierarchy = (isSingleHierarchyInt != 0);
+
+                    if (isSingleHierarchy)
+                        return (IVsHierarchy)Marshal.GetTypedObjectForIUnknown(hierarchyPtr, typeof(IVsHierarchy));
+
+                    return null;
                 }
-
-                // We may have a single item selection, so we can safely pick its owning project/hierarchy.
-                if (itemid != VSConstants.VSITEMID_SELECTION)
-                    return (IVsHierarchy)Marshal.GetTypedObjectForIUnknown(hierarchyPtr, typeof(IVsHierarchy));
-
-                // Otherwise, this is a multiple item selection within the same hierarchy,
-                // we select he hierarchy.
-                uint numberOfSelectedItems;
-                int isSingleHierarchyInt;
-                ErrorHandler.ThrowOnFailure(multiItemSelect.GetSelectionInfo(out numberOfSelectedItems, out isSingleHierarchyInt));
-                var isSingleHierarchy = (isSingleHierarchyInt != 0);
-
-                if (isSingleHierarchy)
-                    return (IVsHierarchy)Marshal.GetTypedObjectForIUnknown(hierarchyPtr, typeof(IVsHierarchy));
-
-                return null;
-            }
-            finally
-            {
-                if (hierarchyPtr != IntPtr.Zero)
+                finally
                 {
-                    Marshal.Release(hierarchyPtr);
+                    if (hierarchyPtr != IntPtr.Zero)
+                    {
+                        Marshal.Release(hierarchyPtr);
+                    }
+                    if (selectionContainer != IntPtr.Zero)
+                    {
+                        Marshal.Release(selectionContainer);
+                    }
                 }
-                if (selectionContainer != IntPtr.Zero)
-                {
-                    Marshal.Release(selectionContainer);
-                }
-            }
+            });
         }
 
-        public static IEnumerable<Tuple<IVsHierarchy, uint>> GetSelection(this IVsMonitorSelection monitorSelection, IVsHierarchy solution)
+        public static IEnumerable<Tuple<IVsHierarchy, uint>> GetSelection(this IVsMonitorSelection monitorSelection, IUIThread uiThread, IVsHierarchy solution)
         {
             var hierarchyPtr = IntPtr.Zero;
             var selectionContainer = IntPtr.Zero;
 
-            try
+            return uiThread.Invoke(() =>
             {
-                // Get the current project hierarchy, project item, and selection container for the current selection
-                // If the selection spans multiple hierarchies, hierarchyPtr is Zero
-                uint itemid;
-                IVsMultiItemSelect multiItemSelect = null;
-                ErrorHandler.ThrowOnFailure(monitorSelection.GetCurrentSelection(out hierarchyPtr, out itemid, out multiItemSelect, out selectionContainer));
-
-                if (itemid == VSConstants.VSITEMID_NIL)
-                    return Enumerable.Empty<Tuple<IVsHierarchy, uint>>();
-
-                if (itemid == VSConstants.VSITEMID_ROOT)
+                try
                 {
-                    if (hierarchyPtr == IntPtr.Zero)
-                        return new[] { Tuple.Create(solution, VSConstants.VSITEMID_ROOT) };
-                    else
-                        return new[] { Tuple.Create(
+                    // Get the current project hierarchy, project item, and selection container for the current selection
+                    // If the selection spans multiple hierarchies, hierarchyPtr is Zero
+                    uint itemid;
+                    IVsMultiItemSelect multiItemSelect = null;
+                    ErrorHandler.ThrowOnFailure(monitorSelection.GetCurrentSelection(out hierarchyPtr, out itemid, out multiItemSelect, out selectionContainer));
+
+                    if (itemid == VSConstants.VSITEMID_NIL)
+                        return Enumerable.Empty<Tuple<IVsHierarchy, uint>>();
+
+                    if (itemid == VSConstants.VSITEMID_ROOT)
+                    {
+                        if (hierarchyPtr == IntPtr.Zero)
+                            return new[] { Tuple.Create(solution, VSConstants.VSITEMID_ROOT) };
+                        else
+                            return new[] { Tuple.Create(
                                 (IVsHierarchy)Marshal.GetTypedObjectForIUnknown(hierarchyPtr, typeof(IVsHierarchy)), 
                                 VSConstants.VSITEMID_ROOT) };
-                }
+                    }
 
-                if (itemid != VSConstants.VSITEMID_SELECTION)
-                    return new[] { Tuple.Create(
+                    if (itemid != VSConstants.VSITEMID_SELECTION)
+                        return new[] { Tuple.Create(
                         (IVsHierarchy)Marshal.GetTypedObjectForIUnknown(hierarchyPtr, typeof(IVsHierarchy)), 
                         itemid) };
 
-                // This is a multiple item selection.
+                    // This is a multiple item selection.
 
-                uint numberOfSelectedItems;
-                int isSingleHierarchyInt;
-                ErrorHandler.ThrowOnFailure(multiItemSelect.GetSelectionInfo(out numberOfSelectedItems, out isSingleHierarchyInt));
-                var isSingleHierarchy = (isSingleHierarchyInt != 0);
+                    uint numberOfSelectedItems;
+                    int isSingleHierarchyInt;
+                    ErrorHandler.ThrowOnFailure(multiItemSelect.GetSelectionInfo(out numberOfSelectedItems, out isSingleHierarchyInt));
+                    var isSingleHierarchy = (isSingleHierarchyInt != 0);
 
-                var vsItemSelections = new VSITEMSELECTION[numberOfSelectedItems];
-                var flags = (isSingleHierarchy) ? (uint)__VSGSIFLAGS.GSI_fOmitHierPtrs : 0;
-                ErrorHandler.ThrowOnFailure(multiItemSelect.GetSelectedItems(flags, numberOfSelectedItems, vsItemSelections));
+                    var vsItemSelections = new VSITEMSELECTION[numberOfSelectedItems];
+                    var flags = (isSingleHierarchy) ? (uint)__VSGSIFLAGS.GSI_fOmitHierPtrs : 0;
+                    ErrorHandler.ThrowOnFailure(multiItemSelect.GetSelectedItems(flags, numberOfSelectedItems, vsItemSelections));
 
-                return vsItemSelections.Where(sel => sel.pHier != null)
-                    .Select(sel => Tuple.Create(sel.pHier, sel.itemid));
-            }
-            finally
-            {
-                if (hierarchyPtr != IntPtr.Zero)
-                {
-                    Marshal.Release(hierarchyPtr);
+                    return vsItemSelections.Where(sel => sel.pHier != null)
+                        // NOTE: we can return lazy results here, since 
+                        // the GetSelectedItems has already returned in the UI thread 
+                        // the array of results. We're just delaying the creation of the tuples
+                        // in case they aren't all needed.
+                        .Select(sel => Tuple.Create(sel.pHier, sel.itemid));
                 }
-                if (selectionContainer != IntPtr.Zero)
+                finally
                 {
-                    Marshal.Release(selectionContainer);
+                    if (hierarchyPtr != IntPtr.Zero)
+                    {
+                        Marshal.Release(hierarchyPtr);
+                    }
+                    if (selectionContainer != IntPtr.Zero)
+                    {
+                        Marshal.Release(selectionContainer);
+                    }
                 }
-            }
+            });
         }
     }
 }

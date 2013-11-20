@@ -47,7 +47,8 @@ namespace Clide.Solution
                     Mock.Of<ISolutionExplorerNodeFactory>(),
                     Mock.Of<IServiceLocator>(),
                     Mock.Of<IAdapterService>(),
-					Mock.Of<ISolutionEvents>());
+					Mock.Of<ISolutionEvents>(), 
+                    Mock.Of<IUIThread>());
 
 				solutionNode.Create(GetFullPath("foo.sln"));
 
@@ -67,7 +68,8 @@ namespace Clide.Solution
                     Mock.Of<ISolutionExplorerNodeFactory>(),
                     Mock.Of<IServiceLocator>(),
                     Mock.Of<IAdapterService>(),
-					Mock.Of<ISolutionEvents>());
+					Mock.Of<ISolutionEvents>(),
+                    Mock.Of<IUIThread>());
 
 				Assert.Throws<ArgumentException>(() => solutionNode.Create("foo"));
 			}
@@ -85,7 +87,8 @@ namespace Clide.Solution
                     Mock.Of<ISolutionExplorerNodeFactory>(),
                     Mock.Of<IServiceLocator>(),
                     Mock.Of<IAdapterService>(),
-					Mock.Of<ISolutionEvents>());
+					Mock.Of<ISolutionEvents>(),
+                    Mock.Of<IUIThread>());
 
 				solutionNode.Open(GetFullPath("SampleSolution\\SampleSolution.sln"));
 
@@ -104,7 +107,8 @@ namespace Clide.Solution
                     Mock.Of<ISolutionExplorerNodeFactory>(),
                     Mock.Of<IServiceLocator>(),
                     Mock.Of<IAdapterService>(),
-                    Mock.Of<ISolutionEvents>());
+                    Mock.Of<ISolutionEvents>(),
+                    Mock.Of<IUIThread>());
 
                 Assert.Null(solutionNode.Parent);
             }
@@ -343,11 +347,13 @@ namespace Clide.Solution
             [TestMethod]
             public void WhenSingleItemIsSelected_ThenOwningProjectIsActive()
             {
-                solution.Traverse().OfType<IItemNode>().First().Select();
+                var item = solution.Traverse().OfType<IItemNode>().First(i => i.DisplayName.EndsWith(".cs"));
+                item.Select();
 
                 var active = solution.ActiveProject;
 
                 Assert.NotNull(active);
+                Assert.Equal(active.DisplayName, item.OwningProject.DisplayName);
             }
 
             [HostType("VS IDE")]
@@ -372,7 +378,6 @@ namespace Clide.Solution
             [TestMethod]
             public void WhenMultipleItemsInDifferentHierarchiesAreSelected_ThenActiveProjectIsNull()
             {
-                System.Diagnostics.Debugger.Launch();
                 solution.FindProjects().First()
                     .Traverse().OfType<IItemNode>()
                     .Where(i => i.DisplayName.EndsWith(".cs"))
@@ -380,7 +385,7 @@ namespace Clide.Solution
 
                 solution.FindProjects()
                     .SelectMany(p => p.Traverse())
-                    .Where(i => i.DisplayName.EndsWith(".cs") || i.DisplayName.EndsWith(".vb"))
+                    .Where(i => i.DisplayName == ("Class1.cs") || i.DisplayName == "Class1.vb")
                     .OfType<IItemNode>()
                     .AsParallel().ForAll(i => i.Select(true));
 
