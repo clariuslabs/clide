@@ -76,6 +76,7 @@
   <ItemGroup>
     <Compile Include="CommandManagerSpec.cs" />
     <Compile Include="CompositionSpec.cs" />
+    <Compile Include="Composition\FallbackServiceLocatorSpec.cs" />
     <Compile Include="FakeSolutionExplorer.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

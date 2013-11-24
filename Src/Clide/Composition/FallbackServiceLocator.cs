@@ -51,7 +51,14 @@ namespace Clide.Composition
         /// </summary>
         protected override object DoGetInstance(Type serviceType, string key)
         {
-            return primary.GetInstance(serviceType, key) ?? fallback.GetInstance(serviceType, key);
+            try
+            {
+                return primary.GetInstance(serviceType, key) ?? fallback.GetInstance(serviceType, key);
+            }
+            catch (ActivationException)
+            {
+                return fallback.GetInstance(serviceType, key);
+            }
         }
     }
 }

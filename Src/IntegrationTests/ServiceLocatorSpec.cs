@@ -25,8 +25,6 @@ namespace Clide
     [TestClass]
     public class ServiceLocatorSpec
     {
-        
-
         [HostType("VS IDE")]
         [TestMethod]
         public void WhenGettingGlobalLocator_ThenCanGetInstanceVsServices()
@@ -40,7 +38,7 @@ namespace Clide
         [TestMethod]
         public void WhenUsingGlobalLocator_ThenCanGetExportedVsServiceProvider()
         {
-            Assert.IsNotNull(ServiceLocator.GlobalLocator.GetInstance<SVsServiceProvider>());
+            Assert.IsNotNull(ServiceLocator.GlobalLocator.GetInstance(typeof(SVsServiceProvider)));
         }
     }
 }
