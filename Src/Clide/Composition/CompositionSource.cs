@@ -72,19 +72,26 @@ namespace Clide.Composition
             //    getExports.MakeGenericMethod(serviceType);
 
             var getExportOrDefault = getExport.MakeGenericMethod(swt.ServiceType);
-
-            // Unfortunately, VSMEF rewrote the logic of how exports are retrieved 
-            // and the catalog doesn't have everything that can be retrieved, so we 
-            // have to resort to actually invoking the GetExportedValueOrDefault 
-            // to really know if the export is there or not :(
             var contractName = AttributedModelServices.GetContractName(swt.ServiceType);
-            // We short-circuit anyways for things that are in the catalog so that we 
-            // don't retrieve the part at this time.
 
             try
             {
-                if (!catalog.Parts.SelectMany(part => part.ExportDefinitions).Any(e => e.ContractName.Equals(contractName)) ||
-                    getExportOrDefault.Invoke(exports, null) == null)
+                var exports = catalog.Parts.SelectMany(part => part.ExportDefinitions)
+                    .Where(e => e.ContractName.Equals(contractName))
+                    .ToList();
+
+                // Means that there are multiple exports in the MEF composition. See NOTE above. 
+                // This is an unsupported scenario.
+                if (exports.Count > 1)
+                    throw new NotSupportedException(Strings.CompositionSource.ImportManyRequired(swt.ServiceType));
+
+                // Unfortunately, VSMEF rewrote the logic of how exports are retrieved 
+                // and the catalog doesn't have everything that can be retrieved, so we 
+                // have to resort to actually invoking the GetExportedValueOrDefault 
+                // to really know if the export is there or not :(
+                // We short-circuit anyways for things that are in the catalog so that we 
+                // don't retrieve the part at this time.
+                if (exports.Count == 0 || getExportOrDefault.Invoke(exports, null) == null)
                     yield break;
             }
             catch (TargetInvocationException tie)

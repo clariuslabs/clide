@@ -30,7 +30,6 @@
         public void WhenRetrievingExportedMultipleComponents_ThenThrowsNotSupported()
         {
             var devEnv = DevEnv.Get(GlobalServiceProvider.Instance);
-
             var ex = Assert.Throws<ActivationException>(() => devEnv.ServiceLocator.GetAllInstances<ICompletionSourceProvider>().ToList());
 
             Assert.True(ex.InnerException is DependencyResolutionException);

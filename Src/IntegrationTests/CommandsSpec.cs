@@ -22,6 +22,8 @@ namespace Clide
     [TestClass]
     public class CommandsSpec : VsHostedSpec
     {
+        internal static readonly IAssertion Assert = new Assertion();
+
         [HostType("VS IDE")]
         [TestMethod]
         public void WhenRegisteringAllCommands_ThenCanRetrieveCommand()
