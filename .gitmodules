@@ -2,15 +2,3 @@
 	path = Common
 	url = https://github.com/clariuslabs/common.git
 	branch = master
-[submodule "External/CommonComposition"]
-	path = External/CommonComposition
-	url = https://github.com/clariuslabs/CommonComposition.git
-	branch = master
-[submodule "External/CommonServiceLocator"]
-	path = External/CommonServiceLocator
-	url = https://github.com/clariuslabs/CommonServiceLocator.git
-	branch = master
-[submodule "External/Unity"]
-	path = External/Unity
-	url = https://github.com/clariuslabs/unity.git
-	branch = master
