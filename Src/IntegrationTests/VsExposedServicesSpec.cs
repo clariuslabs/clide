@@ -6,9 +6,9 @@
     using System.Linq;
     using Microsoft.VisualStudio.Language.Intellisense;
     using System.Collections.Generic;
-    using Autofac.Core;
     using System;
     using Microsoft.Practices.ServiceLocation;
+    using Microsoft.VisualStudio.Shell;
 
     [TestClass]
 	public class VsExposedServicesSpec : VsHostedSpec
@@ -27,13 +27,12 @@
 
         [HostType("VS IDE")]
         [TestMethod]
-        public void WhenRetrievingExportedMultipleComponents_ThenThrowsNotSupported()
+        public void WhenRetrievingExportedMultipleComponents_ThenSucceeds()
         {
-            var devEnv = DevEnv.Get(GlobalServiceProvider.Instance);
-            var ex = Assert.Throws<ActivationException>(() => devEnv.ServiceLocator.GetAllInstances<ICompletionSourceProvider>().ToList());
+            var devEnv = DevEnv.Get(this.ServiceProvider);
+            var result = devEnv.ServiceLocator.GetAllInstances<ICompletionSourceProvider>().ToList();
 
-            Assert.True(ex.InnerException is DependencyResolutionException);
-            Assert.True(((DependencyResolutionException)ex.InnerException).InnerException is NotSupportedException);
+            Assert.True(result.Any());
         }
 
         [HostType("VS IDE")]

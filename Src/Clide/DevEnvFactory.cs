@@ -14,9 +14,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using Autofac;
-    using Autofac.Extras.Attributed;
-    using Autofac.Extras.CommonServiceLocator;
+    using Clide.CommonComposition;
     using Clide.Composition;
     using Clide.Diagnostics;
     using Clide.Properties;
@@ -25,6 +23,8 @@ namespace Clide
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.ComponentModel.Composition;
+    using System.ComponentModel.Composition.Hosting;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -47,24 +47,27 @@ namespace Clide
         {
             using (tracer.StartActivity(Strings.DevEnvFactory.CreatingComposition))
             {
-                var builder = new ContainerBuilder();
-                // Allow dependencies of VS exported services.
+                //// Allow dependencies of VS exported services.
                 var composition = services.GetService<SComponentModel, IComponentModel>();
-                builder.RegisterComponentModel(composition);
-                // Allow dependencies of non-exported VS services.
-                builder.RegisterServiceProvider(services);
-                // Automatically registers metadata associated via metadata attributes on components.
-                builder.RegisterModule(new AttributedMetadataModule());
-                builder.Register<IServiceLocator>(c => serviceLocators[services]);
+
+                //var builder = new ContainerBuilder();
+                //builder.RegisterComponentModel(composition);
+                //// Allow dependencies of non-exported VS services.
+                //builder.RegisterServiceProvider(services);
+                //// Automatically registers metadata associated via metadata attributes on components.
+                //builder.RegisterModule(new AttributedMetadataModule());
+                //builder.Register<IServiceLocator>(c => serviceLocators[services]);
 
                 // Keep track of assemblies we've already added, to avoid duplicate registrations.
-                var addedAssemblies = new HashSet<string>();
+                var addedAssemblies = new Dictionary<string, Assembly>();
 
                 // Register built-in components from Clide assembly.
-                RegisterAssembly(builder, composition, Assembly.GetExecutingAssembly(), addedAssemblies);
+                var clideAssembly = Assembly.GetExecutingAssembly();
+                addedAssemblies.Add(clideAssembly.Location.ToLowerInvariant(), clideAssembly);
 
                 // Register hosting package assembly.
-                RegisterAssembly(builder, composition, services.GetType().Assembly, addedAssemblies);
+                var servicesAssembly = services.GetType().Assembly;
+                addedAssemblies[servicesAssembly.Location.ToLowerInvariant()] = servicesAssembly;
 
                 var installPath = GetInstallPath(services);
 
@@ -75,6 +78,11 @@ namespace Clide
                     var manifestDoc = XDocument.Load(packageManifestFile);
 
                     ThrowIfClideIsMefComponent(manifestDoc);
+                    // NOTE: we don't warn anymore in this case, since a single package may have 
+                    // a mix of plain VS exports as well as clide components. 
+                    // Since we use CommonComposition, only the types with the ComponentAttribute 
+                    // will be made available in the Clide container, not the others, and no 
+                    // duplicates would be registered.
                     //WarnIfClideComponentIsAlsoMefComponent(packageManifestFile, manifestDoc);
 
                     foreach (string clideComponent in GetClideComponents(manifestDoc))
@@ -91,7 +99,9 @@ namespace Clide
                         if (!File.Exists(assemblyFile))
                             throw new InvalidOperationException(Strings.DevEnvFactory.ClideComponentNotFound(packageManifestFile, clideComponent, assemblyFile));
 
-                        RegisterAssembly(builder, composition, Assembly.LoadFrom(assemblyFile), addedAssemblies);
+                        var componentAssembly = Assembly.LoadFrom(assemblyFile);
+                        if (!addedAssemblies.ContainsKey(componentAssembly.Location.ToLowerInvariant()))
+                            addedAssemblies.Add(componentAssembly.Location.ToLowerInvariant(), componentAssembly);
                     }
                 }
                 else
@@ -99,19 +109,16 @@ namespace Clide
                     tracer.Info(Strings.DevEnvFactory.ExtensionManifestNotFound(packageManifestFile));
                 }
 
-                var container = builder.Build();
+                var catalog = new ComponentCatalog(addedAssemblies.Values.ToArray());
+                var container = new CompositionContainer(catalog, 
+                    composition.DefaultExportProvider,
+                    new ServicesExportProvider(services));
 
-                return new AutofacServiceLocator(container);
-            }
-        }
+                // Make the service locator itself available as an export.
+                var serviceLocator = new ServicesAccessor(services, new Lazy<IServiceLocator>(() => serviceLocators[services]));
+                container.ComposeParts(serviceLocator);
 
-        private static void RegisterAssembly(ContainerBuilder builder, IComponentModel composition, Assembly assembly, HashSet<string> addedAssemblies)
-        {
-            var assemblyFile = assembly.Location.ToLowerInvariant();
-            if (!addedAssemblies.Contains(assemblyFile))
-            {
-                builder.RegisterAssemblyComponents(composition.DefaultExportProvider, assembly);
-                addedAssemblies.Add(assemblyFile);
+                return new ExportsServiceLocator(container);
             }
         }
 
@@ -162,6 +169,23 @@ namespace Clide
         private string GetInstallPath(IServiceProvider services)
         {
             return Path.GetDirectoryName(services.GetType().Assembly.ManifestModule.FullyQualifiedName);
+        }
+
+        internal class ServicesAccessor
+        {
+            private Lazy<IServiceLocator> serviceLocator;
+
+            public ServicesAccessor(IServiceProvider serviceProvider, Lazy<IServiceLocator> serviceLocator)
+            {
+                this.ServiceProvider = serviceProvider;
+                this.serviceLocator = serviceLocator;
+            }
+
+            [Export]
+            public IServiceProvider ServiceProvider { get; private set; }
+
+            [Export]
+            public IServiceLocator ServiceLocator { get { return serviceLocator.Value; } }
         }
     }
 }

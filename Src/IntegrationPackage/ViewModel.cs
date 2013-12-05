@@ -14,7 +14,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace IntegrationPackage
 {
-    using Clide.Composition;
+    using Clide.CommonComposition;
     using Microsoft.VisualStudio.Shell;
     using System;
     using System.ComponentModel.Composition;
@@ -22,7 +22,11 @@ namespace IntegrationPackage
     [Component]
     public class ViewModel
     {
-        [Import(typeof(SVsServiceProvider))]
+        public ViewModel(IServiceProvider services)
+        {
+            this.Services = services;
+        }
+
         public IServiceProvider Services { get; set; }
     }
 }

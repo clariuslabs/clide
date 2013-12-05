@@ -17,6 +17,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
+    using Clide.CommonComposition;
     using Clide.Composition;
     using Clide.VisualStudio;
     using Microsoft.VisualStudio;
@@ -25,7 +26,7 @@ namespace Clide.Solution
     using System.Collections.Generic;
     using System.ComponentModel.Design;
 
-    [Component(typeof(IToolWindow), typeof(ISolutionExplorer))]
+    [Component(IsSingleton = true)]
     internal class SolutionExplorer : ISolutionExplorer
     {
         private VsToolWindow toolWindow;

@@ -17,11 +17,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    using Autofac.Extras.Attributed;
+    using Clide.CommonComposition;
     using Clide.Patterns.Adapter;
     using Clide.VisualStudio;
     using System;
 
+    [Named("SolutionExplorer")]
     [FallbackFactory]
     internal class ReferenceNodeFactory : ITreeNodeFactory<IVsSolutionHierarchyNode>
 	{
@@ -29,7 +30,7 @@ namespace Clide.Solution
 		private IAdapterService adapter;
 
 		public ReferenceNodeFactory(
-			[WithKey(DefaultHierarchyFactory.RegisterKey)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory,
+			[Named(DefaultHierarchyFactory.RegisterKey)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory,
 			IAdapterService adapter)
 		{
 			this.nodeFactory = nodeFactory;

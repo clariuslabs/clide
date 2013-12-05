@@ -17,6 +17,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
+    using Clide.CommonComposition;
     using Clide.Composition;
     using Clide.Diagnostics;
     using Clide.Events;
@@ -29,8 +30,8 @@ namespace Clide
     using System.Collections.Generic;
     using System.Linq;
 
-    [Component(typeof(IDevEnv))]
-    internal class DevEnvImpl : IDevEnv, IShellEvents
+    [Component(IsSingleton = true)]
+    internal class DevEnvImpl : IDevEnv
     {
         private static readonly Guid OutputWindowId = new Guid("{66893206-0EF5-4A16-AA10-6EC6B6319F92}");
 

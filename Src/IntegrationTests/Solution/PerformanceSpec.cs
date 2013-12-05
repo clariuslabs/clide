@@ -92,7 +92,7 @@
 
             //System.Diagnostics.Debugger.Launch();
 
-            var solution = VsIdeTestHostContext.ServiceProvider.GetService<SVsSolution, IVsSolution>();
+            var solution = this.ServiceProvider.GetService<SVsSolution, IVsSolution>();
             var devenv = DevEnv.Get(VsIdeTestHostContext.ServiceProvider);
             devenv.SolutionExplorer().Solution.FindProjects().First().Select();
 

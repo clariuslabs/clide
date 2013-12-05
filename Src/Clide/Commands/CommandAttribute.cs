@@ -17,6 +17,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Commands
 {
+    using Clide.CommonComposition;
     using Clide.Composition;
     using System;
     using System.Collections.Generic;
@@ -45,7 +46,6 @@ namespace Clide.Commands
         /// Initializes a new instance of the <see cref="CommandAttribute"/> class.
         /// </summary>
         public CommandAttribute(string groupGuid, int commandId)
-            : base(typeof(ICommandExtension))
         {
             this.GroupId = groupGuid;
             this.CommandId = commandId;

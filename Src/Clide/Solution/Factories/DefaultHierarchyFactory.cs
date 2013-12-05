@@ -14,10 +14,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    using Autofac.Extras.Attributed;
-    using Clide.Composition;
+    using Clide.CommonComposition;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.Composition;
     using System.Linq;
 
     /// <summary>
@@ -25,30 +25,32 @@ namespace Clide.Solution
     /// that all individual node factories reuse for their own 
     /// parent/children construction. 
     /// </summary>
-    [Component(RegisterKey, typeof(ITreeNodeFactory<IVsSolutionHierarchyNode>))]
-	internal class DefaultHierarchyFactory : ITreeNodeFactory<IVsSolutionHierarchyNode>
-	{
+    [Named(RegisterKey)]
+    [Component(IsSingleton = true)]
+    internal class DefaultHierarchyFactory : ITreeNodeFactory<IVsSolutionHierarchyNode>
+    {
         public const string RegisterKey = "Clide.Solution.DefaultHierarchyFactory";
 
-		private Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> factory;
+        private Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> factory;
 
-		public DefaultHierarchyFactory([WithKey("SolutionExplorer")] 
-            IEnumerable<Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>, TreeNodeFactoryMetadata>> nodeFactories)
-		{
+        public DefaultHierarchyFactory(
+            [Named("SolutionExplorer")] 
+            IEnumerable<Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>, ITreeNodeFactoryMetadata>> nodeFactories)
+        {
             this.factory = new Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>>(() =>
                 new FallbackNodeFactory<IVsSolutionHierarchyNode>(
                     new AggregateNodeFactory<IVsSolutionHierarchyNode>(nodeFactories.Where(n => !n.Metadata.IsFallback).Select(f => f.Value)),
                     new AggregateNodeFactory<IVsSolutionHierarchyNode>(nodeFactories.Where(n => n.Metadata.IsFallback).Select(f => f.Value))));
-		}
+        }
 
-		public bool Supports(IVsSolutionHierarchyNode hierarchy)
-		{
-			return this.factory.Value.Supports(hierarchy);
-		}
+        public bool Supports(IVsSolutionHierarchyNode hierarchy)
+        {
+            return this.factory.Value.Supports(hierarchy);
+        }
 
-		public ITreeNode CreateNode(Lazy<ITreeNode> parent, IVsSolutionHierarchyNode hierarchy)
-		{
+        public ITreeNode CreateNode(Lazy<ITreeNode> parent, IVsSolutionHierarchyNode hierarchy)
+        {
             return this.factory.Value.CreateNode(parent, hierarchy);
-		}
-	}
+        }
+    }
 }

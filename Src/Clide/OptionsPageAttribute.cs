@@ -14,7 +14,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using Clide.Composition;
+    using Clide.CommonComposition;
     using System;
 
     /// <summary>
@@ -27,7 +27,6 @@ namespace Clide
         /// Initializes a new instance of the <see cref="OptionsPageAttribute"/> class.
         /// </summary>
         public OptionsPageAttribute()
-            : base(typeof(IOptionsPage))
         {
         }
     }

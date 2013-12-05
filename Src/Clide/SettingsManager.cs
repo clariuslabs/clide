@@ -17,7 +17,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using Clide.Composition;
+    using Clide.CommonComposition;
     using Clide.Diagnostics;
     using Clide.Properties;
     using Microsoft.VisualStudio.Settings;
@@ -32,7 +32,7 @@ namespace Clide
     /// <summary>
 	/// Default implementation of <see cref="ISettingsManager"/> which uses <see cref="ShellSettingsManager"/>.
 	/// </summary>
-	[Component(typeof(ISettingsManager))]
+	[Component(IsSingleton = true)]
 	internal class SettingsManager : ISettingsManager
 	{
 		private static readonly ITracer tracer = Tracer.Get<SettingsManager>();

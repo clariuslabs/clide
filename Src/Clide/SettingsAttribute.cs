@@ -17,7 +17,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using Clide.Composition;
+    using Clide.CommonComposition;
     using System;
 
     /// <summary>
@@ -26,21 +26,9 @@ namespace Clide
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class SettingsAttribute : ComponentAttribute
 	{
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SettingsAttribute"/> class, 
-        /// using the concrete type of the settings class as the component registration.
-        /// </summary>
-		public SettingsAttribute()
-		{
-		}
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SettingsAttribute"/> class, 
-        /// using a specific type (typically an interface) for the component registration.
-        /// </summary>
-		public SettingsAttribute(Type registerAs)
-			: base(registerAs)
-		{
-		}
+        public SettingsAttribute()
+        {
+            this.IsSingleton = true;
+        }
 	}
 }

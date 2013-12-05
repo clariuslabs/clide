@@ -14,7 +14,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using Clide.Composition;
+    using Clide.CommonComposition;
     using System;
     using System.ComponentModel;
     using System.Runtime.InteropServices;
@@ -24,7 +24,7 @@ namespace Clide
     using System.Windows.Input;
     using System.Windows.Interop;
 
-    [Component(typeof(IOptionsPageWindowFactory))]
+    [Component(IsSingleton = true)]
 	internal class OptionsPageWindowFactory : IOptionsPageWindowFactory
 	{
         private IMessageBoxService messageBox;

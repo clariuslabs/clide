@@ -17,6 +17,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
+    using Clide.CommonComposition;
     using Clide.Composition;
     using Clide.Diagnostics;
     using Microsoft.VisualStudio.Shell.Interop;
@@ -26,7 +27,7 @@ namespace Clide
     /// <summary>
     /// Default implementation of the <see cref="IMessageBoxService"/>.
     /// </summary>
-    [Component(typeof(IMessageBoxService))]
+    [Component(IsSingleton = true)]
     internal class MessageBoxService : IMessageBoxService
     {
         public const string DefaultTitle = "Microsoft Visual Studio";

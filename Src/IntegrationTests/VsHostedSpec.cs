@@ -26,6 +26,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using Microsoft.VSSDK.Tools.VsIdeTesting;
+using Microsoft.VisualStudio.Shell;
 
 [TestClass]
 public abstract class VsHostedSpec
@@ -54,6 +56,8 @@ public abstract class VsHostedSpec
     [TestInitialize]
     public virtual void TestInitialize()
     {
+        UIThreadInvoker.Initialize();
+
         // Causes devenv to initialize
         var factory = DevEnv.DevEnvFactory;
 
@@ -71,7 +75,7 @@ public abstract class VsHostedSpec
         {
             Dte.SuppressUI = false;
             Dte.MainWindow.Visible = true;
-            Dte.MainWindow.WindowState = EnvDTE.vsWindowState.vsWindowStateMaximize;
+            Dte.MainWindow.WindowState = EnvDTE.vsWindowState.vsWindowStateNormal;
         }
 
         var shellEvents = new ShellEvents(ServiceProvider);
@@ -82,6 +86,8 @@ public abstract class VsHostedSpec
         }
 
         tracer.Info("Shell initialized successfully");
+        if (VsIdeTestHostContext.ServiceProvider == null)
+            VsIdeTestHostContext.ServiceProvider = new VsServiceProvider();
     }
 
     [TestCleanup]
@@ -152,5 +158,13 @@ public abstract class VsHostedSpec
             }
         }
         while (retryCondition() && retry < numberOfRetries);
+    }
+
+    private class VsServiceProvider : IServiceProvider
+    {
+        public object GetService(Type serviceType)
+        {
+            return Package.GetGlobalService(serviceType);
+        }
     }
 }

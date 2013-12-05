@@ -17,10 +17,18 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
+    using Clide.CommonComposition;
+    using Clide.Composition;
+    using Clide.Events;
     using Clide.Solution;
+    using Microsoft.Practices.ServiceLocation;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
+    using System.ComponentModel.Composition;
+    using System.ComponentModel.Composition.Hosting;
     using System.Threading;
+    using System.Linq;
+    using Microsoft.ComponentModel.Composition.Diagnostics;
 
     [TestClass]
 	public class DevEnvSpec : VsHostedSpec
@@ -96,6 +104,29 @@ namespace Clide
 
             // If we sleep enough here we will see VS starting to come up again.
             Thread.Sleep(50000);
+        }
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void when_constructing_container_then_can_retrieve_devenv()
+        {
+            var catalog = new ComponentCatalog(typeof(IDevEnv).Assembly);
+            var container = new CompositionContainer(catalog, new ServicesExportProvider(base.ServiceProvider));
+            IServiceLocator locator = null;
+
+            // Make the service locator itself available as an export.
+            var accessor = new Clide.DevEnvFactory.ServicesAccessor(base.ServiceProvider, 
+                new Lazy<IServiceLocator>(() => locator));
+            container.ComposeParts(accessor);
+
+            locator = new ExportsServiceLocator(container);
+
+            //var info = new CompositionInfo(catalog, container);
+            //CompositionInfoTextFormatter.Write(info, Console.Out);
+
+            var devenv = container.GetExportedValue<IDevEnv>();
+
+            Assert.NotNull(devenv);
         }
     }
 }

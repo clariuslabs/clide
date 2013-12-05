@@ -14,43 +14,44 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    using Autofac.Extras.Attributed;
+    using Clide.CommonComposition;
     using Clide.Patterns.Adapter;
     using EnvDTE;
     using System;
 
+    [Named("SolutionExplorer")]
     [FallbackFactory]
     internal class SolutionItemNodeFactory : ITreeNodeFactory<IVsSolutionHierarchyNode>
-	{
-		private Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory;
-		private IAdapterService adapter;
+    {
+        private Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory;
+        private IAdapterService adapter;
 
         public SolutionItemNodeFactory(
-			[WithKey(DefaultHierarchyFactory.RegisterKey)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory,
-			IAdapterService adapter)
-		{
-			this.nodeFactory = nodeFactory;
-			this.adapter = adapter;
-		}
+            [Named(DefaultHierarchyFactory.RegisterKey)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory,
+            IAdapterService adapter)
+        {
+            this.nodeFactory = nodeFactory;
+            this.adapter = adapter;
+        }
 
-		public bool Supports(IVsSolutionHierarchyNode hierarchy)
-		{
+        public bool Supports(IVsSolutionHierarchyNode hierarchy)
+        {
             if (hierarchy.Parent == null)
                 return false;
 
             var item = hierarchy.ExtensibilityObject as ProjectItem;
             var project = hierarchy.Parent.ExtensibilityObject as Project;
 
-            return 
-                project != null && 
-                item != null && 
+            return
+                project != null &&
+                item != null &&
                 project.Object is EnvDTE80.SolutionFolder;
         }
 
-		public ITreeNode CreateNode(Lazy<ITreeNode> parent, IVsSolutionHierarchyNode hierarchy)
-		{
-			return Supports(hierarchy) ?
-				new SolutionItemNode(hierarchy, parent, this.nodeFactory.Value, this.adapter) : null;
-		}
-	}
+        public ITreeNode CreateNode(Lazy<ITreeNode> parent, IVsSolutionHierarchyNode hierarchy)
+        {
+            return Supports(hierarchy) ?
+                new SolutionItemNode(hierarchy, parent, this.nodeFactory.Value, this.adapter) : null;
+        }
+    }
 }

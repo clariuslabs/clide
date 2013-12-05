@@ -17,7 +17,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Commands
 {
-    using Clide.Composition;
+    using Clide.CommonComposition;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -48,7 +48,6 @@ namespace Clide.Commands
         /// <param name="groupGuid">Gets the command group GUID (also known as CommandSet ID).</param>
         /// <param name="commandId">The command id.</param>
         public CommandFilterAttribute(string packageGuid, string groupGuid, int commandId)
-            : base(typeof(ICommandFilter))
         {
             this.PackageId = packageGuid;
             this.GroupId = groupGuid;

@@ -14,7 +14,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Patterns.Adapter
 {
-    using Clide.Composition;
+    using Clide.CommonComposition;
     using System;
 
     /// <summary>
@@ -24,12 +24,5 @@ namespace Clide.Patterns.Adapter
     [AttributeUsage(AttributeTargets.Class)]
     public class AdapterAttribute : ComponentAttribute
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AdapterAttribute"/> class.
-        /// </summary>
-        public AdapterAttribute()
-            : base(typeof(IAdapter))
-        {
-        }
     }
 }

@@ -17,6 +17,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
+    using Clide.CommonComposition;
     using Clide.Composition;
     using System;
     using System.Windows.Threading;
@@ -26,8 +27,8 @@ namespace Clide
     /// current <see cref="Dispatcher.CurrentDispatcher"/> by default 
     /// or the one initialized from the host.
     /// </summary>
-	[Component(typeof(IUIThread))]
-	internal class UIThread : IUIThread
+    [Component(IsSingleton = true)]
+    internal class UIThread : IUIThread
 	{
         private static Dispatcher dispatcher = Dispatcher.CurrentDispatcher;
 

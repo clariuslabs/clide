@@ -19,11 +19,12 @@ namespace Clide.Solution
 {
     using System.ComponentModel.Composition;
 
+    // TODO: see if the [MetadataAttribute] can be applied on the TreeNodeFactoryAttribute base class instead.
     [MetadataAttribute]
     internal class FallbackFactoryAttribute : TreeNodeFactoryAttribute
 	{
         public FallbackFactoryAttribute()
-            : base("SolutionExplorer", typeof(IVsSolutionHierarchyNode), true)
+            : base(true)
 		{
 		}
 	}

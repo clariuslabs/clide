@@ -17,13 +17,14 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    using Autofac.Extras.Attributed;
+    using Clide.CommonComposition;
     using Clide.Events;
     using Clide.Patterns.Adapter;
     using Microsoft.Practices.ServiceLocation;
     using Microsoft.VisualStudio.Shell.Interop;
     using System;
 
+    [Named("SolutionExplorer")]
     [FallbackFactory]
 	internal class SolutionNodeFactory : ITreeNodeFactory<IVsSolutionHierarchyNode>
 	{
@@ -36,7 +37,7 @@ namespace Clide.Solution
 
 		public SolutionNodeFactory(
             IServiceLocator serviceLocator,
-			[WithKey(DefaultHierarchyFactory.RegisterKey)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory,
+			[Named(DefaultHierarchyFactory.RegisterKey)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory,
             ISolutionExplorerNodeFactory explorerNodeFactory,
 			ISolutionEvents solutionEvents,
 			IAdapterService adapter, 

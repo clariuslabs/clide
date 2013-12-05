@@ -17,39 +17,40 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    using Autofac.Extras.Attributed;
+    using Clide.CommonComposition;
     using Clide.Patterns.Adapter;
     using Clide.VisualStudio;
     using System;
 
+    [Named("SolutionExplorer")]
     [FallbackFactory]
     internal class FolderNodeFactory : ITreeNodeFactory<IVsSolutionHierarchyNode>
-	{
-		private Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory;
-		private IAdapterService adapter;
+    {
+        private Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory;
+        private IAdapterService adapter;
 
-		public FolderNodeFactory(
-			[WithKey(DefaultHierarchyFactory.RegisterKey)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory,
-			IAdapterService adapter)
-		{
-			this.nodeFactory = nodeFactory;
-			this.adapter = adapter;
-		}
+        public FolderNodeFactory(
+            [Named(DefaultHierarchyFactory.RegisterKey)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory,
+            IAdapterService adapter)
+        {
+            this.nodeFactory = nodeFactory;
+            this.adapter = adapter;
+        }
 
-		public bool Supports(IVsSolutionHierarchyNode hierarchy)
-		{
-			var extenderObject = hierarchy.VsHierarchy.Properties(hierarchy.ItemId).ExtenderObject;
-			var projectItem = extenderObject as EnvDTE.ProjectItem;
+        public bool Supports(IVsSolutionHierarchyNode hierarchy)
+        {
+            var extenderObject = hierarchy.VsHierarchy.Properties(hierarchy.ItemId).ExtenderObject;
+            var projectItem = extenderObject as EnvDTE.ProjectItem;
 
-			return
-				(extenderObject != null && extenderObject.GetType().FullName == "Microsoft.VisualStudio.Project.Automation.OAFolderItem") ||
-				(projectItem != null && projectItem.Kind == EnvDTE.Constants.vsProjectItemKindPhysicalFolder);
-		}
+            return
+                (extenderObject != null && extenderObject.GetType().FullName == "Microsoft.VisualStudio.Project.Automation.OAFolderItem") ||
+                (projectItem != null && projectItem.Kind == EnvDTE.Constants.vsProjectItemKindPhysicalFolder);
+        }
 
-		public ITreeNode CreateNode(Lazy<ITreeNode> parent, IVsSolutionHierarchyNode hierarchy)
-		{
-			return Supports(hierarchy) ?
-				 new FolderNode(hierarchy, parent, this.nodeFactory.Value, this.adapter) : null;
-		}
-	}
+        public ITreeNode CreateNode(Lazy<ITreeNode> parent, IVsSolutionHierarchyNode hierarchy)
+        {
+            return Supports(hierarchy) ?
+                 new FolderNode(hierarchy, parent, this.nodeFactory.Value, this.adapter) : null;
+        }
+    }
 }

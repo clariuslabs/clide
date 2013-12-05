@@ -42,14 +42,8 @@
     <Reference Include="Autofac.Extras.Attributed">
       <HintPath>..\..\packages\Autofac.Extras.Attributed.3.1.0\lib\net40\Autofac.Extras.Attributed.dll</HintPath>
     </Reference>
-    <Reference Include="Autofac.Extras.CommonServiceLocator">
-      <HintPath>..\..\packages\Autofac.Extras.CommonServiceLocator.3.0.1\lib\net40\Autofac.Extras.CommonServiceLocator.dll</HintPath>
-    </Reference>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="Microsoft.Practices.ServiceLocation">
-      <HintPath>..\..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
@@ -75,10 +69,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandManagerSpec.cs" />
-    <Compile Include="CompositionSpec.cs" />
     <Compile Include="Composition\FallbackServiceLocatorSpec.cs" />
     <Compile Include="FakeSolutionExplorer.cs" />
-    <Compile Include="Misc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Solution\ISolutionNodeExtensionsSpec.cs" />
   </ItemGroup>

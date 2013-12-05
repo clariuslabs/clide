@@ -14,7 +14,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Events
 {
-    using Autofac.Extras.Attributed;
+    using Clide.CommonComposition;
     using Clide.Composition;
     using Clide.Solution;
     using EnvDTE;
@@ -23,8 +23,8 @@ namespace Clide.Events
     using Microsoft.VisualStudio.Shell.Interop;
     using System;
 
-    [Component(typeof(IGlobalEvents), typeof(ISolutionEvents))]
-	internal class SolutionEvents : IDisposable, IVsSolutionEvents, ISolutionEvents
+    [Component(IsSingleton = true)]
+    internal class SolutionEvents : IDisposable, IVsSolutionEvents, ISolutionEvents
 	{
 		private bool isDisposed;
 		private uint solutionEventsCookie;
@@ -41,7 +41,7 @@ namespace Clide.Events
 
 		public SolutionEvents(
 			IServiceProvider serviceProvider,
-			[WithKey(DefaultHierarchyFactory.RegisterKey)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory)
+			[Named(DefaultHierarchyFactory.RegisterKey)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory)
 		{
 			Guard.NotNull(() => serviceProvider, serviceProvider);
 			Guard.NotNull(() => nodeFactory, nodeFactory);

@@ -17,19 +17,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-
-    /// <summary>
-    /// Attribute used by implementations of <see cref="ITreeNodeFactory{TModel}"/> 
-    /// that override the default solution explorer node creation.
-    /// </summary>
-    public class SolutionExplorerNodeFactoryAttribute : TreeNodeFactoryAttribute
-	{
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SolutionExplorerNodeFactoryAttribute"/> class.
-        /// </summary>
-		public SolutionExplorerNodeFactoryAttribute()
-			: base("SolutionExplorer", typeof(IVsSolutionHierarchyNode), false)
-		{
-		}
-	}
+    // NOTE: to override the default solution explorer node creation, 
+    // you need to annotate a class with TreeNodeFactoryAttribute 
+    // and [Named("SolutionExplorer")]
 }

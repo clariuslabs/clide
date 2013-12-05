@@ -20,12 +20,23 @@ namespace Clide
     using Clide.Events;
     using Microsoft.Practices.ServiceLocation;
     using System.Collections.Generic;
+    using System;
 
     /// <summary>
     /// Entry point interface for the environment components.
     /// </summary>
-    public interface IDevEnv : IShellEvents, IFluentInterface
+    public interface IDevEnv : IFluentInterface
 	{
+        /// <summary>
+        /// Gets a value indicating whether the shell has been initialized.
+        /// </summary>
+        bool IsInitialized { get; }
+
+        /// <summary>
+        /// Occurs when the shell has finished initializing.
+        /// </summary>
+        event EventHandler Initialized;
+
         /// <summary>
         /// Gets the service locator.
         /// </summary>

@@ -23,24 +23,6 @@
     <PublicAssemblies>$(VS100COMNTOOLS)..\IDE\PublicAssemblies\</PublicAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Autofac.3.1.5\lib\net40\Autofac.dll</HintPath>
-      <IlMerge>true</IlMerge>
-    </Reference>
-    <Reference Include="Autofac.Extras.Attributed, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Autofac.Extras.Attributed.3.1.0\lib\net40\Autofac.Extras.Attributed.dll</HintPath>
-      <IlMerge>true</IlMerge>
-    </Reference>
-    <Reference Include="Autofac.Extras.CommonServiceLocator">
-      <HintPath>..\..\packages\Autofac.Extras.CommonServiceLocator.3.0.1\lib\net40\Autofac.Extras.CommonServiceLocator.dll</HintPath>
-      <IlMerge>true</IlMerge>
-    </Reference>
-    <Reference Include="Autofac.Integration.Mef">
-      <HintPath>..\..\packages\Autofac.Mef.3.0.2\lib\net40\Autofac.Integration.Mef.dll</HintPath>
-      <IlMerge>true</IlMerge>
-    </Reference>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <SpecificVersion>True</SpecificVersion>
       <HintPath>$(PublicAssemblies)EnvDTE.dll</HintPath>
@@ -48,10 +30,6 @@
     <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <SpecificVersion>True</SpecificVersion>
       <HintPath>$(PublicAssemblies)EnvDTE80.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.ServiceLocation">
-      <HintPath>..\..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
-      <IlMerge>true</IlMerge>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>True</SpecificVersion>
@@ -124,12 +102,9 @@
     <Compile Include="ClideSettings.cs" />
     <Compile Include="Commands\CommandInterceptorAttribute.cs" />
     <Compile Include="Commands\ICommandInterceptor.cs" />
-    <Compile Include="Composition\CompositionExtensions.cs" />
-    <Compile Include="Composition\CompositionModule.cs" />
-    <Compile Include="Composition\CompositionSource.cs" />
     <Compile Include="Composition\FallbackServiceLocator.cs" />
     <Compile Include="Composition\ExportsServiceLocator.cs" />
-    <Compile Include="Composition\ServiceProviderSource.cs" />
+    <Compile Include="Composition\ServicesExportProvider.cs" />
     <Compile Include="Diagnostics\Tracer\ITracer.cs" />
     <Compile Include="Diagnostics\Tracer\ITracerExtensions.cs" />
     <Compile Include="Diagnostics\Tracer\ITracerManager.cs" />
@@ -140,6 +115,16 @@
     <Compile Include="Diagnostics\ITracerManager.cs" />
     <Compile Include="Diagnostics\Tracer\TracerManager.cs" />
     <Compile Include="Diagnostics\Tracer.cs" />
+    <Compile Include="External\CommonComposition.Mef\ComponentCatalog.cs" />
+    <Compile Include="External\CommonComposition.Mef\DelegatingReflection.cs" />
+    <Compile Include="External\CommonComposition\ComponentAttribute.cs" />
+    <Compile Include="External\CommonComposition\NamedAttribute.cs" />
+    <Compile Include="External\ServiceLocation\ActivationException.cs" />
+    <Compile Include="External\ServiceLocation\IServiceLocator.cs" />
+    <Compile Include="External\ServiceLocation\Properties\Resources.Designer.cs" />
+    <Compile Include="External\ServiceLocation\ServiceLocator.cs" />
+    <Compile Include="External\ServiceLocation\ServiceLocatorImplBase.cs" />
+    <Compile Include="External\ServiceLocation\ServiceLocatorProvider.cs" />
     <Compile Include="FallbackServiceProvider.cs" />
     <Compile Include="IOptionsPageWindowFactory.cs" />
     <Compile Include="netfx\System\AmbientSingleton.cs" />
@@ -185,7 +170,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
-    <Compile Include="Composition\ComponentAttribute.cs" />
     <Compile Include="References\IReferenceProvider.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -327,7 +311,7 @@
     <Compile Include="StatusBar.cs" />
     <Compile Include="Diagnostics\TracingExtensions.cs" />
     <Compile Include="UI\TreeNodes\ITreeNodeFactory.cs" />
-    <Compile Include="UI\TreeNodes\TreeNodeFactoryMetadata.cs" />
+    <Compile Include="UI\TreeNodes\ITreeNodeFactoryMetadata.cs" />
     <Compile Include="UI\TreeNodes\TreeNodeFactoryAttribute.cs" />
     <Compile Include="UIThread.cs" />
     <Compile Include="UI\InputBox.xaml.cs">
@@ -362,6 +346,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="External\ServiceLocation\Properties\Resources.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

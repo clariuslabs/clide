@@ -17,6 +17,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Commands
 {
+    using Clide.CommonComposition;
     using Clide.Composition;
     using Clide.Diagnostics;
     using Clide.Properties;
@@ -35,7 +36,7 @@ namespace Clide.Commands
     /// <summary>
     /// Implements the command registration mechanism.
     /// </summary>
-    [Component(typeof(ICommandManager))]
+    [Component(IsSingleton = true)]
     internal class CommandManager : ICommandManager
     {
         private static readonly ITracer tracer = Tracer.Get<CommandManager>();

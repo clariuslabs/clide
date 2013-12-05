@@ -14,7 +14,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Commands
 {
-    using Clide.Composition;
+    using Clide.CommonComposition;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -45,7 +45,6 @@ namespace Clide.Commands
         /// <param name="groupGuid">The group GUID of the intercepted command.</param>
         /// <param name="commandId">The command id of the intercepted command.</param>
         public CommandInterceptorAttribute(string packageGuid, string groupGuid, int commandId)
-            : base(typeof(ICommandInterceptor))
         {
             this.PackageId = packageGuid;
             this.GroupId = groupGuid;

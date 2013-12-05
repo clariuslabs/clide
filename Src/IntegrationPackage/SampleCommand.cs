@@ -1,5 +1,6 @@
 ﻿using Clide;
 using Clide.Commands;
+using System.Linq;
 
 namespace IntegrationPackage
 {
@@ -20,8 +21,15 @@ namespace IntegrationPackage
 
 		public void Execute(IMenuCommand command)
 		{
+            var items = devEnv.SolutionExplorer()
+                .Solution
+                .Traverse()
+                .Count();
+
             devEnv.MessageBoxService.ShowInformation(string.Format(
-                    "Clide Version: {0}", typeof(IDevEnv).Assembly.GetName().Version));
+                    "Clide Version: {0}, Solution Nodes: {1}", 
+                    typeof(IDevEnv).Assembly.GetName().Version, 
+                    items));
         }
 
 		public void QueryStatus(IMenuCommand command)

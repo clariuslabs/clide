@@ -14,21 +14,21 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution.Factories
 {
-    using Autofac.Extras.Attributed;
+    using Clide.CommonComposition;
     using Clide.Composition;
     using Clide.Events;
     using Microsoft.VisualStudio.Shell.Interop;
     using System;
     using System.Collections.Concurrent;
 
-    [Component(typeof(ISolutionExplorerNodeFactory))]
+    [Component(IsSingleton = true)]
     internal class SolutionExplorerNodeFactory : ISolutionExplorerNodeFactory
     {
         private Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory;
         private ConcurrentDictionary<Tuple<IVsHierarchy, uint>, ISolutionExplorerNode> nodeCache = new ConcurrentDictionary<Tuple<IVsHierarchy,uint>,ISolutionExplorerNode>();
 
         public SolutionExplorerNodeFactory(
-            [WithKey(DefaultHierarchyFactory.RegisterKey)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory,
+            [Named(DefaultHierarchyFactory.RegisterKey)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory,
             ISolutionEvents solutionEvents)
         {
             this.nodeFactory = nodeFactory;

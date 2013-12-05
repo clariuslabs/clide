@@ -14,6 +14,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
+    using Clide.CommonComposition;
     using Clide.Composition;
     using System;
     using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace Clide
     /// <summary>
     /// Default implementation of the reference service.
     /// </summary>
-    [Component(typeof(IReferenceService), typeof(IReferenceProviderRegistry))]
+    [Component(IsSingleton = true)]
     internal class ReferenceService : IReferenceService, IReferenceProviderRegistry
     {
         private Dictionary<string, IReferenceProvider> providers = new Dictionary<string, IReferenceProvider>();

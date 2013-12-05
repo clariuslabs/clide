@@ -61,6 +61,9 @@ namespace Clide.Composition
         /// </returns>
         protected override object DoGetInstance(Type serviceType, string key)
         {
+            if (serviceType == typeof(ExportProvider))
+                return this.provider;
+
             if (key == null)
                 key = AttributedModelServices.GetContractName(serviceType);
 

@@ -14,12 +14,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Patterns.Adapter
 {
+    using Clide.CommonComposition;
     using Clide.Composition;
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    [Component(typeof(IAdapterService))]
+    [Component(IsSingleton = true)]
     partial class AdapterService
     {
         /// <summary>

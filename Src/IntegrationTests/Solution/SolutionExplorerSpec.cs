@@ -17,11 +17,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    using Autofac.Features.Metadata;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.Composition.Hosting;
     using System.Linq;
 
     public class SolutionExplorerSpec
@@ -39,7 +39,7 @@ namespace Clide.Solution
 
                 Assert.NotNull(factory);
 
-                var nodefactories = base.ServiceLocator.GetInstance<IEnumerable<Meta<ITreeNodeFactory<IVsSolutionHierarchyNode>, TreeNodeFactoryMetadata>>>("SolutionExplorer")
+                var nodefactories = base.ServiceLocator.GetAllInstances<Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>, ITreeNodeFactoryMetadata>>()
                     .ToList();
 
                 foreach (var node in nodefactories)
@@ -83,9 +83,12 @@ namespace Clide.Solution
 			[TestMethod]
 			public void WhenGettingDefaultFactories_ThenGetsAllOfThem()
 			{
-                var withMetadata = base.ServiceLocator.GetInstance<IEnumerable<Meta<ITreeNodeFactory<IVsSolutionHierarchyNode>, TreeNodeFactoryMetadata>>>("SolutionExplorer").ToList();
-                var withoutMetadata = base.ServiceLocator.GetInstance<IEnumerable<ITreeNodeFactory<IVsSolutionHierarchyNode>>>("SolutionExplorer").ToList();
+                var exports = base.ServiceLocator.GetInstance<ExportProvider>();
 
+                var withMetadata = exports.GetExports<ITreeNodeFactory<IVsSolutionHierarchyNode>, ITreeNodeFactoryMetadata>("SolutionExplorer").ToList();
+                var withoutMetadata = exports.GetExports<ITreeNodeFactory<IVsSolutionHierarchyNode>>("SolutionExplorer").ToList();
+
+                System.Diagnostics.Debugger.Launch();
 				Assert.Equal(withoutMetadata.Count, withMetadata.Count);
 
 				var fallbacks = withMetadata.Where(n => n.Metadata.IsFallback).ToList();

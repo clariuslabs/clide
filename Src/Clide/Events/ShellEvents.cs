@@ -14,12 +14,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Events
 {
+    using Clide.CommonComposition;
     using Clide.Composition;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
     using System;
 
-    [Component(typeof(IGlobalEvents), typeof(IShellEvents))]
+    [Component(IsSingleton = true)]
     internal class ShellEvents : IDisposable, IVsShellPropertyEvents, IShellEvents
     {
         private IServiceProvider services;

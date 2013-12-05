@@ -15,6 +15,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide
 {
     using Clide.Commands;
+    using Clide.CommonComposition;
     using Clide.Composition;
     using Clide.Diagnostics;
     using Clide.Events;
@@ -28,11 +29,9 @@ namespace Clide
     /// garbage collection of the exposed components and 
     /// services.
     /// </summary>
-    [Component]
-    public class Host : IDisposable
+    public static class Host 
     {
-        private static readonly ITracer tracer = Tracer.Get<Host>();
-        private static IDisposable disposable;
+        private static readonly ITracer tracer = Tracer.Get(typeof(Host));
 
         /// <summary>
         /// Registers the package components such as commands, filter, options, etc.
@@ -77,7 +76,7 @@ namespace Clide
                     //devEnv.ServiceLocator.SatisfyImportsOnce(hostingPackage);
 
                     // Initialize the host package components.
-                    var host = devEnv.ServiceLocator.GetInstance<Host>();
+                    var host = devEnv.ServiceLocator.GetInstance<HostImpl>();
                     host.Initialize(packageId, tracingPaneTitle, rootTraceSource);
 
                     tracer.Info("Package initialization finished successfully");
@@ -91,14 +90,20 @@ namespace Clide
                 throw;
             }
         }
+    }
 
+    [Component(IsSingleton = true)]
+    internal class HostImpl : IDisposable
+    {
+        private static readonly ITracer tracer = Tracer.Get<HostImpl>();
+        private IDisposable disposable;
         private readonly IServiceProvider hostingPackage;
         private readonly ICommandManager commands;
         private readonly IOptionsManager options;
         private readonly IShellEvents shellEvents;
         private readonly Lazy<IUIThread> uiThread;
 
-        private Host(IServiceProvider hostingPackage, ICommandManager commands, IOptionsManager options, IShellEvents shellEvents, Lazy<IUIThread> uiThread)
+        public HostImpl(IServiceProvider hostingPackage, ICommandManager commands, IOptionsManager options, IShellEvents shellEvents, Lazy<IUIThread> uiThread)
         {
             this.hostingPackage = hostingPackage;
             this.commands = commands;
@@ -107,7 +112,7 @@ namespace Clide
             this.uiThread = uiThread;
         }
 
-        private void Initialize(Guid packageId, string tracingPaneTitle, string rootTraceSource)
+        internal void Initialize(Guid packageId, string tracingPaneTitle, string rootTraceSource)
         {
             Initialize();
 
@@ -146,4 +151,5 @@ namespace Clide
             // Do nothing for now.
         }
     }
+
 }

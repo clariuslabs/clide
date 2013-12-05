@@ -22,7 +22,7 @@ namespace Clide.Composition
     /// <summary>
     /// Provides component location from a primary and a fallback locator.
     /// </summary>
-    public class FallbackServiceLocator : ServiceLocatorImplBase
+    internal class FallbackServiceLocator : ServiceLocatorImplBase
     {
         private IServiceLocator primary;
         private IServiceLocator fallback;

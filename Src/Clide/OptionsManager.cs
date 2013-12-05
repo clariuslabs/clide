@@ -14,7 +14,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using Clide.Composition;
+    using Clide.CommonComposition;
     using Clide.Diagnostics;
     using Clide.Properties;
     using Microsoft.CSharp;
@@ -34,7 +34,7 @@ namespace Clide
     using System.Reflection;
     using System.Text.RegularExpressions;
 
-    [Component(typeof(IOptionsManager))]
+    [Component(IsSingleton = true)]
     internal class OptionsManager : IOptionsManager
     {
         private static readonly ITracer tracer = Tracer.Get<OptionsManager>();
