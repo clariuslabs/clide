@@ -5,6 +5,7 @@ Src/Clide/nuget/
 [Bb]in/
 [Oo]bj/
 nuget/
+packages/
 
 # mstest test results
 TestResults
