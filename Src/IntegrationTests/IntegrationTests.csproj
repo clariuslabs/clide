@@ -86,7 +86,6 @@
   <ItemGroup>
     <Compile Include="ClideSettingsSpec.cs" />
     <Compile Include="CommandsSpec.cs" />
-    <Compile Include="VsServiceMapper.cs" />
     <Content Include="Content\SampleSolution\ClassLibrary\Class1.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -26,6 +26,10 @@ namespace Clide
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class SettingsAttribute : ComponentAttribute
 	{
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SettingsAttribute"/> class, 
+        /// which are singletons by default.
+        /// </summary>
         public SettingsAttribute()
         {
             this.IsSingleton = true;
