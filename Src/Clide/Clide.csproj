@@ -153,7 +153,6 @@
     <Compile Include="Events\ProjectEventArgs.cs" />
     <Compile Include="Events\ShellEvents.cs" />
     <Compile Include="Events\SolutionEvents.cs" />
-    <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="IMessageBoxServiceExtensions.cs" />
     <Compile Include="Extensions\TracingExtensions.cs" />
     <Compile Include="IOptionsManager.cs" />

@@ -88,7 +88,6 @@ namespace Clide.Solution
                 var withMetadata = exports.GetExports<ITreeNodeFactory<IVsSolutionHierarchyNode>, ITreeNodeFactoryMetadata>("SolutionExplorer").ToList();
                 var withoutMetadata = exports.GetExports<ITreeNodeFactory<IVsSolutionHierarchyNode>>("SolutionExplorer").ToList();
 
-                System.Diagnostics.Debugger.Launch();
 				Assert.Equal(withoutMetadata.Count, withMetadata.Count);
 
 				var fallbacks = withMetadata.Where(n => n.Metadata.IsFallback).ToList();

@@ -110,7 +110,7 @@
         [HostType("VS IDE")]
         [TestMethod]
         // Uncomment Ignore, and download EntLib to test performance.
-        //[Ignore]
+        [Ignore]
         public void when_retrieving_active_project_then_performance_is_acceptable()
         {
             this.OpenSolution("SampleSolution\\SampleSolution.sln");

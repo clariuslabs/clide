@@ -33,31 +33,31 @@ namespace Clide.VisualStudio
             return new VsHierarchyProperties(hierarchy, itemId);
 		}
 
-        ///// <summary>
-        ///// Provides access to the properties of the hierarchy root itself (i.e. the solution, a project, etc.).
-        ///// </summary>
-        //public static VsHierarchyProperties Properties(this IVsHierarchy hierarchy)
-        //{
-        //    return new VsHierarchyProperties(hierarchy, GetItemId(hierarchy));
-        //}
+        /// <summary>
+        /// Provides access to the properties of the hierarchy root itself (i.e. the solution, a project, etc.).
+        /// </summary>
+        public static VsHierarchyProperties Properties(this IVsHierarchy hierarchy)
+        {
+            return new VsHierarchyProperties(hierarchy, GetItemId(hierarchy));
+        }
 
-		private static uint GetItemId(IVsHierarchy hierarchy)
-		{
-			object extObject;
-			uint itemId = 0;
-			IVsHierarchy tempHierarchy;
+        private static uint GetItemId(IVsHierarchy hierarchy)
+        {
+            object extObject;
+            uint itemId = 0;
+            IVsHierarchy tempHierarchy;
 
-			ErrorHandler.ThrowOnFailure(
-				hierarchy.GetProperty(
-					VSConstants.VSITEMID_ROOT,
-					(int)__VSHPROPID.VSHPROPID_BrowseObject,
-					out extObject));
+            ErrorHandler.ThrowOnFailure(
+                hierarchy.GetProperty(
+                    VSConstants.VSITEMID_ROOT,
+                    (int)__VSHPROPID.VSHPROPID_BrowseObject,
+                    out extObject));
 
-			var browseObject = extObject as IVsBrowseObject;
-			if (browseObject != null)
-				browseObject.GetProjectItem(out tempHierarchy, out itemId);
+            var browseObject = extObject as IVsBrowseObject;
+            if (browseObject != null)
+                browseObject.GetProjectItem(out tempHierarchy, out itemId);
 
-			return itemId;
-		}
+            return itemId;
+        }
 	}
 }
