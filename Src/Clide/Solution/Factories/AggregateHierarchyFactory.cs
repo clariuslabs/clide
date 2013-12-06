@@ -36,15 +36,11 @@ namespace Clide.Solution
 
 		public bool Supports(IVsSolutionHierarchyNode hierarchy)
 		{
-            // TODO: cache by IVsHierarchy->Factory mapping
-
 			return this.factory.Value.Supports(hierarchy);
 		}
 
 		public ITreeNode CreateNode(Lazy<ITreeNode> parent, IVsSolutionHierarchyNode hierarchy)
 		{
-            // TODO: cache by IVsHierarchy->Factory mapping.
-            
             return this.factory.Value.CreateNode(parent, hierarchy);
 		}
 
