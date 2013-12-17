@@ -59,7 +59,7 @@ namespace System
                     .FirstOrDefault();
 
                 if (guidString == null)
-                    throw new InvalidOperationException(Strings.IServiceProviderExtensions.MissingGuidAttribute(typeof(TPackage)));
+                    throw new ArgumentException(Strings.IServiceProviderExtensions.MissingGuidAttribute(typeof(TPackage)));
 
                 var guid = new Guid(guidString);
                 var vsPackage = default(IVsPackage);
