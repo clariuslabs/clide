@@ -40,6 +40,7 @@ namespace Clide.Events
 
             this.IsInitialized = !((bool)isZombie);
 
+            // TODO: see if we still should advise changes if IsInitialized is true at this point?
             ErrorHandler.ThrowOnFailure(
                 this.shellService.AdviseShellPropertyChanges(this, out this.shellCookie));
         }
