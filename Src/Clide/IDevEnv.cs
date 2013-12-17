@@ -26,11 +26,17 @@ namespace Clide
     /// Entry point interface for the environment components.
     /// </summary>
     public interface IDevEnv : IFluentInterface
-	{
+    {
         /// <summary>
         /// Gets a value indicating whether the shell has been initialized.
         /// </summary>
         bool IsInitialized { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the environment is running with 
+        /// elevated permissions.
+        /// </summary>
+        bool IsElevated { get; }
 
         /// <summary>
         /// Occurs when the shell has finished initializing.

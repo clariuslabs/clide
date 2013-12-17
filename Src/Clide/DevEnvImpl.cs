@@ -43,6 +43,7 @@ namespace Clide
         private Lazy<IMessageBoxService> messageBox;
         private Lazy<IReferenceService> references;
         private TraceOutputWindowManager outputWindowManager;
+        private Lazy<bool> isElevated;
 
         public DevEnvImpl(
             ClideSettings settings,
@@ -71,8 +72,23 @@ namespace Clide
                 OutputWindowId,
                 Strings.DevEnv.OutputPaneTitle);
 
+            this.isElevated = new Lazy<bool>(() =>
+            {
+                var shell = this.ServiceLocator.TryGetService<SVsShell, IVsShell3>();
+                if (shell == null)
+                    return false;
+
+                bool elevated;
+                shell.IsRunningElevated(out elevated);
+                return elevated;
+            });
+
             Tracer.Manager.SetTracingLevel(TracerManager.DefaultSourceName, settings.TracingLevel);
         }
+
+        public bool IsInitialized { get { return this.shellEvents.IsInitialized; } }
+
+        public bool IsElevated { get { return this.isElevated.Value; } }
 
         public IServiceLocator ServiceLocator { get; private set; }
 
@@ -105,8 +121,6 @@ namespace Clide
         {
             get { return this.references.Value; }
         }
-
-        public bool IsInitialized { get { return this.shellEvents.IsInitialized; } }
 
         public event EventHandler Initialized
         {
