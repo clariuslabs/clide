@@ -14,67 +14,60 @@
     <AssemblyName>Clide</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <OutputPath>nuget\lib\$(NugetTarget)\</OutputPath>
-    <DocumentationFile>$(OutputPath)Clide.xml</DocumentationFile>
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
-  </PropertyGroup>
-  <PropertyGroup>
-    <VSSDK>$(VSSDK100Install)VisualStudioIntegration\Common\Assemblies\v4.0\</VSSDK>
-    <PublicAssemblies>$(VS100COMNTOOLS)..\IDE\PublicAssemblies\</PublicAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <SpecificVersion>True</SpecificVersion>
-      <HintPath>$(PublicAssemblies)EnvDTE.dll</HintPath>
+      <HintPath>$(DevEnvDir)PublicAssemblies\EnvDTE.dll</HintPath>
     </Reference>
     <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <SpecificVersion>True</SpecificVersion>
-      <HintPath>$(PublicAssemblies)EnvDTE80.dll</HintPath>
+      <HintPath>$(DevEnvDir)PublicAssemblies\EnvDTE80.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>True</SpecificVersion>
-      <HintPath>$(PublicAssemblies)Microsoft.VisualStudio.ComponentModelHost.dll</HintPath>
+      <HintPath>$(DevEnvDir)PublicAssemblies\Microsoft.VisualStudio.ComponentModelHost.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Settings, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=x86">
       <SpecificVersion>True</SpecificVersion>
-      <HintPath>$(VSSDK)Microsoft.VisualStudio.Settings.dll</HintPath>
+      <HintPath>$(SdkLib)Microsoft.VisualStudio.Settings.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>True</SpecificVersion>
-      <HintPath>$(VSSDK)Microsoft.VisualStudio.Shell.10.0.dll</HintPath>
+      <HintPath>$(SdkLib)Microsoft.VisualStudio.Shell.10.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Design, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>True</SpecificVersion>
-      <HintPath>$(VSSDK)Microsoft.VisualStudio.Shell.Design.dll</HintPath>
+      <HintPath>$(SdkLib)Microsoft.VisualStudio.Shell.Design.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>True</SpecificVersion>
-      <HintPath>$(VSSDK)Microsoft.VisualStudio.Shell.Immutable.10.0.dll</HintPath>
+      <HintPath>$(SdkLib)Microsoft.VisualStudio.Shell.Immutable.10.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <SpecificVersion>True</SpecificVersion>
-      <HintPath>$(VSSDK)Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
+      <HintPath>$(SdkLib)Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>True</SpecificVersion>
-      <HintPath>$(VSSDK)Microsoft.VisualStudio.Shell.Interop.10.0.dll</HintPath>
+      <HintPath>$(SdkLib)Microsoft.VisualStudio.Shell.Interop.10.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <SpecificVersion>True</SpecificVersion>
-      <HintPath>$(VSSDK)Microsoft.VisualStudio.Shell.Interop.8.0.dll</HintPath>
+      <HintPath>$(SdkLib)Microsoft.VisualStudio.Shell.Interop.8.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <SpecificVersion>True</SpecificVersion>
-      <HintPath>$(VSSDK)Microsoft.VisualStudio.Shell.Interop.9.0.dll</HintPath>
+      <HintPath>$(SdkLib)Microsoft.VisualStudio.Shell.Interop.9.0.dll</HintPath>
     </Reference>
+    <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Net" />
-    <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <SpecificVersion>True</SpecificVersion>
-      <HintPath>$(PublicAssemblies)VSLangProj.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Build" />
