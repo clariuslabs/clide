@@ -44,6 +44,7 @@ namespace Clide
         private Lazy<IReferenceService> references;
         private TraceOutputWindowManager outputWindowManager;
         private Lazy<bool> isElevated;
+        private IErrorsManager errorsManager;
 
         public DevEnvImpl(
             ClideSettings settings,
@@ -53,7 +54,8 @@ namespace Clide
             Lazy<IUIThread> uiThread,
             Lazy<IMessageBoxService> messageBox,
             IShellEvents shellEvents,
-            Lazy<IReferenceService> references)
+            Lazy<IReferenceService> references,
+            IErrorsManager errorsManager)
         {
             this.ServiceLocator = serviceLocator;
             this.dialogFactory = dialogFactory;
@@ -63,6 +65,9 @@ namespace Clide
             this.messageBox = messageBox;
             this.status = new Lazy<IStatusBar>(() => new StatusBar(this.ServiceLocator));
             this.references = references;
+            this.errorsManager = errorsManager;
+
+            ITracerExtensions.ErrorsManager = this.errorsManager;
 
             this.outputWindowManager = new TraceOutputWindowManager(
                 serviceLocator,
@@ -120,6 +125,11 @@ namespace Clide
         public IReferenceService ReferenceService
         {
             get { return this.references.Value; }
+        }
+
+        public IErrorsManager Errors
+        {
+            get { return this.errorsManager; }
         }
 
         public event EventHandler Initialized
