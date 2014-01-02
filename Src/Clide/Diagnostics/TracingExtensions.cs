@@ -105,5 +105,25 @@ namespace Clide
             tracer.Error(text);
             ErrorsManager.AddError(text, handler);
         }
+
+        /// <summary>
+        /// Traces an event of type <see cref="TraceEventType.Warning"/> with the given exception and 
+        /// message and adds an error to the error list that will be handled by the provided action.
+        /// </summary>
+        public static void Warn(this ITracer tracer, Exception exception, string text, Action<IErrorItem> handler)
+        {
+            tracer.Warn(exception, text);
+            ErrorsManager.AddWarning(text, handler);
+        }
+
+        /// <summary>
+        /// Traces an event of type <see cref="TraceEventType.Warning"/> with the given message and 
+        /// adds an error to the error list that will be handled by the provided action.
+        /// </summary>
+        public static void Warn(this ITracer tracer, string text, Action<IErrorItem> handler)
+        {
+            tracer.Warn(text);
+            ErrorsManager.AddWarning(text, handler);
+        }
     }
 }

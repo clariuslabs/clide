@@ -17,47 +17,58 @@ namespace Clide
     using Clide.CommonComposition;
     using Microsoft.VisualStudio.Shell;
     using System;
-    
+
     [Component(IsSingleton = true)]
-	internal class ErrorsManager : IErrorsManager
-	{
-		private IServiceProvider serviceProvider;
-		private ErrorListProvider errorListProvider;
+    internal class ErrorsManager : IErrorsManager
+    {
+        private IServiceProvider serviceProvider;
+        private ErrorListProvider errorListProvider;
 
-		public ErrorsManager(IServiceProvider serviceProvider)
-		{
-			this.serviceProvider = serviceProvider;
-			this.errorListProvider = new ErrorListProvider(this.serviceProvider);
-		}
+        public ErrorsManager(IServiceProvider serviceProvider)
+        {
+            this.serviceProvider = serviceProvider;
+            this.errorListProvider = new ErrorListProvider(this.serviceProvider);
+        }
 
-		public IErrorItem AddError(string text, Action<IErrorItem> handler)
-		{
-			var errorTask = new ErrorTask();
+        public IErrorItem AddError(string text, Action<IErrorItem> handler)
+        {
+            return Add(text, handler, false);
+        }
 
-			errorTask.Category = TaskCategory.Misc;
-			errorTask.ErrorCategory = TaskErrorCategory.Error;
-			errorTask.Text = text;
+        public IErrorItem AddWarning(string text, Action<IErrorItem> handler)
+        {
+            return Add(text, handler, true);
+        }
 
-			var errorItem = new ErrorItem(this.errorListProvider, errorTask);
+        public void ClearErrors()
+        {
+            this.errorListProvider.Tasks.Clear();
+        }
 
-			errorTask.Navigate += (sender, e) =>
-				{
-					handler(errorItem);
-				};
+        public void ShowErrors()
+        {
+            this.errorListProvider.Show();
+        }
 
-			this.errorListProvider.Tasks.Add(errorTask);
+        private IErrorItem Add(string text, Action<IErrorItem> handler, bool isWarning)
+        {
+            var errorTask = new ErrorTask();
 
-			return errorItem;
-		}
+            errorTask.Category = TaskCategory.Misc;
+            errorTask.ErrorCategory = isWarning ? TaskErrorCategory.Warning : TaskErrorCategory.Error;
+            errorTask.Text = text;
 
-		public void ClearErrors()
-		{
-			this.errorListProvider.Tasks.Clear();
-		}
+            var errorItem = new ErrorItem(this.errorListProvider, errorTask);
 
-		public void ShowErrors()
-		{
-			this.errorListProvider.Show();
-		}
-	}
+            errorTask.Navigate += (sender, e) =>
+            {
+                if (handler != null)
+                    handler(errorItem);
+            };
+
+            this.errorListProvider.Tasks.Add(errorTask);
+
+            return errorItem;
+        }
+    }
 }

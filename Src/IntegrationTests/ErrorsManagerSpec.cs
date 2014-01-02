@@ -22,6 +22,8 @@ namespace Clide
     [TestClass]
     public class ErrorsManagerSpec : VsHostedSpec
 	{
+        internal static readonly IAssertion Assert = new Assertion();
+
 		[HostType("VS IDE")]
 		[TestMethod]
 		public void WhenAddingError_ThenItemIsNotNull()
@@ -31,7 +33,7 @@ namespace Clide
 
             var item = manager.AddError("Error1", null);
 
-            Assert.IsNotNull(item);
+            Assert.NotNull(item);
         }
 
         [HostType("VS IDE")]
@@ -45,8 +47,28 @@ namespace Clide
 
             var dte = this.ServiceProvider.GetService(typeof(EnvDTE.DTE)) as EnvDTE80.DTE2;
 
-            Assert.AreEqual(1, dte.ToolWindows.ErrorList.ErrorItems.Count);
-            Assert.AreEqual("Error1", dte.ToolWindows.ErrorList.ErrorItems.Item(1).Description);
+            Assert.Equal(1, dte.ToolWindows.ErrorList.ErrorItems.Count);
+            Assert.Equal("Error1", dte.ToolWindows.ErrorList.ErrorItems.Item(1).Description);
+        }
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void WhenAddingWarning_ThenItemIsAddedToTheErrorList()
+        {
+            var manager = ServiceLocator.GetInstance<IErrorsManager>();
+            manager.ClearErrors();
+
+            var item = manager.AddWarning("Warning1", null);
+
+            manager.ShowErrors();
+
+            System.Threading.Thread.Sleep(5000);
+
+            var dte = this.ServiceProvider.GetService(typeof(EnvDTE.DTE)) as EnvDTE80.DTE2;
+            dte.ToolWindows.ErrorList.ShowWarnings = true;
+
+            Assert.Equal(1, dte.ToolWindows.ErrorList.ErrorItems.Count);
+            Assert.Equal("Warning1", dte.ToolWindows.ErrorList.ErrorItems.Item(1).Description);
         }
 
         [HostType("VS IDE")]
@@ -62,7 +84,7 @@ namespace Clide
 
             var dte = this.ServiceProvider.GetService(typeof(EnvDTE.DTE)) as EnvDTE80.DTE2;
 
-            Assert.AreEqual(0, dte.ToolWindows.ErrorList.ErrorItems.Count);
+            Assert.Equal(0, dte.ToolWindows.ErrorList.ErrorItems.Count);
         }
 
         [HostType("VS IDE")]
@@ -79,7 +101,7 @@ namespace Clide
 
             var dte = this.ServiceProvider.GetService(typeof(EnvDTE.DTE)) as EnvDTE80.DTE2;
 
-            Assert.AreEqual(0, dte.ToolWindows.ErrorList.ErrorItems.Count);
+            Assert.Equal(0, dte.ToolWindows.ErrorList.ErrorItems.Count);
         }
     }
 }
