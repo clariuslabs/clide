@@ -23,8 +23,6 @@ namespace Clide.Diagnostics
     ///	<nuget id="Tracer.Interfaces" />
     static partial class ITracerExtensions
     {
-        internal static IErrorsManager ErrorsManager = new NullErrorsManager();
-
         #region Critical overloads
 
         /// <summary>
@@ -93,24 +91,6 @@ namespace Clide.Diagnostics
         public static void Error(this ITracer tracer, Exception exception, string format, params object[] args)
         {
             tracer.Trace(TraceEventType.Error, exception, format, args);
-        }
-
-        /// <summary>
-        /// Traces an event of type <see cref="TraceEventType.Error"/> with the given exception and message and adds an error to the error list that will be handled by the provided action.
-        /// </summary>
-        public static void Error(this ITracer tracer, Exception exception, string text, Action<IErrorItem> handler)
-        {
-            Error(tracer, exception, text);
-            ErrorsManager.AddError(text, handler);
-        }
-
-        /// <summary>
-        /// Traces an event of type <see cref="TraceEventType.Error"/> with the given message and adds an error to the error list that will be handled by the provided action.
-        /// </summary>
-        public static void Error(this ITracer tracer, string text, Action<IErrorItem> handler)
-        {
-            Error(tracer, text);
-            ErrorsManager.AddError(text, handler);
         }
 
         #endregion

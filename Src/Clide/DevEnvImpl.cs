@@ -67,7 +67,7 @@ namespace Clide
             this.references = references;
             this.errorsManager = errorsManager;
 
-            ITracerExtensions.ErrorsManager = this.errorsManager;
+            TracingExtensions.ErrorsManager = this.errorsManager;
 
             this.outputWindowManager = new TraceOutputWindowManager(
                 serviceLocator,

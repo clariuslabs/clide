@@ -29,6 +29,8 @@ namespace Clide
     /// </summary>
     public static class TracingExtensions
     {
+        internal static IErrorsManager ErrorsManager = new NullErrorsManager();
+
         internal static Action<Exception, string, string[]> ShowExceptionAction = (ex, format, args) =>
         {
             System.Windows.MessageBox.Show(
@@ -84,6 +86,24 @@ namespace Clide
             Guard.NotNullOrEmpty(() => errorMessage, errorMessage);
 
             return ShieldUI(tracer, action, errorMessage, new string[0]);
+        }
+
+        /// <summary>
+        /// Traces an event of type <see cref="TraceEventType.Error"/> with the given exception and message and adds an error to the error list that will be handled by the provided action.
+        /// </summary>
+        public static void Error(this ITracer tracer, Exception exception, string text, Action<IErrorItem> handler)
+        {
+            tracer.Error(exception, text);
+            ErrorsManager.AddError(text, handler);
+        }
+
+        /// <summary>
+        /// Traces an event of type <see cref="TraceEventType.Error"/> with the given message and adds an error to the error list that will be handled by the provided action.
+        /// </summary>
+        public static void Error(this ITracer tracer, string text, Action<IErrorItem> handler)
+        {
+            tracer.Error(text);
+            ErrorsManager.AddError(text, handler);
         }
     }
 }
