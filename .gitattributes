@@ -1,63 +1,34 @@
-###############################################################################
-# Set default behavior to automatically normalize line endings.
-###############################################################################
-* text=auto
+# NOTE: this file is for git 1.6.6 (and possibly older)
+# Post-1.7.2 there is eol and text, and crlf is deprecated
+# but we can't depend on an unreleased version...
 
-###############################################################################
-# Set default behavior for command prompt diff.
-#
-# This is need for earlier builds of msysgit that does not have it on by
-# default for csharp files.
-# Note: This is only used by command line
-###############################################################################
-#*.cs     diff=csharp
+# This file mainly controls line ending conversion behaviour, if
+# the user has the setting core.autocrlf true.
 
-###############################################################################
-# Set the merge driver for project and solution files
-#
-# Merging from the command prompt will add diff markers to the files if there
-# are conflicts (Merging from VS is not affected by the settings below, in VS
-# the diff markers are never inserted). Diff markers may cause the following 
-# file extensions to fail to load in VS. An alternative would be to treat
-# these files as binary and thus will always conflict and require user
-# intervention with every merge. To do so, just uncomment the entries below
-###############################################################################
-#*.sln       merge=binary
-#*.csproj    merge=binary
-#*.vbproj    merge=binary
-#*.vcxproj   merge=binary
-#*.vcproj    merge=binary
-#*.dbproj    merge=binary
-#*.fsproj    merge=binary
-#*.lsproj    merge=binary
-#*.wixproj   merge=binary
-#*.modelproj merge=binary
-#*.sqlproj   merge=binary
-#*.wwaproj   merge=binary
+# The meaning of the attributes is a little odd
+# -crlf means DO NOT convert line endings
+# crlf means CONVERT to lf in the repo & Linux/Mac, crlf on Windows
 
-###############################################################################
-# behavior for image files
-#
-# image files are treated as binary by default.
-###############################################################################
-#*.jpg   binary
-#*.png   binary
-#*.gif   binary
+# sln is always CRLF, even on linux, so don't convert
+*.sln        -crlf
 
-###############################################################################
-# diff behavior for common document formats
-# 
-# Convert binary document formats to text before diffing them. This feature
-# is only available from the command line. Turn it on by uncommenting the 
-# entries below.
-###############################################################################
-#*.doc   diff=astextplain
-#*.DOC   diff=astextplain
-#*.docx  diff=astextplain
-#*.DOCX  diff=astextplain
-#*.dot   diff=astextplain
-#*.DOT   diff=astextplain
-#*.pdf   diff=astextplain
-#*.PDF   diff=astextplain
-#*.rtf   diff=astextplain
-#*.RTF   diff=astextplain
+# The configure script and makefiles must always be lf
+/configure -crlf
+Makefile -crlf
+
+# Opt in known files to be automatically kept in sync
+*.csproj        crlf
+*.cs            crlf
+*.xml           crlf
+*.txt           crlf
+*.resx          crlf
+*.config        crlf
+*.xaml          crlf
+*.tt            crlf
+*.ttinclude     crlf
+*.props         crlf
+*.targets       crlf
+*.proj          crlf
+*.testsettings  crlf
+*.md            crlf
+*.bat           crlf
