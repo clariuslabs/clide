@@ -98,6 +98,7 @@
     <Compile Include="Composition\FallbackServiceLocator.cs" />
     <Compile Include="Composition\ExportsServiceLocator.cs" />
     <Compile Include="Composition\ServicesExportProvider.cs" />
+    <Compile Include="IErrorItem.cs" />
     <Compile Include="Diagnostics\Tracer\ITracer.cs" />
     <Compile Include="Diagnostics\Tracer\ITracerExtensions.cs" />
     <Compile Include="Diagnostics\Tracer\ITracerManager.cs" />
@@ -108,6 +109,8 @@
     <Compile Include="Diagnostics\ITracerManager.cs" />
     <Compile Include="Diagnostics\Tracer\TracerManager.cs" />
     <Compile Include="Diagnostics\Tracer.cs" />
+    <Compile Include="ErrorItem.cs" />
+    <Compile Include="ErrorsManager.cs" />
     <Compile Include="External\CommonComposition.Mef\ComponentCatalog.cs" />
     <Compile Include="External\CommonComposition.Mef\DelegatingReflection.cs" />
     <Compile Include="External\CommonComposition\ComponentAttribute.cs" />
@@ -119,6 +122,7 @@
     <Compile Include="External\ServiceLocation\ServiceLocatorImplBase.cs" />
     <Compile Include="External\ServiceLocation\ServiceLocatorProvider.cs" />
     <Compile Include="FallbackServiceProvider.cs" />
+    <Compile Include="IErrorsManager.cs" />
     <Compile Include="IOptionsPageWindowFactory.cs" />
     <Compile Include="netfx\System\AmbientSingleton.cs" />
     <Compile Include="netfx\System\Collections\Generic\IEnumerable\TraverseKind.cs" />
@@ -126,6 +130,7 @@
     <Compile Include="netfx\System\Guard.cs" />
     <Compile Include="netfx\System\StringFormatWith.cs" />
     <Compile Include="netfx\System\Windows\Threading\DispatcherInvokeExtensions.cs" />
+    <Compile Include="NullErrorsManager.cs" />
     <Compile Include="Patterns\AdapterAttribute.cs" />
     <Compile Include="Patterns\Adapters.cs" />
     <Compile Include="Patterns\Adapter\Adapters.cs" />

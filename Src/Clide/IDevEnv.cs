@@ -79,6 +79,11 @@ namespace Clide
         IReferenceService ReferenceService { get; }
 
         /// <summary>
+        /// Gets the errors manager
+        /// </summary>
+        IErrorsManager Errors { get; }
+
+        /// <summary>
         /// Exits Visual Studio.
         /// </summary>
         /// <param name="saveAll">Whether to save all pending changes before exiting.</param>

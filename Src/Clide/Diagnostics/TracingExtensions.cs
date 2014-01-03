@@ -29,6 +29,8 @@ namespace Clide
     /// </summary>
     public static class TracingExtensions
     {
+        internal static IErrorsManager ErrorsManager = new NullErrorsManager();
+
         internal static Action<Exception, string, string[]> ShowExceptionAction = (ex, format, args) =>
         {
             System.Windows.MessageBox.Show(
@@ -84,6 +86,108 @@ namespace Clide
             Guard.NotNullOrEmpty(() => errorMessage, errorMessage);
 
             return ShieldUI(tracer, action, errorMessage, new string[0]);
+        }
+
+        /// <summary>
+        /// Traces an event of type <see cref="TraceEventType.Error"/> with the given exception and message and 
+        /// adds an error to the error list that will be handled by the provided function.
+        /// </summary>
+        /// <param name="tracer">The tracer that will perform the error logging.</param>
+        /// <param name="exception">The exception that will be logged.</param>
+        /// <param name="text">The message to log.</param>
+        /// <param name="handler">A callback function to call when the user selects the error in the error list. 
+        /// The return value determines if the error has been fixed and can be deleted from the 
+        /// error list (<see langword="true"/>) or not.
+        /// </param>
+        /// <remarks>
+        /// This overload adds an error to the error list, and allows a callback to run when the user double-clicks
+        /// the error in the error list. The function return value determines if the error will be cleared from the 
+        /// list after the handler finishes running or not.
+        /// </remarks>
+        public static void Error(this ITracer tracer, Exception exception, string text, Func<bool> handler)
+        {
+            tracer.Error(exception, text);
+            ErrorsManager.AddError(text, item =>
+            {
+                if (handler())
+                    item.Remove();
+            });
+        }
+
+        /// <summary>
+        /// Traces an event of type <see cref="TraceEventType.Error"/> with the given message and
+        /// adds an error to the error list that will be handled by the provided function.
+        /// </summary>
+        /// <param name="tracer">The tracer that will perform the error logging.</param>
+        /// <param name="text">The message to log.</param>
+        /// <param name="handler">A callback function to call when the user selects the error in the error list. 
+        /// The return value determines if the error has been fixed and can be deleted from the 
+        /// error list (<see langword="true"/>) or not.
+        /// </param>
+        /// <remarks>
+        /// This overload adds an error to the error list, and allows a callback to run when the user double-clicks
+        /// the error in the error list. The function return value determines if the error will be cleared from the 
+        /// list after the handler finishes running or not.
+        /// </remarks>
+        public static void Error(this ITracer tracer, string text, Func<bool> handler)
+        {
+            tracer.Error(text);
+            ErrorsManager.AddError(text, item =>
+            {
+                if (handler())
+                    item.Remove();
+            });
+        }
+
+        /// <summary>
+        /// Traces an event of type <see cref="TraceEventType.Warning"/> with the given exception and 
+        /// message and adds an error to the error list that will be handled by the provided function.
+        /// </summary>
+        /// <param name="tracer">The tracer that will perform the warning logging.</param>
+        /// <param name="exception">The exception that will be logged.</param>
+        /// <param name="text">The message to log.</param>
+        /// <param name="handler">A callback function to call when the user selects the error in the error list. 
+        /// The return value determines if the error has been fixed and can be deleted from the 
+        /// error list (<see langword="true"/>) or not.
+        /// </param>
+        /// <remarks>
+        /// This overload adds an error to the error list, and allows a callback to run when the user double-clicks
+        /// the error in the error list. The function return value determines if the error will be cleared from the 
+        /// list after the handler finishes running or not.
+        /// </remarks>
+        public static void Warn(this ITracer tracer, Exception exception, string text, Func<bool> handler)
+        {
+            tracer.Warn(exception, text);
+            ErrorsManager.AddWarning(text, item =>
+            {
+                if (handler())
+                    item.Remove();
+            });
+        }
+
+        /// <summary>
+        /// Traces an event of type <see cref="TraceEventType.Warning"/> with the given message and 
+        /// adds an error to the error list that will be handled by the provided action.
+        /// </summary>
+        /// <param name="tracer">The tracer that will perform the warning logging.</param>
+        /// <param name="text">The message to log.</param>
+        /// <param name="handler">A callback function to call when the user selects the error in the error list. 
+        /// The return value determines if the error has been fixed and can be deleted from the 
+        /// error list (<see langword="true"/>) or not.
+        /// </param>
+        /// <remarks>
+        /// This overload adds an error to the error list, and allows a callback to run when the user double-clicks
+        /// the error in the error list. The function return value determines if the error will be cleared from the 
+        /// list after the handler finishes running or not.
+        /// </remarks>
+        public static void Warn(this ITracer tracer, string text, Func<bool> handler)
+        {
+            tracer.Warn(text);
+            ErrorsManager.AddWarning(text, item =>
+            {
+                if (handler())
+                    item.Remove();
+            });
         }
     }
 }
