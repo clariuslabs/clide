@@ -43,12 +43,24 @@ namespace Clide.Diagnostics
         static Tracer()
         {
             Tracer.Initialize(new TracerManager());
+            System.Diagnostics.Debug.AutoFlush = true;
         }
 
         /// <summary>
         /// Gets the trace manager to manipulate the tracing level and listeners.
         /// </summary>
         public static ITracerManager Manager { get { return manager; } }
+
+        /// <summary>
+        /// Replaces the existing trace manager with the new one, and returns 
+        /// the existing manager.
+        /// </summary>
+        public static ITracerManager ReplaceManager(ITracerManager manager)
+        {
+            var existing = Manager;
+            Tracer.manager = manager;
+            return existing;
+        }
 
         // Implement missing members that we added.
         partial class DefaultManager : ITracerManager
