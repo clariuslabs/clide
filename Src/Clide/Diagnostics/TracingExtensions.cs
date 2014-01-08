@@ -21,6 +21,7 @@ namespace Clide
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
     using System;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Windows;
 
@@ -29,9 +30,10 @@ namespace Clide
     /// </summary>
     public static class TracingExtensions
     {
-        internal static IErrorsManager ErrorsManager = new NullErrorsManager();
+        private static AmbientSingleton<IErrorsManager> errorsManager = new AmbientSingleton<IErrorsManager>(new NullErrorsManager());
+        private static AmbientSingleton<Action<Exception, string, string[]>> showException = new AmbientSingleton<Action<Exception, string, string[]>>(DefaultShowExceptionAction);
 
-        internal static Action<Exception, string, string[]> ShowExceptionAction = (ex, format, args) =>
+        private static Action<Exception, string, string[]> DefaultShowExceptionAction = (ex, format, args) =>
         {
             System.Windows.MessageBox.Show(
                 GlobalServiceProvider.Instance.GetService<SVsUIShell, IVsUIShell>().GetMainWindow(), 
@@ -188,6 +190,29 @@ namespace Clide
                 if (handler())
                     item.Remove();
             });
+        }
+
+        /// <summary>
+        /// Gets or sets the errors manager to use to add errors to the error list.
+        /// This is an ambient singleton, so  it is safe to replace it in multi-threaded test runs.
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        public static IErrorsManager ErrorsManager
+        {
+            get { return errorsManager.Value; }
+            set { errorsManager.Value = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the action that is used to show error messages to 
+        /// the user. The signature has the exception being thrown, a 
+        /// message or format string, and optional formatting arguments.
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        public static Action<Exception, string, string[]> ShowExceptionAction
+        {
+            get { return showException.Value; }
+            set { showException.Value = value; }
         }
     }
 }

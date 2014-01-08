@@ -1,13 +1,13 @@
 ﻿namespace UnitTests.Extensions
 {
     using Microsoft.VisualStudio.Shell.Interop;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using Xunit;
+    using Moq;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime.InteropServices;
+    using System.Text;
+    using Xunit;
 
     public class ServiceProviderExtensionsSpec
     {

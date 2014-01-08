@@ -21,6 +21,7 @@ namespace Clide
     using Clide.Events;
     using Clide.Properties;
     using System;
+    using System.ComponentModel;
     using System.Windows.Threading;
 
     /// <summary>
@@ -29,59 +30,40 @@ namespace Clide
     /// garbage collection of the exposed components and 
     /// services.
     /// </summary>
-    public static class Host 
+    public static class Host
     {
         private static readonly ITracer tracer = Tracer.Get(typeof(Host));
 
         /// <summary>
         /// Registers the package components such as commands, filter, options, etc.
-        /// with the development environment.
+        /// with the development environment. This call should always be made from 
+        /// the package Initialize method, which is guaranteed to run on the UI 
+        /// thread.
         /// </summary>
-        public static void Initialize(IServiceProvider hostingPackage)
-        {
-            Initialize(hostingPackage, null, null);
-        }
-
-        /// <summary>
-        /// Initializes the hosting facilities for the given package, 
-        /// as well as registering the package components such as 
-        /// commands, filter, options, etc.
-        /// </summary>
-        /// <remarks>
-        /// The returned instance must remain alive while the hosting 
-        /// package is loaded, ensuring that the components don't get 
-        /// garbage-collected and in particular for the tracing the 
-        /// output window to remain active.
-        /// </remarks>
         /// <param name="hostingPackage">The package owning this deploy 
         /// of Clide.</param>
-        /// <param name="tracingPaneTitle">Optional title of an output 
-        /// pane to create for the calling package, for tracing purposes. 
-        /// If it</param>
-        /// <param name="rootTraceSource">Root trace source to hook the output window trace listener to.</param>
-        public static IDisposable Initialize(IServiceProvider hostingPackage, string tracingPaneTitle, string rootTraceSource)
+        public static IDevEnv Initialize(IServiceProvider hostingPackage)
         {
             try
             {
+                // This call should always be made from a package Initialize method, 
+                // which is guaranteed to be called from the UI thread.
+                UIThread.Initialize(Dispatcher.CurrentDispatcher);
+
+                var devEnv = DevEnv.Get(hostingPackage);
                 using (tracer.StartActivity("Initializing package"))
                 {
-                    // This call should always be made from a package Initialize method, 
-                    // which is guaranteed to be called from the UI thread.
-                    UIThread.Initialize(Dispatcher.CurrentDispatcher);
-                    var packageId = hostingPackage.GetPackageGuidOrThrow();
-                    var devEnv = DevEnv.Get(hostingPackage);
-                    // Brings in imports that the package itself might need.
-
                     // TODO
+                    // Brings in imports that the package itself might need.
                     //devEnv.ServiceLocator.SatisfyImportsOnce(hostingPackage);
 
                     // Initialize the host package components.
                     var host = devEnv.ServiceLocator.GetInstance<HostImpl>();
-                    host.Initialize(packageId, tracingPaneTitle, rootTraceSource);
+                    host.Initialize();
 
                     tracer.Info("Package initialization finished successfully");
 
-                    return host;
+                    return devEnv;
                 }
             }
             catch (Exception ex)
@@ -90,48 +72,32 @@ namespace Clide
                 throw;
             }
         }
+
+        /// <summary>
+        /// Obsolete
+        /// </summary>
+        [Obsolete(@"See http://clarius.io/clide-tracing for more information.", true)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static IDisposable Initialize(IServiceProvider hostingPackage, string tracingPaneTitle, string rootTraceSource)
+        {
+            throw new NotSupportedException();
+        }
     }
 
     [Component(IsSingleton = true)]
-    internal class HostImpl : IDisposable
+    internal class HostImpl
     {
         private static readonly ITracer tracer = Tracer.Get<HostImpl>();
-        private IDisposable disposable;
-        private readonly IServiceProvider hostingPackage;
         private readonly ICommandManager commands;
         private readonly IOptionsManager options;
-        private readonly IShellEvents shellEvents;
-        private readonly Lazy<IUIThread> uiThread;
 
-        public HostImpl(IServiceProvider hostingPackage, ICommandManager commands, IOptionsManager options, IShellEvents shellEvents, Lazy<IUIThread> uiThread)
+        public HostImpl(ICommandManager commands, IOptionsManager options)
         {
-            this.hostingPackage = hostingPackage;
             this.commands = commands;
             this.options = options;
-            this.shellEvents = shellEvents;
-            this.uiThread = uiThread;
         }
 
-        internal void Initialize(Guid packageId, string tracingPaneTitle, string rootTraceSource)
-        {
-            Initialize();
-
-            if (!string.IsNullOrEmpty(tracingPaneTitle) && !string.IsNullOrEmpty(rootTraceSource))
-            {
-                // We keep the instance around so that the event handlers 
-                // aren't disposed.
-                disposable = new TraceOutputWindowManager(
-                    hostingPackage,
-                    shellEvents,
-                    uiThread,
-                    Tracer.Manager,
-                    packageId,
-                    tracingPaneTitle,
-                    rootTraceSource);
-            }
-        }
-
-        private void Initialize()
+        internal void Initialize()
         {
             tracer.Info("Registering package commands");
             this.commands.AddCommands();
@@ -142,14 +108,5 @@ namespace Clide
             tracer.Info("Registering package options pages");
             this.options.AddPages();
         }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            // Do nothing for now.
-        }
     }
-
 }

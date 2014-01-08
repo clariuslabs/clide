@@ -383,13 +383,25 @@ namespace Clide.Properties
 		///	</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
 		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-		public static partial class DevEnv
+		public static partial class Trace
 		{
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	66893206-0EF5-4A16-AA10-6EC6B6319F92
+			/// </summary>
+			public static string OutputPaneId { get { return Resources.Trace_OutputPaneId; } }
+		
 			/// <summary>
 			/// Looks up a localized string similar to: 
 			///	Clide
 			/// </summary>
-			public static string OutputPaneTitle { get { return Resources.DevEnv_OutputPaneTitle; } }
+			public static string OutputPaneTitle { get { return Resources.Trace_OutputPaneTitle; } }
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Clide
+			/// </summary>
+			public static string RootSource { get { return Resources.Trace_RootSource; } }
 		}
 		
 		///	<summary>
@@ -857,6 +869,62 @@ namespace Clide.Properties
 				return Resources.CompositionSource_ImportManyRequired.FormatWith(new 
 				{
 					componentType = componentType,
+				});
+			}
+		}
+		
+		///	<summary>
+		///	Provides access to string resources.
+		///	</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		public static partial class OutputWindowManager
+		{
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Creating output pane '{title}' since it doesn't exist already.
+			/// </summary>
+			public static string CreatingPane(object title)
+			{
+				return Resources.OutputWindowManager_CreatingPane.FormatWith(new 
+				{
+					title = title,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Failed to create output window pane '{title}'.
+			/// </summary>
+			public static string FailedToCreatePane(object title)
+			{
+				return Resources.OutputWindowManager_FailedToCreatePane.FormatWith(new 
+				{
+					title = title,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Retrieving potentially existing output pane '{title}'.
+			/// </summary>
+			public static string RetrievingPane(object title)
+			{
+				return Resources.OutputWindowManager_RetrievingPane.FormatWith(new 
+				{
+					title = title,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Initializing trace output pane '{title}'.
+			/// </summary>
+			public static string TraceInitializing(object title)
+			{
+				return Resources.OutputWindowManager_TraceInitializing.FormatWith(new 
+				{
+					title = title,
 				});
 			}
 		}

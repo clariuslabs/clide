@@ -168,7 +168,7 @@
   <data name="OptionsManager_Unsupported" xml:space="preserve">
     <value>Tools options pages are not supported in this version of Visual Studio.</value>
   </data>
-  <data name="DevEnv_OutputPaneTitle" xml:space="preserve">
+  <data name="Trace_OutputPaneTitle" xml:space="preserve">
     <value>Clide</value>
   </data>
   <data name="SettingsManager_CannotSaveAsString" xml:space="preserve">
@@ -311,5 +311,23 @@
   </data>
   <data name="CompositionSource_ImportManyRequired" xml:space="preserve">
     <value>In order to retrieve the multiple components of type {componentType} from Visual Studio composition, the [ImportMany] annotation has to be used.</value>
+  </data>
+  <data name="OutputWindowManager_FailedToCreatePane" xml:space="preserve">
+    <value>Failed to create output window pane '{title}'.</value>
+  </data>
+  <data name="OutputWindowManager_CreatingPane" xml:space="preserve">
+    <value>Creating output pane '{title}' since it doesn't exist already.</value>
+  </data>
+  <data name="OutputWindowManager_RetrievingPane" xml:space="preserve">
+    <value>Retrieving potentially existing output pane '{title}'.</value>
+  </data>
+  <data name="OutputWindowManager_TraceInitializing" xml:space="preserve">
+    <value>Initializing trace output pane '{title}'.</value>
+  </data>
+  <data name="Trace_RootSource" xml:space="preserve">
+    <value>Clide</value>
+  </data>
+  <data name="Trace_OutputPaneId" xml:space="preserve">
+    <value>66893206-0EF5-4A16-AA10-6EC6B6319F92</value>
   </data>
 </root>

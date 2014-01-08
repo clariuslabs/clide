@@ -18,6 +18,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide
 {
     using Clide.Solution;
+    using System.ComponentModel;
     using System.Linq;
 
     /// <summary>

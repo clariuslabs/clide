@@ -5,20 +5,21 @@
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
     using System;
+    using System.ComponentModel;
+    using System.Diagnostics;
     using System.IO;
     using System.Runtime.InteropServices;
 
     [Guid(Constants.PackageGuid)]
     [ProvideAutoLoad(UIContextGuids.NoSolution)]
     [PackageRegistration(UseManagedResourcesOnly = true)]
+    [InstalledProductRegistration("#110", "#112", "1.0")]
+    [DisplayName("Clide Test Package")]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(MyToolWindow))]
     public class ClideIntegrationPackage : Package
     {
-        private static readonly string OutputPaneTitle = "Clide Integration Test Package";
-
         private ITracer tracer;
-        private IDisposable host;
 
         static ClideIntegrationPackage()
         {
@@ -29,11 +30,14 @@
         {
             base.Initialize();
 
-            this.host = Host.Initialize(this, OutputPaneTitle, "*");
+            var devEnv = Host.Initialize(this);
+
+            Tracer.Manager.AddListener(this.GetType().Namespace, new TextTraceListener(devEnv.OutputWindow.GetPane(this)));
+            Tracer.Manager.SetTracingLevel(this.GetType().Namespace, SourceLevels.All);
+
             this.tracer = Tracer.Get<ClideIntegrationPackage>();
 
             this.tracer.Info("Shell package initialized");
-            this.tracer.Info("Composition log path: {0}", Path.Combine(Path.GetTempPath(), "DevEnv.log"));
         }
     }
 }

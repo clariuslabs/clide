@@ -11,7 +11,7 @@
     <ProjectGuid>{3B640876-2510-4EED-8157-1ACB417C758D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UnitTests</RootNamespace>
+    <RootNamespace>Clide</RootNamespace>
     <AssemblyName>Clide.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

@@ -12,32 +12,35 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
-namespace Clide
+namespace UnitTests
 {
-    using System.ComponentModel;
-    using System.Diagnostics;
+    using Clide;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
 
-    [Settings]
-    internal class ClideSettings : Settings
+    [TestClass]
+    public class OutputWindowManagerSpec : VsHostedSpec
     {
-        public ClideSettings(ISettingsManager manager)
-            : base(manager)
+        internal static readonly IAssertion Assert = new Assertion();
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void when_writing_to_pane_writer_then_writes_to_output_pane()
         {
-            Save(true);
+            var manager = ServiceLocator.GetInstance<IOutputWindowManager>();
+
+            var writer = manager.GetPane(Guid.Empty, "test");
+
+            writer.Write("foo");
+
+            var pane = Dte.ToolWindows.OutputWindow.OutputWindowPanes.Item("test");
+            var start = pane.TextDocument.StartPoint.CreateEditPoint();
+            var text = start.GetText(pane.TextDocument.EndPoint);
+
+            Assert.Equal("foo", text);
         }
-
-#if DEBUG
-        [DefaultValue(SourceLevels.All)]
-#else
-        [DefaultValue(SourceLevels.Warning)]
-#endif
-        public SourceLevels TracingLevel { get; set; }
-
-#if DEBUG
-        [DefaultValue(true)]
-#else
-        [DefaultValue(false)]
-#endif
-        public bool Debug { get; set; }
     }
 }

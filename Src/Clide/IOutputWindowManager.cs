@@ -14,30 +14,20 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using System.ComponentModel;
-    using System.Diagnostics;
+    using System;
+    using System.IO;
 
-    [Settings]
-    internal class ClideSettings : Settings
+    /// <summary>
+    /// Provides access to writing messages to the output window.
+    /// </summary>
+    public interface IOutputWindowManager : IFluentInterface
     {
-        public ClideSettings(ISettingsManager manager)
-            : base(manager)
-        {
-            Save(true);
-        }
-
-#if DEBUG
-        [DefaultValue(SourceLevels.All)]
-#else
-        [DefaultValue(SourceLevels.Warning)]
-#endif
-        public SourceLevels TracingLevel { get; set; }
-
-#if DEBUG
-        [DefaultValue(true)]
-#else
-        [DefaultValue(false)]
-#endif
-        public bool Debug { get; set; }
+        /// <summary>
+        /// Gets or creates the output window pane with the given identifier and title.
+        /// </summary>
+        /// <param name="id">The identifier of the output window pane.</param>
+        /// <param name="title">The title of the output window pane.</param>
+        /// <returns>A <see cref="TextWriter"/> that can be used to write to the output window.</returns>
+        TextWriter GetPane(Guid id, string title);
     }
 }

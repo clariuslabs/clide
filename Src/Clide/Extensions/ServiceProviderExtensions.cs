@@ -18,6 +18,7 @@ namespace System
     using Clide.Properties;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
+    using System.ComponentModel;
     using System.Linq;
     using System.Runtime.InteropServices;
 

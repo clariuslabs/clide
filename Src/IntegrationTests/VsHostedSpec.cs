@@ -28,6 +28,7 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.VSSDK.Tools.VsIdeTesting;
 using Microsoft.VisualStudio.Shell;
+using EnvDTE80;
 
 [TestClass]
 public abstract class VsHostedSpec
@@ -38,9 +39,9 @@ public abstract class VsHostedSpec
 
     public TestContext TestContext { get; set; }
 
-    protected EnvDTE.DTE Dte
+    protected DTE2 Dte
     {
-        get { return this.ServiceProvider.GetService<DTE>(); }
+        get { return this.ServiceProvider.GetService<DTE, DTE2>(); }
     }
 
     protected IServiceProvider ServiceProvider

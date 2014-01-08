@@ -47,16 +47,8 @@ namespace Clide
         {
             using (tracer.StartActivity(Strings.DevEnvFactory.CreatingComposition))
             {
-                //// Allow dependencies of VS exported services.
+                // Allow dependencies of VS exported services.
                 var composition = services.GetService<SComponentModel, IComponentModel>();
-
-                //var builder = new ContainerBuilder();
-                //builder.RegisterComponentModel(composition);
-                //// Allow dependencies of non-exported VS services.
-                //builder.RegisterServiceProvider(services);
-                //// Automatically registers metadata associated via metadata attributes on components.
-                //builder.RegisterModule(new AttributedMetadataModule());
-                //builder.Register<IServiceLocator>(c => serviceLocators[services]);
 
                 // Keep track of assemblies we've already added, to avoid duplicate registrations.
                 var addedAssemblies = new Dictionary<string, Assembly>();

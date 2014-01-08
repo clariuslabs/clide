@@ -19,12 +19,12 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
+        <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
+        <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
     </PropertyGroup>
 
     <!-- On build servers and command line, this property is not available, so we redefine it in 

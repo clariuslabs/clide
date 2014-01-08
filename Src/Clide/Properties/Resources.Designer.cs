@@ -223,15 +223,6 @@ namespace Clide.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Clide.
-        /// </summary>
-        internal static string DevEnv_OutputPaneTitle {
-            get {
-                return ResourceManager.GetString("DevEnv_OutputPaneTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to {clideAssembly} cannot be exported as a MEF component in the hosting extension manifest..
         /// </summary>
         internal static string DevEnvFactory_ClideCantBeMefComponent {
@@ -520,6 +511,42 @@ namespace Clide.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Creating output pane &apos;{title}&apos; since it doesn&apos;t exist already..
+        /// </summary>
+        internal static string OutputWindowManager_CreatingPane {
+            get {
+                return ResourceManager.GetString("OutputWindowManager_CreatingPane", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to create output window pane &apos;{title}&apos;..
+        /// </summary>
+        internal static string OutputWindowManager_FailedToCreatePane {
+            get {
+                return ResourceManager.GetString("OutputWindowManager_FailedToCreatePane", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retrieving potentially existing output pane &apos;{title}&apos;..
+        /// </summary>
+        internal static string OutputWindowManager_RetrievingPane {
+            get {
+                return ResourceManager.GetString("OutputWindowManager_RetrievingPane", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Initializing trace output pane &apos;{title}&apos;..
+        /// </summary>
+        internal static string OutputWindowManager_TraceInitializing {
+            get {
+                return ResourceManager.GetString("OutputWindowManager_TraceInitializing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Object has already been initialized..
         /// </summary>
         internal static string Settings_AlreadyInitialized {
@@ -606,6 +633,33 @@ namespace Clide.Properties {
         internal static string SolutionTreeNode_SelectionUnsupported {
             get {
                 return ResourceManager.GetString("SolutionTreeNode_SelectionUnsupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 66893206-0EF5-4A16-AA10-6EC6B6319F92.
+        /// </summary>
+        internal static string Trace_OutputPaneId {
+            get {
+                return ResourceManager.GetString("Trace_OutputPaneId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clide.
+        /// </summary>
+        internal static string Trace_OutputPaneTitle {
+            get {
+                return ResourceManager.GetString("Trace_OutputPaneTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clide.
+        /// </summary>
+        internal static string Trace_RootSource {
+            get {
+                return ResourceManager.GetString("Trace_RootSource", resourceCulture);
             }
         }
         

@@ -44,19 +44,29 @@ namespace Clide
         event EventHandler Initialized;
 
         /// <summary>
-        /// Gets the service locator.
-        /// </summary>
-        IServiceLocator ServiceLocator { get; }
-
-        /// <summary>
         /// Gets the dialog window factory.
         /// </summary>
         IDialogWindowFactory DialogWindowFactory { get; }
 
         /// <summary>
+        /// Gets the errors manager
+        /// </summary>
+        IErrorsManager Errors { get; }
+
+        /// <summary>
         /// Gets the message box service.
         /// </summary>
         IMessageBoxService MessageBoxService { get; }
+
+        /// <summary>
+        /// Gets the output window manager.
+        /// </summary>
+        IOutputWindowManager OutputWindow { get; }
+
+        /// <summary>
+        /// Gets the service locator.
+        /// </summary>
+        IServiceLocator ServiceLocator { get; }
 
         /// <summary>
         /// Gets the status bar.
@@ -77,11 +87,6 @@ namespace Clide
         /// Gets the reference service.
         /// </summary>
         IReferenceService ReferenceService { get; }
-
-        /// <summary>
-        /// Gets the errors manager
-        /// </summary>
-        IErrorsManager Errors { get; }
 
         /// <summary>
         /// Exits Visual Studio.

@@ -28,13 +28,13 @@ namespace Clide
     using Microsoft.VisualStudio.Shell.Interop;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
 
     [Component(IsSingleton = true)]
     internal class DevEnvImpl : IDevEnv
     {
-        private static readonly Guid OutputWindowId = new Guid("{66893206-0EF5-4A16-AA10-6EC6B6319F92}");
-
+        private IServiceLocator serviceLocator;
         private Lazy<IStatusBar> status;
         private IShellEvents shellEvents;
         private Lazy<IDialogWindowFactory> dialogFactory;
@@ -42,9 +42,9 @@ namespace Clide
         private Lazy<IUIThread> uiThread;
         private Lazy<IMessageBoxService> messageBox;
         private Lazy<IReferenceService> references;
-        private TraceOutputWindowManager outputWindowManager;
         private Lazy<bool> isElevated;
         private IErrorsManager errorsManager;
+        private Lazy<IOutputWindowManager> outputWindow;
 
         public DevEnvImpl(
             ClideSettings settings,
@@ -55,9 +55,10 @@ namespace Clide
             Lazy<IMessageBoxService> messageBox,
             IShellEvents shellEvents,
             Lazy<IReferenceService> references,
-            IErrorsManager errorsManager)
+            IErrorsManager errorsManager, 
+            Lazy<IOutputWindowManager> outputWindow)
         {
-            this.ServiceLocator = serviceLocator;
+            this.serviceLocator = serviceLocator;
             this.dialogFactory = dialogFactory;
             this.toolWindows = toolWindows;
             this.shellEvents = shellEvents;
@@ -66,16 +67,17 @@ namespace Clide
             this.status = new Lazy<IStatusBar>(() => new StatusBar(this.ServiceLocator));
             this.references = references;
             this.errorsManager = errorsManager;
+            this.outputWindow = outputWindow;
 
             TracingExtensions.ErrorsManager = this.errorsManager;
 
-            this.outputWindowManager = new TraceOutputWindowManager(
-                serviceLocator,
-                shellEvents,
-                uiThread,
-                Tracer.Manager,
-                OutputWindowId,
-                Strings.DevEnv.OutputPaneTitle);
+            if (settings.Debug)
+            {
+                Tracer.Manager.AddListener(Strings.Trace.RootSource,
+                    new TextTraceListener(outputWindow.Value.GetPane(new Guid(Strings.Trace.OutputPaneId), Strings.Trace.OutputPaneTitle)));
+            }
+
+            Tracer.Manager.SetTracingLevel(Strings.Trace.RootSource, settings.TracingLevel);
 
             this.isElevated = new Lazy<bool>(() =>
             {
@@ -87,15 +89,33 @@ namespace Clide
                 shell.IsRunningElevated(out elevated);
                 return elevated;
             });
-
-            Tracer.Manager.SetTracingLevel(TracerManager.DefaultSourceName, settings.TracingLevel);
         }
 
         public bool IsInitialized { get { return this.shellEvents.IsInitialized; } }
 
         public bool IsElevated { get { return this.isElevated.Value; } }
 
-        public IServiceLocator ServiceLocator { get; private set; }
+        public IDialogWindowFactory DialogWindowFactory
+        {
+            get { return this.dialogFactory.Value; }
+        }
+
+        public IErrorsManager Errors
+        {
+            get { return this.errorsManager; }
+        }
+
+        public IMessageBoxService MessageBoxService
+        {
+            get { return this.messageBox.Value; }
+        }
+
+        public IOutputWindowManager OutputWindow
+        {
+            get { return this.outputWindow.Value; }
+        }
+
+        public IServiceLocator ServiceLocator { get { return this.serviceLocator; } }
 
         public IStatusBar StatusBar
         {
@@ -107,16 +127,6 @@ namespace Clide
             get { return this.uiThread.Value; }
         }
 
-        public IDialogWindowFactory DialogWindowFactory
-        {
-            get { return this.dialogFactory.Value; }
-        }
-
-        public IMessageBoxService MessageBoxService
-        {
-            get { return this.messageBox.Value; }
-        }
-
         public IEnumerable<IToolWindow> ToolWindows
         {
             get { return this.toolWindows.Select(lazy => lazy.Value); }
@@ -125,11 +135,6 @@ namespace Clide
         public IReferenceService ReferenceService
         {
             get { return this.references.Value; }
-        }
-
-        public IErrorsManager Errors
-        {
-            get { return this.errorsManager; }
         }
 
         public event EventHandler Initialized

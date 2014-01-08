@@ -98,6 +98,7 @@
     <Compile Include="Composition\FallbackServiceLocator.cs" />
     <Compile Include="Composition\ExportsServiceLocator.cs" />
     <Compile Include="Composition\ServicesExportProvider.cs" />
+    <Compile Include="Diagnostics\TextTraceListener.cs" />
     <Compile Include="External\Diagnostics\Tracer\ITracer.cs" />
     <Compile Include="External\Diagnostics\Tracer\ITracerExtensions.cs" />
     <Compile Include="External\Diagnostics\Tracer\ITracerManager.cs" />
@@ -124,6 +125,8 @@
     <Compile Include="FallbackServiceProvider.cs" />
     <Compile Include="IErrorsManager.cs" />
     <Compile Include="IOptionsPageWindowFactory.cs" />
+    <Compile Include="IOutputWindowManager.cs" />
+    <Compile Include="IOutputWindowManagerExtensions.cs" />
     <Compile Include="netfx\System\AmbientSingleton.cs" />
     <Compile Include="netfx\System\Collections\Generic\IEnumerable\TraverseKind.cs" />
     <Compile Include="netfx\System\Collections\Generic\IEnumerable\Traverser.cs" />
@@ -204,6 +207,7 @@
     <Compile Include="Solution\Implementation\SolutionVisitable.cs" />
     <Compile Include="Solution\ISolutionVisitor.cs" />
     <Compile Include="Solution\SolutionVisitor.cs" />
+    <Compile Include="OutputWindowManager.cs" />
     <Compile Include="UI\TreeNodes\ITreeNodeExtensions.cs" />
     <Compile Include="Solution\Factories\ISolutionExplorerNodeFactory.cs" />
     <Compile Include="Solution\Factories\SolutionItemNodeFactory.cs" />
@@ -232,9 +236,6 @@
     <Compile Include="UI\TreeNodes\ITreeNode.cs" />
     <Compile Include="MessageBoxService.cs" />
     <Compile Include="DevEnvImpl.cs" />
-    <Compile Include="Diagnostics\IndentingTextListener.cs" />
-    <Compile Include="Diagnostics\OutputWindowTextWriter.cs" />
-    <Compile Include="Diagnostics\TraceOutputWindowManager.cs" />
     <Compile Include="DialogWindowFactory.cs" />
     <Compile Include="Events\IGlobalEvents.cs" />
     <Compile Include="Events\IShellEvents.cs" />
