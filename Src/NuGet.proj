@@ -11,10 +11,10 @@
 
     <ItemGroup>
         <!-- AdditionalProperties are passed to the build task below automatically -->
-        <ProjectToBuild Include="Clide\Clide.csproj">
+        <ProjectToBuild Include="Clide.Resolver\Clide.Resolver.csproj">
             <AdditionalProperties>VisualStudioVersion=10.0;</AdditionalProperties>
         </ProjectToBuild>
-        <ProjectToBuild Include="Clide.Resolver\Clide.Resolver.csproj">
+        <ProjectToBuild Include="Clide\Clide.csproj">
             <AdditionalProperties>VisualStudioVersion=10.0;</AdditionalProperties>
         </ProjectToBuild>
     </ItemGroup>
