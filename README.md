@@ -22,4 +22,6 @@ If you are authoring any kind of Visual Studio or Xamarin Studio tooling or auto
 Is there API documentation?
 =====
 
-Documentation will be published automatically via [NuDoq](http://www.nudoq.org/#!/Projects/Clide). It's still not live though.
+Documentation is published automatically via [NuDoq](http://www.nudoq.org/#!/Projects/Clide).
+
+User documentation is available via the [Wiki](https://github.com/clariuslabs/clide/wiki).
