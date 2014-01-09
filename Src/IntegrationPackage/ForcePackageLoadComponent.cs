@@ -1,11 +1,11 @@
-﻿using System.ComponentModel.Composition;
+﻿using Clide.CommonComposition;
+using System.ComponentModel.Composition;
 
 namespace IntegrationPackage
 {
-	[Export]
+	[Component]
 	public class ForcePackageLoadComponent
 	{
-		[ImportingConstructor]
 		public ForcePackageLoadComponent(IShellComponent package)
 		{
 			// No need to do anything special with the package here, 
