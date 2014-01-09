@@ -102,7 +102,7 @@ namespace Clide.Diagnostics
         }
 
         /// <summary>
-        /// After determining if tracing should be performed according to the configured <see cref="Filter"/>, 
+        /// After determining if tracing should be performed according to the configured <see cref="TraceListener.Filter"/>, 
         /// issues the <see cref="WriteLine"/> call.
         /// </summary>
         /// <param name="eventCache">The event cache that contains extra information about the trace context.</param>
@@ -116,7 +116,7 @@ namespace Clide.Diagnostics
         {
             if (ignoredEvents.Contains(eventType))
                 return;
-
+            
             WriteLine(eventType.ToString().PadRight(MaxEventTypeLength) + ": " + message);
         }
     }

@@ -17,8 +17,8 @@ namespace IntegrationPackage
     using Clide;
     using System.ComponentModel;
 
-    [Category("Clide")]
-    [DisplayName("Integration Package")]
+    [Category("My Package")]
+    [DisplayName("Server Settings")]
     [OptionsPage]
     public class FooOptionsPage : OptionsPage<FooView, FooSettings>
     {

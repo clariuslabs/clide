@@ -14,6 +14,9 @@
         <ProjectToBuild Include="Clide\Clide.csproj">
             <AdditionalProperties>VisualStudioVersion=10.0;</AdditionalProperties>
         </ProjectToBuild>
+        <ProjectToBuild Include="Clide.Resolver\Clide.Resolver.csproj">
+            <AdditionalProperties>VisualStudioVersion=10.0;</AdditionalProperties>
+        </ProjectToBuild>
     </ItemGroup>
 
     <ItemGroup>

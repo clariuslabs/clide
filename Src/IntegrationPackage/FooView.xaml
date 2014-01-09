@@ -5,12 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="183" d:DesignWidth="323">
-	<StackPanel Orientation="Vertical">
-		<TextBlock Text="Display name:" VerticalAlignment="Top" />
-		<TextBox Text="{Binding DisplayName}" Width="100" VerticalAlignment="Top" />
-        <TextBlock Text="Address:" VerticalAlignment="Top" />
-        <TextBox Text="{Binding Address}" Width="100" VerticalAlignment="Top" />
-        <TextBlock Text="Port:" VerticalAlignment="Top" />
-        <TextBox Text="{Binding Port}" Width="100" VerticalAlignment="Top" />
+    <StackPanel Orientation="Vertical">
+        <!--<TextBlock Text="Display name:" VerticalAlignment="Top" />
+        <TextBox Text="{Binding DisplayName}" Width="100" VerticalAlignment="Top" />-->
+        <TextBlock Text="Address:" VerticalAlignment="Top" Margin="5" />
+        <TextBox Text="{Binding Address}" Width="100" Margin="5" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <TextBlock Text="Port:" VerticalAlignment="Top" Margin="5" />
+        <TextBox Text="{Binding Port}" Width="100" Margin="5" VerticalAlignment="Top" HorizontalAlignment="Left" />
     </StackPanel>
 </UserControl>

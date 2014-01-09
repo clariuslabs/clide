@@ -18,8 +18,10 @@ namespace IntegrationPackage
 
         [Required]
         public string DisplayName { get; set; }
+
         public Uri Address { get; set; }
 
+        [DefaultValue(8080)]
         [Required]
         [Range(8000, 50000)]
         public int Port { get; set; }

@@ -199,8 +199,8 @@ namespace Clide
 
         /// <summary>
         /// Manually raises the property changed. Not needed if using automatic 
-        /// properties together with the <see cref="https://www.nuget.org/packages/PropertyChanged.Fody/">Property Changed</see> 
-        /// nuget package.
+        /// properties together with the Property Changed nuget package
+        /// (https://www.nuget.org/packages/PropertyChanged.Fody/)
         /// </summary>
         /// <param name="propertyName">Name of the property that changed.</param>
         protected void RaisePropertyChanged(string propertyName)
