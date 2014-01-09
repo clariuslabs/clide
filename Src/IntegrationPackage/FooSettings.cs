@@ -7,23 +7,26 @@ using System.Diagnostics;
 
 namespace IntegrationPackage
 {
-	[Settings]
-	public class FooSettings : Settings
-	{
-		public FooSettings(ISettingsManager manager)
-			: base(manager)
-		{
+    [Settings]
+    public class FooSettings : Settings
+    {
+        public FooSettings(ISettingsManager manager)
+            : base(manager)
+        {
             this.BarSettings = new BarSettings();
-		}
+        }
 
         [Required]
-		public string DisplayName { get; set; }
+        public string DisplayName { get; set; }
         public Uri Address { get; set; }
+
+        [Required]
+        [Range(8000, 50000)]
         public int Port { get; set; }
 
         // TODO: add support for child properties
         public BarSettings BarSettings { get; private set; }
-	}
+    }
 
     public class BarSettings
     {

@@ -34,10 +34,10 @@ namespace Clide
     /// <example>
     /// The following is an example of a settings class:
     /// <code>
-    /// [Settings(typeof(IServerSettings))]
+    /// [Settings]
     /// public class ServerSettings : Settings, IServerSettings
     /// {
-    ///     public FooSettings(ISettingsManager manager)
+    ///     public ServerSettings(ISettingsManager manager)
     ///         : base(manager)
     ///     {
     ///     }
@@ -195,6 +195,17 @@ namespace Clide
         /// </summary>
         protected virtual void OnSaved()
         {
+        }
+
+        /// <summary>
+        /// Manually raises the property changed. Not needed if using automatic 
+        /// properties together with the <see cref="https://www.nuget.org/packages/PropertyChanged.Fody/">Property Changed</see> 
+        /// nuget package.
+        /// </summary>
+        /// <param name="propertyName">Name of the property that changed.</param>
+        protected void RaisePropertyChanged(string propertyName)
+        {
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
