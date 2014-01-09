@@ -80,12 +80,5 @@ v1.0
 </releaseNotes>
         <copyright>Copyright 2012</copyright>
         <tags>visualstudio vsx extensibility</tags>
-        <dependencies>
-            <dependency id="Autofac" version="3.0" />
-            <dependency id="Autofac.Mef" version="3.0" />
-            <dependency id="Autofac.Extras.Attributed" version="3.0" />
-            <dependency id="Autofac.Extras.CommonServiceLocator" version="3.0" />
-            <dependency id="CommonServiceLocator" version="1.0" />
-        </dependencies>
     </metadata>
 </package>
