@@ -23,6 +23,7 @@ Makefile -crlf
 *.txt           crlf
 *.resx          crlf
 *.config        crlf
+*.Config        crlf
 *.xaml          crlf
 *.tt            crlf
 *.ttinclude     crlf
