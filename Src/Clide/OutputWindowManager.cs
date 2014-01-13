@@ -42,7 +42,6 @@ namespace Clide
         private IServiceProvider serviceProvider;
         private IShellEvents shellEvents;
         private Lazy<IUIThread> uiThread;
-        private IVsOutputWindow outputWindow;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OutputWindowManager" /> class.
@@ -59,7 +58,6 @@ namespace Clide
             this.serviceProvider = serviceProvider;
             this.shellEvents = shellEvents;
             this.uiThread = uiThread;
-            this.outputWindow = this.serviceProvider.GetService<SVsOutputWindow, IVsOutputWindow>();
         }
 
         /// <summary>
@@ -115,7 +113,8 @@ namespace Clide
             tracer.ShieldUI(() =>
             {
                 tracer.Verbose(Strings.OutputWindowManager.RetrievingPane(title));
-                
+
+                var outputWindow = this.serviceProvider.GetService<SVsOutputWindow, IVsOutputWindow>();
                 if (!ErrorHandler.Succeeded(outputWindow.GetPane(ref id, out pane)))
                 {
                     tracer.Verbose(Strings.OutputWindowManager.CreatingPane(title));

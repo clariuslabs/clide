@@ -32,8 +32,8 @@
 
             IDevEnv devEnv = Host.Initialize(this);
 
-            Tracer.Manager.AddListener(this.GetType().Namespace, new TextTraceListener(devEnv.OutputWindow.GetPane(this)));
             Tracer.Manager.SetTracingLevel(this.GetType().Namespace, SourceLevels.All);
+            Tracer.Manager.AddListener(this.GetType().Namespace, new TextTraceListener(devEnv.OutputWindow.GetPane(this)));
 
             this.tracer = Tracer.Get<ClideIntegrationPackage>();
 
