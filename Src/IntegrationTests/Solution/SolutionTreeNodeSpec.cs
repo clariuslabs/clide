@@ -18,6 +18,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide.Solution
 {
     using Clide.Patterns.Adapter;
+    using Clide.Sdk.Solution;
+    using Clide.Solution.Implementation;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.VisualStudio.TestTools.UnitTesting;

@@ -12,9 +12,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
-namespace Clide.Solution
+namespace Clide.Solution.Implementation
 {
     using Clide.Properties;
+    using Clide.Sdk.Solution;
     using Microsoft.Build.Evaluation;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;

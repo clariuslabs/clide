@@ -16,6 +16,7 @@ namespace UnitTests
 {
     using Clide;
     using Clide.Events;
+    using Clide.Sdk.Solution;
     using Clide.Solution;
     using System;
     using System.Collections.Concurrent;

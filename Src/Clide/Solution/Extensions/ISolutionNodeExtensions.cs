@@ -203,6 +203,16 @@ namespace Clide.Solution
             {
                 throw new NotSupportedException();
             }
+
+            public bool VisitEnter(ICustomNode node)
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool VisitLeave(ICustomNode node)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         private class FilteringProjectsVisitor : ISolutionVisitor
@@ -309,6 +319,16 @@ namespace Clide.Solution
             public bool VisitLeave(IReferenceNode reference)
             {
                 throw new NotSupportedException();
+            }
+
+            public bool VisitEnter(ICustomNode node)
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool VisitLeave(ICustomNode node)
+            {
+                throw new NotImplementedException();
             }
         }
     }

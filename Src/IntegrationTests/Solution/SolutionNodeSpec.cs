@@ -19,6 +19,8 @@ namespace Clide.Solution
 {
     using Clide.Events;
     using Clide.Patterns.Adapter;
+    using Clide.Sdk.Solution;
+    using Clide.Solution.Implementation;
     using Microsoft.Practices.ServiceLocation;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;

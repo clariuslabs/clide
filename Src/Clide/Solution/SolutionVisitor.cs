@@ -212,5 +212,46 @@ namespace Clide.Solution
         {
             return true;
         }
+
+        /// <summary>
+        /// Begins visiting a custom node.
+        /// </summary>
+        /// <param name="customNode">The custom node being visited.</param>
+        /// <returns><see langword="true"/> if the node children should be visited; <see langword="false"/> otherwise.</returns>
+        public bool VisitEnterCustom(ISolutionExplorerNode customNode)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Ends visiting a custom node.
+        /// </summary>
+        /// <param name="customNode">The custom node being visited.</param>
+        /// <returns><see langword="true"/> if the node siblings should be visited; <see langword="false"/> otherwise.</returns>
+        public bool VisitLeaveCustom(ISolutionExplorerNode customNode)
+        {
+            return true;
+        }
+
+
+        /// <summary>
+        /// Begins visiting a custom node.
+        /// </summary>
+        /// <param name="node">The custom node being visited.</param>
+        /// <returns><see langword="true" /> if the node children should be visited; <see langword="false" /> otherwise.</returns>
+        public bool VisitEnter(ICustomNode node)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Ends visiting a custom node.
+        /// </summary>
+        /// <param name="node">The custom node being visited.</param>
+        /// <returns><see langword="true" /> if the node siblings should be visited; <see langword="false" /> otherwise.</returns>
+        public bool VisitLeave(ICustomNode node)
+        {
+            return true;
+        }
     }
 }

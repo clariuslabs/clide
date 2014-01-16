@@ -131,5 +131,19 @@ namespace Clide.Solution
         /// <param name="reference">The project reference being visited.</param>
         /// <returns><see langword="true"/> if the project reference siblings should be visited; <see langword="false"/> otherwise.</returns>
         bool VisitLeave(IReferenceNode reference);
+
+        /// <summary>
+        /// Begins visiting a custom node.
+        /// </summary>
+        /// <param name="node">The custom node being visited.</param>
+        /// <returns><see langword="true"/> if the node children should be visited; <see langword="false"/> otherwise.</returns>
+        bool VisitEnter(ICustomNode node);
+
+        /// <summary>
+        /// Ends visiting a custom node.
+        /// </summary>
+        /// <param name="node">The custom node being visited.</param>
+        /// <returns><see langword="true"/> if the node siblings should be visited; <see langword="false"/> otherwise.</returns>
+        bool VisitLeave(ICustomNode node);
     }
 }

@@ -16,7 +16,9 @@ namespace Clide.Events
 {
     using Clide.CommonComposition;
     using Clide.Composition;
+    using Clide.Sdk.Solution;
     using Clide.Solution;
+    using Clide.Solution.Implementation;
     using EnvDTE;
     using EnvDTE80;
     using Microsoft.VisualStudio;

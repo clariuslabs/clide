@@ -26,14 +26,22 @@ namespace Clide
     /// Attribute that designates a given class as a 
     /// tree node factory for a specific owner and model type.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false, Inherited = false)]
     public class TreeNodeFactoryAttribute : ComponentAttribute
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TreeNodeFactoryAttribute"/> class.
         /// </summary>
+        public TreeNodeFactoryAttribute()
+            : this(false)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TreeNodeFactoryAttribute"/> class.
+        /// </summary>
         /// <param name="isFallback">Whether the factory is a fallback one, meaning a non-fallback one should be tried first..</param>
-        public TreeNodeFactoryAttribute(bool isFallback)
+        protected TreeNodeFactoryAttribute(bool isFallback)
         {
             this.IsFallback = isFallback;
         }

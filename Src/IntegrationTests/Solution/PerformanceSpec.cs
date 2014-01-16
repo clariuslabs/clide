@@ -84,13 +84,11 @@
 
         [HostType("VS IDE")]
         [TestMethod]
-        // Uncomment Ignore, and download EntLib to test performance.
-        //[Ignore]
+        // Comment Ignore, and download EntLib to test performance.
+        [Ignore]
         public void when_retrieving_selected_project_then_performance_is_acceptable()
         {
             OpenSolution(@"C:\Delete\Blocks\EnterpriseLibrary.sln");
-
-            //System.Diagnostics.Debugger.Launch();
 
             var solution = this.ServiceProvider.GetService<SVsSolution, IVsSolution>();
             var devenv = DevEnv.Get(VsIdeTestHostContext.ServiceProvider);

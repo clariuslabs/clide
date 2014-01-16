@@ -14,6 +14,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
+    using Clide.Sdk.Solution;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Linq;
 

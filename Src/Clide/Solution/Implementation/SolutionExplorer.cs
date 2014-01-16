@@ -15,10 +15,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
-namespace Clide.Solution
+namespace Clide.Solution.Implementation
 {
     using Clide.CommonComposition;
     using Clide.Composition;
+    using Clide.Sdk.Solution;
     using Clide.VisualStudio;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;

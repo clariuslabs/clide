@@ -35,6 +35,11 @@ namespace Clide.Solution
         /// <summary>
         /// Gets the dynamic properties of the item.
         /// </summary>
+        /// <remarks>
+        /// The default implementation of item nodes exposes the 
+        /// MSBuild item metadata properties using this property, 
+        /// and allows getting and setting them.
+        /// </remarks>
 		dynamic Properties { get; }
 	}
 }
