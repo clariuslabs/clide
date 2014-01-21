@@ -110,7 +110,8 @@ namespace Clide.Diagnostics
         /// <param name="eventType">Type of the event.</param>
         /// <param name="message">The message to trace.</param>
         /// <remarks>
-        /// <see cref="TraceEventType.Stop"/> traces are ignored, as well as 
+        /// <see cref="TraceEventType.Resume"/>, <see cref="TraceEventType.Stop"/>,
+		/// <see cref="TraceEventType.Resume"/> and <see cref="TraceEventType.Transfer"/> traces are ignored.
         /// </remarks>
         protected virtual void DoTrace(TraceEventCache eventCache, string source, TraceEventType eventType, string message)
         {
