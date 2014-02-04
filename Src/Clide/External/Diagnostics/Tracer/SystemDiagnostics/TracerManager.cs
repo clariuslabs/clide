@@ -72,7 +72,7 @@ namespace Clide.Diagnostics
             // Note we have only one async task to perform all tracing. This 
             // is an optimization, so that we don't consume too much resources
             // from the running app for this.
-            Task.Factory.StartNew(DoTrace, cancellation.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current);
+            Task.Factory.StartNew(DoTrace, cancellation.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
 
             InitializeConfiguredSources();
         }
