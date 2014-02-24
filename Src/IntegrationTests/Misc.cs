@@ -17,11 +17,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System;
-    using System.Collections.Generic;
+	using Microsoft.VisualStudio;
+	using Microsoft.VisualStudio.Shell;
+	using Microsoft.VisualStudio.Shell.Interop;
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+	using Microsoft.VSSDK.Tools.VsIdeTesting;
+	using System;
+	using System.Collections.Generic;
 
     [TestClass]
     public class Misc : VsHostedSpec

@@ -236,5 +236,25 @@ namespace Clide.Solution
 
             Assert.NotNull(node);
         }
+
+		[HostType ("VS IDE")]
+		[TestMethod]
+		public void WhenAdaptingProjectReferencesToReference_ThenSucceeds()
+		{
+            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+			
+			var references = base.ServiceLocator.GetInstance<ISolutionExplorer>().Solution
+				.FindProjects()
+				.First()
+				.Nodes
+				.OfType<IReferencesNode> ()
+				.SelectMany (r => r.Nodes.OfType<IReferenceNode> ())
+				.Select (r => r.As<VSLangProj.Reference> ())
+				.Where (r => r != null)
+				.Select (r => r.Path)
+				.ToList ();
+
+			Assert.True (references.Count > 2);
+		}
     }
 }

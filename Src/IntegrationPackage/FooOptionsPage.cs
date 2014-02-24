@@ -26,5 +26,5 @@ namespace IntegrationPackage
             : base(windowFactory, settings)
         {
         }
-    }
+	}
 }

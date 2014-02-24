@@ -17,6 +17,7 @@
     [DisplayName("Clide Test Package")]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(MyToolWindow))]
+    [ProvideProfile(typeof(FooSettingsManager), "General", "FooSettings", 110, 113, false, MigrationType = ProfileMigrationType.PassThrough)]
     public class ClideIntegrationPackage : Package
     {
         private ITracer tracer;
