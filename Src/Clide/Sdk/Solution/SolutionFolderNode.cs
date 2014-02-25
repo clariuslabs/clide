@@ -74,6 +74,19 @@ namespace Clide.Sdk.Solution
             return SolutionVisitable.Accept(this, visitor);
         }
 
+		/// <summary>
+		/// Tries to smart-cast this node to the give type.
+		/// </summary>
+		/// <typeparam name="T">Type to smart-cast to.</typeparam>
+		/// <returns>
+		/// The casted value or null if it cannot be converted to that type.
+		/// </returns>
+		/// <exception cref="System.NotImplementedException"></exception>
+		public override T As<T>()
+		{
+			return this.Adapter.Adapt(this).As<T>();
+		}
+
         /// <summary>
         /// Gets the solution folder represented by this node.
         /// </summary>

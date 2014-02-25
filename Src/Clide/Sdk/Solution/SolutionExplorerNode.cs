@@ -101,6 +101,11 @@ namespace Clide.Sdk.Solution
         /// </summary>
         protected internal IVsSolutionHierarchyNode HierarchyNode { get { return this.hierarchyNode; } }
 
+		/// <summary>
+		/// Gets the adapter service used to construct this node.
+		/// </summary>
+		protected IAdapterService Adapter { get { return this.adapter; } }
+
         /// <summary>
         /// Gets the parent of this node.
         /// </summary>
@@ -200,10 +205,7 @@ namespace Clide.Sdk.Solution
         /// <returns>
         /// The casted value or null if it cannot be converted to that type.
         /// </returns>
-        public virtual T As<T>() where T : class
-        {
-            return this.adapter.Adapt(this).As<T>();
-        }
+        public abstract T As<T>() where T : class;
 
         /// <summary>
         /// Collapses this node.

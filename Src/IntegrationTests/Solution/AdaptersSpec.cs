@@ -239,7 +239,7 @@ namespace Clide.Solution
 
 		[HostType ("VS IDE")]
 		[TestMethod]
-		public void WhenAdaptingProjectReferencesToReference_ThenSucceeds()
+		public void WhenAdaptingProjectReferencesToNonAdaptedType_ThenReturnsEmptyList()
 		{
             base.OpenSolution("SampleSolution\\SampleSolution.sln");
 			
@@ -249,12 +249,11 @@ namespace Clide.Solution
 				.Nodes
 				.OfType<IReferencesNode> ()
 				.SelectMany (r => r.Nodes.OfType<IReferenceNode> ())
-				.Select (r => r.As<VSLangProj.Reference> ())
+				.Select (r => r.As<IFormattable> ())
 				.Where (r => r != null)
-				.Select (r => r.Path)
 				.ToList ();
 
-			Assert.True (references.Count > 2);
+			Assert.Equal (0, references.Count);
 		}
     }
 }

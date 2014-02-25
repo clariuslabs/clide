@@ -189,6 +189,11 @@ namespace Clide.Solution
             {
                 return true;
             }
+
+			public override T As<T>()
+			{
+				return this.Adapter.Adapt(this).As<T>();
+			}
         }
 	}
 }
