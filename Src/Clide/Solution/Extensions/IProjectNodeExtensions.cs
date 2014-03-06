@@ -78,7 +78,7 @@ namespace Clide.Solution
                     // Cleanup handler.
                     events.OnBuildDone -= done;
                 }
-            });
+            }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace Clide.Solution
                 var provider = new VsTargetFrameworkProvider(dtar, dtal, openScope);
 
                 return provider.GetReflectionAssembly(assemblyName);
-            });
+            }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
         }
 
         /// <summary>

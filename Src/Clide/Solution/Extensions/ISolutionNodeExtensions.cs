@@ -65,7 +65,7 @@ namespace Clide.Solution
                     // Cleanup handler.
                     events.OnBuildDone -= done;
                 }
-            });
+            }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
         }
 
         /// <summary>
