@@ -22,18 +22,24 @@ namespace Clide.Solution.Adapters
     [Adapter]
     internal class SolutionToVsAdapter : 
         IAdapter<SolutionTreeNode, VsHierarchyItem>,
+        IAdapter<SolutionTreeNode, IVsSolutionHierarchyNode>,
         IAdapter<SolutionTreeNode, IVsHierarchy>,
         IAdapter<SolutionNode, IVsSolution>,
         IAdapter<ProjectNode, IVsProject>
     {
-        IVsHierarchy IAdapter<SolutionTreeNode, IVsHierarchy>.Adapt(SolutionTreeNode from)
-        {
-            return from.HierarchyNode.VsHierarchy;
-        }
-
         VsHierarchyItem IAdapter<SolutionTreeNode, VsHierarchyItem>.Adapt(SolutionTreeNode from)
         {
             return new VsHierarchyItem(from.HierarchyNode.VsHierarchy, from.HierarchyNode.ItemId);
+        }
+
+        IVsSolutionHierarchyNode IAdapter<SolutionTreeNode, IVsSolutionHierarchyNode>.Adapt(SolutionTreeNode from)
+        {
+            return from.HierarchyNode;
+        }
+
+        IVsHierarchy IAdapter<SolutionTreeNode, IVsHierarchy>.Adapt(SolutionTreeNode from)
+        {
+            return from.HierarchyNode.VsHierarchy;
         }
 
         public IVsSolution Adapt(SolutionNode from)

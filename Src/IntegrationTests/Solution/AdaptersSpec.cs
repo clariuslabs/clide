@@ -179,6 +179,25 @@ namespace Clide.Solution
             Assert.NotNull(node);
         }
 
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void WhenAdaptingISolutionNodeToVsHierarchyItem_ThenSucceeds()
+        {
+            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+
+            var adapter = this.ServiceLocator.GetInstance<IAdapterService>();
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
+            var source = explorer.Solution
+                .As<VsHierarchyItem>();
+
+            Assert.NotNull(source);
+
+            var node = adapter.Adapt(source).As<ISolutionNode>();
+
+            Assert.NotNull(node);
+        }
+
         [HostType("VS IDE")]
         [TestMethod]
         public void WhenAdaptingVsHierarchyItemToISolutionNode_ThenSucceeds()

@@ -194,7 +194,6 @@
     <Compile Include="Solution\Implementation\Adapters\DteToSolutionAdapter.cs" />
     <Compile Include="Solution\Implementation\Adapters\IServiceProviderAdapter.cs" />
     <Compile Include="Solution\Implementation\Adapters\SolutionToVsLangAdapter.cs" />
-    <Compile Include="Solution\Implementation\Adapters\VsSolutionHierarchyAdapter.cs" />
     <Compile Include="Solution\Implementation\Adapters\SolutionToVsAdapter.cs" />
     <Compile Include="Solution\Implementation\Adapters\MsBuildAdapter.cs" />
     <Compile Include="Solution\Implementation\Adapters\SolutionToDteAdapter.cs" />
