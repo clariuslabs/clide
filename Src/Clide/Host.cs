@@ -14,15 +14,16 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using Clide.Commands;
-    using Clide.CommonComposition;
-    using Clide.Composition;
-    using Clide.Diagnostics;
-    using Clide.Events;
-    using Clide.Properties;
-    using System;
-    using System.ComponentModel;
-    using System.Windows.Threading;
+	using Clide.Commands;
+	using Clide.CommonComposition;
+	using Clide.Composition;
+	using Clide.Diagnostics;
+	using Clide.Events;
+	using Clide.Patterns.Adapter;
+	using Clide.Properties;
+	using System;
+	using System.ComponentModel;
+	using System.Windows.Threading;
 
     /// <summary>
     /// Core host implementation, to be cached while the 
@@ -60,6 +61,10 @@ namespace Clide
                     // Initialize the host package components.
                     var host = devEnv.ServiceLocator.GetInstance<HostImpl>();
                     host.Initialize();
+
+					// Re-initialize the adapter service so that extended adapter implementations
+					// are available.
+					AdaptersInitializer.SetService(devEnv.ServiceLocator.GetInstance<IAdapterService>());
 
                     tracer.Info("Package initialization finished successfully");
 

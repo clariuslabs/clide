@@ -14,7 +14,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Patterns.Adapter
 {
-
     partial class Adapters
     {
         static Adapters()
@@ -24,5 +23,15 @@ namespace Clide.Patterns.Adapter
             // from Clide itself.
             AdaptersInitializer.SetService(ServiceLocator.GlobalLocator.GetInstance<IAdapterService>());
         }
+
+		/// <summary>
+		/// Gets the singleton instance initialized with a global Clide-only 
+		/// adapter service, or a fully extensible one if Clide has been properly 
+		/// initialized.
+		/// </summary>
+		internal static IAdapterService ServiceInstance
+		{
+			get { return AdapterService; }
+		}
     }
 }

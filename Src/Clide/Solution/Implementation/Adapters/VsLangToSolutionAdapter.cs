@@ -14,7 +14,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution.Adapters
 {
-
     // TODO: implement VSLang -> Solution nodes adapter
     //[Adapter]
     internal class VsLangToSolutionAdapter // : 

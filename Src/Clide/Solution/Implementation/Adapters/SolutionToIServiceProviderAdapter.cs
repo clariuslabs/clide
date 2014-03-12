@@ -16,40 +16,38 @@ namespace Clide.Solution.Adapters
 {
     using Clide.Patterns.Adapter;
     using Clide.Sdk.Solution;
+    using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
     using System;
+    using Ole = Microsoft.VisualStudio.OLE.Interop;
 
     [Adapter]
-    internal class SolutionToVsAdapter : 
-        IAdapter<SolutionTreeNode, VsHierarchyItem>,
-        IAdapter<SolutionTreeNode, IVsSolutionHierarchyNode>,
-        IAdapter<SolutionTreeNode, IVsHierarchy>,
-        IAdapter<SolutionNode, IVsSolution>,
-        IAdapter<ProjectNode, IVsProject>
+    internal class SolutionToIServiceProviderAdapter : 
+        IAdapter<ISolutionNode, IServiceProvider>, 
+        IAdapter<IProjectNode, IServiceProvider>, 
+        IAdapter<IProjectItemNode, IServiceProvider>
     {
-        VsHierarchyItem IAdapter<SolutionTreeNode, VsHierarchyItem>.Adapt(SolutionTreeNode from)
+        public IServiceProvider Adapt(ISolutionNode from)
         {
-            return new VsHierarchyItem(from.HierarchyNode.VsHierarchy, from.HierarchyNode.ItemId);
+            return GlobalServiceProvider.Instance;
         }
 
-        IVsSolutionHierarchyNode IAdapter<SolutionTreeNode, IVsSolutionHierarchyNode>.Adapt(SolutionTreeNode from)
+        public IServiceProvider Adapt(IProjectNode from)
         {
-            return from.HierarchyNode;
+            var vsProject = from.As<IVsProject>();
+            Ole.IServiceProvider oleSp;
+
+            // local service provider for the project
+            if (vsProject != null && vsProject.GetItemContext(VSConstants.VSITEMID_ROOT, out oleSp) == VSConstants.S_OK)
+                return new ServiceProvider(oleSp);
+
+            return GlobalServiceProvider.Instance;
         }
 
-        IVsHierarchy IAdapter<SolutionTreeNode, IVsHierarchy>.Adapt(SolutionTreeNode from)
+        public IServiceProvider Adapt(IProjectItemNode from)
         {
-            return from.HierarchyNode.VsHierarchy;
+            return Adapt(from.OwningProject);
         }
-
-        public IVsSolution Adapt(SolutionNode from)
-        {
-            return from.HierarchyNode.ServiceProvider.GetService<SVsSolution, IVsSolution>();
-        }
-
-        public IVsProject Adapt(ProjectNode from)
-        {
-            return from.HierarchyNode.VsHierarchy as IVsProject;
-        }
-	}
+    }
 }

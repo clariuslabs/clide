@@ -134,6 +134,7 @@
     <Compile Include="netfx\System\StringFormatWith.cs" />
     <Compile Include="netfx\System\Windows\Threading\DispatcherInvokeExtensions.cs" />
     <Compile Include="NullErrorsManager.cs" />
+    <Compile Include="Patterns\Adaptable.cs" />
     <Compile Include="Patterns\AdapterAttribute.cs" />
     <Compile Include="Patterns\Adapters.cs" />
     <Compile Include="Patterns\Adapter\Adapters.cs" />
@@ -187,12 +188,16 @@
     </Compile>
     <Compile Include="Sdk\Solution\CustomNode.cs" />
     <Compile Include="ServiceLocator.cs" />
+    <Compile Include="Solution\Extensions\SolutionAdapterFacade.cs" />
+    <Compile Include="Solution\Extensions\MsBuildAdapterFacade.cs" />
+    <Compile Include="Solution\Extensions\VsInteropAdapterFacade.cs" />
+    <Compile Include="Solution\Extensions\DteAdapterFacade.cs" />
     <Compile Include="Solution\ICustomNode.cs" />
     <Compile Include="Solution\Implementation\Adapters\VsLangToSolutionAdapter.cs" />
     <Compile Include="Solution\Implementation\Adapters\VsHierarchyItemToSolutionAdapter.cs" />
     <Compile Include="Solution\Implementation\Adapters\VsToSolutionAdapter.cs" />
     <Compile Include="Solution\Implementation\Adapters\DteToSolutionAdapter.cs" />
-    <Compile Include="Solution\Implementation\Adapters\IServiceProviderAdapter.cs" />
+    <Compile Include="Solution\Implementation\Adapters\SolutionToIServiceProviderAdapter.cs" />
     <Compile Include="Solution\Implementation\Adapters\SolutionToVsLangAdapter.cs" />
     <Compile Include="Solution\Implementation\Adapters\SolutionToVsAdapter.cs" />
     <Compile Include="Solution\Implementation\Adapters\MsBuildAdapter.cs" />
@@ -210,6 +215,7 @@
     <Compile Include="Solution\Implementation\DynamicPropertyAccessor.cs" />
     <Compile Include="Solution\Implementation\IPropertyAccessor.cs" />
     <Compile Include="Solution\Implementation\UserProjectProperties.cs" />
+    <Compile Include="Solution\IProjectItemNode.cs" />
     <Compile Include="Solution\ISolutionVisitor.cs" />
     <Compile Include="Solution\SolutionVisitor.cs" />
     <Compile Include="OutputWindowManager.cs" />

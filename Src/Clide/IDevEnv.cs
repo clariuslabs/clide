@@ -83,10 +83,11 @@ namespace Clide
         /// </summary>
         IUIThread UIThread { get; }
 
-        /// <summary>
-        /// Gets the reference service.
-        /// </summary>
-        IReferenceService ReferenceService { get; }
+		// TODO: implement the reference service
+		///// <summary>
+		///// Gets the reference service.
+		///// </summary>
+		//IReferenceService ReferenceService { get; }
 
         /// <summary>
         /// Exits Visual Studio.

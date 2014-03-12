@@ -1,0 +1,157 @@
+﻿<#@ template debug="true" hostspecific="true" language="C#" #>
+<#@ assembly name="System" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Collections.Concurrent" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.ComponentModel" #>
+<#@ import namespace="System.Globalization" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ output extension=".md" #>
+<#
+    var assemblyFile = this.Host.ResolveParameterValue("TestReport", "VisualStudio", "AssemblyFile");
+    if (string.IsNullOrEmpty(assemblyFile))
+    {
+        var msg = "Did not receive the AssemblyFile parameter to process";
+        this.Error(msg);
+        return "#error " + msg;
+    }
+    if (!File.Exists(assemblyFile))
+    {
+        var msg = string.Format("Received AssemblyFile '{0}' does not exist on disk.", assemblyFile);
+        this.Error(msg);
+        return "#error " + msg;
+    }
+
+    var baseDir = Path.Combine(Path.GetDirectoryName(assemblyFile));
+    Assembly.ReflectionOnlyLoad(typeof(DisplayNameAttribute).Assembly.FullName);
+
+    ResolveEventHandler resolve = (sender, args) =>
+    {
+        var file = Path.Combine(baseDir, args.Name.Substring(0, args.Name.IndexOf(',')) + ".dll");
+        if (File.Exists(file))
+            return Assembly.ReflectionOnlyLoad(File.ReadAllBytes(file));
+
+        var asm = Assembly.ReflectionOnlyLoad(args.Name);
+        if (asm == null)
+            this.Error("Could not load assembly '" + args.Name + "' by name or from the expected file to reflect at " + file);
+
+        return asm;
+    };
+
+    AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += resolve;
+
+    var assembly = Assembly.ReflectionOnlyLoad(File.ReadAllBytes(Path.Combine(baseDir, assemblyFile)));
+    var tests = assembly.GetExportedTypes()
+        .Where(t => !t.IsAbstract || t.IsInterface)
+        .SelectMany(t => t.GetMethods())
+        .Select(m => new 
+        { 
+            Method = m, 
+            Text = m
+                .GetCustomAttributesData()
+                .Where(c => c.AttributeType.FullName == typeof(DisplayNameAttribute).FullName)
+                .Select(c => c.ConstructorArguments[0].Value.ToString())
+                .FirstOrDefault() ?? m.Name
+        })
+        .Where(m => m.Method.Name.StartsWith("how", StringComparison.InvariantCultureIgnoreCase))
+        .Select(m => new
+        {
+            Context = BuildContext(m.Method.ReflectedType),
+            Text = m.Text,
+        });
+
+    var root = new Node("Report");
+    foreach (var test in tests)
+    {
+        var context = test.Context
+            .Split(new[] { '>' }, StringSplitOptions.RemoveEmptyEntries)
+            .Reverse()
+            .Aggregate(root, (node, name) => node.Nodes.GetOrAdd(name, s => new Node(s)));
+
+		context.Nodes.GetOrAdd(test.Text, new Node(test.Text));
+    }
+
+    Render(root.Nodes.Values);
+#>
+
+<#+
+    private void Render(IEnumerable<Node> nodes)
+    {
+        foreach (var node in nodes.OrderBy(n => n.Text))
+        {
+            if (node.Nodes.Any())
+                this.PushIndent("\t");
+                            
+            Render(node);
+
+            if (node.Nodes.Any())
+                this.PopIndent();
+        }
+    }
+
+    private void Render(Node node)
+    {
+        var text = node.Text;
+        if (text.EndsWith("feature", StringComparison.InvariantCultureIgnoreCase))
+            text = "Feature: " + text.Substring(0, text.IndexOf("feature", StringComparison.InvariantCultureIgnoreCase));
+        if (text.EndsWith("scenario", StringComparison.InvariantCultureIgnoreCase))
+            text = "Scenario: " + text.Substring(0, text.IndexOf("scenario", StringComparison.InvariantCultureIgnoreCase));
+#>
+<#= text #>
+<#+
+        Render(node.Nodes.Values);
+        if (node.Nodes.Any())
+        {
+#>
+  
+<#+      
+        }
+    }
+    
+    private static string BuildContext(Type type)
+    {
+        var current = type;
+        var context = "";
+        while (current != null && current != typeof(object))
+        {
+            context += ">" + (current
+                .GetCustomAttributesData()
+                .Where(c => c.AttributeType.FullName == typeof(DisplayNameAttribute).FullName)
+                .Select(c => c.ConstructorArguments[0].Value.ToString())
+                .FirstOrDefault() ?? current.Name);
+
+            current = current.DeclaringType;
+        }
+
+        return context;
+    }
+
+    public class Node
+    {
+        public Node(string id)
+        {
+            this.Id = id;
+            if (id.IndexOf('_') == -1)
+            {
+                this.Text = id;
+            }
+            else
+            {
+                this.Text = string.Join(" ", id
+                    .Split(new[] { '_' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select((s, i) =>
+                        i == 0 ?
+                        CultureInfo.CurrentCulture.TextInfo.ToTitleCase(s) :
+                        s));
+            }
+
+            this.Nodes = new ConcurrentDictionary<string, Node>();
+        }
+
+        public string Id { get; private set; }
+        public string Text { get; private set; }
+        public ConcurrentDictionary<string, Node> Nodes { get; private set; }
+    }
+#>

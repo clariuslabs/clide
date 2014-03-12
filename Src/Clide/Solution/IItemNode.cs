@@ -20,13 +20,8 @@ namespace Clide.Solution
     /// <summary>
     /// Represents an item inside a project or a project folder.
     /// </summary>
-    public interface IItemNode : ISolutionExplorerNode
+    public interface IItemNode : IProjectItemNode
 	{
-        /// <summary>
-        /// Gets the owning project.
-        /// </summary>
-        IProjectNode OwningProject { get; }
-
         /// <summary>
         /// Gets the physical path of the item.
         /// </summary>

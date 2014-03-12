@@ -23,7 +23,13 @@ namespace Clide.Solution.Adapters
     [Adapter]
     internal class VsToSolutionAdapter :
         IAdapter<IVsSolution, ISolutionNode>,
-        IAdapter<IVsProject, IProjectNode>
+		IAdapter<IVsSolution2, ISolutionNode>,
+		IAdapter<IVsSolution3, ISolutionNode>,
+		IAdapter<IVsSolution4, ISolutionNode>,
+		IAdapter<IVsProject, IProjectNode>,
+		IAdapter<IVsProject2, IProjectNode>,
+		IAdapter<IVsProject3, IProjectNode>,
+		IAdapter<IVsProject4, IProjectNode>
     {
         private ISolutionExplorerNodeFactory nodeFactory;
 
@@ -32,18 +38,51 @@ namespace Clide.Solution.Adapters
             this.nodeFactory = nodeFactory;
         }
 
-        public IProjectNode Adapt(IVsProject from)
-        {
-            var node = new VsSolutionHierarchyNode((IVsHierarchy)from, VSConstants.VSITEMID_ROOT);
-
-            return this.nodeFactory.Create(node) as IProjectNode;
-        }
-
         public ISolutionNode Adapt(IVsSolution from)
         {
-            var node = new VsSolutionHierarchyNode((IVsHierarchy)from, VSConstants.VSITEMID_ROOT);
-
-            return this.nodeFactory.Create(node) as ISolutionNode;
+			return CreateNode((IVsHierarchy)from) as ISolutionNode;
         }
-    }
+
+		public ISolutionNode Adapt(IVsSolution2 from)
+		{
+			return CreateNode((IVsHierarchy)from) as ISolutionNode;
+		}
+
+		public ISolutionNode Adapt(IVsSolution3 from)
+		{
+			return CreateNode((IVsHierarchy)from) as ISolutionNode;
+		}
+
+		public ISolutionNode Adapt(IVsSolution4 from)
+		{
+			return CreateNode((IVsHierarchy)from) as ISolutionNode;
+		}
+
+		public IProjectNode Adapt(IVsProject from)
+		{
+			return CreateNode((IVsHierarchy)from) as IProjectNode;
+		}
+
+		public IProjectNode Adapt(IVsProject2 from)
+		{
+			return CreateNode((IVsHierarchy)from) as IProjectNode;
+		}
+
+		public IProjectNode Adapt(IVsProject3 from)
+		{
+			return CreateNode((IVsHierarchy)from) as IProjectNode;
+		}
+
+		public IProjectNode Adapt(IVsProject4 from)
+		{
+			return CreateNode((IVsHierarchy)from) as IProjectNode;
+		}
+
+		private ISolutionExplorerNode CreateNode(IVsHierarchy from)
+		{
+			var node = new VsSolutionHierarchyNode(from, VSConstants.VSITEMID_ROOT);
+
+			return this.nodeFactory.Create(node);
+		}
+	}
 }

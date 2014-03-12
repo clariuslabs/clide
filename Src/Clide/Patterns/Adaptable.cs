@@ -12,42 +12,41 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 #endregion
 
-namespace Clide.Solution.Adapters
+namespace Clide.Patterns.Adapter
 {
-    using Clide.Patterns.Adapter;
-    using Clide.Sdk.Solution;
-    using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.Shell;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using System;
-    using Ole = Microsoft.VisualStudio.OLE.Interop;
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Text;
 
-    [Adapter]
-    internal class IServiceProviderAdapter : 
-        IAdapter<ISolutionNode, IServiceProvider>, 
-        IAdapter<IProjectNode, IServiceProvider>, 
-        IAdapter<ProjectItemNode, IServiceProvider>
-    {
-        public IServiceProvider Adapt(ISolutionNode from)
-        {
-            return GlobalServiceProvider.Instance;
-        }
+	/// <summary>
+	/// Default implementation of <see cref="IAdaptable{TSource}"/>.
+	/// </summary>
+	/// <typeparam name="TSource">The type of the object being adapted.</typeparam>
+	public class Adaptable<TSource> : IAdaptable<TSource>
+		where TSource : class
+	{
+		private IAdapterService service;
+		private TSource source;
 
-        public IServiceProvider Adapt(IProjectNode from)
-        {
-            var vsProject = from.As<IVsProject>();
-            Ole.IServiceProvider oleSp;
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Adaptable{TSource}"/> class.
+		/// </summary>
+		/// <param name="service">The service that looks up adapter implementations.</param>
+		/// <param name="source">The source object being adapted.</param>
+		public Adaptable(IAdapterService service, TSource source)
+		{
+			this.service = service;
+			this.source = source;
+		}
 
-            // local service provider for the project
-            if (vsProject != null && vsProject.GetItemContext(VSConstants.VSITEMID_ROOT, out oleSp) == VSConstants.S_OK)
-                return new ServiceProvider(oleSp);
-
-            return GlobalServiceProvider.Instance;
-        }
-
-        public IServiceProvider Adapt(ProjectItemNode from)
-        {
-            return Adapt(from.OwningProject);
-        }
-    }
+		/// <summary>
+		/// Adapts the instance to the given target type.
+		/// </summary>
+		/// <returns>The adapted instance or <see langword="null"/> if no compatible adapter was found.</returns>
+		public T As<T>() where T : class
+		{
+			return this.service.Adapt<TSource>(source).As<T>();
+		}
+	}
 }

@@ -105,6 +105,7 @@
     <Compile Include="Extensions\VsUIShellExtensionsSpec.cs" />
     <Compile Include="GlobalServiceProviderSpec.cs" />
     <Compile Include="HostingSpec.cs" />
+    <Compile Include="HowTo\Adapters\AdaptProject.cs" />
     <Compile Include="IntegrationPackageSpec.cs" />
     <Compile Include="MessageBoxServiceSpec.cs" />
     <Compile Include="Misc.cs" />
@@ -145,6 +146,8 @@
       <Link>ClariusLabs.licenseheader</Link>
     </None>
     <None Include="app.config" />
+    <TestReport Include="HowTo\HowTo.tt" />
+    <None Include="HowTo\HowTo.md" />
     <None Include="packages.config" />
     <TestReport Include="TestReport.tt" />
   </ItemGroup>
@@ -192,6 +195,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildThisFileDirectory)..\Clide.targets" />
 </Project>

@@ -20,11 +20,7 @@ namespace Clide.Solution
     /// <summary>
     /// Interface implemented by the references node in a project.
     /// </summary>
-    public interface IReferencesNode : ISolutionExplorerNode
+    public interface IReferencesNode : IProjectItemNode
 	{
-        /// <summary>
-        /// Gets the owning project.
-        /// </summary>
-        IProjectNode OwningProject { get; }
     }
 }
