@@ -73,20 +73,20 @@
 		context.Nodes.GetOrAdd(test.Text, new Node(test.Text));
     }
 
-    Render(root.Nodes.Values);
+    Render(root.Nodes.Values, true);
 #>
 
 <#+
-    private void Render(IEnumerable<Node> nodes)
+    private void Render(IEnumerable<Node> nodes, bool isRoot = false)
     {
         foreach (var node in nodes.OrderBy(n => n.Text))
         {
-            if (node.Nodes.Any())
+            if (node.Nodes.Any() && !isRoot)
                 this.PushIndent("\t");
                             
             Render(node);
 
-            if (node.Nodes.Any())
+            if (node.Nodes.Any() && !isRoot)
                 this.PopIndent();
         }
     }
