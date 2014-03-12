@@ -20,7 +20,7 @@
 	{
 		const string baseUrl = "Adapters/AdaptProject.cs#L";
 
-		[DisplayName("*  [Convert DTE Project to IProjectNode](" + baseUrl + "26")]
+		[DisplayName("*  [Convert DTE Project to IProjectNode](" + baseUrl + "26)")]
 		[HostType("VS IDE")]
 		[TestMethod]
 		public void how_to_convert_DTE_project_to_IProjectNode()
