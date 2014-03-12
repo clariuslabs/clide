@@ -14,7 +14,7 @@
 
 	[TestClass]
 	[DisplayName(
-@"# How To: convert back and forth between DTE, IVsSolution, IVsProject and Clide APIs
+@"## How To: convert back and forth between DTE, IVsSolution, IVsProject and Clide APIs
 ")]
 	public partial class AdaptProject : VsHostedSpec
 	{
