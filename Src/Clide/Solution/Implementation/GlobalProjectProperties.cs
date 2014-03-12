@@ -14,160 +14,181 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution.Implementation
 {
-    using Clide.Sdk.Solution;
-    using Microsoft.Build.Evaluation;
-    using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using System;
-    using System.Collections.Generic;
-    using System.Dynamic;
-    using System.Linq;
+	using Clide.Sdk.Solution;
+	using Microsoft.Build.Evaluation;
+	using Microsoft.VisualStudio;
+	using Microsoft.VisualStudio.Shell.Interop;
+	using System;
+	using System.Collections.Generic;
+	using System.Dynamic;
+	using System.Linq;
 
-    internal class GlobalProjectProperties : DynamicObject
-    {
-        private Project msBuildProject;
-        private EnvDTE.Project dteProject;
-        private IVsBuildPropertyStorage vsBuild;
+	class GlobalProjectProperties : DynamicObject, IPropertyAccessor
+	{
+		Project msBuildProject;
+		EnvDTE.Project dteProject;
+		IVsBuildPropertyStorage vsBuild;
+		DynamicPropertyAccessor accessor;
 
-        public GlobalProjectProperties(ProjectNode project)
-        {
-            this.msBuildProject = project.As<Project>();
-            this.dteProject = project.As<EnvDTE.Project>();
-            this.vsBuild = project.HierarchyNode.VsHierarchy as IVsBuildPropertyStorage;
-        }
+		public GlobalProjectProperties(ProjectNode project)
+		{
+			msBuildProject = project.As<Project>();
+			dteProject = project.As<EnvDTE.Project>();
+			vsBuild = project.HierarchyNode.VsHierarchy as IVsBuildPropertyStorage;
+			accessor = new DynamicPropertyAccessor(this);
+		}
 
-        public override IEnumerable<string> GetDynamicMemberNames()
-        {
-            var names = new List<string>();
+		public override IEnumerable<string> GetDynamicMemberNames()
+		{
+			var names = new List<string>();
 
-            if (this.dteProject != null)
-            {
-                names.AddRange(this.dteProject.Properties
-                    .OfType<EnvDTE.Property>()
-                    .Select(prop => prop.Name));
-            }
+			if (this.dteProject != null)
+			{
+				names.AddRange(this.dteProject.Properties
+					.OfType<EnvDTE.Property>()
+					.Select(prop => prop.Name));
+			}
 
-            if (this.msBuildProject != null)
-            {
-                names.AddRange(this.msBuildProject.AllEvaluatedProperties
-                    .Select(prop => prop.Name));
-            }
+			if (this.msBuildProject != null)
+			{
+				names.AddRange(this.msBuildProject.AllEvaluatedProperties
+					.Select(prop => prop.Name));
+			}
 
-            names.Sort();
-            return names.Distinct();
-        }
+			names.Sort();
+			return names.Distinct();
+		}
 
-        public override bool TryGetMember(GetMemberBinder binder, out object result)
-        {
-            if (TryGetDteProperty(binder.Name, out result))
-                return true;
+		public override bool TryGetMember(GetMemberBinder binder, out object result)
+		{
+			return accessor.TryGetMember(binder, out result, base.TryGetMember);
+		}
 
-            if (this.vsBuild != null)
-            {
-                string value = "";
-                if (ErrorHandler.Succeeded(vsBuild.GetPropertyValue(
-                    binder.Name, "", (uint)_PersistStorageType.PST_PROJECT_FILE, out value)))
-                {
-                    result = value;
-                    return true;
-                }
-            }
-            
-            if (msBuildProject != null)
-            {
-                string value = "";
-                var configName = this.dteProject.ConfigurationManager.ActiveConfiguration.ConfigurationName + "|" +
-                    this.dteProject.ConfigurationManager.ActiveConfiguration.PlatformName;
+		public override bool TrySetMember(SetMemberBinder binder, object value)
+		{
+			return accessor.TrySetMember(binder, value, base.TrySetMember);
+		}
 
-                if (ErrorHandler.Succeeded(vsBuild.GetPropertyValue(
-                    binder.Name, configName, (uint)_PersistStorageType.PST_PROJECT_FILE, out value)))
-                {
-                    result = value;
-                    return true;
-                }
+		public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result)
+		{
+			return accessor.TryGetIndex(binder, indexes, out result, base.TryGetIndex);
+		}
 
-                var prop = msBuildProject.GetProperty(binder.Name);
-                if (prop != null)
-                {
-                    result = prop.EvaluatedValue;
-                    return true;
-                }
-            }
+		public override bool TrySetIndex(SetIndexBinder binder, object[] indexes, object value)
+		{
+			return accessor.TrySetIndex(binder, indexes, value, base.TrySetIndex);
+		}
 
-            // We always succeed, but return null. This 
-            // is easier for the calling code than catching 
-            // a binder exception.
-            result = null;
-            return true;
-        }
+		bool IPropertyAccessor.TryGetProperty(string propertyName, out object result)
+		{
+			if (TryGetDteProperty(propertyName, out result))
+				return true;
 
-        public override bool TrySetMember(SetMemberBinder binder, object value)
-        {
-            if (TrySetDteProperty(binder.Name, value))
-                return true;
+			if (this.vsBuild != null)
+			{
+				string value = "";
+				if (ErrorHandler.Succeeded(vsBuild.GetPropertyValue(
+					propertyName, "", (uint)_PersistStorageType.PST_PROJECT_FILE, out value)))
+				{
+					result = value;
+					return true;
+				}
 
-            if (this.vsBuild != null)
-            {
-                if (ErrorHandler.Succeeded(vsBuild.SetPropertyValue(
-                    binder.Name, "", (uint)_PersistStorageType.PST_PROJECT_FILE, value.ToString())))
-                    return true;
-            }
-            
-            if (this.msBuildProject != null)
-            {
-                this.msBuildProject.SetProperty(binder.Name, value.ToString());
-                return true;
-            }
+				if (msBuildProject != null)
+				{
+					var configName = this.dteProject.ConfigurationManager.ActiveConfiguration.ConfigurationName + "|" +
+						this.dteProject.ConfigurationManager.ActiveConfiguration.PlatformName;
 
-            // In this case we fail, since we can't persist the member.
-            return false;
-        }
+					if (ErrorHandler.Succeeded(vsBuild.GetPropertyValue(
+						propertyName, configName, (uint)_PersistStorageType.PST_PROJECT_FILE, out value)))
+					{
+						result = value;
+						return true;
+					}
 
-        private bool TrySetDteProperty(string propertyName, object value)
-        {
-            if (this.dteProject != null)
-            {
-                EnvDTE.Property property;
-                try
-                {
-                    property = this.dteProject.Properties.Item(propertyName);
-                }
-                catch (ArgumentException)
-                {
-                    property = null;
-                }
-                if (property != null)
-                {
-                    property.Value = value.ToString();
-                    return true;
-                }
-            }
+					var prop = msBuildProject.GetProperty(propertyName);
+					if (prop != null)
+					{
+						result = prop.EvaluatedValue;
+						return true;
+					}
+				}
+			}
 
-            return false;
-        }
+			// We always succeed, but return null. This 
+			// is easier for the calling code than catching 
+			// a binder exception.
+			result = null;
+			return true;
+		}
 
-        private bool TryGetDteProperty(string propertyName, out object result)
-        {
-            if (this.dteProject != null)
-            {
-                EnvDTE.Property property;
-                try
-                {
-                    property = this.dteProject.Properties.Item(propertyName);
-                }
-                catch (ArgumentException)
-                {
-                    property = null;
-                }
-                if (property != null)
-                {
-                    result = property.Value;
-                    return true;
-                }
-            }
+		bool IPropertyAccessor.TrySetProperty(string propertyName, object value)
+		{
+			if (TrySetDteProperty(propertyName, value))
+				return true;
 
-            result = null;
-            return false;
-        }
-    }
+			if (this.vsBuild != null)
+			{
+				if (ErrorHandler.Succeeded(vsBuild.SetPropertyValue(
+					propertyName, "", (uint)_PersistStorageType.PST_PROJECT_FILE, value.ToString())))
+					return true;
+			}
+
+			if (this.msBuildProject != null)
+			{
+				this.msBuildProject.SetProperty(propertyName, value.ToString());
+				return true;
+			}
+
+			// In this case we fail, since we can't persist the member.
+			return false;
+		}
+
+		private bool TrySetDteProperty(string propertyName, object value)
+		{
+			if (this.dteProject != null)
+			{
+				EnvDTE.Property property;
+				try
+				{
+					property = this.dteProject.Properties.Item(propertyName);
+				}
+				catch (ArgumentException)
+				{
+					property = null;
+				}
+				if (property != null)
+				{
+					property.Value = value.ToString();
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		private bool TryGetDteProperty(string propertyName, out object result)
+		{
+			if (this.dteProject != null)
+			{
+				EnvDTE.Property property;
+				try
+				{
+					property = this.dteProject.Properties.Item(propertyName);
+				}
+				catch (ArgumentException)
+				{
+					property = null;
+				}
+				if (property != null)
+				{
+					result = property.Value;
+					return true;
+				}
+			}
+
+			result = null;
+			return false;
+		}
+	}
 }

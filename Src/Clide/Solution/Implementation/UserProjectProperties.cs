@@ -23,40 +23,34 @@ namespace Clide.Solution.Implementation
 	using System;
 	using System.Collections.Generic;
 	using System.Dynamic;
-	using System.IO;
 	using System.Linq;
 
-	internal class ConfigProjectProperties : DynamicObject, IPropertyAccessor
+	class UserProjectProperties : DynamicObject, IPropertyAccessor
 	{
-		static readonly ITracer tracer = Tracer.Get<ConfigProjectProperties>();
+		static readonly ITracer tracer = Tracer.Get<UserProjectProperties>();
 
 		ProjectNode project;
+		Project msBuildProject;
+		EnvDTE.Project dteProject;
 		IVsBuildPropertyStorage vsBuild;
-		string configName;
 		DynamicPropertyAccessor accessor;
 
-		public ConfigProjectProperties(ProjectNode project, string configName)
+		public UserProjectProperties(ProjectNode project)
 		{
 			this.project = project;
-			this.configName = configName;
-			this.vsBuild = project.HierarchyNode.VsHierarchy as IVsBuildPropertyStorage;
-			if (this.vsBuild == null)
-				tracer.Warn(Strings.ConfigProjectProperties.NonMsBuildProject(project.DisplayName));
+			msBuildProject = project.As<Project>();
+			dteProject = project.As<EnvDTE.Project>();
+			vsBuild = project.HierarchyNode.VsHierarchy as IVsBuildPropertyStorage;
+
+			if (msBuildProject == null || vsBuild == null)
+				tracer.Warn(Strings.UserProjectProperties.NonMsBuildProject(project.DisplayName));
 
 			accessor = new DynamicPropertyAccessor(this);
 		}
 
 		public override IEnumerable<string> GetDynamicMemberNames()
 		{
-			var msb = this.project.As<Project>();
-			if (msb != null)
-			{
-				return msb.AllEvaluatedProperties
-					.Select(prop => prop.Name)
-					.Distinct()
-					.OrderBy(s => s);
-			}
-
+			// Enumeration is not supported by the underlying VS API.
 			return Enumerable.Empty<string>();
 		}
 
@@ -80,32 +74,29 @@ namespace Clide.Solution.Implementation
 			return accessor.TrySetIndex(binder, indexes, value, base.TrySetIndex);
 		}
 
-		bool IPropertyAccessor.TrySetProperty(string propertyName, object value)
-		{
-			if (this.vsBuild != null)
-			{
-				return ErrorHandler.Succeeded(vsBuild.SetPropertyValue(
-					propertyName, this.configName, (uint)_PersistStorageType.PST_PROJECT_FILE, value.ToString()));
-			}
-			else
-			{
-				tracer.Warn(Strings.ConfigProjectProperties.SetNonMsBuildProject(propertyName, configName, project.DisplayName));
-			}
-
-			// In this case we fail, since we can't persist the member.
-			return false;
-		}
-
 		bool IPropertyAccessor.TryGetProperty(string propertyName, out object result)
 		{
 			if (this.vsBuild != null)
 			{
 				string value = "";
 				if (ErrorHandler.Succeeded(vsBuild.GetPropertyValue(
-					propertyName, this.configName, (uint)_PersistStorageType.PST_PROJECT_FILE, out value)))
+					propertyName, "", (uint)_PersistStorageType.PST_USER_FILE, out value)))
 				{
 					result = value;
 					return true;
+				}
+
+				if (msBuildProject != null && dteProject != null)
+				{
+					var configName = this.dteProject.ConfigurationManager.ActiveConfiguration.ConfigurationName + "|" +
+						this.dteProject.ConfigurationManager.ActiveConfiguration.PlatformName;
+
+					if (ErrorHandler.Succeeded(vsBuild.GetPropertyValue(
+						propertyName, configName, (uint)_PersistStorageType.PST_USER_FILE, out value)))
+					{
+						result = value;
+						return true;
+					}
 				}
 			}
 
@@ -114,6 +105,23 @@ namespace Clide.Solution.Implementation
 			// a binder exception.
 			result = null;
 			return true;
+		}
+
+		bool IPropertyAccessor.TrySetProperty(string propertyName, object value)
+		{
+			if (this.vsBuild != null)
+			{
+				if (ErrorHandler.Succeeded(vsBuild.SetPropertyValue(
+					propertyName, "", (uint)_PersistStorageType.PST_USER_FILE, value.ToString())))
+					return true;
+			}
+			else
+			{
+				tracer.Warn(Strings.UserProjectProperties.SetNonMsBuildProject(propertyName, project.DisplayName));
+			}
+
+			// In this case we fail, since we can't persist the member.
+			return false;
 		}
 	}
 }

@@ -29,6 +29,8 @@ using System.Windows.Forms;
 using Microsoft.VSSDK.Tools.VsIdeTesting;
 using Microsoft.VisualStudio.Shell;
 using EnvDTE80;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 [TestClass]
 public abstract class VsHostedSpec
@@ -36,6 +38,7 @@ public abstract class VsHostedSpec
     private ITracer tracer;
     private StringBuilder strings; 
     private TraceListener listener;
+	private List<string> cleanupFolders;
 
     public TestContext TestContext { get; set; }
 
@@ -89,6 +92,8 @@ public abstract class VsHostedSpec
         tracer.Info("Shell initialized successfully");
         if (VsIdeTestHostContext.ServiceProvider == null)
             VsIdeTestHostContext.ServiceProvider = new VsServiceProvider();
+
+		cleanupFolders = new List<string>();
     }
 
     [TestCleanup]
@@ -110,6 +115,18 @@ public abstract class VsHostedSpec
         Debug.WriteLine(this.strings.ToString());
         Console.WriteLine(this.strings.ToString());
         Trace.WriteLine(this.strings.ToString());
+
+		if (Dte.Solution.IsOpen)
+			CloseSolution();
+
+		foreach (var folder in cleanupFolders)
+		{
+			try
+			{
+				Directory.Delete(folder, true);
+			}
+			catch  { }
+		}
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "None")]
@@ -118,6 +135,13 @@ public abstract class VsHostedSpec
         if (!Path.IsPathRooted(solutionFile))
             solutionFile = GetFullPath(solutionFile);
 
+		var tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+		cleanupFolders.Add(tempPath);
+
+		CopyAll(Path.GetDirectoryName(solutionFile), tempPath);
+
+		solutionFile = Path.Combine(tempPath, Path.GetFileName(solutionFile));
+		
         VsHostedSpec.DoActionWithWaitAndRetry(
             () => Dte.Solution.Open(solutionFile),
             2000,
@@ -160,6 +184,23 @@ public abstract class VsHostedSpec
         }
         while (retryCondition() && retry < numberOfRetries);
     }
+
+	private static void CopyAll(string source, string target)
+	{
+		var directories = Directory.EnumerateDirectories(source, "*.*", SearchOption.AllDirectories);
+
+		Parallel.ForEach(directories, dirPath =>
+		{
+			Directory.CreateDirectory(dirPath.Replace(source, target));
+		});
+
+		var files = Directory.EnumerateFiles(source, "*.*", SearchOption.AllDirectories);
+
+		Parallel.ForEach(files, newPath =>
+		{
+			File.Copy(newPath, newPath.Replace(source, target));
+		});
+	}
 
     private class VsServiceProvider : IServiceProvider
     {

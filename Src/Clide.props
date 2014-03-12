@@ -18,7 +18,11 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+	<PropertyGroup>
+		<TextTransformExe>$(CommonProgramFiles)\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\TextTransform.exe</TextTransformExe>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
     </PropertyGroup>
 
@@ -70,5 +74,9 @@
         <AvailableItemName Include="NuSpec">
             <Visible>False</Visible>
         </AvailableItemName>
-    </ItemGroup>
+
+		<AvailableItemName Include="TestReport">
+			<Visible>False</Visible>
+		</AvailableItemName>
+	</ItemGroup>
 </Project>

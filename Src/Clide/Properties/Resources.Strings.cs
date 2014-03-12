@@ -560,13 +560,27 @@ namespace Clide.Properties
 		{
 			/// <summary>
 			/// Looks up a localized string similar to: 
-			///	Project '{projectFile}' must be based on MSBuild in order to support dynamic properties.
+			///	Project '{project}' is not based on MSBuild. Configuration-specific properties cannot be retrieved or set using the standard dynamic properties.
 			/// </summary>
-			public static string UnsupportedProject(object projectFile)
+			public static string NonMsBuildProject(object project)
 			{
-				return Resources.ConfigProjectProperties_UnsupportedProject.FormatWith(new 
+				return Resources.ConfigProjectProperties_NonMsBuildProject.FormatWith(new 
 				{
-					projectFile = projectFile,
+					project = project,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Attempted to set property '{property}' for configuration '{configuration}' on project '{project}' which is not based on MSBuild. Configuration-specific user properties cannot be retrieved or set using the standard dynamic properties.
+			/// </summary>
+			public static string SetNonMsBuildProject(object property, object configuration, object project)
+			{
+				return Resources.ConfigProjectProperties_SetNonMsBuildProject.FormatWith(new 
+				{
+					property = property,
+					configuration = configuration,
+					project = project,
 				});
 			}
 		}
@@ -925,6 +939,74 @@ namespace Clide.Properties
 				return Resources.OutputWindowManager_TraceInitializing.FormatWith(new 
 				{
 					title = title,
+				});
+			}
+		}
+		
+		///	<summary>
+		///	Provides access to string resources.
+		///	</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		public static partial class UserProjectProperties
+		{
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Project '{project}' is not based on MSBuild. User properties cannot be retrieved or set using the standard dynamic properties.
+			/// </summary>
+			public static string NonMsBuildProject(object project)
+			{
+				return Resources.UserProjectProperties_NonMsBuildProject.FormatWith(new 
+				{
+					project = project,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Attempted to set property '{property}' on project '{project}' which is not based on MSBuild. User properties cannot be retrieved or set using the standard dynamic properties.
+			/// </summary>
+			public static string SetNonMsBuildProject(object property, object project)
+			{
+				return Resources.UserProjectProperties_SetNonMsBuildProject.FormatWith(new 
+				{
+					property = property,
+					project = project,
+				});
+			}
+		}
+		
+		///	<summary>
+		///	Provides access to string resources.
+		///	</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		public static partial class ConfigUserProjectProperties
+		{
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Project '{project}' is not based on MSBuild. Configuration-specific properties for '{configuration}' cannot be retrieved or set using the standard dynamic properties.
+			/// </summary>
+			public static string NonMsBuildProject(object project, object configuration)
+			{
+				return Resources.ConfigUserProjectProperties_NonMsBuildProject.FormatWith(new 
+				{
+					project = project,
+					configuration = configuration,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Attempted to set property '{property}' for configuration '{configuration}' on project '{project}' which is not based on MSBuild. Configuration-specific user properties cannot be retrieved or set using the standard dynamic properties.
+			/// </summary>
+			public static string SetNonMsBuildProject(object property, object configuration, object project)
+			{
+				return Resources.ConfigUserProjectProperties_SetNonMsBuildProject.FormatWith(new 
+				{
+					property = property,
+					configuration = configuration,
+					project = project,
 				});
 			}
 		}

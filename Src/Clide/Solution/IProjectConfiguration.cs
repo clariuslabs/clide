@@ -23,7 +23,8 @@ namespace Clide.Solution
     {
         /// <summary>
         /// Gets the combined configuration and platform that makes 
-        /// the configuration name for use in <see cref="IProjectNode.PropertiesFor"/>, 
+        /// the configuration name for use in <see cref="IProjectNode.PropertiesFor"/> 
+		/// and <see cref="IProjectNode.UserPropertiesFor"/>, 
         /// such as "Debug|AnyCPU".
         /// </summary>
         string ActiveConfigurationName { get; }

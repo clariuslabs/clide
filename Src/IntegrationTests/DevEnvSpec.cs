@@ -67,7 +67,7 @@ namespace Clide
         [HostType("VS IDE")]
         [TestMethod]
         [Ignore]
-        public void when_quitting_vs_then_ends_process()
+        public void when_quitting_VS_then_ends_process()
         {
             var devenv = ServiceLocator.GetInstance<IDevEnv>();
 

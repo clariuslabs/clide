@@ -26,39 +26,39 @@ namespace Clide.Solution.Implementation
 	using System.IO;
 	using System.Linq;
 
-	internal class ConfigProjectProperties : DynamicObject, IPropertyAccessor
-	{
-		static readonly ITracer tracer = Tracer.Get<ConfigProjectProperties>();
+    class ConfigUserProjectProperties : DynamicObject, IPropertyAccessor
+    {
+		static readonly ITracer tracer = Tracer.Get<ConfigUserProjectProperties>();
 
-		ProjectNode project;
-		IVsBuildPropertyStorage vsBuild;
-		string configName;
+        ProjectNode project;
+        IVsBuildPropertyStorage vsBuild;
+        string configName;
 		DynamicPropertyAccessor accessor;
 
-		public ConfigProjectProperties(ProjectNode project, string configName)
-		{
-			this.project = project;
-			this.configName = configName;
-			this.vsBuild = project.HierarchyNode.VsHierarchy as IVsBuildPropertyStorage;
-			if (this.vsBuild == null)
-				tracer.Warn(Strings.ConfigProjectProperties.NonMsBuildProject(project.DisplayName));
+		public ConfigUserProjectProperties(ProjectNode project, string configName)
+        {
+            this.project = project;
+            this.configName = configName;
+            vsBuild = project.HierarchyNode.VsHierarchy as IVsBuildPropertyStorage;
+            if (vsBuild == null)
+				tracer.Warn(Strings.ConfigUserProjectProperties.NonMsBuildProject(project.DisplayName, configName));
 
 			accessor = new DynamicPropertyAccessor(this);
-		}
+        }
 
-		public override IEnumerable<string> GetDynamicMemberNames()
-		{
-			var msb = this.project.As<Project>();
-			if (msb != null)
-			{
-				return msb.AllEvaluatedProperties
-					.Select(prop => prop.Name)
-					.Distinct()
-					.OrderBy(s => s);
-			}
+        public override IEnumerable<string> GetDynamicMemberNames()
+        {
+            var msb = this.project.As<Project>();
+            if (msb != null)
+            {
+                return msb.AllEvaluatedProperties
+                    .Select(prop => prop.Name)
+                    .Distinct()
+                    .OrderBy(s => s);
+            }
 
-			return Enumerable.Empty<string>();
-		}
+            return Enumerable.Empty<string>();
+        }
 
 		public override bool TryGetMember(GetMemberBinder binder, out object result)
 		{
@@ -80,22 +80,6 @@ namespace Clide.Solution.Implementation
 			return accessor.TrySetIndex(binder, indexes, value, base.TrySetIndex);
 		}
 
-		bool IPropertyAccessor.TrySetProperty(string propertyName, object value)
-		{
-			if (this.vsBuild != null)
-			{
-				return ErrorHandler.Succeeded(vsBuild.SetPropertyValue(
-					propertyName, this.configName, (uint)_PersistStorageType.PST_PROJECT_FILE, value.ToString()));
-			}
-			else
-			{
-				tracer.Warn(Strings.ConfigProjectProperties.SetNonMsBuildProject(propertyName, configName, project.DisplayName));
-			}
-
-			// In this case we fail, since we can't persist the member.
-			return false;
-		}
-
 		bool IPropertyAccessor.TryGetProperty(string propertyName, out object result)
 		{
 			if (this.vsBuild != null)
@@ -115,5 +99,21 @@ namespace Clide.Solution.Implementation
 			result = null;
 			return true;
 		}
-	}
+
+		bool IPropertyAccessor.TrySetProperty(string propertyName, object value)
+		{
+			if (this.vsBuild != null)
+			{
+				return ErrorHandler.Succeeded(vsBuild.SetPropertyValue(
+					propertyName, this.configName, (uint)_PersistStorageType.PST_USER_FILE, value.ToString()));
+			}
+			else
+			{
+				tracer.Warn(Strings.ConfigUserProjectProperties.SetNonMsBuildProject(propertyName, configName, project.DisplayName));
+			}
+
+			// In this case we fail, since we can't persist the member.
+			return false;
+		}
+    }
 }

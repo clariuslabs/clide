@@ -210,8 +210,8 @@
   <data name="VsCommandExtensionAdapter_QueryStatusShieldMessage" xml:space="preserve">
     <value>Command could not determine its current status due to an unexpected exception. Please check the output window for additional information.</value>
   </data>
-  <data name="ConfigProjectProperties_UnsupportedProject" xml:space="preserve">
-    <value>Project '{projectFile}' must be based on MSBuild in order to support dynamic properties.</value>
+  <data name="ConfigProjectProperties_NonMsBuildProject" xml:space="preserve">
+    <value>Project '{project}' is not based on MSBuild. Configuration-specific properties cannot be retrieved or set using the standard dynamic properties.</value>
   </data>
   <data name="SolutionTreeNode_SelectionUnsupported" xml:space="preserve">
     <value>Selecting element '{itemPath}' is not supported by the underlying project type.</value>
@@ -329,5 +329,20 @@
   </data>
   <data name="Trace_OutputPaneId" xml:space="preserve">
     <value>66893206-0EF5-4A16-AA10-6EC6B6319F92</value>
+  </data>
+  <data name="UserProjectProperties_NonMsBuildProject" xml:space="preserve">
+    <value>Project '{project}' is not based on MSBuild. User properties cannot be retrieved or set using the standard dynamic properties.</value>
+  </data>
+  <data name="UserProjectProperties_SetNonMsBuildProject" xml:space="preserve">
+    <value>Attempted to set property '{property}' on project '{project}' which is not based on MSBuild. User properties cannot be retrieved or set using the standard dynamic properties.</value>
+  </data>
+  <data name="ConfigProjectProperties_SetNonMsBuildProject" xml:space="preserve">
+    <value>Attempted to set property '{property}' for configuration '{configuration}' on project '{project}' which is not based on MSBuild. Configuration-specific user properties cannot be retrieved or set using the standard dynamic properties.</value>
+  </data>
+  <data name="ConfigUserProjectProperties_NonMsBuildProject" xml:space="preserve">
+    <value>Project '{project}' is not based on MSBuild. Configuration-specific properties for '{configuration}' cannot be retrieved or set using the standard dynamic properties.</value>
+  </data>
+  <data name="ConfigUserProjectProperties_SetNonMsBuildProject" xml:space="preserve">
+    <value>Attempted to set property '{property}' for configuration '{configuration}' on project '{project}' which is not based on MSBuild. Configuration-specific user properties cannot be retrieved or set using the standard dynamic properties.</value>
   </data>
 </root>

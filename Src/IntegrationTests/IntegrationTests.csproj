@@ -92,6 +92,9 @@
     <Compile Include="Commands\CommandInterceptorSpec.cs" />
     <Compile Include="CompositionSpec.cs" />
     <Compile Include="Content\SampleSolution\ClassLibrary\Folder\Folder\Class2.cs" />
+    <Content Include="Content\SampleSolution\ClassLibrary\ClassLibrary.csproj.user">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\SampleSolution\ClassLibrary\Properties\AssemblyInfo.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -112,6 +115,7 @@
     <Compile Include="SettingsIntegrationSpec.cs" />
     <Compile Include="SettingsManagerSpec.cs" />
     <Compile Include="Solution\AdaptersSpec.cs" />
+    <Compile Include="Solution\DynamicPropertiesFeature.cs" />
     <Compile Include="Solution\ISolutionNodeExtensionsSpec.cs" />
     <Compile Include="Solution\PerformanceSpec.cs" />
     <Compile Include="Solution\ProjectNodeSpec.cs" />
@@ -128,6 +132,9 @@
     <Compile Include="Solution\VsSolutionHierarchyNodeSpec.cs" />
     <Compile Include="VsExposedServicesSpec.cs" />
     <Compile Include="VsHostedSpec.cs" />
+    <Content Include="TestReport.txt">
+      <DependentUpon>TestReport.tt</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\SampleSolution\SolutionItem.txt" />
@@ -139,6 +146,7 @@
     </None>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <TestReport Include="TestReport.tt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Clide\Clide.csproj">
@@ -180,8 +188,6 @@
     <Content Include="Content\SampleSolution\VBClassLibrary\VBClassLibrary.vbproj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Content\SampleSolution\VBClassLibrary\My Project\Resources.resx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

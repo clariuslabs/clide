@@ -53,4 +53,13 @@
         <Exec Command="&quot;$(NuGetExe)&quot; pack -NoPackageAnalysis &quot;%(NuSpecOut.FullPath)&quot; -Symbols -OutputDirectory &quot;$(DropDirectory.TrimEnd('\'))&quot; -Version &quot;$(PackageVersion)&quot;"
               ContinueOnError="false" />
     </Target>
+
+	<Target Name="GenerateTestReportOnBuild"
+			Condition="Exists('$(TextTransformExe)') And '@(TestReport)' != ''"
+            Inputs="$(TargetPath)"
+            Outputs="%(TestReport.RootDir)%(TestReport.Directory)%(TestReport.RecursiveDir)%(TestReport.Filename).txt"
+			AfterTargets="AfterBuild">
+		<Exec Command="&quot;$(TextTransformExe)&quot; -a VisualStudio!TestReport!AssemblyFile!$(TargetPath) &quot;%(TestReport.FullPath)&quot;" />
+	</Target>
+
 </Project>

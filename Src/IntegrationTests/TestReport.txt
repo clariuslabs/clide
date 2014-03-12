@@ -1,0 +1,522 @@
+﻿	AdaptersSpec
+		Whenadaptingdteprojectitemtoiitemnode
+		ThenSucceeds
+		  
+		Whenadaptingdteprojecttoiprojectnode
+		ThenSucceeds
+		  
+		Whenadaptingdtesolutiontoisolutionnode
+		ThenSucceeds
+		  
+		Whenadaptingisolutionnodetovshierarchyitem
+		ThenSucceeds
+		  
+		Whenadaptingivsprojecttoiprojectnode
+		ThenSucceeds
+		  
+		Whenadaptingivssolutiontoisolutionnode
+		ThenSucceeds
+		  
+		Whenadaptingprojectreferencestononadaptedtype
+		ThenReturnsEmptyList
+		  
+		Whenadaptingusingextensionmethod
+		ThenSucceeds
+		  
+		Whenadaptingvshierarchyitemtoiitemnode
+		ThenSucceeds
+		  
+		Whenadaptingvshierarchyitemtoiprojectnode
+		ThenSucceeds
+		  
+		Whenadaptingvshierarchyitemtoisolutionnode
+		ThenSucceeds
+		  
+		Whensolutionisopened
+		ThenCanAdaptTypes
+		  
+	  
+	ClideSettingsSpec
+		Whenretrievingsettings
+		ThenSavesDefaultTracingLevelValue
+		  
+	  
+	CommandInterceptorSpec
+		Whenaddinginterceptor
+		ThenCanInterceptIdeOperation
+		  
+	  
+	CommandsSpec
+		Whenregisteringallcommands
+		ThenCanRetrieveCommand
+		  
+	  
+	CompositionSpec
+		Whenretrievingdte
+		ThenCanGetFromCompositionContainer
+		  
+		Whenretrievingdte2
+		ThenCanGetFromCompositionContainer
+		  
+		Whenretrievingexportedvalueordefaultformany
+		ThenThrowsImportCardinalityException
+		  
+		Whenretrievingserviceprovider
+		ThenSucceeds
+		  
+		Whenretrievingvsservice
+		ThenCanGetFromCompositionContainer
+		  
+		Whenretrievingvsservicewithversionnumber
+		ThenCanGetFromCompositionContainer
+		  
+	  
+	DevEnvSpec
+		When constructing container
+		Then can retrieve devenv
+		  
+		When getting global devenv
+		Then succeeds
+		  
+		When quitting VS
+		Then ends process
+		  
+		When quitting vs while building
+		Then cancels build and ends process
+		  
+		When restarting vs while building
+		Then cancels build and restarts
+		  
+		Whenenvironmentinitialized
+		ThenRaisesInitializedEvent
+		  
+	  
+	DialogWindowFactorySpec
+		Whencreatingdialog
+		ThenSucceeds
+		  
+	  
+	ErrorsManagerSpec
+		Whenaddingerror
+		ThenItemIsAddedToTheErrorList
+		ThenItemIsNotNull
+		  
+		Whenaddingwarning
+		ThenItemIsAddedToTheErrorList
+		  
+		Whenclearingerrors
+		ThenErrorsAreRemovedFromTheErrorList
+		  
+		Whenremovingerror
+		ThenItemIsRemovedFromTheErrorList
+		  
+	  
+	Feature: MSBuild Properties Access
+		As a developer
+		I want to be able to access MSBuild properties on solution elements easily
+		So that I don't have to resort to convoluted APIs
+	
+		Scenario: Accessing Configuration-specific MSBuild Project Properties
+			Given an opened solution
+			And a class library project
+		
+			When I get a non existent property
+			Then returns null with dynamic property syntax
+			Then returns null with indexer property syntax
+			  
+			When I get an existing property
+			Then I can use indexer property syntax
+			  
+			When I get existing property
+			Then I can use dynamic property syntax
+			  
+			When I set existing property
+			Then I can use dynamic property syntax
+			Then I can use indexer property syntax
+			  
+		  
+		Scenario: Accessing Global MSBuild Project Properties
+			Given an opened solution
+			And a class library project
+		
+			When I get a non existent property
+			Then returns null with dynamic property syntax
+			Then returns null with indexer property syntax
+			  
+			When I get an existing property
+			Then I can use indexer property syntax
+			  
+			When I get existing property
+			Then I can use dynamic property syntax
+			  
+			When I set existing property
+			Then I can use dynamic property syntax
+			Then I can use indexer property syntax
+			  
+		  
+		Scenario: Accessing per-user MSBuild Project Properties
+			Given an opened solution
+			And a class library project
+		
+			When I get a non existent property
+			Then returns null with dynamic property syntax
+			Then returns null with indexer property syntax
+			  
+			When I get an existing property
+			Then I can use indexer property syntax
+			  
+			When I get existing property
+			Then I can use dynamic property syntax
+			  
+			When I set existing property
+			Then I can use dynamic property syntax
+			Then I can use indexer property syntax
+			  
+		  
+		Scenario: Accessing per-user, per-config MSBuild Project Properties
+			Given an opened solution
+			And a class library project
+		
+			When I get a non existent property
+			Then returns null with dynamic property syntax
+			Then returns null with indexer property syntax
+			  
+			When I get an existing property
+			Then I can use indexer property syntax
+			  
+			When I get existing property
+			Then I can use dynamic property syntax
+			  
+			When I set existing property
+			Then I can use dynamic property syntax
+			Then I can use indexer property syntax
+			  
+		  
+	  
+	GivenASolution
+		Whenreplacingselectionwithitem
+		ThenSelectionReturnsItemOnly
+		  
+		Whenselectingfolder
+		ThenSucceeds
+		  
+		Whenselectingprojects
+		ThenSelectionReturnsOnlyProjectNodes
+		  
+		Whenselectingreference
+		ThenSucceeds
+		  
+		Whenselectingreferences
+		ThenSucceeds
+		  
+		Whenselectingsolution
+		ThenSucceeds
+		  
+		Whenselectingsolutionfolder
+		ThenSucceeds
+		  
+	  
+	GlobalServiceProviderSpec
+		Whengettingglobalprovider
+		ThenCanGetInstanceVsServices
+		  
+		Whenusingglobalprovider
+		ThenCanGetComponentModel
+		  
+	  
+	HostingSpec
+		Whenexportingvsadornmentfactory
+		ThenCanRetrieveIt
+		  
+		Whenloadingbasedirectory
+		ThenWorksOnBoth
+		  
+		Whenretrievingapackageexport
+		ThenReturnsSingleExport
+		  
+		Whenretrievingshellpackage
+		ThenSucceeds
+		  
+	  
+	IntegrationPackageSpec
+		Whenretrievingpackage
+		ThenSucceeds
+		  
+	  
+	IProjectNodeExtensionsSpec
+		Whenbuildingproject
+		ThenCanWaitForSuccess
+		  
+		Whengettingoutputassembly
+		ThenTryingToInstantiateTypeThrows
+		  
+		Whensolutionisopened
+		ThenCanGetProjectOutputAssembly
+		ThenCanGetProjectReferencedAssemblies
+		  
+	  
+	ISolutionNodeExtensionsSpec
+		Whensolutionisopened
+		ThenCanGetAllProjects
+		  
+	  
+	ItemDataSpec
+		Whensettingitemdata
+		ThenCanRetrieveIt
+		  
+	  
+	MessageBoxServiceSpec
+		Whenshowingmessagebox
+		ThenCanInvokeShowAndPrompt
+		ThenSucceeds
+		  
+	  
+	Misc
+		Whenclosingandreopeningsolution
+		ThenSolutionInstanceIsDifferent
+		  
+		Whenretrievinghierarchyitem
+		ThenAlwaysGetsSameInstance
+		  
+	  
+	MsBuildAdapterSpec
+		Whensolutionisopened
+		ThenCanGetMsBuildProjectProperties
+		  
+	  
+	OutputWindowManagerSpec
+		When writing to pane writer
+		Then writes to output pane
+		  
+	  
+	PerformanceSpec
+		When retrieving active project
+		Then performance is acceptable
+		  
+		When retrieving selected project
+		Then performance is acceptable
+		  
+		When traversing solution to find projects
+		Then performance is acceptable
+		  
+	  
+	ProjectDataSpec
+		Whengettingallproperties
+		ThenSucceeds
+		  
+		Whengettingglobalproperty
+		ThenRetrievesActiveConfigurationValue
+		  
+		Whenretrievingpropertynames
+		ThenFindsDteAndMsBuild
+		  
+		Whensettingdteproperty
+		ThenCanRetrieveIt
+		  
+		Whensettingexistingmsbuildconfiguration
+		ThenCanRetrieveIt
+		  
+		Whensettingexistingmsbuildproperty
+		ThenCanRetrieveIt
+		  
+		Whensettingnewmsbuildproperty
+		ThenCanRetrieveIt
+		  
+	  
+	ProjectNodeSpec
+		Whengettingactiveconfigurationname
+		ThenRetrievesDebugAnyCPU
+		  
+		Whengettingconfigurations
+		ThenRetrievesDebugAndRelease
+		  
+		Whengettingplatforms
+		ThenRetrievesAnyCPU
+		  
+		Whensolutionisopened
+		ThenCanGetProjectConfigurations
+		ThenCanGetProjectReferencedAssemblies
+		  
+	  
+	ServiceLocatorSpec
+		Whengettinggloballocator
+		ThenCanGetInstanceVsServices
+		  
+		Whenusinggloballocator
+		ThenCanGetExportedVsServiceProvider
+		  
+	  
+	SettingsManagerSpec
+		GivenASimpleClass
+			Whenreadingsettingsandnoexistingone
+			ThenReadsDefaultValues
+			  
+			Whensavinginvalidsettings
+			ThenThrowsValidationException
+			  
+			Whensavingsettings
+			ThenCanReadThem
+			  
+			Whensavingvaluetypesetting
+			ThenAlwaysSaveIfDifferentThanDefaultValue
+			  
+		  
+	  
+	SolutionEventsSpec
+		Whensolutionclosed
+		ThenRaisesClosingAndClosedEvent
+		ThenRaisesProjectClosingEvent
+		  
+		Whensolutionopened
+		ThenRaisesOpenedEvent
+		ThenRaisesProjectOpenedEvent
+		  
+	  
+	SolutionExplorerSpec
+		GivenNocontext
+			Whenclosingsolutionexplorer
+			ThenIsOpenReturnsFalse
+			  
+			Whengettingdefaultfactories
+			ThenGetsAllOfThem
+			  
+			Whengettingdefaultfactory
+			ThenCanRetrieveIt
+			  
+			Whengettingdefaulthierarchyfactory
+			ThenSucceeds
+			  
+			Whengettingsolutionexplorer
+			ThenReturnsInstance
+			  
+			Whenopeningsolutionexplorer
+			ThenIsOpenReturnsTrue
+			  
+		  
+	  
+	SolutionNodeSpec
+		GivenASolution
+			Whenfolderfound
+			ThenOwningProjectIsValid
+			  
+			Whenitemfound
+			ThenOwningProjectIsValid
+			  
+			Whenmultipleitemsindifferenthierarchiesareselected
+			ThenActiveProjectIsNull
+			  
+			Whenmultipleitemsinsinglehierarchyareselected
+			ThenOwningProjectIsActive
+			  
+			Whenmultipleprojectsareselected
+			ThenCanRetrieveAllSelectedNodes
+			  
+			Whennosolutionisopened
+			ThenActiveProjectIsNull
+			  
+			Whenprojectisselected
+			ThenCanRetrieveSelectedNode
+			  
+			Whenreferencefound
+			ThenOwningProjectIsValid
+			  
+			Whenreferencesnode
+			ThenOwningProjectIsValid
+			  
+			Whenselectionissolution
+			ThenActiveProjectIsNull
+			  
+			Whensingleitemisselected
+			ThenOwningProjectIsActive
+			  
+			Whensingleprojectisselected
+			ThenActiveProjectIsNotNull
+			  
+			Whensolutionisopened
+			ThenReturnsProperHierarchy
+			  
+			Whensolutionitemfound
+			ThenOwningSolutionFolderIsValid
+			  
+			Whentraversinghiddendescendentnode
+			ThenItIsHiddenAndInvisible
+			  
+			Whentraversinghiddennode
+			ThenItIsHiddenAndInvisible
+			  
+		  
+		GivenNoContext
+			Whencreatingsolution
+			ThenIsOpenReturnsTrue
+			  
+			Whencreatingsolutionwithinvalidname
+			ThenThrows
+			  
+			Whengettingparent
+			ThenReturnsNull
+			  
+			Whensolutionisopened
+			ThenIsOpenReturnsTrue
+			  
+		  
+	  
+	VsExposedServicesSpec
+		Whengettingexportedservices
+		ThenSuccceedsForAll
+		  
+		Whenretrievingexportedmultiplecomponents
+		ThenSucceeds
+		  
+		Whenretrievingsinglecomponent
+		ThenSucceeds
+		  
+	  
+	VsHierarchyExtensionsSpec
+		Whengettingidfromextension
+		ThenAlwaysReturnsSameValue
+		  
+	  
+	VsSolutionHierarchyNodeIteratorSpec
+		GivenASolution
+			Wheniteratingclasslibraryproject
+			ThenGetsFourNodes
+			  
+			Wheniteratingclasslibraryprojectfolder
+			ThenGetsTwoNodes
+			  
+			Wheniteratingclasslibraryprojectfolderfolder
+			ThenGetsOneNode
+			  
+			Wheniteratingsolutionfolder1
+			ThenGetsTwoNodes
+			  
+			Wheniteratingtoplevelnodes
+			ThenGetsTwoFolders
+			  
+		  
+	  
+	VsSolutionHierarchyNodeSpec
+		GivenASolution
+			Whengettingancestorsolutionfolder2
+			ThenReturnsNull
+			  
+			Whengettingowninghierarchyforitem
+			ThenReturnsProject
+			  
+			Whengettingparentforsolutionfolder1
+			ThenReturnsSolution
+			  
+			Whengettingparentforsolutionfolder2
+			ThenReturnsSolutionFolder1
+			  
+			Whengettingparentforsolutionnode
+			ThenReturnsNull
+			  
+		  
+	  
+	VsUIShellExtensionsSpec
+		Whengettingmainwindow
+		ThenSucceeds
+		  
+	  
+

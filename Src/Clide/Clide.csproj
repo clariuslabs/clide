@@ -206,6 +206,10 @@
     <Compile Include="Solution\Extensions\IProjectNodeExtensions.cs" />
     <Compile Include="Solution\Extensions\ISolutionNodeExtensions.cs" />
     <Compile Include="Sdk\Solution\SolutionVisitable.cs" />
+    <Compile Include="Solution\Implementation\ConfigUserProjectProperties.cs" />
+    <Compile Include="Solution\Implementation\DynamicPropertyAccessor.cs" />
+    <Compile Include="Solution\Implementation\IPropertyAccessor.cs" />
+    <Compile Include="Solution\Implementation\UserProjectProperties.cs" />
     <Compile Include="Solution\ISolutionVisitor.cs" />
     <Compile Include="Solution\SolutionVisitor.cs" />
     <Compile Include="OutputWindowManager.cs" />
@@ -324,6 +328,10 @@
     <None Include="..\..\Common\ClariusLabs.licenseheader">
       <Link>ClariusLabs.licenseheader</Link>
     </None>
+    <None Include="Properties\Resources.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Resources.Strings.cs</LastGenOutput>
+    </None>
     <NuSpec Include="Clide.nuspec">
       <SubType>Designer</SubType>
     </NuSpec>
@@ -335,10 +343,6 @@
     <None Include="netfx\System\Reflection\TargetFramework.ttinclude" />
     <None Include="packages.config" />
     <Compile Include="Patterns\AdapterService.cs" />
-    <None Include="Properties\Resources.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Resources.Strings.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -372,5 +376,12 @@
   <Target Name="AfterBuild">
     <!-- Fix for improper Microsoft.Practices.ServiceLocation.pdb in CommonServiceLocator package -->
     <Delete Files="$(OutputPath)Microsoft.Practices.ServiceLocation.pdb" ContinueOnError="false" />
+  </Target>
+  <Import Project="..\..\packages\netfx-System.StringResources.2.0.0\build\netfx-System.StringResources.targets" Condition="Exists('..\..\packages\netfx-System.StringResources.2.0.0\build\netfx-System.StringResources.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\netfx-System.StringResources.2.0.0\build\netfx-System.StringResources.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\netfx-System.StringResources.2.0.0\build\netfx-System.StringResources.targets'))" />
   </Target>
 </Project>

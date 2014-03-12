@@ -82,12 +82,24 @@
     </None>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <Compile Include="TestReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TestReport.tt</DependentUpon>
+    </Compile>
+    <None Include="TestReport.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>TestReport.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Clide\Clide.csproj">
       <Project>{eaf59c6d-a973-48e6-a90a-5e894ecec3f6}</Project>
       <Name>Clide</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

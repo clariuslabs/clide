@@ -186,7 +186,9 @@ namespace UnitTests
     public class FakeProject : FakeSolutionExplorerNode, IProjectNode
     {
         private ExpandoObject properties = new ExpandoObject();
+		private ExpandoObject userProperties = new ExpandoObject();
         private ConcurrentDictionary<string, ExpandoObject> propertiesFor = new ConcurrentDictionary<string, ExpandoObject>();
+		private ConcurrentDictionary<string, ExpandoObject> userPropertiesFor = new ConcurrentDictionary<string, ExpandoObject>();
 
         public FakeProject(string name)
         {
@@ -221,7 +223,14 @@ namespace UnitTests
         {
             return propertiesFor.GetOrAdd(configurationName, _ => new ExpandoObject());
         }
-    }
+
+		public virtual dynamic UserProperties { get { return userProperties; } }
+
+		public virtual dynamic UserPropertiesFor(string configurationName)
+		{
+			return userPropertiesFor.GetOrAdd(configurationName, _ => new ExpandoObject());
+		}
+	}
 
     public class FakeFolder : FakeSolutionExplorerNode, IFolderNode
     {
