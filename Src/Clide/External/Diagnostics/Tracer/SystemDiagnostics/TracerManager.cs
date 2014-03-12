@@ -72,7 +72,7 @@ namespace Clide.Diagnostics
             // Note we have only one async task to perform all tracing. This 
             // is an optimization, so that we don't consume too much resources
             // from the running app for this.
-            Task.Factory.StartNew(DoTrace, cancellation.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+            Task.Factory.StartNew(DoTrace, cancellation.Token, TaskCreationOptions.LongRunning, TaskScheduler.Current);
 
             InitializeConfiguredSources();
         }
@@ -233,7 +233,7 @@ namespace Clide.Diagnostics
         /// </summary>
         private TraceSource GetOrAdd(string sourceName, Func<string, TraceSource> factory)
         {
-            var cachedSources = AppDomain.CurrentDomain.GetData<Dictionary<string, TraceSource>>();
+            var cachedSources = AppDomain.CurrentDomain.GetData<ConcurrentDictionary<string, TraceSource>>();
             if (cachedSources == null)
             {
                 // This lock guarantees that throughout the current 
@@ -241,10 +241,10 @@ namespace Clide.Diagnostics
                 // created ever.
                 lock (AppDomain.CurrentDomain)
                 {
-                    cachedSources = AppDomain.CurrentDomain.GetData<Dictionary<string, TraceSource>>();
+                    cachedSources = AppDomain.CurrentDomain.GetData<ConcurrentDictionary<string, TraceSource>>();
                     if (cachedSources == null)
                     {
-                        cachedSources = new Dictionary<string, TraceSource>();
+                        cachedSources = new ConcurrentDictionary<string, TraceSource>();
                         AppDomain.CurrentDomain.SetData(cachedSources);
                     }
                 }
