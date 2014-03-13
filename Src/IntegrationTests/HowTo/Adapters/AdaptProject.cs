@@ -242,6 +242,26 @@
 			Assert.AreEqual("MSBuild:Compile", (string)itemNode.Properties.Generator);
 		}
 
+		[DisplayName("*  [Convert DTE ProjectItem to MSBuild ProjectItem](" + baseUrl + "233)")]
+		[HostType("VS IDE")]
+		[TestMethod]
+		public void how_to_convert_DTE_ProjectItem_to_MSBuild_ProjectItem()
+		{
+			// Say you got a DTE project item somehow.
+			EnvDTE.ProjectItem dteItem = this.DteLibrary.ProjectItems.OfType<ProjectItem>().First(pi => pi.Name == "Class1.cs");
+
+			Microsoft.Build.Evaluation.ProjectItem item = dteItem.Adapt().AsMsBuildItem();
+
+			Assert.IsNotNull(item);
+
+			// Now use MSBuild to set/get custom metadata on the item
+			item.SetMetadataValue("Identifier", "Foo");
+			string identifier = item.GetMetadataValue("Identifier");
+			
+			Assert.AreEqual("Foo", identifier);
+		}
+
+
 		[TestInitialize]
 		public override void TestInitialize()
 		{
