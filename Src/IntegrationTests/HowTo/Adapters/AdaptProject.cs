@@ -242,7 +242,7 @@
 			Assert.AreEqual("MSBuild:Compile", (string)itemNode.Properties.Generator);
 		}
 
-		[DisplayName("*  [Convert DTE ProjectItem to MSBuild ProjectItem](" + baseUrl + "233)")]
+		[DisplayName("*  [Convert DTE ProjectItem to MSBuild ProjectItem](" + baseUrl + "253)")]
 		[HostType("VS IDE")]
 		[TestMethod]
 		public void how_to_convert_DTE_ProjectItem_to_MSBuild_ProjectItem()
