@@ -222,7 +222,7 @@
 			Assert.IsNotNull(folder);
 		}
 
-		[DisplayName("*  [Convert DTE ProjectItem to Clide's IItemNode](" + baseUrl + "142)")]
+		[DisplayName("*  [Convert DTE ProjectItem to Clide's IItemNode](" + baseUrl + "233)")]
 		[HostType("VS IDE")]
 		[TestMethod]
 		public void how_to_convert_DTE_ProjectItem_to_IItemNode()
