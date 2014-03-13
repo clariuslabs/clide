@@ -9,7 +9,7 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Reflection" #>
 <#@ output extension=".md" #>
-# How Tos: Using Clide APIs
+# How To: Using Clide APIs
 
 <#
     var assemblyFile = this.Host.ResolveParameterValue("TestReport", "VisualStudio", "AssemblyFile");
