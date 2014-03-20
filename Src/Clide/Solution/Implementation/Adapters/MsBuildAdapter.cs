@@ -16,15 +16,32 @@ namespace Clide.Solution.Adapters
 {
     using Clide.Patterns.Adapter;
     using Clide.Sdk.Solution;
+    using Clide.Solution.Implementation;
     using Microsoft.Build.Evaluation;
+    using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.Shell.Interop;
+    using System;
     using System.IO;
     using System.Linq;
 
     [Adapter]
     internal class MsBuildAdapter :
         IAdapter<ProjectNode, Project>,
-        IAdapter<ItemNode, ProjectItem>
+        IAdapter<ItemNode, ProjectItem>,
+        IAdapter<Project, IProjectNode>, 
+        IAdapter<ProjectItem, IItemNode>
     {
+        IVsSolution vsSolution;
+        ISolutionExplorerNodeFactory nodeFactory;
+        ISolutionExplorer solutionExplorer;
+
+        public MsBuildAdapter(IVsSolution vsSolution, ISolutionExplorerNodeFactory nodeFactory, ISolutionExplorer solutionExplorer)
+        {
+            this.vsSolution = vsSolution;
+            this.nodeFactory = nodeFactory;
+            this.solutionExplorer = solutionExplorer;
+        }
+
         public Project Adapt(ProjectNode from)
         {
             return from == null || from.Project.Value == null ? null :
@@ -57,6 +74,50 @@ namespace Clide.Solution.Adapters
             }
 
             return null;
+        }
+
+        public IProjectNode Adapt(Project from)
+		{
+			var id = from.GetPropertyValue("ProjectGuid");
+            
+            // Fast path first.
+            var guid = Guid.Empty;
+            IVsHierarchy hierarchy;
+            if (!String.IsNullOrEmpty(id) && Guid.TryParse(id, out guid) && 
+                ErrorHandler.Succeeded(vsSolution.GetProjectOfGuid(ref guid, out hierarchy)))
+            {
+                return (IProjectNode)nodeFactory.Create(new VsSolutionHierarchyNode(hierarchy, VSConstants.VSITEMID_ROOT));
+            }
+
+            // Slow way next
+            return solutionExplorer.Solution.FindProject(x => x.PhysicalPath.Equals(from.FullPath, StringComparison.OrdinalIgnoreCase));
+		}
+
+        public IItemNode Adapt(ProjectItem from)
+        {
+			var id = from.Project.GetPropertyValue("ProjectGuid");
+            
+            // Fast path first.
+            var guid = Guid.Empty;
+            IVsHierarchy hierarchy = null;
+            if (String.IsNullOrEmpty(id) || !Guid.TryParse(id, out guid) ||
+                !ErrorHandler.Succeeded(vsSolution.GetProjectOfGuid(ref guid, out hierarchy)))
+            {
+                // Slow way next
+                var project = solutionExplorer.Solution
+                    .FindProject(x => x.PhysicalPath.Equals(from.Project.FullPath, StringComparison.OrdinalIgnoreCase));
+                if (project != null)
+                    hierarchy = project.As<IVsHierarchy>();
+            }
+            
+            if (hierarchy == null)
+                return null;
+
+            uint itemId;
+            if (!ErrorHandler.Succeeded(hierarchy.ParseCanonicalName(from.GetMetadataValue("FullPath"), out itemId)))
+                return null;
+
+            return nodeFactory.Create(new VsSolutionHierarchyNode(hierarchy, itemId)) as IItemNode;
         }
     }
 }
