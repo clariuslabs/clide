@@ -286,7 +286,7 @@
 			// Say you got an MSBuild Project somehow.
 			Microsoft.Build.Evaluation.Project project = this.MsBuildLibrary;
 
-			IProjectNode projectNode = project.Adapt().AsProjectNode();
+            IProjectNode projectNode = project.Adapt().AsProjectNode();
 
 			Assert.IsNotNull(projectNode);
 
@@ -402,7 +402,12 @@
 			DteLibrary = LibraryNode.As<EnvDTE.Project>();
 			IVsLibrary = LibraryNode.As<IVsProject>();
 			VsLangLibrary = LibraryNode.As<VSLangProj.VSProject>();
-			MsBuildLibrary = LibraryNode.As<Microsoft.Build.Evaluation.Project>();
+
+			DoActionWithWaitAndRetry(
+				() => MsBuildLibrary = LibraryNode.As<Microsoft.Build.Evaluation.Project>(),
+				100, 
+				50,
+				() => MsBuildLibrary == null);
 
 			Assert.IsNotNull(DteLibrary);
 			Assert.IsNotNull(IVsLibrary);

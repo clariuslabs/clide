@@ -14,15 +14,15 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution.Adapters
 {
-    using Clide.Patterns.Adapter;
-    using Clide.Sdk.Solution;
-    using Clide.Solution.Implementation;
-    using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.Shell.Interop;
+	using Clide.Patterns.Adapter;
+	using Clide.Sdk.Solution;
+	using Clide.Solution.Implementation;
+	using Microsoft.VisualStudio;
+	using Microsoft.VisualStudio.Shell.Interop;
 
-    [Adapter]
-    internal class VsToSolutionAdapter :
-        IAdapter<IVsSolution, ISolutionNode>,
+	[Adapter]
+	internal class VsToSolutionAdapter :
+		IAdapter<IVsSolution, ISolutionNode>,
 		IAdapter<IVsSolution2, ISolutionNode>,
 		IAdapter<IVsSolution3, ISolutionNode>,
 		IAdapter<IVsSolution4, ISolutionNode>,
@@ -30,18 +30,18 @@ namespace Clide.Solution.Adapters
 		IAdapter<IVsProject2, IProjectNode>,
 		IAdapter<IVsProject3, IProjectNode>,
 		IAdapter<IVsProject4, IProjectNode>
-    {
-        private ISolutionExplorerNodeFactory nodeFactory;
+	{
+		private ISolutionExplorerNodeFactory nodeFactory;
 
-        public VsToSolutionAdapter(ISolutionExplorerNodeFactory nodeFactory)
-        {
-            this.nodeFactory = nodeFactory;
-        }
+		public VsToSolutionAdapter(ISolutionExplorerNodeFactory nodeFactory)
+		{
+			this.nodeFactory = nodeFactory;
+		}
 
-        public ISolutionNode Adapt(IVsSolution from)
-        {
+		public ISolutionNode Adapt(IVsSolution from)
+		{
 			return CreateNode((IVsHierarchy)from) as ISolutionNode;
-        }
+		}
 
 		public ISolutionNode Adapt(IVsSolution2 from)
 		{

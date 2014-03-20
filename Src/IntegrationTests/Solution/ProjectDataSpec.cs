@@ -144,6 +144,8 @@ namespace Clide.Solution
             Assert.Equal("5", (string)project.PropertiesFor("Debug|AnyCPU").WarningLevel);
         }
 
+        // NOTE: this test is used only to enumerate all properties available.
+        [Ignore]
         [TestMethod]
         public void WhenGettingAllProperties_ThenSucceeds()
         {

@@ -108,7 +108,7 @@
         [HostType("VS IDE")]
         [TestMethod]
         // Uncomment Ignore, and download EntLib to test performance.
-        [Ignore]
+        //[Ignore]
         public void when_retrieving_active_project_then_performance_is_acceptable()
         {
             this.OpenSolution("SampleSolution\\SampleSolution.sln");
@@ -118,8 +118,6 @@
             devenv.SolutionExplorer().Solution.FindProjects().First().Select();
 
             var iterations = 1000;
-
-            //System.Diagnostics.Debugger.Launch();
 
             var dteSelection = Measure(iterations, () => Console.WriteLine(GetSelectedProjectDte()));
             var ivsSelection = Measure(iterations, () => Console.WriteLine(GetSelectedProjectIVs()));

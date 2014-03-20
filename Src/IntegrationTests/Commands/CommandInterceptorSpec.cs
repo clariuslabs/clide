@@ -17,6 +17,8 @@ namespace Clide.Commands
     using IntegrationPackage;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
+    using Clide.Solution;
+    using System.Threading;
 
     [TestClass]
     public class CommandInterceptorSpec : VsHostedSpec
@@ -35,7 +37,14 @@ namespace Clide.Commands
             commands.AddInterceptor(interceptor.Object, new CommandInterceptorAttribute(
                 Constants.PackageGuid, "{5efc7975-14bc-11cf-9b2b-00aa00573819}", 0x372));
 
+            var mre = new ManualResetEventSlim();
+            var events = this.Dte.Events.BuildEvents;
+            EnvDTE._dispBuildEvents_OnBuildDoneEventHandler done = (scope, action) => mre.Set();
+            events.OnBuildDone += done;
+
             this.Dte.ExecuteCommand("Build.BuildSolution");
+
+            mre.Wait();
 
             Assert.True(BuildCommandInterceptor.BeforeExecuteCalled);
             Assert.True(BuildCommandInterceptor.AfterExecuteCalled);

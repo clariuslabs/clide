@@ -48,6 +48,9 @@ namespace Clide.Solution.Implementation
         {
             get
             {
+                // NOTE: need to create each time, since retrieving the 
+                // IVsSolution service returns a new instance in 2010 and 
+                // 2013, so it does not look safe to cache it.
                 return this.nodeFactory.Create(
                         new VsSolutionHierarchyNode(
                             this.serviceProvider.GetService<IVsSolution>() as IVsHierarchy,

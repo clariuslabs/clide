@@ -28,11 +28,6 @@ namespace Clide.Solution
 
             var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
 
-            explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
-                .Where(node => node.DisplayName == "TextFile1.txt")
-                .ToList()
-                .ForEach(node => Console.WriteLine(node.GetType().FullName));
-
             var item = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
                 .OfType<IItemNode>()
                 .FirstOrDefault(node => node.DisplayName == "TextFile1.txt");
