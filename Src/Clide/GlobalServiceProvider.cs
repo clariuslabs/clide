@@ -52,8 +52,19 @@ namespace Clide
             {
                 var dte = Package.GetGlobalService(typeof(EnvDTE.DTE));
                 var ole = dte as Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
+				if (ole == null)
+					return new NullServiceProvider();
+
                 return new Microsoft.VisualStudio.Shell.ServiceProvider(ole);
             }
+
+			class NullServiceProvider : IServiceProvider
+			{
+				public object GetService (Type serviceType)
+				{
+					return null;
+				}
+			}
         }
 
         private class VsServiceProvider : IServiceProvider
