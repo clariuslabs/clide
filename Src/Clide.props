@@ -1,82 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-    <PropertyGroup>
-        <PackageVersion Condition="'$(PackageVersion)' == ''">1.0.0</PackageVersion>
-        <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
-        <BuildRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .gitignore))</BuildRoot>
-        <BuildRoot Condition="!HasTrailingSlash('$(BuildRoot)')">$(BuildRoot)\</BuildRoot>
-        <DropDirectory>$(BuildRoot)Drops\</DropDirectory>
-        <NuGetExe>$(BuildRoot).nuget\NuGet.exe</NuGetExe>
-        <NugetTarget>net40</NugetTarget>
+	<PropertyGroup>
+		<SolutionDir>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Clide.sln))</SolutionDir>
+		<SolutionDir Condition="!HasTrailingSlash('$(SolutionDir)')">$(SolutionDir)\</SolutionDir>
+
+		<PackageVersion Condition="'$(PackageVersion)' == ''">1.0.0</PackageVersion>
+		<Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+		<BuildRoot>$(SolutionDir)</BuildRoot>
+		<DropDirectory>$(BuildRoot)Drops\</DropDirectory>
+		<NuGetExe>$(BuildRoot).nuget\NuGet.exe</NuGetExe>
+		<NugetTarget>net40</NugetTarget>
 		<RestorePackages>true</RestorePackages>
 		<RequireRestoreConsent>false</RequireRestoreConsent>
 		<DownloadNuGetExe>true</DownloadNuGetExe>
-		
-        <OutputPath>bin\$(Configuration)\</OutputPath>
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
+
+		<OutputPath>bin\$(Configuration)\</OutputPath>
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>full</DebugType>
+		<Optimize>false</Optimize>
+		<ErrorReport>prompt</ErrorReport>
+		<WarningLevel>4</WarningLevel>
+	</PropertyGroup>
 
 	<PropertyGroup>
 		<TextTransformExe>$(CommonProgramFiles)\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\TextTransform.exe</TextTransformExe>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
-    </PropertyGroup>
+		<DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
+	</PropertyGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
-    </PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+	</PropertyGroup>
 
-    <!-- On build servers and command line, this property is not available, so we redefine it in 
+	<!-- On build servers and command line, this property is not available, so we redefine it in 
              terms of the environment variables created by VS when installed -->
-    <PropertyGroup Condition="'$(DevEnvDir)' == ''">
-        <VSCommToolsVar>VS$(VisualStudioVersion.Replace('.', ''))COMNTOOLS</VSCommToolsVar>
-        <DevEnvDir>$([System.Environment]::ExpandEnvironmentVariables('%$(VSCommToolsVar)%'))..\IDE\</DevEnvDir>
+	<PropertyGroup Condition="'$(DevEnvDir)' == ''">
+		<VSCommToolsVar>VS$(VisualStudioVersion.Replace('.', ''))COMNTOOLS</VSCommToolsVar>
+		<DevEnvDir>$([System.Environment]::ExpandEnvironmentVariables('%$(VSCommToolsVar)%'))..\IDE\</DevEnvDir>
 
-        <!-- VSSDK -->
-        <VSSDKVar>VSSDK$(VisualStudioVersion.Replace('.', ''))Install</VSSDKVar>
-        <SdkDir>$([System.Environment]::ExpandEnvironmentVariables('%$(VSSDKVar)%'))</SdkDir>
-        <SdkLib>$(SdkDir)VisualStudioIntegration\Common\Assemblies\v4.0\</SdkLib>
-    </PropertyGroup>
+		<!-- VSSDK -->
+		<VSSDKVar>VSSDK$(VisualStudioVersion.Replace('.', ''))Install</VSSDKVar>
+		<SdkDir>$([System.Environment]::ExpandEnvironmentVariables('%$(VSSDKVar)%'))</SdkDir>
+		<SdkLib>$(SdkDir)VisualStudioIntegration\Common\Assemblies\v4.0\</SdkLib>
+	</PropertyGroup>
 
-    <!-- This is the property that causes VS 2012+ to insist on one-way update of the project -->
-    <PropertyGroup Condition="'$(VisualStudioVersion)' &gt;= '11.0'">
-        <MinimumVisualStudioVersion>$(VisualStudioVersion)</MinimumVisualStudioVersion>
-    </PropertyGroup>
-    <!-- This is the property that causes VS 2013 to insist on one-way update of the project -->
-    <PropertyGroup Condition="'$(VisualStudioVersion)' &gt;= '12.0'">
-        <OldToolsVersion>4.0</OldToolsVersion>
-    </PropertyGroup>
+	<!-- This is the property that causes VS 2012+ to insist on one-way update of the project -->
+	<PropertyGroup Condition="'$(VisualStudioVersion)' &gt;= '11.0'">
+		<MinimumVisualStudioVersion>$(VisualStudioVersion)</MinimumVisualStudioVersion>
+	</PropertyGroup>
+	<!-- This is the property that causes VS 2013 to insist on one-way update of the project -->
+	<PropertyGroup Condition="'$(VisualStudioVersion)' &gt;= '12.0'">
+		<OldToolsVersion>4.0</OldToolsVersion>
+	</PropertyGroup>
 
-    <PropertyGroup Condition="'$(VisualStudioVersion)' == ''">
-        <VisualStudioVersion>10.0</VisualStudioVersion>
-        <VSToolsPath>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    </PropertyGroup>
-    
-    <PropertyGroup Condition="'$(VisualStudioVersion)' == '10.0'">
-        <DefineConstants>$(DefineConstants);Vs10</DefineConstants>
-    </PropertyGroup>
+	<PropertyGroup Condition="'$(VisualStudioVersion)' == ''">
+		<VisualStudioVersion>10.0</VisualStudioVersion>
+		<VSToolsPath>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+	</PropertyGroup>
 
-    <PropertyGroup Condition="'$(VisualStudioVersion)' == '11.0'">
-        <DefineConstants>$(DefineConstants);Vs11</DefineConstants>
-    </PropertyGroup>
-    
-    <PropertyGroup Condition="'$(VisualStudioVersion)' == '12.0'">
-        <DefineConstants>$(DefineConstants);Vs12</DefineConstants>
-    </PropertyGroup>
+	<PropertyGroup Condition="'$(VisualStudioVersion)' == '10.0'">
+		<DefineConstants>$(DefineConstants);Vs10</DefineConstants>
+	</PropertyGroup>
 
-    <ItemGroup>
-        <!-- If we don't make these invisible, they show up in VS as missing files :S -->
-        <AvailableItemName Include="NuSpec">
-            <Visible>False</Visible>
-        </AvailableItemName>
+	<PropertyGroup Condition="'$(VisualStudioVersion)' == '11.0'">
+		<DefineConstants>$(DefineConstants);Vs11</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(VisualStudioVersion)' == '12.0'">
+		<DefineConstants>$(DefineConstants);Vs12</DefineConstants>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- If we don't make these invisible, they show up in VS as missing files :S -->
+		<AvailableItemName Include="NuSpec">
+			<Visible>False</Visible>
+		</AvailableItemName>
 
 		<AvailableItemName Include="TestReport">
 			<Visible>False</Visible>
