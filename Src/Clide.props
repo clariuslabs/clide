@@ -9,7 +9,10 @@
         <DropDirectory>$(BuildRoot)Drops\</DropDirectory>
         <NuGetExe>$(BuildRoot).nuget\NuGet.exe</NuGetExe>
         <NugetTarget>net40</NugetTarget>
-
+		<RestorePackages>true</RestorePackages>
+		<RequireRestoreConsent>false</RequireRestoreConsent>
+		<DownloadNuGetExe>true</DownloadNuGetExe>
+		
         <OutputPath>bin\$(Configuration)\</OutputPath>
         <DebugSymbols>true</DebugSymbols>
         <DebugType>full</DebugType>
