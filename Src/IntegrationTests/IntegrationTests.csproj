@@ -93,9 +93,6 @@
     <Compile Include="Commands\CommandInterceptorSpec.cs" />
     <Compile Include="CompositionSpec.cs" />
     <Compile Include="Content\SampleSolution\ClassLibrary\Folder\Folder\Class2.cs" />
-    <Content Include="Content\SampleSolution\ClassLibrary\ClassLibrary.csproj.user">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\SampleSolution\ClassLibrary\Properties\AssemblyInfo.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

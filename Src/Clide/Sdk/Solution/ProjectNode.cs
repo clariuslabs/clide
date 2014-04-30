@@ -122,7 +122,7 @@ namespace Clide.Sdk.Solution
         /// <summary>
         /// Gets the configuration-specific properties for the project.
         /// </summary>
-        /// <param name="configurationName">Configuration names are the combination 
+        /// <param name="configurationAndPlatform">Configuration names are the combination 
         /// of a project configuration and the platform, like "Debug|AnyCPU".</param>
         /// <remarks>
         /// To set properties for the current project configuration only, use 
