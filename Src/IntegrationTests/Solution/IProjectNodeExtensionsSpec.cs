@@ -14,11 +14,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Xml.Linq;
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+	using System;
+	using System.Linq;
+	using System.Threading;
+	using System.Threading.Tasks;
+	using System.Xml.Linq;
 
     [TestClass]
     public class IProjectNodeExtensionsSpec : VsHostedSpec
@@ -98,5 +99,21 @@ namespace Clide.Solution
 
             Assert.True(lib.Build().Result);
         }
-    }
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void WhenBuildWaitIsCancelled_ThenReturnsFalseRegardlessOfResult()
+        {
+            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
+            var lib = explorer.Solution.FindProject(project => project.DisplayName == "ClassLibrary");
+
+			var cancellation = new CancellationTokenSource();
+			var task = lib.Build(cancellation.Token);
+			cancellation.Cancel();
+
+            Assert.False(task.Result);
+        }
+	}
 }

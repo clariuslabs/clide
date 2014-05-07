@@ -31,6 +31,7 @@ using Microsoft.VisualStudio.Shell;
 using EnvDTE80;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Threading;
 
 [TestClass]
 public abstract class VsHostedSpec
@@ -151,6 +152,9 @@ public abstract class VsHostedSpec
 
     protected void CloseSolution()
     {
+		SpinWait.SpinUntil(() => Dte.Solution.SolutionBuild.BuildState == vsBuildState.vsBuildStateDone || 
+			Dte.Solution.SolutionBuild.BuildState == vsBuildState.vsBuildStateNotStarted);
+
         VsHostedSpec.DoActionWithWaitAndRetry(
             () => Dte.Solution.Close(),
             2000,

@@ -43,6 +43,21 @@ namespace Clide.Solution
         /// <returns><see langword="true"/> if the build succeeded; <see langword="false"/> otherwise.</returns>
         public static Task<bool> Build(this IProjectNode project)
         {
+			return Build(project, new CancellationTokenSource().Token);
+        }
+
+        /// <summary>
+        /// Builds the specified project.
+        /// </summary>
+        /// <param name="project">The project to build.</param>
+		/// <param name="cancellation">Cancellation token to cancel the wait for the build to finish.</param>
+        /// <exception cref="System.ArgumentException">The project has no <see cref="ISolutionExplorerNode.OwningSolution"/>.</exception>
+        /// <returns><see langword="true"/> if the build succeeded; <see langword="false"/> otherwise.</returns>
+        public static Task<bool> Build(this IProjectNode project, CancellationToken cancellation)
+        {
+			Guard.NotNull(() => project, project);
+			Guard.NotNull(() => cancellation, cancellation);
+
             var solution = project.OwningSolution;
             if (solution == null)
                 throw new ArgumentException(Strings.IProjectNodeExtensions.BuildNoSolution(project.DisplayName));
@@ -53,30 +68,24 @@ namespace Clide.Solution
 
             return System.Threading.Tasks.Task.Factory.StartNew<bool>(() => 
             {
-                var mre = new ManualResetEventSlim();
-                var events = sln.DTE.Events.BuildEvents;
-                EnvDTE._dispBuildEvents_OnBuildDoneEventHandler done = (scope, action) => mre.Set();
-                events.OnBuildDone += done;
                 try
                 {
                     // Let build run async.
                     sln.SolutionBuild.BuildProject(sln.SolutionBuild.ActiveConfiguration.Name, project.As<EnvDTE.Project>().UniqueName, false);
 
                     // Wait until it's done.
-                    mre.Wait();
+					SpinWait.SpinUntil(() => 
+						cancellation.IsCancellationRequested ||
+						sln.SolutionBuild.BuildState == EnvDTE.vsBuildState.vsBuildStateDone);
 
                     // LastBuildInfo == # of projects that failed to build.
-                    return sln.SolutionBuild.LastBuildInfo == 0;
+					// We'll return false if the build wait was cancelled.
+                    return !cancellation.IsCancellationRequested && sln.SolutionBuild.LastBuildInfo == 0;
                 }
                 catch (Exception ex)
                 {
                     tracer.Error(ex, Strings.IProjectNodeExtensions.BuildException);
                     return false;
-                }
-                finally
-                {
-                    // Cleanup handler.
-                    events.OnBuildDone -= done;
                 }
             }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
         }

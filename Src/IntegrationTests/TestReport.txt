@@ -247,6 +247,9 @@
 		Whenbuildingproject
 		ThenCanWaitForSuccess
 		  
+		Whenbuildwaitiscancelled
+		ThenReturnsFalseRegardlessOfResult
+		  
 		Whengettingoutputassembly
 		ThenTryingToInstantiateTypeThrows
 		  
@@ -269,6 +272,9 @@
 		Whenshowingmessagebox
 		ThenCanInvokeShowAndPrompt
 		ThenSucceeds
+		  
+		Whenshowingmessageboxfrombackgroundthread
+		ThenCanInvokeShowAndPrompt
 		  
 	  
 	Misc

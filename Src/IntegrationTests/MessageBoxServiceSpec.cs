@@ -34,6 +34,19 @@ namespace Clide
 			service.Prompt("Go next?");
 		}
 
+		[HostType("VS IDE")]
+		[Ignore]
+		[TestMethod]
+		public void WhenShowingMessageBoxFromBackgroundThread_ThenCanInvokeShowAndPrompt()
+		{
+			var service = ServiceLocator.GetInstance<IMessageBoxService>();
+
+			System.Threading.Tasks.Task.Run(() => service.Show("From background!"))
+				.ContinueWith(_ => service.Prompt("Background 2!"))
+				.Wait();
+		}
+
+
         [HostType("VS IDE")]
         [Ignore]
         [TestMethod]
