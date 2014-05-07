@@ -51,7 +51,7 @@ namespace Clide.Solution
         public void WhenSettingDteProperty_ThenCanRetrieveIt()
         {
             var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
-            this.OpenSolution("SampleSolution\\SampleSolution.sln");
+            var slnFile = this.OpenSolution("SampleSolution\\SampleSolution.sln");
 
             var project = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
                 .OfType<ProjectNode>()
@@ -62,7 +62,7 @@ namespace Clide.Solution
             project.Save();
             this.CloseSolution();
 
-            this.OpenSolution("SampleSolution\\SampleSolution.sln");
+            this.OpenSolution(slnFile);
 
             project = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
                 .OfType<ProjectNode>()
@@ -75,7 +75,7 @@ namespace Clide.Solution
         public void WhenSettingExistingMsBuildProperty_ThenCanRetrieveIt()
         {
             var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
-            this.OpenSolution("SampleSolution\\SampleSolution.sln");
+            var slnFile = this.OpenSolution("SampleSolution\\SampleSolution.sln");
 
             var project = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
                 .OfType<ProjectNode>()
@@ -86,7 +86,7 @@ namespace Clide.Solution
             project.Save();
             this.CloseSolution();
 
-            this.OpenSolution("SampleSolution\\SampleSolution.sln");
+            this.OpenSolution(slnFile);
 
             project = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
                 .OfType<ProjectNode>()
@@ -99,7 +99,7 @@ namespace Clide.Solution
         public void WhenSettingNewMsBuildProperty_ThenCanRetrieveIt()
         {
             var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
-            this.OpenSolution("SampleSolution\\SampleSolution.sln");
+            var slnFile = this.OpenSolution("SampleSolution\\SampleSolution.sln");
 
             var project = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
                 .OfType<ProjectNode>()
@@ -110,7 +110,7 @@ namespace Clide.Solution
             project.Save();
             this.CloseSolution();
 
-            this.OpenSolution("SampleSolution\\SampleSolution.sln");
+            this.OpenSolution(slnFile);
 
             project = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
                 .OfType<ProjectNode>()
@@ -124,7 +124,7 @@ namespace Clide.Solution
         public void WhenSettingExistingMsBuildConfiguration_ThenCanRetrieveIt()
         {
             var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
-            this.OpenSolution("SampleSolution\\SampleSolution.sln");
+            var slnFile = this.OpenSolution("SampleSolution\\SampleSolution.sln");
 
             var project = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
                 .OfType<ProjectNode>()
@@ -135,7 +135,7 @@ namespace Clide.Solution
             project.Save();
             this.CloseSolution();
 
-            this.OpenSolution("SampleSolution\\SampleSolution.sln");
+            this.OpenSolution(slnFile);
 
             project = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
                 .OfType<ProjectNode>()

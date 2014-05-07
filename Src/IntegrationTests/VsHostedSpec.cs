@@ -36,86 +36,86 @@ using System.Threading;
 [TestClass]
 public abstract class VsHostedSpec
 {
-    private ITracer tracer;
-    private StringBuilder strings; 
-    private TraceListener listener;
+	private ITracer tracer;
+	private StringBuilder strings;
+	private TraceListener listener;
 	private List<string> cleanupFolders;
 
-    public TestContext TestContext { get; set; }
+	public TestContext TestContext { get; set; }
 
-    protected DTE2 Dte
-    {
-        get { return this.ServiceProvider.GetService<DTE, DTE2>(); }
-    }
+	protected DTE2 Dte
+	{
+		get { return this.ServiceProvider.GetService<DTE, DTE2>(); }
+	}
 
-    protected IServiceProvider ServiceProvider
-    {
-        get { return GlobalServiceProvider.Instance.GetLoadedPackage(new Guid(IntegrationPackage.Constants.PackageGuid)); }
-    }
+	protected IServiceProvider ServiceProvider
+	{
+		get { return GlobalServiceProvider.Instance.GetLoadedPackage(new Guid(IntegrationPackage.Constants.PackageGuid)); }
+	}
 
-    protected IServiceLocator ServiceLocator
-    {
-        get { return DevEnv.Get(this.ServiceProvider).ServiceLocator; }
-    }
+	protected IServiceLocator ServiceLocator
+	{
+		get { return DevEnv.Get(this.ServiceProvider).ServiceLocator; }
+	}
 
-    [TestInitialize]
-    public virtual void TestInitialize()
-    {
-        UIThreadInvoker.Initialize();
+	[TestInitialize]
+	public virtual void TestInitialize()
+	{
+		UIThreadInvoker.Initialize();
 
-        // Causes devenv to initialize
-        var factory = DevEnv.DevEnvFactory;
+		// Causes devenv to initialize
+		var factory = DevEnv.DevEnvFactory;
 
-        this.tracer = Tracer.Get(this.GetType());
-        this.strings = new StringBuilder();
-        this.listener = new TextWriterTraceListener(new StringWriter(this.strings));
+		this.tracer = Tracer.Get(this.GetType());
+		this.strings = new StringBuilder();
+		this.listener = new TextWriterTraceListener(new StringWriter(this.strings));
 
-        // Just in case, re-set the tracers.
-        Tracer.Manager.SetTracingLevel(TracerManager.DefaultSourceName, SourceLevels.All);
-        Tracer.Manager.AddListener(TracerManager.DefaultSourceName, this.listener);
+		// Just in case, re-set the tracers.
+		Tracer.Manager.SetTracingLevel(TracerManager.DefaultSourceName, SourceLevels.All);
+		Tracer.Manager.AddListener(TracerManager.DefaultSourceName, this.listener);
 
-        tracer.Info("Running test from: " + this.TestContext.TestDeploymentDir);
+		tracer.Info("Running test from: " + this.TestContext.TestDeploymentDir);
 
-        if (Dte != null)
-        {
-            Dte.SuppressUI = false;
-            Dte.MainWindow.Visible = true;
-            Dte.MainWindow.WindowState = EnvDTE.vsWindowState.vsWindowStateNormal;
-        }
+		if (Dte != null)
+		{
+			Dte.SuppressUI = false;
+			Dte.MainWindow.Visible = true;
+			Dte.MainWindow.WindowState = EnvDTE.vsWindowState.vsWindowStateNormal;
+		}
 
-        var shellEvents = new ShellEvents(ServiceProvider);
-        var initialized = shellEvents.IsInitialized;
-        while (!initialized)
-        {
-            System.Threading.Thread.Sleep(10);
-        }
+		var shellEvents = new ShellEvents(ServiceProvider);
+		var initialized = shellEvents.IsInitialized;
+		while (!initialized)
+		{
+			System.Threading.Thread.Sleep(10);
+		}
 
-        tracer.Info("Shell initialized successfully");
-        if (VsIdeTestHostContext.ServiceProvider == null)
-            VsIdeTestHostContext.ServiceProvider = new VsServiceProvider();
+		tracer.Info("Shell initialized successfully");
+		if (VsIdeTestHostContext.ServiceProvider == null)
+			VsIdeTestHostContext.ServiceProvider = new VsServiceProvider();
 
 		cleanupFolders = new List<string>();
-    }
+	}
 
-    [TestCleanup]
-    public virtual void TestCleanup()
-    {
-        //tracer.Info("Cleaning ambient context data");
-        //var contextData = (Hashtable)ExecutionContext
-        //    .Capture()
-        //    .AsDynamicReflection()
-        //    .LogicalCallContext
-        //    .Datastore;
+	[TestCleanup]
+	public virtual void TestCleanup()
+	{
+		//tracer.Info("Cleaning ambient context data");
+		//var contextData = (Hashtable)ExecutionContext
+		//    .Capture()
+		//    .AsDynamicReflection()
+		//    .LogicalCallContext
+		//    .Datastore;
 
-        //foreach (var slot in contextData.Keys.OfType<string>())
-        //{
-        //    CallContext.FreeNamedDataSlot(slot);
-        //}
+		//foreach (var slot in contextData.Keys.OfType<string>())
+		//{
+		//    CallContext.FreeNamedDataSlot(slot);
+		//}
 
-        listener.Flush();
-        Debug.WriteLine(this.strings.ToString());
-        Console.WriteLine(this.strings.ToString());
-        Trace.WriteLine(this.strings.ToString());
+		listener.Flush();
+		Debug.WriteLine(this.strings.ToString());
+		Console.WriteLine(this.strings.ToString());
+		Trace.WriteLine(this.strings.ToString());
 
 		if (Dte.Solution.IsOpen)
 			CloseSolution();
@@ -126,68 +126,83 @@ public abstract class VsHostedSpec
 			{
 				Directory.Delete(folder, true);
 			}
-			catch  { }
+			catch { }
 		}
-    }
+	}
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "None")]
-    protected void OpenSolution(string solutionFile)
-    {
-        if (!Path.IsPathRooted(solutionFile))
-            solutionFile = GetFullPath(solutionFile);
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "None")]
+	protected string OpenSolution(string solutionFile)
+	{
+		if (!Path.IsPathRooted(solutionFile))
+		{
+			solutionFile = GetFullPath(TestContext.TestDeploymentDir, solutionFile);
 
-		var tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-		cleanupFolders.Add(tempPath);
+			var tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+			cleanupFolders.Add(tempPath);
 
-		CopyAll(Path.GetDirectoryName(solutionFile), tempPath);
+			CopyAll(Path.GetDirectoryName(solutionFile), tempPath);
 
-		solutionFile = Path.Combine(tempPath, Path.GetFileName(solutionFile));
-		
-        VsHostedSpec.DoActionWithWaitAndRetry(
-            () => Dte.Solution.Open(solutionFile),
-            2000,
-            3,
-            () => !Dte.Solution.IsOpen);
-    }
+			solutionFile = Path.Combine(tempPath, Path.GetFileName(solutionFile));
+		}
 
-    protected void CloseSolution()
-    {
-		SpinWait.SpinUntil(() => Dte.Solution.SolutionBuild.BuildState == vsBuildState.vsBuildStateDone || 
+		VsHostedSpec.DoActionWithWaitAndRetry(
+			() => Dte.Solution.Open(solutionFile),
+			2000,
+			3,
+			() => !Dte.Solution.IsOpen);
+
+		return solutionFile;
+	}
+
+	protected void CloseSolution()
+	{
+		SpinWait.SpinUntil(() => Dte.Solution.SolutionBuild.BuildState == vsBuildState.vsBuildStateDone ||
 			Dte.Solution.SolutionBuild.BuildState == vsBuildState.vsBuildStateNotStarted);
 
-        VsHostedSpec.DoActionWithWaitAndRetry(
-            () => Dte.Solution.Close(),
-            2000,
-            3,
-            () => Dte.Solution.IsOpen);
-    }
+		VsHostedSpec.DoActionWithWaitAndRetry(
+			() => Dte.Solution.Close(),
+			2000,
+			3,
+			() => Dte.Solution.IsOpen);
+	}
 
-    protected string GetFullPath(string relativePath)
-    {
-        return Path.Combine(TestContext.TestDeploymentDir, relativePath);
-    }
+	/// <summary>
+	/// Gets the full path relative to the test deployment directory.
+	/// </summary>
+	protected string GetFullPath(string relativePath)
+	{
+		return Path.Combine(TestContext.TestDeploymentDir, relativePath);
+	}
 
-    protected static void DoActionWithWait(Action action, int millisecondsToWait)
-    {
-        DoActionWithWaitAndRetry(action, millisecondsToWait, 1, () => true);
-    }
+	/// <summary>
+	/// Gets the full path relative to the given base directory.
+	/// </summary>
+	protected string GetFullPath(string baseDir, string relativePath)
+	{
+		return Path.Combine(baseDir, relativePath);
+	}
 
-    protected static void DoActionWithWaitAndRetry(Action action, int millisecondsToWait, int numberOfRetries, Func<bool> retryCondition)
-    {
-        int retry = 0;
+	protected static void DoActionWithWait(Action action, int millisecondsToWait)
+	{
+		DoActionWithWaitAndRetry(action, millisecondsToWait, 1, () => true);
+	}
 
-        do
-        {
-            action();
-            if (retryCondition())
-            {
-                System.Threading.Thread.Sleep(millisecondsToWait);
-                Application.DoEvents();
-                retry++;
-            }
-        }
-        while (retryCondition() && retry < numberOfRetries);
-    }
+	protected static void DoActionWithWaitAndRetry(Action action, int millisecondsToWait, int numberOfRetries, Func<bool> retryCondition)
+	{
+		int retry = 0;
+
+		do
+		{
+			action();
+			if (retryCondition())
+			{
+				System.Threading.Thread.Sleep(millisecondsToWait);
+				Application.DoEvents();
+				retry++;
+			}
+		}
+		while (retryCondition() && retry < numberOfRetries);
+	}
 
 	private static void CopyAll(string source, string target)
 	{
@@ -206,11 +221,11 @@ public abstract class VsHostedSpec
 		});
 	}
 
-    private class VsServiceProvider : IServiceProvider
-    {
-        public object GetService(Type serviceType)
-        {
-            return Package.GetGlobalService(serviceType);
-        }
-    }
+	private class VsServiceProvider : IServiceProvider
+	{
+		public object GetService(Type serviceType)
+		{
+			return Package.GetGlobalService(serviceType);
+		}
+	}
 }

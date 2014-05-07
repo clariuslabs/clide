@@ -41,7 +41,7 @@ namespace Clide.Solution
 			{
 				base.TestInitialize();
 
-				base.OpenSolution(GetFullPath("SampleSolution\\SampleSolution.sln"));
+				base.OpenSolution(GetFullPath(TestContext.TestDeploymentDir, "SampleSolution\\SampleSolution.sln"));
 
 				var adapter = new Mock<IAdapterService>();
                 //adapter.Setup(x => x.As<ISolutionNode>(It.IsAny<object>()))

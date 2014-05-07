@@ -37,7 +37,7 @@ namespace Clide.Solution
 			{
                 base.TestInitialize();
 
-				base.OpenSolution(GetFullPath("SampleSolution\\SampleSolution.sln"));
+				base.OpenSolution(GetFullPath(TestContext.TestDeploymentDir, "SampleSolution\\SampleSolution.sln"));
 			}
 
 			[HostType("VS IDE")]

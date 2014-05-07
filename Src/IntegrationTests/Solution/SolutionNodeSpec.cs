@@ -52,7 +52,7 @@ namespace Clide.Solution
 					Mock.Of<ISolutionEvents>(), 
                     Mock.Of<IUIThread>());
 
-				solutionNode.Create(GetFullPath("foo.sln"));
+				solutionNode.Create(GetFullPath(TestContext.TestDeploymentDir, "foo.sln"));
 
 				Assert.True(solutionNode.IsOpen);
 			}
@@ -92,7 +92,7 @@ namespace Clide.Solution
 					Mock.Of<ISolutionEvents>(),
                     Mock.Of<IUIThread>());
 
-				solutionNode.Open(GetFullPath("SampleSolution\\SampleSolution.sln"));
+				solutionNode.Open(GetFullPath(TestContext.TestDeploymentDir, "SampleSolution\\SampleSolution.sln"));
 
 				Assert.True(solutionNode.IsOpen);
 			}

@@ -34,7 +34,7 @@ namespace Clide.Solution
 
 			explorer.Solution.SolutionOpened += (sender, args) => called = true;
 
-			explorer.Solution.Open(GetFullPath("SampleSolution\\SampleSolution.sln"));
+			explorer.Solution.Open(GetFullPath(TestContext.TestDeploymentDir, "SampleSolution\\SampleSolution.sln"));
 
 			Assert.True(called);
 		}
@@ -44,7 +44,7 @@ namespace Clide.Solution
 		public void WhenSolutionClosed_ThenRaisesClosingAndClosedEvent()
 		{
             var explorer = this.ServiceLocator.GetInstance<ISolutionExplorer>();
-			explorer.Solution.Open(GetFullPath("SampleSolution\\SampleSolution.sln"));
+			explorer.Solution.Open(GetFullPath(TestContext.TestDeploymentDir, "SampleSolution\\SampleSolution.sln"));
 
 			var closing = false;
 			var closed = false;
@@ -68,7 +68,7 @@ namespace Clide.Solution
 
 			explorer.Solution.ProjectOpened += (sender, args) => called = true;
 
-			explorer.Solution.Open(GetFullPath("SampleSolution\\SampleSolution.sln"));
+			explorer.Solution.Open(GetFullPath(TestContext.TestDeploymentDir, "SampleSolution\\SampleSolution.sln"));
 
 			Assert.True(called);
 		}
@@ -78,7 +78,7 @@ namespace Clide.Solution
 		public void WhenSolutionClosed_ThenRaisesProjectClosingEvent()
 		{
             var explorer = this.ServiceLocator.GetInstance<ISolutionExplorer>();
-			explorer.Solution.Open(GetFullPath("SampleSolution\\SampleSolution.sln"));
+			explorer.Solution.Open(GetFullPath(TestContext.TestDeploymentDir, "SampleSolution\\SampleSolution.sln"));
 
 			var closing = false;
 

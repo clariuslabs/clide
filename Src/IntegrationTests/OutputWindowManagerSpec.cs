@@ -20,6 +20,7 @@ namespace UnitTests
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+	using System.Threading;
 
     [TestClass]
     public class OutputWindowManagerSpec : VsHostedSpec
@@ -35,12 +36,14 @@ namespace UnitTests
             var writer = manager.GetPane(Guid.Empty, "test");
 
             writer.Write("foo");
-
             var pane = Dte.ToolWindows.OutputWindow.OutputWindowPanes.Item("test");
-            var start = pane.TextDocument.StartPoint.CreateEditPoint();
-            var text = start.GetText(pane.TextDocument.EndPoint);
 
-            Assert.Equal("foo", text);
+			Assert.True(SpinWait.SpinUntil(() =>
+			{
+				var start = pane.TextDocument.StartPoint.CreateEditPoint();
+				var text = start.GetText(pane.TextDocument.EndPoint);
+				return text == "foo";
+			}, 3000), "Expected text was not written to the output window within the specified timeout.");
         }
     }
 }

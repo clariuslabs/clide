@@ -24,7 +24,7 @@ namespace Clide.Solution
         [TestMethod]
         public void WhenSettingItemData_ThenCanRetrieveIt()
         {
-            this.OpenSolution("SampleSolution\\SampleSolution.sln");
+            var slnFile = this.OpenSolution("SampleSolution\\SampleSolution.sln");
 
             var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
 
@@ -43,7 +43,7 @@ namespace Clide.Solution
             explorer.Solution.Save();
 
             this.CloseSolution();
-            this.OpenSolution("SampleSolution\\SampleSolution.sln");
+            this.OpenSolution(slnFile);
 
             item = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
                 .OfType<IItemNode>()

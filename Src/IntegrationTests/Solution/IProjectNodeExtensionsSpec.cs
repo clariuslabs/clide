@@ -16,6 +16,7 @@ namespace Clide.Solution
 {
 	using Microsoft.VisualStudio.TestTools.UnitTesting;
 	using System;
+	using System.IO;
 	using System.Linq;
 	using System.Threading;
 	using System.Threading.Tasks;
@@ -49,9 +50,9 @@ namespace Clide.Solution
         [TestMethod]
         public void WhenSolutionIsOpened_ThenCanGetProjectReferencedAssemblies()
         {
-            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+            var slnFile = base.OpenSolution("SampleSolution\\SampleSolution.sln");
 
-            var proj = XDocument.Load(GetFullPath("SampleSolution\\ClassLibrary\\ClassLibrary.csproj"));
+            var proj = XDocument.Load(GetFullPath(Path.GetDirectoryName(slnFile), "ClassLibrary\\ClassLibrary.csproj"));
             var refs = proj.Descendants(XName.Get("{http://schemas.microsoft.com/developer/msbuild/2003}Reference"))
                 .Select(e => e.Attribute("Include").Value)
                 .ToList();
