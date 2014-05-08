@@ -36,7 +36,8 @@ namespace Clide.Solution
         private static readonly ITracer tracer = Tracer.Get(typeof(IProjectNodeExtensions));
 
         /// <summary>
-        /// Builds the specified project.
+        /// Builds the specified project with no cancellation token and the 
+		/// default maximum timeout of 10 minutes for the build to complete.
         /// </summary>
         /// <param name="project">The project to build.</param>
         /// <exception cref="System.ArgumentException">The project has no <see cref="ISolutionExplorerNode.OwningSolution"/>.</exception>
@@ -47,13 +48,27 @@ namespace Clide.Solution
         }
 
         /// <summary>
-        /// Builds the specified project.
+        /// Builds the specified project and waits for the default maximum timeout of 
+		/// 10 minutes for it to complete before returning false.
         /// </summary>
         /// <param name="project">The project to build.</param>
 		/// <param name="cancellation">Cancellation token to cancel the wait for the build to finish.</param>
         /// <exception cref="System.ArgumentException">The project has no <see cref="ISolutionExplorerNode.OwningSolution"/>.</exception>
         /// <returns><see langword="true"/> if the build succeeded; <see langword="false"/> otherwise.</returns>
         public static Task<bool> Build(this IProjectNode project, CancellationToken cancellation)
+        {
+			return Build (project, cancellation, TimeSpan.FromMinutes (10));
+        }
+
+        /// <summary>
+        /// Builds the specified project.
+        /// </summary>
+        /// <param name="project">The project to build.</param>
+		/// <param name="cancellation">Cancellation token to cancel the wait for the build to finish.</param>
+		/// <param name="timeout">A maximum time to wait for the build to finish.</param>
+        /// <exception cref="System.ArgumentException">The project has no <see cref="ISolutionExplorerNode.OwningSolution"/>.</exception>
+        /// <returns><see langword="true"/> if the build succeeded; <see langword="false"/> otherwise.</returns>
+        public static Task<bool> Build(this IProjectNode project, CancellationToken cancellation, TimeSpan timeout)
         {
 			Guard.NotNull(() => project, project);
 			Guard.NotNull(() => cancellation, cancellation);
@@ -73,21 +88,38 @@ namespace Clide.Solution
                     // Let build run async.
                     sln.SolutionBuild.BuildProject(sln.SolutionBuild.ActiveConfiguration.Name, project.As<EnvDTE.Project>().UniqueName, false);
 
-                    // Wait until it's done.
-					SpinWait.SpinUntil(() => 
+					// First wait until it becomes in progress. We give it 
+					// a maximum of 2 seconds for VS to start building. If this doesn't 
+					// happen in that time, something really weird must be going on.
+					var inProgress = SpinWait.SpinUntil(() => 
 						cancellation.IsCancellationRequested ||
-						sln.SolutionBuild.BuildState == EnvDTE.vsBuildState.vsBuildStateDone);
+						sln.SolutionBuild.BuildState == EnvDTE.vsBuildState.vsBuildStateInProgress, 
+						2000);
+
+					// If the build did not start in under 2 seconds, something weird happened, 
+					// so return quickly and with false. 
+					// Note that this may be the case when the token is cancelled.
+					if (!inProgress)
+						return false;
+
+                    // Next wait until it's done.
+					// This could be a remote build, complex one, etc., so we specify 10 minutes as a 
+					// conservative wait.
+					var isDone = SpinWait.SpinUntil(() => 
+						cancellation.IsCancellationRequested ||
+						sln.SolutionBuild.BuildState == EnvDTE.vsBuildState.vsBuildStateDone, 
+						timeout);
 
                     // LastBuildInfo == # of projects that failed to build.
 					// We'll return false if the build wait was cancelled.
-                    return !cancellation.IsCancellationRequested && sln.SolutionBuild.LastBuildInfo == 0;
+                    return !cancellation.IsCancellationRequested && isDone && sln.SolutionBuild.LastBuildInfo == 0;
                 }
                 catch (Exception ex)
                 {
                     tracer.Error(ex, Strings.IProjectNodeExtensions.BuildException);
                     return false;
                 }
-            }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
+            }, cancellation, TaskCreationOptions.None, TaskScheduler.Default);
         }
 
         /// <summary>
