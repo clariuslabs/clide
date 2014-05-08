@@ -248,7 +248,7 @@
 		ThenCanWaitForSuccess
 		  
 		Whenbuildwaitiscancelled
-		ThenReturnsFalseRegardlessOfResult
+		ThenResultThrowsTaskCancelled
 		  
 		Whengettingoutputassembly
 		ThenTryingToInstantiateTypeThrows

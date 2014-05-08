@@ -103,7 +103,7 @@ namespace Clide.Solution
 
         [HostType("VS IDE")]
         [TestMethod]
-        public void WhenBuildWaitIsCancelled_ThenReturnsFalseRegardlessOfResult()
+        public void WhenBuildWaitIsCancelled_ThenResultThrowsTaskCancelled()
         {
             base.OpenSolution("SampleSolution\\SampleSolution.sln");
 
@@ -114,7 +114,7 @@ namespace Clide.Solution
 			var task = lib.Build(cancellation.Token);
 			cancellation.Cancel();
 
-            Assert.False(task.Result);
+			Assert.Throws<AggregateException> (() => { Console.WriteLine (task.Result); });
         }
 	}
 }
