@@ -80,8 +80,8 @@
 			<Visible>False</Visible>
 		</AvailableItemName>
 
-		<AvailableItemName Include="TestReport">
+		<AvailableItemName Include="AssemblyReport">
 			<Visible>False</Visible>
 		</AvailableItemName>
-	</ItemGroup>
+    </ItemGroup>
 </Project>

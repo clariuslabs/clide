@@ -82,15 +82,9 @@
     </None>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <Compile Include="TestReport.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TestReport.tt</DependentUpon>
-    </Compile>
-    <None Include="TestReport.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>TestReport.cs</LastGenOutput>
-    </None>
+    <AssemblyReport Include="TestReport.tt">
+        <OutputExtension>.txt</OutputExtension>
+    </AssemblyReport>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Clide\Clide.csproj">

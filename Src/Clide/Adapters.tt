@@ -8,7 +8,23 @@
 <#@ import namespace="System.IO" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Reflection" #>
-<#@ output extension=".txt" #>
+<#@ output extension=".md" #>
+# Adapter Pattern Support
+
+Clide provides built-in adapters to convert to and from a variety of types. 
+This support is extensible by providing custom IAdapter<TFrom, TTo> components.
+
+After importing Clide.Patterns.Adapter, the Adapt extension method will be 
+available on any object. Provided an adapter implementation exists, using the 
+As<T> smart cast operator will return a properly adapted implementation for
+the given source object.
+
+If a direct conversion is not possible using a single adapter, consider 
+using an intermediate common representation as a bridge (i.e. Clide's 
+solution tree abstraction can be used to bridge DTE and IVs* APIs).
+
+## The following is a list of the built-in supported conversions
+
 <#
     var assemblyFile = this.Host.ResolveParameterValue("AssemblyReport", "MSBuild", "AssemblyFile");
     if (string.IsNullOrEmpty(assemblyFile))
@@ -25,7 +41,6 @@
     }
 
     var baseDir = Path.Combine(Path.GetDirectoryName(assemblyFile));
-    Assembly.ReflectionOnlyLoad(typeof(DisplayNameAttribute).Assembly.FullName);
 
     ResolveEventHandler resolve = (sender, args) =>
     {
@@ -41,61 +56,58 @@
     };
 
     AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += resolve;
-
-    var assembly = Assembly.ReflectionOnlyLoad(File.ReadAllBytes(Path.Combine(baseDir, assemblyFile)));
-    var tests = assembly.GetExportedTypes()
-        .Where(t => !t.IsAbstract || t.IsInterface)
-        .SelectMany(t => t.GetMethods())
-        .Select(m => new 
-        { 
-            Method = m, 
-            Text = m
-                .GetCustomAttributesData()
-                .Where(c => c.AttributeType.FullName == typeof(DisplayNameAttribute).FullName)
-                .Select(c => c.ConstructorArguments[0].Value.ToString())
-                .FirstOrDefault() ?? m.Name
-        })
-        .Where(m => m.Text.IndexOf("then", StringComparison.InvariantCultureIgnoreCase) != -1)
-        .Select(m => new
-        {
-            Context = BuildContext(m.Method.ReflectedType),
-            When = m.Text.Substring(0, m.Text.IndexOf("then", StringComparison.InvariantCultureIgnoreCase)).Trim(),
-            Then = m.Text.Substring(m.Text.IndexOf("then", StringComparison.InvariantCultureIgnoreCase)).Trim(),
-        });
-
-    var root = new Node("Report");
-    foreach (var test in tests)
+    try
     {
-        var context = test.Context
-            .Split(new[] { '>' }, StringSplitOptions.RemoveEmptyEntries)
-            .Reverse()
-            .Aggregate(root, (node, name) => node.Nodes.GetOrAdd(name, s => new Node(s)));
+		var assembly = Assembly.ReflectionOnlyLoad(File.ReadAllBytes(Path.Combine(baseDir, assemblyFile)));
+		var tests = assembly.GetExportedTypes()
+			.Where(t => !t.IsAbstract || t.IsInterface)
+			.SelectMany(t => t.GetMethods())
+			.Select(m => new 
+			{ 
+				Method = m, 
+				Text = m
+					.GetCustomAttributesData()
+					.Where(c => c.AttributeType.FullName == typeof(DisplayNameAttribute).FullName)
+					.Select(c => c.ConstructorArguments[0].Value.ToString())
+					.FirstOrDefault() ?? m.Name
+			})
+			.Where(m => m.Method.Name.StartsWith("how", StringComparison.InvariantCultureIgnoreCase))
+			.Select(m => new
+			{
+				Context = BuildContext(m.Method.ReflectedType),
+				Text = m.Text,
+			});
 
-        if (!string.IsNullOrEmpty(test.When))
-        {
-            var when = context.Nodes.GetOrAdd(test.When, s => new Node(s));
-            when.Nodes.TryAdd(test.Then, new Node(test.Then));
-        }
-        else
-        {
-            context.Nodes.GetOrAdd(test.Then, new Node(test.Then));
-        }
+		var root = new Node("Report");
+		foreach (var test in tests)
+		{
+			var context = test.Context
+				.Split(new[] { '>' }, StringSplitOptions.RemoveEmptyEntries)
+				.Reverse()
+				.Aggregate(root, (node, name) => node.Nodes.GetOrAdd(name, s => new Node(s)));
+
+			context.Nodes.GetOrAdd(test.Text, new Node(test.Text));
+		}
+
+		Render(root.Nodes.Values, true);
     }
-
-    Render(root.Nodes.Values);
+    finally
+    {
+        AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve -= resolve;
+    }
 #>
 
 <#+
-    private void Render(IEnumerable<Node> nodes)
+    private void Render(IEnumerable<Node> nodes, bool isRoot = false)
     {
         foreach (var node in nodes.OrderBy(n => n.Text))
         {
-            if (node.Nodes.Any())
+            if (node.Nodes.Any() && !isRoot)
                 this.PushIndent("\t");
                             
             Render(node);
 
-            if (node.Nodes.Any())
+            if (node.Nodes.Any() && !isRoot)
                 this.PopIndent();
         }
     }

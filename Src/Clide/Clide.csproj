@@ -335,6 +335,9 @@
     <None Include="..\..\Common\ClariusLabs.licenseheader">
       <Link>ClariusLabs.licenseheader</Link>
     </None>
+    <AssemblyReport Include="Adapters.tt">
+      <OutputExtension>.md</OutputExtension>
+    </AssemblyReport>
     <None Include="Properties\Resources.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Resources.Strings.cs</LastGenOutput>
@@ -380,17 +383,23 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildThisFileDirectory)..\Clide.targets" />
-  <Target Name="AfterBuild">
-    <!-- Fix for improper Microsoft.Practices.ServiceLocation.pdb in CommonServiceLocator package -->
-    <Delete Files="$(OutputPath)Microsoft.Practices.ServiceLocation.pdb" ContinueOnError="false" />
-  </Target>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\netfx-System.StringResources.2.0.0\build\netfx-System.StringResources.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\netfx-System.StringResources.2.0.0\build\netfx-System.StringResources.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Clarius.TransformOnBuild.1.0.5\build\Clarius.TransformOnBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Clarius.TransformOnBuild.1.0.5\build\Clarius.TransformOnBuild.targets'))" />
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
+  <Target Name="AssemblyReportsOnBuild" AfterTargets="AfterBuild">
+    <Error Text="Failed to find TextTransform.exe tool at '$(_TransformExe)." Condition="!Exists('$(_TransformExe)')" />
+    <ItemGroup>
+      <_TextTransform Include="@(None)" Condition="'%(None.Generator)' == 'TextTemplatingFilePreprocessor' Or '%(None.Generator)' == 'TextTemplatingFileGenerator'" />
+    </ItemGroup>
+    <!-- Perform task batching for each file -->
+    <Exec Command="&quot;$(_TransformExe)&quot; &quot;@(_TextTransform)&quot;" Condition="'%(Identity)' != ''" />
+  </Target>
   <Import Project="..\..\packages\netfx-System.StringResources.2.0.0\build\netfx-System.StringResources.targets" Condition="Exists('..\..\packages\netfx-System.StringResources.2.0.0\build\netfx-System.StringResources.targets')" />
+  <Import Project="..\..\packages\Clarius.TransformOnBuild.1.0.5\build\Clarius.TransformOnBuild.targets" Condition="Exists('..\..\packages\Clarius.TransformOnBuild.1.0.5\build\Clarius.TransformOnBuild.targets')" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>

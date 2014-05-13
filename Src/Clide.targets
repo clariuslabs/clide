@@ -54,12 +54,12 @@
               ContinueOnError="false" />
     </Target>
 
-	<Target Name="GenerateTestReportOnBuild"
-			Condition="Exists('$(TextTransformExe)') And '@(TestReport)' != ''"
+	<Target Name="GenerateAssemblyReportOnBuild"
+			Condition="Exists('$(_TransformExe)') And '@(AssemblyReport)' != ''"
             Inputs="$(TargetPath)"
-            Outputs="%(TestReport.RootDir)%(TestReport.Directory)%(TestReport.RecursiveDir)%(TestReport.Filename).txt"
+            Outputs="%(AssemblyReport.RootDir)%(AssemblyReport.Directory)%(AssemblyReport.RecursiveDir)%(AssemblyReport.Filename)%(AssemblyReport.OutputExtension)"
 			AfterTargets="AfterBuild">
-		<Exec Command="&quot;$(TextTransformExe)&quot; -a VisualStudio!TestReport!AssemblyFile!$(TargetPath) &quot;%(TestReport.FullPath)&quot;" />
+		<Exec Command="&quot;$(_TransformExe)&quot; -a MSBuild!AssemblyReport!AssemblyFile!$(TargetPath) &quot;%(AssemblyReport.FullPath)&quot;" />
 	</Target>
 
 </Project>
