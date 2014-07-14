@@ -41,7 +41,7 @@ solution tree abstraction can be used to bridge DTE and IVs* APIs).
     }
 
     var baseDir = Path.Combine(Path.GetDirectoryName(assemblyFile));
-
+    
     ResolveEventHandler resolve = (sender, args) =>
     {
         var file = Path.Combine(baseDir, args.Name.Substring(0, args.Name.IndexOf(',')) + ".dll");
@@ -89,7 +89,12 @@ solution tree abstraction can be used to bridge DTE and IVs* APIs).
 			context.Nodes.GetOrAdd(test.Text, new Node(test.Text));
 		}
 
-		Render(root.Nodes.Values, true);
+        Render(root.Nodes.Values, true);
+    }
+    catch (Exception ex)
+    {
+		this.Error(ex.ToString());
+        throw;
     }
     finally
     {

@@ -59,7 +59,7 @@
             Inputs="$(TargetPath)"
             Outputs="%(AssemblyReport.RootDir)%(AssemblyReport.Directory)%(AssemblyReport.RecursiveDir)%(AssemblyReport.Filename)%(AssemblyReport.OutputExtension)"
 			AfterTargets="AfterBuild">
-		<Exec Command="&quot;$(_TransformExe)&quot; -a MSBuild!AssemblyReport!AssemblyFile!$(TargetPath) &quot;%(AssemblyReport.FullPath)&quot;" />
+		<Exec Command="&quot;$(_TransformExe)&quot; -a MSBuild!AssemblyReport!AssemblyFile!$(TargetPath) -out &quot;%(AssemblyReport.RootDir)%(AssemblyReport.Directory)%(AssemblyReport.RecursiveDir)%(AssemblyReport.Filename)%(AssemblyReport.OutputExtension)&quot; &quot;%(AssemblyReport.FullPath)&quot;" />
 	</Target>
 
 </Project>
