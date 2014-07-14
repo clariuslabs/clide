@@ -17,7 +17,7 @@
     <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
-    <NuGetPackageImportStamp>a9f7a7dd</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>15a51358</NuGetPackageImportStamp>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -132,6 +132,7 @@
     <Compile Include="netfx\System\Collections\Generic\IEnumerable\TraverseKind.cs" />
     <Compile Include="netfx\System\Collections\Generic\IEnumerable\Traverser.cs" />
     <Compile Include="netfx\System\Guard.cs" />
+    <Compile Include="netfx\System\Reflection\Reflect.Overloads.cs" />
     <Compile Include="netfx\System\StringFormatWith.cs" />
     <Compile Include="netfx\System\Windows\Threading\DispatcherInvokeExtensions.cs" />
     <Compile Include="NullErrorsManager.cs" />
@@ -274,11 +275,6 @@
     <Compile Include="netfx\System\Dynamic\TypeParameter.cs" />
     <Compile Include="netfx\System\Reflection\GetCustomAttribute.cs" />
     <Compile Include="netfx\System\Reflection\Reflect.cs" />
-    <Compile Include="netfx\System\Reflection\Reflect.Overloads.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reflect.Overloads.tt</DependentUpon>
-    </Compile>
     <Compile Include="netfx\System\ServiceProvider.cs" />
     <Compile Include="OwningPackageAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -346,10 +342,7 @@
       <SubType>Designer</SubType>
     </NuSpec>
     <None Include="ilmerge.exclude" />
-    <None Include="netfx\System\Reflection\Reflect.Overloads.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Reflect.Overloads.cs</LastGenOutput>
-    </None>
+    <None Include="netfx\System\Reflection\Reflect.Overloads.tt" />
     <None Include="netfx\System\Reflection\TargetFramework.ttinclude" />
     <None Include="packages.config" />
     <Compile Include="Patterns\AdapterService.cs" />
@@ -388,18 +381,10 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\netfx-System.StringResources.2.0.0\build\netfx-System.StringResources.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\netfx-System.StringResources.2.0.0\build\netfx-System.StringResources.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Clarius.TransformOnBuild.1.0.5\build\Clarius.TransformOnBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Clarius.TransformOnBuild.1.0.5\build\Clarius.TransformOnBuild.targets'))" />
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
-  </Target>
-  <Target Name="AssemblyReportsOnBuild" AfterTargets="AfterBuild">
-    <Error Text="Failed to find TextTransform.exe tool at '$(_TransformExe)." Condition="!Exists('$(_TransformExe)')" />
-    <ItemGroup>
-      <_TextTransform Include="@(None)" Condition="'%(None.Generator)' == 'TextTemplatingFilePreprocessor' Or '%(None.Generator)' == 'TextTemplatingFileGenerator'" />
-    </ItemGroup>
-    <!-- Perform task batching for each file -->
-    <Exec Command="&quot;$(_TransformExe)&quot; &quot;@(_TextTransform)&quot;" Condition="'%(Identity)' != ''" />
+    <Error Condition="!Exists('..\..\packages\Clarius.TransformOnBuild.1.1.1\build\Clarius.TransformOnBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Clarius.TransformOnBuild.1.1.1\build\Clarius.TransformOnBuild.targets'))" />
   </Target>
   <Import Project="..\..\packages\netfx-System.StringResources.2.0.0\build\netfx-System.StringResources.targets" Condition="Exists('..\..\packages\netfx-System.StringResources.2.0.0\build\netfx-System.StringResources.targets')" />
-  <Import Project="..\..\packages\Clarius.TransformOnBuild.1.0.5\build\Clarius.TransformOnBuild.targets" Condition="Exists('..\..\packages\Clarius.TransformOnBuild.1.0.5\build\Clarius.TransformOnBuild.targets')" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Import Project="..\..\packages\Clarius.TransformOnBuild.1.1.1\build\Clarius.TransformOnBuild.targets" Condition="Exists('..\..\packages\Clarius.TransformOnBuild.1.1.1\build\Clarius.TransformOnBuild.targets')" />
 </Project>
