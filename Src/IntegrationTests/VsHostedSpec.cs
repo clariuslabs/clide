@@ -64,7 +64,7 @@ public abstract class VsHostedSpec
 		UIThreadInvoker.Initialize();
 
 		// Causes devenv to initialize
-		var factory = DevEnv.DevEnvFactory;
+		var devEnv = Clide.DevEnv.Get(new Guid(IntegrationPackage.Constants.PackageGuid));
 
 		this.tracer = Tracer.Get(this.GetType());
 		this.strings = new StringBuilder();
