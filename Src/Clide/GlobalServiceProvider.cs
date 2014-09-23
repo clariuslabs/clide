@@ -41,11 +41,11 @@ namespace Clide
 
         private class DteServiceProvider : IServiceProvider
         {
-            private static Lazy<IServiceProvider> globalProvider = new Lazy<IServiceProvider>(GetGlobalProvider);
+			private static IServiceProvider globalProvider = GetGlobalProvider();
 
             public object GetService(Type serviceType)
             {
-                return globalProvider.Value.GetService(serviceType);
+                return globalProvider.GetService(serviceType);
             }
 
             private static IServiceProvider GetGlobalProvider()
@@ -72,30 +72,6 @@ namespace Clide
             public object GetService(Type serviceType)
             {
                 return Package.GetGlobalService(serviceType);
-            }
-        }
-
-        private class ComponentModelProvider : IServiceProvider
-        {
-            private static MethodInfo getService = typeof(IComponentModel).GetMethod("GetService");
-            private IComponentModel componentModel;
-
-            public ComponentModelProvider(IServiceProvider parentProvider)
-            {
-                componentModel = parentProvider.GetService<SComponentModel, IComponentModel>();
-            }
-
-            public object GetService(Type serviceType)
-            {
-                // TODO: cache delegates per service type for performance.
-                try
-                {
-                    return getService.MakeGenericMethod(serviceType).Invoke(componentModel, null);
-                }
-                catch (Exception)
-                {
-                    return null;
-                }
             }
         }
     }
