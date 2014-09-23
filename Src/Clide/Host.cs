@@ -23,6 +23,7 @@ namespace Clide
 	using Clide.Properties;
 	using System;
 	using System.ComponentModel;
+	using System.Diagnostics;
 	using System.Windows.Threading;
 
     /// <summary>
@@ -62,9 +63,17 @@ namespace Clide
                     var host = devEnv.ServiceLocator.GetInstance<HostImpl>();
                     host.Initialize();
 
+					// This call causes the static initialization on Adapters to run, which 
+					// is then overriden on the next line.
+					Debug.Assert(Adapters.ServiceInstance != null);
 					// Re-initialize the adapter service so that extended adapter implementations
 					// are available.
 					AdaptersInitializer.SetService(devEnv.ServiceLocator.GetInstance<IAdapterService>());
+
+					// Force initialization of the global service locator so that the component model 
+					// is requested from the UI thread.
+					// This call also forces initialization of the global service locator singleton.
+					Debug.Assert(ServiceLocator.GlobalLocator != null);
 
                     tracer.Info("Package initialization finished successfully");
 
