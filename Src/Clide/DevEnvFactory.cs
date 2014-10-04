@@ -103,8 +103,8 @@ namespace Clide
 
                 var catalog = new ComponentCatalog(addedAssemblies.Values.ToArray());
                 var container = new CompositionContainer(catalog, 
-                    composition.DefaultExportProvider,
-                    new ServicesExportProvider(services));
+                    new ServicesExportProvider(services),
+                    composition.DefaultExportProvider);
 
                 // Make the service locator itself available as an export.
                 var serviceLocator = new ServicesAccessor(services, new Lazy<IServiceLocator>(() => serviceLocators[services]));
