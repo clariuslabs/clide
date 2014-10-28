@@ -1010,6 +1010,27 @@ namespace Clide.Properties
 				});
 			}
 		}
+		
+		///	<summary>
+		///	Provides access to string resources.
+		///	</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("netfx-System.Strings", "1.0.0.0")]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		public static partial class ISolutionExplorerNodeExtensions
+		{
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	Node '{ancestor}' is not an ancestor of '{descendent}'.
+			/// </summary>
+			public static string NotAncestor(object ancestor, object descendent)
+			{
+				return Resources.ISolutionExplorerNodeExtensions_NotAncestor.FormatWith(new 
+				{
+					ancestor = ancestor,
+					descendent = descendent,
+				});
+			}
+		}
 	}
 }
 

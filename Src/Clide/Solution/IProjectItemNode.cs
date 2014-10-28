@@ -17,14 +17,16 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    /// <summary>
-    /// Interface implemented by the nodes that belong to a project.
-    /// </summary>
-    public interface IProjectItemNode : ISolutionExplorerNode
+	using System;
+
+	/// <summary>
+	/// Interface implemented by the nodes that belong to a project.
+	/// </summary>
+	public interface IProjectItemNode : ISolutionExplorerNode
 	{
-        /// <summary>
-        /// Gets the owning project.
-        /// </summary>
-        IProjectNode OwningProject { get; }
-    }
+		/// <summary>
+		/// Gets the owning project.
+		/// </summary>
+		IProjectNode OwningProject { get; }
+	}
 }

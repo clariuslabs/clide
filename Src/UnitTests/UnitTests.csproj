@@ -74,6 +74,7 @@
     <Compile Include="Extensions\ServiceProviderExtensionsSpec.cs" />
     <Compile Include="FakeSolutionExplorer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Solution\ISolutionExplorerNodeExtensionsSpec.cs" />
     <Compile Include="Solution\ISolutionNodeExtensionsSpec.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -83,7 +84,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
     <AssemblyReport Include="TestReport.tt">
-        <OutputExtension>.txt</OutputExtension>
+      <OutputExtension>.txt</OutputExtension>
     </AssemblyReport>
   </ItemGroup>
   <ItemGroup>

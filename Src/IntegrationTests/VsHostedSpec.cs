@@ -32,6 +32,7 @@ using EnvDTE80;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Runtime.InteropServices;
 
 [TestClass]
 public abstract class VsHostedSpec
@@ -219,6 +220,154 @@ public abstract class VsHostedSpec
 		{
 			File.Copy(newPath, newPath.Replace(source, target));
 		});
+	}
+
+	/// <summary>
+	/// Automatically close a dialog if it pops up.
+	/// </summary>
+	protected IDisposable AutoCloseDialog(string dialogName, string buttonCaption = null, Action closeAction = null)
+	{
+		return new AutoCloser(dialogName, buttonCaption, closeAction);
+	}
+
+	private class AutoCloser : IDisposable
+	{
+		private string dialogName;
+		private string buttonCaption;
+		private Action closeAction;
+		private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
+		public AutoCloser(string dialogName, string buttonCaption, Action closeAction)
+		{
+			this.dialogName = dialogName;
+			this.buttonCaption = buttonCaption;
+			this.closeAction = closeAction;
+
+			var closerTask = System.Threading.Tasks.Task.Factory.StartNew(() =>
+			{
+				while (!cancellationTokenSource.IsCancellationRequested)
+				{
+					bool result = WaitForDialogAndClickButton(cancellationTokenSource.Token, dialogName, buttonCaption);
+					if (result && closeAction != null)
+						closeAction();
+					if (result)
+						return true;
+				}
+				return false;
+			}, cancellationTokenSource.Token);
+		}
+
+		public void Dispose()
+		{
+			cancellationTokenSource.Cancel();
+		}
+
+		/// <summary>
+		/// Waits for a dialog and clicks the button specified.
+		/// Use Spy++ to find the captions of the button's you want to click. Note that some buttons include an accelerator & which should be included.
+		/// </summary>
+		/// <param name="dialogCaption">The caption of the dialog on which the button exists</param>
+		/// <param name="buttonCaption">The caption of the button (including any accelerator keys)</param>
+		/// <param name="timeout">length of time to wait before we time out</param>
+		/// <returns>True if the button was clicked, false otherwise</returns>
+		protected bool WaitForDialogAndClickButton (CancellationToken token, string dialogCaption, string buttonCaption = null, int timeout = 30, string className = null)
+		{
+			var ts = new TimeSpan (0, 0, timeout);
+			var dispatcher = System.Windows.Application.Current.Dispatcher;
+			var start = DateTime.Now;
+			var sw = new Stopwatch ();
+			sw.Start ();
+			try {
+				// we want to keep looping until we find the window and button we are after or
+				// the timeout exxpires
+				while (true) {
+					SearchData sd = new SearchData { Wndclass = className, Title = dialogCaption, ButtonCaption = buttonCaption };
+					EnumWindows (new EnumWindowsProc (EnumProc), ref sd);
+					IntPtr window = sd.hWnd;
+					if (window != IntPtr.Zero) {
+						IntPtr button = IntPtr.Zero;
+						if (!string.IsNullOrEmpty(buttonCaption)) {
+							button = FindWindowEx (window, IntPtr.Zero, "Button", buttonCaption); 
+							if (button != IntPtr.Zero) {
+								SendMessage (button, WM_LBUTTONDOWN, 0, 0);
+								SendMessage (button, WM_LBUTTONUP, 0, 0);
+								SendMessage (button, BM_SETSTATE, 1, 0);
+								return true;
+							}
+						} else {
+							SendMessage (window, WM_CLOSE, 0, 0);
+							return true;
+						}
+
+					}
+					System.Threading.Thread.Sleep (10);
+					if (sw.ElapsedMilliseconds > ts.TotalMilliseconds || token.IsCancellationRequested) {
+						break;
+					}
+				}
+				return false;
+			} finally {
+				sw.Stop ();
+			}
+		}
+
+		const uint GW_HWNDFIRST = 0;
+		const int WM_CLOSE = 0x0010;
+		const int WM_SYSCOMMAND = 0x0112;
+		const int SC_CLOSE = 0xF060;
+		const int BM_SETSTATE = 0x00F3;
+		const int WM_LBUTTONDOWN = 0x0201;
+		const int WM_LBUTTONUP = 0x0202;
+
+		[DllImport ("user32.dll", EntryPoint = "FindWindowEx", CharSet = CharSet.Auto)]
+		static extern IntPtr FindWindowEx (IntPtr parentHandle, IntPtr childAfter, string lclassName, string windowTitle);
+
+		[DllImport ("user32.dll", CharSet = CharSet.Auto)]
+		private static extern int SendMessage (IntPtr hWnd, int wMsg, int wParam, int lParam);
+
+		public class SearchData
+		{
+			public string Wndclass;
+			public string Title;
+			public string ButtonCaption;
+			public IntPtr hWnd;
+		} 
+
+		private delegate bool EnumWindowsProc (IntPtr hWnd, ref SearchData data);
+
+		[DllImport ("user32.dll")]
+		[return: MarshalAs (UnmanagedType.Bool)]
+		private static extern bool EnumWindows (EnumWindowsProc lpEnumFunc, ref SearchData data);
+
+		[DllImport ("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+		public static extern int GetClassName (IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
+
+		[DllImport ("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+		public static extern int GetWindowText (IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+
+		public static bool EnumProc (IntPtr hWnd, ref SearchData data)
+		{
+			// Check classname and title 
+			// This is different from FindWindow() in that the code below allows partial matches
+			StringBuilder sb = new StringBuilder (1024);
+			GetClassName (hWnd, sb, sb.Capacity);
+			if (string.IsNullOrEmpty(data.Wndclass) || sb.ToString ().StartsWith (data.Wndclass)) {
+				sb = new StringBuilder (1024);
+				GetWindowText (hWnd, sb, sb.Capacity);
+				if (sb.ToString ().StartsWith (data.Title)) {
+					if (!string.IsNullOrEmpty (data.ButtonCaption)) {
+						if (FindWindowEx (hWnd, IntPtr.Zero, "Button", data.ButtonCaption) != IntPtr.Zero) {
+							data.hWnd = hWnd;
+							return false;    // Found the wnd, halt enumeration
+						}
+					} else {
+						data.hWnd = hWnd;
+						return false;
+					}
+				}
+			}
+			return true;
+		}
 	}
 
 	private class VsServiceProvider : IServiceProvider

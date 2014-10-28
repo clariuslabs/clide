@@ -58,6 +58,14 @@ namespace Clide.Sdk.Solution
         /// </summary>
         internal Lazy<ProjectItem> Item { get; private set; }
 
+		/// <summary>
+		/// Gets the logical path of the item, relative to its containing project.
+		/// </summary>
+		public virtual string LogicalPath
+		{
+			get { return this.RelativePathTo(this.OwningProject); }
+		}
+
         /// <summary>
         /// Gets the physical path of the item.
         /// </summary>

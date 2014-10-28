@@ -87,11 +87,26 @@
   <ItemGroup>
     <Compile Include="ClideSettingsSpec.cs" />
     <Compile Include="CommandsSpec.cs" />
+    <Content Include="Content\SampleShared\Library\Library.csproj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\SampleShared\SampleShared.sln">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\SampleSolution\ClassLibrary\Class1.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Compile Include="Commands\CommandInterceptorSpec.cs" />
     <Compile Include="CompositionSpec.cs" />
+    <Content Include="Content\SampleShared\Library\Class1.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\SampleShared\Library\Properties\AssemblyInfo.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\SampleShared\SampleShared\Folder\Foo.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Compile Include="Content\SampleSolution\ClassLibrary\Folder\Folder\Class2.cs" />
     <Content Include="Content\SampleSolution\ClassLibrary\ClassLibrary.csproj.user">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -120,12 +135,14 @@
     <Compile Include="Solution\DynamicPropertiesFeature.cs" />
     <Compile Include="Solution\ISolutionNodeExtensionsSpec.cs" />
     <Compile Include="Solution\PerformanceSpec.cs" />
+    <Compile Include="Solution\ProjectItemNodeSpec.cs" />
     <Compile Include="Solution\ProjectNodeSpec.cs" />
     <Compile Include="Solution\IProjectNodeExtensionsSpec.cs" />
     <Compile Include="Solution\ItemDataSpec.cs" />
     <Compile Include="Solution\MsBuildAdapterSpec.cs" />
     <Compile Include="Solution\NodeSelectionSpec.cs" />
     <Compile Include="Solution\ProjectDataSpec.cs" />
+    <Compile Include="Solution\SharedProjectSpec.cs" />
     <Compile Include="Solution\SolutionEventsSpec.cs" />
     <Compile Include="Solution\SolutionExplorerSpec.cs" />
     <Compile Include="Solution\SolutionNodeSpec.cs" />
@@ -150,6 +167,12 @@
     <AssemblyReport Include="HowTo\HowTo.tt">
       <OutputExtension>.md</OutputExtension>
     </AssemblyReport>
+    <Content Include="Content\SampleShared\SampleShared\Shared.projitems">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\SampleShared\SampleShared\Shared.shproj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <AssemblyReport Include="TestReport.tt">
       <OutputExtension>.txt</OutputExtension>
@@ -199,7 +222,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Content\SampleShared\SampleShared\Properties\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildThisFileDirectory)..\Clide.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

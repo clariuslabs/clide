@@ -190,6 +190,7 @@
     </Compile>
     <Compile Include="Sdk\Solution\CustomNode.cs" />
     <Compile Include="ServiceLocator.cs" />
+    <Compile Include="Solution\Extensions\ISolutionExplorerNodeExtensions.cs" />
     <Compile Include="Solution\Extensions\SolutionAdapterFacade.cs" />
     <Compile Include="Solution\Extensions\MsBuildAdapterFacade.cs" />
     <Compile Include="Solution\Extensions\VsInteropAdapterFacade.cs" />

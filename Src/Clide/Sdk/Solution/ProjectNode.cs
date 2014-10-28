@@ -90,6 +90,15 @@ namespace Clide.Sdk.Solution
                     0));
         }
 
+		/// <summary>
+		/// Gets the logical path of the project, relative to the solution, 
+		/// considering any containing solution folders.
+		/// </summary>
+		public virtual string LogicalPath
+		{
+			get { return this.RelativePathTo(this.OwningSolution); }
+		}
+
         /// <summary>
         /// Gets the physical path of the project.
         /// </summary>
@@ -183,5 +192,69 @@ namespace Clide.Sdk.Solution
         /// Gets the DTE project represented by this node.
         /// </summary>
         internal Lazy<EnvDTE.Project> Project { get; private set; }
+
+		#region Equality
+
+		/// <summary>
+		/// Gets whether the given nodes are equal.
+		/// </summary>
+		public static bool operator ==(ProjectNode obj1, ProjectNode obj2)
+		{
+			return Equals(obj1, obj2);
+		}
+
+		/// <summary>
+		/// Gets whether the given nodes are not equal.
+		/// </summary>
+		public static bool operator !=(ProjectNode obj1, ProjectNode obj2)
+		{
+			return !Equals(obj1, obj2);
+		}
+
+		/// <summary>
+		/// Gets whether the current node equals the given node.
+		/// </summary>
+		public bool Equals(IProjectNode other)
+		{
+			return ProjectNode.Equals(this, other);
+		}
+
+		/// <summary>
+		/// Gets whether the current node equals the given node.
+		/// </summary>
+		public override bool Equals(object obj)
+		{
+			return ProjectNode.Equals(this, obj as ProjectNode);
+		}
+
+		/// <summary>
+		/// Gets whether the given nodes are equal.
+		/// </summary>
+		public static bool Equals(ProjectNode obj1, ProjectNode obj2)
+		{
+			if (Object.Equals(null, obj1) ||
+				Object.Equals(null, obj2) ||
+				obj1.GetType() != obj2.GetType())
+				return false;
+
+			if (Object.ReferenceEquals(obj1, obj2)) return true;
+
+			return obj1.PhysicalPath == obj2.PhysicalPath;
+		}
+
+		/// <summary>
+		/// Returns a hash code for this instance.
+		/// </summary>
+		/// <returns>
+		/// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+		/// </returns>
+		public override int GetHashCode()
+		{
+			// A given project can't be added twice to the same solution, so we use the 
+			// Physical path as the key.
+			return PhysicalPath.GetHashCode();
+		}
+
+		#endregion
     }
 }

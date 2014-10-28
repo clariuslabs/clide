@@ -14,25 +14,31 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    /// <summary>
-    /// Interface implemented by solution item nodes.
-    /// </summary>
-    public interface ISolutionItemNode : ISolutionExplorerNode
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+	using System.IO;
+	using System.Linq;
+	using System.Xml.Linq;
+
+	[TestClass]
+	public class ProjectItemNodeSpec : VsHostedSpec
 	{
-        /// <summary>
-        /// Gets the owning solution folder.
-        /// </summary>
-        ISolutionFolderNode OwningSolutionFolder { get; }
+		internal static readonly IAssertion Assert = new Assertion();
 
-        /// <summary>
-        /// Gets the logical path of the item, relative to the solution, 
-		/// considering any containing solution folders.
-        /// </summary>
-        string LogicalPath { get; }
+		[HostType("VS IDE")]
+		[TestMethod]
+		public void WhenComparingItemsInProject_ThenCanCheckForEquality()
+		{
+			base.OpenSolution("SampleSolution\\SampleSolution.sln");
 
-        /// <summary>
-        /// Gets the physical path of the solution item.
-        /// </summary>
-        string PhysicalPath { get; }
+			var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
+
+			var node1 = explorer.Solution.Traverse().OfType<IItemNode>().First(i => i.DisplayName == "Class1.cs");
+			var node2 = explorer.Solution.Traverse().OfType<IItemNode>().First(i => i.DisplayName == "Class1.cs");
+
+			Assert.Equal(node1.OwningProject, node2.OwningProject, "Owning projects aren't equal.");
+			Assert.Equal(node1.As<VsHierarchyItem>().ItemId, node2.As<VsHierarchyItem>().ItemId, "ItemIds aren't equal.");
+
+			Assert.Equal(node1, node2, "Items aren't equal.");
+		}
 	}
 }

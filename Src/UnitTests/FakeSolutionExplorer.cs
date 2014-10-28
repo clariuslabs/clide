@@ -180,6 +180,11 @@ namespace UnitTests
 
         public virtual ISolutionFolderNode OwningSolutionFolder { get { return Parent as ISolutionFolderNode; } }
 
+		public virtual string LogicalPath
+		{
+			get { return this.RelativePathTo(this.OwningSolution); }
+		}
+
         public virtual string PhysicalPath { get; set; }
     }
 
@@ -210,6 +215,11 @@ namespace UnitTests
             Nodes.Add(folder);
             return folder;
         }
+
+		public virtual string LogicalPath
+		{
+			get { return this.RelativePathTo(this.OwningSolution); }
+		}
 
         public virtual string PhysicalPath { get; set; }
 
@@ -278,6 +288,11 @@ namespace UnitTests
         {
             get { return this.Ancestors().OfType<IProjectNode>().FirstOrDefault(); }
         }
+
+		public virtual string LogicalPath
+		{
+			get { return this.RelativePathTo(this.OwningProject); }
+		}
 
         public virtual string PhysicalPath { get; set; }
 

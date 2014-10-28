@@ -15,12 +15,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 namespace Clide.VisualStudio
 {
     using Microsoft.VisualStudio.Shell.Interop;
+	using System;
 
     /// <summary>
     /// Represents the combination of a Visual Studio hierarchy 
     /// and an item identifier.
     /// </summary>
-    public class VsHierarchyItem
+    public class VsHierarchyItem : IEquatable<VsHierarchyItem>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VsHierarchyItem"/> class.
@@ -42,5 +43,37 @@ namespace Clide.VisualStudio
         /// Gets the item id.
         /// </summary>
         public uint ItemId { get; private set; }
+
+		#region Equality
+
+		public bool Equals(VsHierarchyItem other)
+		{
+			return VsHierarchyItem.Equals(this, other);
+		}
+
+		public override bool Equals(object obj)
+		{
+			return VsHierarchyItem.Equals(this, obj as VsHierarchyItem);
+		}
+
+		public static bool Equals(VsHierarchyItem obj1, VsHierarchyItem obj2)
+		{
+			if (Object.Equals(null, obj1) ||
+				Object.Equals(null, obj2) ||
+				obj1.GetType() != obj2.GetType())
+				return false;
+
+			if (Object.ReferenceEquals(obj1, obj2)) return true;
+
+			return obj1.Hierarchy == obj2.Hierarchy &&
+				obj1.ItemId == obj2.ItemId;
+		}
+
+		public override int GetHashCode()
+		{
+			return Hierarchy.GetHashCode() ^ ItemId.GetHashCode();
+		}
+
+		#endregion
     }
 }

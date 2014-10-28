@@ -41,6 +41,25 @@ namespace Clide.Solution
 
         [HostType("VS IDE")]
         [TestMethod]
+        public void WhenComparingNodes_ThenCheckForEquality()
+        {
+            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
+
+            var lib1 = new ITreeNode[] {explorer.Solution }.Traverse(TraverseKind.BreadthFirst, node => node.Nodes)
+                .OfType<IProjectNode>()
+                .FirstOrDefault(node => node.DisplayName == "ClassLibrary");
+
+            var lib2 = new ITreeNode[] {explorer.Solution }.Traverse(TraverseKind.BreadthFirst, node => node.Nodes)
+                .OfType<IProjectNode>()
+                .FirstOrDefault(node => node.DisplayName == "ClassLibrary");
+
+			Assert.Equal(lib1, lib2);
+        }
+
+        [HostType("VS IDE")]
+        [TestMethod]
         public void WhenSolutionIsOpened_ThenCanGetProjectReferencedAssemblies()
         {
             var slnFile = base.OpenSolution("SampleSolution\\SampleSolution.sln");

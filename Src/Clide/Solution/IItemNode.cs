@@ -17,11 +17,18 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    /// <summary>
+	using System;
+    
+	/// <summary>
     /// Represents an item inside a project or a project folder.
     /// </summary>
     public interface IItemNode : IProjectItemNode
 	{
+        /// <summary>
+        /// Gets the logical path of the item, relative to its containing project.
+        /// </summary>
+        string LogicalPath { get; }
+
         /// <summary>
         /// Gets the physical path of the item.
         /// </summary>

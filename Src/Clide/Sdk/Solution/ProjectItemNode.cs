@@ -14,56 +14,123 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Sdk.Solution
 {
-    using Clide.Patterns.Adapter;
-    using Clide.Solution;
-    using Clide.Solution.Implementation;
-    using Microsoft.VisualStudio;
-    using System;
+	using Clide.Patterns.Adapter;
+	using Clide.Solution;
+	using Clide.Solution.Implementation;
+	using Microsoft.VisualStudio;
+	using System;
 
-    /// <summary>
-    /// Base class for nodes that exist with a managed project.
-    /// </summary>
-    public abstract class ProjectItemNode : SolutionTreeNode
-    {
-        private ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory;
-        private Lazy<IProjectNode> owningProject;
+	/// <summary>
+	/// Base class for nodes that exist with a managed project.
+	/// </summary>
+	public abstract class ProjectItemNode : SolutionTreeNode
+	{
+		private ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory;
+		private Lazy<IProjectNode> owningProject;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ProjectItemNode"/> class.
-        /// </summary>
-        /// <param name="kind">The kind of project node.</param>
-        /// <param name="hierarchyNode">The underlying hierarchy represented by this node.</param>
-        /// <param name="parentNode">The parent node accessor.</param>
-        /// <param name="nodeFactory">The factory for child nodes.</param>
-        /// <param name="adapter">The adapter service that implements the smart cast <see cref="ITreeNode.As{T}"/>.</param>
-        public ProjectItemNode(
-            SolutionNodeKind kind,
-            IVsSolutionHierarchyNode hierarchyNode,
-            Lazy<ITreeNode> parentNode,
-            ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
-            IAdapterService adapter)
-            : base(kind, hierarchyNode, parentNode, nodeFactory, adapter)
-        {
-            this.nodeFactory = nodeFactory;
-            this.owningProject = new Lazy<IProjectNode>(() =>
-            {
-                var owningHierarchy = new VsSolutionHierarchyNode(hierarchyNode.VsHierarchy, VSConstants.VSITEMID_ROOT);
-                return this.nodeFactory.CreateNode(GetParent(owningHierarchy), owningHierarchy) as IProjectNode;
-            });
-        }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ProjectItemNode"/> class.
+		/// </summary>
+		/// <param name="kind">The kind of project node.</param>
+		/// <param name="hierarchyNode">The underlying hierarchy represented by this node.</param>
+		/// <param name="parentNode">The parent node accessor.</param>
+		/// <param name="nodeFactory">The factory for child nodes.</param>
+		/// <param name="adapter">The adapter service that implements the smart cast <see cref="ITreeNode.As{T}"/>.</param>
+		public ProjectItemNode(
+			SolutionNodeKind kind,
+			IVsSolutionHierarchyNode hierarchyNode,
+			Lazy<ITreeNode> parentNode,
+			ITreeNodeFactory<IVsSolutionHierarchyNode> nodeFactory,
+			IAdapterService adapter)
+			: base(kind, hierarchyNode, parentNode, nodeFactory, adapter)
+		{
+			this.nodeFactory = nodeFactory;
+			this.owningProject = new Lazy<IProjectNode>(() =>
+			{
+				var owningHierarchy = new VsSolutionHierarchyNode(hierarchyNode.VsHierarchy, VSConstants.VSITEMID_ROOT);
+				return this.nodeFactory.CreateNode(GetParent(owningHierarchy), owningHierarchy) as IProjectNode;
+			});
+		}
 
-        /// <summary>
-        /// Gets the owning project.
-        /// </summary>
-        public virtual IProjectNode OwningProject
-        {
-            get { return this.owningProject.Value; }
-        }
+		/// <summary>
+		/// Gets the owning project.
+		/// </summary>
+		public virtual IProjectNode OwningProject
+		{
+			get { return this.owningProject.Value; }
+		}
 
-        private Lazy<ITreeNode> GetParent(IVsSolutionHierarchyNode hierarchy)
-        {
-            return hierarchy.Parent == null ? null :
-               new Lazy<ITreeNode>(() => this.nodeFactory.CreateNode(GetParent(hierarchy.Parent), hierarchy.Parent));
-        }
-    }
+		private Lazy<ITreeNode> GetParent(IVsSolutionHierarchyNode hierarchy)
+		{
+			return hierarchy.Parent == null ? null :
+			   new Lazy<ITreeNode>(() => this.nodeFactory.CreateNode(GetParent(hierarchy.Parent), hierarchy.Parent));
+		}
+
+
+		#region Equality
+
+		/// <summary>
+		/// Gets whether the given nodes are equal.
+		/// </summary>
+		public static bool operator ==(ProjectItemNode obj1, ProjectItemNode obj2)
+		{
+			return Equals(obj1, obj2);
+		}
+
+		/// <summary>
+		/// Gets whether the given nodes are not equal.
+		/// </summary>
+		public static bool operator !=(ProjectItemNode obj1, ProjectItemNode obj2)
+		{
+			return !Equals(obj1, obj2);
+		}
+
+		/// <summary>
+		/// Gets whether the current node equals the given node.
+		/// </summary>
+		public bool Equals(ProjectItemNode other)
+		{
+			return ProjectItemNode.Equals(this, other);
+		}
+
+		/// <summary>
+		/// Gets whether the current node equals the given node.
+		/// </summary>
+		public override bool Equals(object obj)
+		{
+			return ProjectItemNode.Equals(this, obj as ProjectItemNode);
+		}
+
+		/// <summary>
+		/// Gets whether the given nodes are equal.
+		/// </summary>
+		public static bool Equals(ProjectItemNode obj1, ProjectItemNode obj2)
+		{
+			if (Object.Equals(null, obj1) ||
+				Object.Equals(null, obj2) ||
+				obj1.GetType() != obj2.GetType() ||
+				Object.Equals(null, obj1.OwningProject) ||
+				Object.Equals(null, obj2.OwningProject))
+				return false;
+
+			if (Object.ReferenceEquals(obj1, obj2)) return true;
+
+			return obj1.OwningProject.Equals(obj2.OwningProject) &&
+				obj1.HierarchyNode.ItemId.Equals(obj2.HierarchyNode.ItemId);
+		}
+
+		/// <summary>
+		/// Returns a hash code for this instance.
+		/// </summary>
+		/// <returns>
+		/// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+		/// </returns>
+		public override int GetHashCode()
+		{
+			return OwningProject.GetHashCode() ^
+				HierarchyNode.ItemId.GetHashCode();
+		}
+
+		#endregion
+	}
 }

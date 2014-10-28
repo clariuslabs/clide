@@ -58,6 +58,15 @@ namespace Clide.Sdk.Solution
             });
         }
 
+		/// <summary>
+		/// Gets the logical path of the item, relative to the solution, 
+		/// considering any containing solution folders.
+		/// </summary>
+		public virtual string LogicalPath
+		{
+			get { return this.RelativePathTo(this.OwningSolution); }
+		}
+
         /// <summary>
         /// Gets the physical path of the solution item.
         /// </summary>

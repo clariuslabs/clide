@@ -345,4 +345,7 @@
   <data name="ConfigUserProjectProperties_SetNonMsBuildProject" xml:space="preserve">
     <value>Attempted to set property '{property}' for configuration '{configuration}' on project '{project}' which is not based on MSBuild. Configuration-specific user properties cannot be retrieved or set using the standard dynamic properties.</value>
   </data>
+  <data name="ISolutionExplorerNodeExtensions_NotAncestor" xml:space="preserve">
+    <value>Node '{ancestor}' is not an ancestor of '{descendent}'.</value>
+  </data>
 </root>
