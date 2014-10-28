@@ -12,7 +12,7 @@
     <AssemblyName>Clide.Resolver</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <OutputPath>$(MSBuildThisFileDirectory)..\Clide\nuget\lib\$(NugetTarget)\</OutputPath>
+    <OutputPath>nuget\lib\$(NugetTarget)\</OutputPath>
     <DocumentationFile>$(OutputPath)\Clide.Resolver.xml</DocumentationFile>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
   </PropertyGroup>
@@ -31,6 +31,7 @@
     <None Include="..\..\Common\ClariusLabs.licenseheader">
       <Link>ClariusLabs.licenseheader</Link>
     </None>
+    <NuSpec Include="Clide.Resolver.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <SymbolSource Include="**\*.cs" Exclude="nuget\**\*.cs">
@@ -41,8 +42,5 @@
     </SymbolSource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="AfterBuild" Condition="$(NuGet) == 'true'">
-    <!-- Copy sources to destination as needed -->
-    <Copy SourceFiles="@(SymbolSource)" DestinationFiles="@(SymbolSource->'$(MSBuildThisFileDirectory)..\Clide\nuget\src\%(RecursiveDir)%(Filename)%(Extension)')" ContinueOnError="false" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
-  </Target>
+  <Import Project="$(MSBuildThisFileDirectory)..\Clide.targets" />
 </Project>
