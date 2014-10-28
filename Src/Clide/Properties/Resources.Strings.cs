@@ -670,13 +670,25 @@ namespace Clide.Properties
 		
 			/// <summary>
 			/// Looks up a localized string similar to: 
-			///	Could not determine the target assembly name for project '{projectName}'. The project TargetFileName and/or TargetDir properties are empty.
+			///	Could not determine the output assembly path for project '{projectName}'.
 			/// </summary>
 			public static string NoTargetAssemblyName(object projectName)
 			{
 				return Resources.IProjectNodeExtensions_NoTargetAssemblyName.FormatWith(new 
 				{
 					projectName = projectName,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
+			///	The specified project '{project}' cannot be adapted to an MSBuild project, required to retrieve its evaluated intermediate output path.
+			/// </summary>
+			public static string NotMsBuildProject(object project)
+			{
+				return Resources.IProjectNodeExtensions_NotMsBuildProject.FormatWith(new 
+				{
+					project = project,
 				});
 			}
 		}

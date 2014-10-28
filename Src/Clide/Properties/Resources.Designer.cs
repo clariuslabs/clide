@@ -430,11 +430,20 @@ namespace Clide.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not determine the target assembly name for project &apos;{projectName}&apos;. The project TargetFileName and/or TargetDir properties are empty..
+        ///   Looks up a localized string similar to Could not determine the output assembly path for project &apos;{projectName}&apos;..
         /// </summary>
         internal static string IProjectNodeExtensions_NoTargetAssemblyName {
             get {
                 return ResourceManager.GetString("IProjectNodeExtensions_NoTargetAssemblyName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified project &apos;{project}&apos; cannot be adapted to an MSBuild project, required to retrieve its evaluated intermediate output path..
+        /// </summary>
+        internal static string IProjectNodeExtensions_NotMsBuildProject {
+            get {
+                return ResourceManager.GetString("IProjectNodeExtensions_NotMsBuildProject", resourceCulture);
             }
         }
         

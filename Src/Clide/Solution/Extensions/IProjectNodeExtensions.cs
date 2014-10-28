@@ -128,23 +128,36 @@ namespace Clide.Solution
         /// assembly.
         /// </summary>
         /// <param name="project">The project to get the output assembly from.</param>
-        public static Task<Assembly> GetOutputAssembly(this IProjectNode project)
+		/// <param name="buildIfMissing">Whether to build the project if the output assembly is missing.</param>
+        public static Task<Assembly> GetOutputAssembly(this IProjectNode project, bool buildIfMissing = true)
         {
             var fileName = (string)project.Properties.TargetFileName;
-            var outDir = (string)Path.Combine(
-                project.Properties.MSBuildProjectDirectory,
-                // NOTE: we load from the obj/Debug|Release folder, which is 
-                // the one built in the background by VS continuously.
-                project.Properties.BaseIntermediateOutputPath,
-                project.Configuration.ActiveConfiguration);
+			var msBuild = project.Adapt().AsMsBuildProject();
+			if (msBuild == null)
+				throw new ArgumentException(Strings.IProjectNodeExtensions.NotMsBuildProject(project.DisplayName));
 
-            if (string.IsNullOrEmpty(fileName) || string.IsNullOrEmpty(outDir))
+            // NOTE: we load from the obj/Debug|Release folder, which is 
+            // the one built in the background by VS continuously.
+			var intermediateDir = msBuild.AllEvaluatedProperties
+				.Where(p => p.Name == "IntermediateOutputPath")
+				// If we grab the EvaluatedValue, it won't have the current 
+				// global properties overrides, like Configuration and Debug.
+				.Select(p => msBuild.ExpandString(p.UnevaluatedValue))
+				.FirstOrDefault();
+
+            if (string.IsNullOrEmpty(fileName) || 
+				string.IsNullOrEmpty(intermediateDir) || 
+				string.IsNullOrEmpty(project.Properties.MSBuildProjectDirectory))
             {
                 tracer.Warn(Strings.IProjectNodeExtensions.NoTargetAssemblyName(project.DisplayName));
                 return TaskHelpers.FromResult<Assembly>(null);
             }
 
+            var outDir = (string)Path.Combine(project.Properties.MSBuildProjectDirectory, intermediateDir);
             var assemblyFile = Path.Combine(outDir, fileName);
+
+			if (!File.Exists(assemblyFile) && !buildIfMissing)
+				return TaskHelpers.FromResult<Assembly>(null);
 
             return Task.Factory.StartNew<Assembly>(() =>
             {

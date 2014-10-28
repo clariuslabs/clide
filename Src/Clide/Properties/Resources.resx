@@ -232,7 +232,7 @@
     <value>Building project '{projectName}' did not generate the expected output assembly '{assemblyFile}'.</value>
   </data>
   <data name="IProjectNodeExtensions_NoTargetAssemblyName" xml:space="preserve">
-    <value>Could not determine the target assembly name for project '{projectName}'. The project TargetFileName and/or TargetDir properties are empty.</value>
+    <value>Could not determine the output assembly path for project '{projectName}'.</value>
   </data>
   <data name="DevEnvFactory_CompositionErrors" xml:space="preserve">
     <value>Composition errors prevented the successfull creation of the development environment API. All {primaryRejectionCount} primary rejection errors will be logged.</value>
@@ -347,5 +347,8 @@
   </data>
   <data name="ISolutionExplorerNodeExtensions_NotAncestor" xml:space="preserve">
     <value>Node '{ancestor}' is not an ancestor of '{descendent}'.</value>
+  </data>
+  <data name="IProjectNodeExtensions_NotMsBuildProject" xml:space="preserve">
+    <value>The specified project '{project}' cannot be adapted to an MSBuild project, required to retrieve its evaluated intermediate output path.</value>
   </data>
 </root>

@@ -76,6 +76,46 @@ namespace Clide.Solution
 
         [HostType("VS IDE")]
         [TestMethod]
+        public void WhenGettingOutputAssemblyButNoBuild_ThenCanOptOutOfBuild()
+        {
+            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
+            var lib = explorer.Solution.Traverse().OfType<IProjectNode>()
+                .FirstOrDefault(node => node.DisplayName == "ClassLibrary");
+			var outDir = Path.Combine(lib.Properties.MSBuildProjectDirectory, 
+				lib.Adapt().AsMsBuildProject().AllEvaluatedProperties
+				.Where(p => p.Name == "IntermediateOutputPath")
+				.Select(p => lib.Adapt().AsMsBuildProject().ExpandString(p.UnevaluatedValue))
+				.First());
+
+			if (Directory.Exists(outDir))
+				Directory.Delete(outDir, true);
+
+			var asm = lib.GetOutputAssembly(false).Result;
+
+			Assert.Null(asm);
+        }
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void WhenGettingOutputAssembly_ThenCanInspectAssemblyUsingReflection()
+        {
+            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
+            var lib = explorer.Solution.Traverse().OfType<IProjectNode>()
+                .FirstOrDefault(node => node.DisplayName == "ClassLibrary");
+			
+			var asm = lib.GetOutputAssembly().Result;
+
+            var type = asm.GetTypes().First(t => t.GetConstructor(new Type[0]) != null);
+
+            Assert.Throws<ArgumentException>(() => Activator.CreateInstance(type));
+        }
+
+        [HostType("VS IDE")]
+        [TestMethod]
         public void WhenGettingOutputAssembly_ThenTryingToInstantiateTypeThrows()
         {
             base.OpenSolution("SampleSolution\\SampleSolution.sln");
@@ -84,6 +124,7 @@ namespace Clide.Solution
             var lib = explorer.Solution.Traverse().OfType<IProjectNode>()
                 .FirstOrDefault(node => node.DisplayName == "ClassLibrary");
             var asm = lib.GetOutputAssembly().Result;
+
             var type = asm.GetTypes().First(t => t.GetConstructor(new Type[0]) != null);
 
             Assert.Throws<ArgumentException>(() => Activator.CreateInstance(type));
