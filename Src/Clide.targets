@@ -44,7 +44,7 @@
         <RemoveDir Directories="$(OutputPath)" Condition="false" />
     </Target>-->
 
-    <Target Name="BuildPackage" AfterTargets="AfterBuild" Condition="$(NuGet) == 'true'">
+    <Target Name="BuildNuGet" AfterTargets="AfterBuild" Condition="$(NuGet) == 'true'">
         <MakeDir Directories="$(DropDirectory.TrimEnd('\'))" Condition="!Exists($(DropDirectory.TrimEnd('\')))" />
         <Copy SourceFiles="@(NuSpec)" DestinationFiles="@(NuSpec->'nuget\%(Filename)%(Extension)')" SkipUnchangedFiles="true" ContinueOnError="false">
             <Output TaskParameter="DestinationFiles" ItemName="NuSpecOut" />
