@@ -274,5 +274,55 @@ namespace Clide.Solution
 
 			Assert.Equal (0, references.Count);
 		}
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void WhenAdaptingDteSolutionToIVsSolution_ThenSucceeds()
+        {
+            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+
+            var adapter = this.ServiceLocator.GetInstance<IAdapterService>();
+
+            var node = adapter.Adapt(this.Dte.Solution).As<IVsSolution>();
+
+            Assert.NotNull(node);
+        }
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void WhenAdaptingDteProjectToIVsProject_ThenSucceeds()
+        {
+            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+
+            var adapter = this.ServiceLocator.GetInstance<IAdapterService>();
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
+            var library = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, x => x.Nodes)
+                .OfType<IProjectNode>()
+                .First(x => x.DisplayName == "ClassLibrary")
+                .As<Project>();
+
+            var node = adapter.Adapt(library).As<IVsProject>();
+
+            Assert.NotNull(node);
+        }
+
+        [HostType("VS IDE")]
+        [TestMethod]
+        public void WhenAdaptingDteProjectToMSBuildProject_ThenSucceeds()
+        {
+            base.OpenSolution("SampleSolution\\SampleSolution.sln");
+
+            var adapter = this.ServiceLocator.GetInstance<IAdapterService>();
+            var explorer = base.ServiceLocator.GetInstance<ISolutionExplorer>();
+            var library = explorer.Solution.Nodes.Traverse(TraverseKind.DepthFirst, x => x.Nodes)
+                .OfType<IProjectNode>()
+                .First(x => x.DisplayName == "ClassLibrary")
+                .As<Project>();
+
+            var node = adapter.Adapt(library).As<Microsoft.Build.Evaluation.Project>();
+
+            Assert.NotNull(node);
+			Assert.Equal(library.FullName, node.FullPath);
+        }
     }
 }

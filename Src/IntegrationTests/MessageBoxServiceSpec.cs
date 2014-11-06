@@ -41,7 +41,8 @@ namespace Clide
 		{
 			var service = ServiceLocator.GetInstance<IMessageBoxService>();
 
-			System.Threading.Tasks.Task.Run(() => service.Show("From background!"))
+			System.Threading.Tasks.Task.Factory.StartNew(() => service.Show("From background!"), 
+                new System.Threading.CancellationToken(), System.Threading.Tasks.TaskCreationOptions.None, System.Threading.Tasks.TaskScheduler.Default)
 				.ContinueWith(_ => service.Prompt("Background 2!"))
 				.Wait();
 		}

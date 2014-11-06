@@ -129,7 +129,9 @@
     <Compile Include="FooOptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="FooSettings.cs" />
+    <Compile Include="FooSettings.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="FooView.xaml.cs">
       <DependentUpon>FooView.xaml</DependentUpon>
     </Compile>

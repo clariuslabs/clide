@@ -29,7 +29,9 @@ namespace Clide.Solution.Adapters
         IAdapter<ProjectNode, Project>,
         IAdapter<ItemNode, ProjectItem>,
         IAdapter<Project, IProjectNode>, 
-        IAdapter<ProjectItem, IItemNode>
+        IAdapter<ProjectItem, IItemNode>,
+        IAdapter<EnvDTE.Project, Project>,
+        IAdapter<EnvDTE.ProjectItem, ProjectItem>
     {
         IVsSolution vsSolution;
         ISolutionExplorerNodeFactory nodeFactory;
@@ -119,5 +121,25 @@ namespace Clide.Solution.Adapters
 
             return nodeFactory.Create(new VsSolutionHierarchyNode(hierarchy, itemId)) as IItemNode;
         }
-    }
+
+		public Project Adapt (EnvDTE.Project from)
+		{
+            return from == null ? null :
+                ProjectCollection.GlobalProjectCollection
+                    .GetLoadedProjects(from.FullName)
+                    .FirstOrDefault();
+		}
+
+		public ProjectItem Adapt (EnvDTE.ProjectItem from)
+		{
+			var project = Adapt (from.ContainingProject);
+			if (project == null || from.FileCount == 0 || string.IsNullOrEmpty(from.FileNames[1]))
+				return null;
+
+			var fromFile = new FileInfo(from.FileNames[1]).FullName;
+
+			return project.AllEvaluatedItems.FirstOrDefault (item =>
+				new FileInfo (item.GetMetadataValue ("FullPath")).FullName == fromFile);
+		}
+	}
 }

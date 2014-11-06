@@ -28,6 +28,41 @@ namespace Clide
     [TestClass]
     public class Misc : VsHostedSpec
     {
+		[HostType("VS IDE")]
+		[TestMethod]
+		public void when_Action_then_Assert()
+		{
+			Console.WriteLine("RegType_Configuration: " + VSRegistry.RegistryRoot(__VsLocalRegistryType.RegType_Configuration).Name);
+			Console.WriteLine("RegType_UserSettings: " + VSRegistry.RegistryRoot(__VsLocalRegistryType.RegType_UserSettings).Name);
+
+			using (var vsRoot = VSRegistry.RegistryRoot (__VsLocalRegistryType.RegType_UserSettings)) {
+				var registryRoot = vsRoot.Name.Substring(vsRoot.Name.IndexOf('\\') + 1);
+				Console.WriteLine (registryRoot);
+			}
+
+			// /// <summary>The build version of the release and the branch, machine, and user information used to build it (for example, "10.0.30319.01 RTMRel" or "10.0.30128.1 BRANCHNAME(COMPUTERNAME-USERNAME)"). This is the same as the release string shown in Help/About.</summary>
+			var VSSPROPID_ReleaseVersion = -9068;
+			WriteProperty ("VSSPROPID_ReleaseVersion", VSSPROPID_ReleaseVersion);
+
+			// /// <summary>The branding for this release (for example, CTP, Beta, RTM, and so on). This property is read only.</summary>
+			var VSSPROPID_ReleaseDescription = -9069;
+			WriteProperty ("VSSPROPID_ReleaseDescription", VSSPROPID_ReleaseDescription);
+
+			var VSSPROPID_SKUInfo = -9073;
+			WriteProperty ("VSSPROPID_SKUInfo", VSSPROPID_SKUInfo);
+
+			WriteProperty ("VSSPROPID_AppBrandName", -9071);
+			WriteProperty ("VSSPROPID_AppShortBrandName", -9072);
+		}
+
+		private void WriteProperty (string propName, int propId)
+		{
+			var shell = base.ServiceProvider.GetService<SVsShell, IVsShell> ();
+			object prop;
+			shell.GetProperty (propId, out prop);
+			Console.WriteLine ("{0}: {1}", propName, prop);
+		}
+
         [HostType("VS IDE")]
         [TestMethod]
         public void WhenRetrievingHierarchyItem_ThenAlwaysGetsSameInstance()

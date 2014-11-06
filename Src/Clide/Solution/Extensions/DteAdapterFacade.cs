@@ -75,7 +75,7 @@
 		/// <returns>The <see cref="IVsProject"/> or <see langword="null"/> if conversion is not possible.</returns>
 		public static IVsProject AsVsProject(this IAdaptable<Project> adaptable)
 		{
-			return adaptable.AsProjectNode().As<IVsProject>();
+			return adaptable.As<IVsProject>();
 		}
 
 		/// <summary>
@@ -84,7 +84,7 @@
 		/// <returns>The <see cref="Microsoft.Build.Evaluation.Project"/> or <see langword="null"/> if conversion is not possible.</returns>
 		public static Microsoft.Build.Evaluation.Project AsMsBuildProject(this IAdaptable<Project> adaptable)
 		{
-			return adaptable.AsProjectNode().As<Microsoft.Build.Evaluation.Project>();
+			return adaptable.As<Microsoft.Build.Evaluation.Project>();
 		}
 
 		/// <summary>
@@ -125,7 +125,7 @@
 		/// <returns>The <see cref="Microsoft.Build.Evaluation.ProjectItem"/> or <see langword="null"/> if conversion is not possible.</returns>
 		public static Microsoft.Build.Evaluation.ProjectItem AsMsBuildItem(this IAdaptable<ProjectItem> adaptable)
 		{
-			return adaptable.AsItemNode().As<Microsoft.Build.Evaluation.ProjectItem>();
+			return adaptable.As<Microsoft.Build.Evaluation.ProjectItem>();
 		}
 
 		/// <summary>

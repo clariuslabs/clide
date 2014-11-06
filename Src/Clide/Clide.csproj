@@ -197,6 +197,7 @@
     <Compile Include="Solution\Extensions\VsInteropAdapterFacade.cs" />
     <Compile Include="Solution\Extensions\DteAdapterFacade.cs" />
     <Compile Include="Solution\ICustomNode.cs" />
+    <Compile Include="Solution\Implementation\Adapters\DteToVsAdapter.cs" />
     <Compile Include="Solution\Implementation\Adapters\VsLangToSolutionAdapter.cs" />
     <Compile Include="Solution\Implementation\Adapters\VsHierarchyItemToSolutionAdapter.cs" />
     <Compile Include="Solution\Implementation\Adapters\VsToSolutionAdapter.cs" />
