@@ -128,6 +128,7 @@
     <Compile Include="netfx\Testing\Assertions.cs" />
     <Compile Include="OutputWindowManagerSpec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProvidedComponentsSpec.cs" />
     <Compile Include="ServiceLocatorSpec.cs" />
     <Compile Include="SettingsIntegrationSpec.cs" />
     <Compile Include="SettingsManagerSpec.cs" />
@@ -151,6 +152,9 @@
     <Compile Include="Solution\VsSolutionHierarchyNodeSpec.cs" />
     <Compile Include="VsExposedServicesSpec.cs" />
     <Compile Include="VsHostedSpec.cs" />
+    <Content Include="Content\extension.vsixmanifest">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestReport.txt">
       <DependentUpon>TestReport.tt</DependentUpon>
     </Content>
@@ -187,6 +191,10 @@
     <ProjectReference Include="..\IntegrationPackage\IntegrationPackage.csproj">
       <Project>{41c96c7d-bc81-489c-a60e-97cf431b7608}</Project>
       <Name>IntegrationPackage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestComponents\TestComponents.csproj">
+      <Project>{e6c899ea-21e8-417a-9a70-a216419836fd}</Project>
+      <Name>TestComponents</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

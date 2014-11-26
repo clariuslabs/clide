@@ -351,4 +351,7 @@
   <data name="IProjectNodeExtensions_NotMsBuildProject" xml:space="preserve">
     <value>The specified project '{project}' cannot be adapted to an MSBuild project, required to retrieve its evaluated intermediate output path.</value>
   </data>
+  <data name="DevEnvFactory_ClideProvidedComponentsNotFound" xml:space="preserve">
+    <value>The service provider type '{providerType}' specified a provided assembly for components registration '{providedAssembly}' that was not found at '{assemblyFile}'.</value>
+  </data>
 </root>

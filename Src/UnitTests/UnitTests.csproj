@@ -92,6 +92,10 @@
       <Project>{eaf59c6d-a973-48e6-a90a-5e894ecec3f6}</Project>
       <Name>Clide</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TestComponents\TestComponents.csproj">
+      <Project>{e6c899ea-21e8-417a-9a70-a216419836fd}</Project>
+      <Name>TestComponents</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

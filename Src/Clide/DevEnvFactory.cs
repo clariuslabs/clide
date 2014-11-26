@@ -48,7 +48,7 @@ namespace Clide
             using (tracer.StartActivity(Strings.DevEnvFactory.CreatingComposition))
             {
                 // Allow dependencies of VS exported services.
-                var composition = services.GetService<SComponentModel, IComponentModel>();
+                var composition = services.TryGetService<SComponentModel, IComponentModel>();
 
                 // Keep track of assemblies we've already added, to avoid duplicate registrations.
                 var addedAssemblies = new Dictionary<string, Assembly>();
@@ -62,6 +62,19 @@ namespace Clide
                 addedAssemblies[servicesAssembly.Location.ToLowerInvariant()] = servicesAssembly;
 
                 var installPath = GetInstallPath(services);
+
+                foreach (var providedAssemblyFile in services.GetType()
+                    .GetCustomAttributes<ProvideComponentsAttribute>(true)
+                    .Select(attr => Path.Combine(installPath, attr.AssemblyFile)))
+                {
+                    if (!File.Exists(providedAssemblyFile))
+                        throw new InvalidOperationException(Strings.DevEnvFactory.ClideProvidedComponentsNotFound(
+                            services.GetType().FullName, Path.GetFileName(providedAssemblyFile), providedAssemblyFile));
+
+                    var providedAssembly = Assembly.LoadFrom(providedAssemblyFile);
+                    if (!addedAssemblies.ContainsKey(providedAssembly.Location.ToLowerInvariant()))
+                        addedAssemblies.Add(providedAssembly.Location.ToLowerInvariant(), providedAssembly);
+                }
 
                 var packageManifestFile = Path.Combine(installPath, "extension.vsixmanifest");
                 if (File.Exists(packageManifestFile))
@@ -102,9 +115,11 @@ namespace Clide
                 }
 
                 var catalog = new ComponentCatalog(addedAssemblies.Values.ToArray());
-                var container = new CompositionContainer(catalog, 
-                    new ServicesExportProvider(services),
-                    composition.DefaultExportProvider);
+				var providers = composition != null ? 
+					new ExportProvider[] { new ServicesExportProvider(services), composition.DefaultExportProvider } : 
+					new ExportProvider[] { new ServicesExportProvider(services) };
+
+                var container = new CompositionContainer(catalog, providers);
 
                 // Make the service locator itself available as an export.
                 var serviceLocator = new ServicesAccessor(services, new Lazy<IServiceLocator>(() => serviceLocators[services]));

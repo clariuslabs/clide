@@ -766,6 +766,20 @@ namespace Clide.Properties
 		
 			/// <summary>
 			/// Looks up a localized string similar to: 
+			///	The service provider type '{providerType}' specified a provided assembly for components registration '{providedAssembly}' that was not found at '{assemblyFile}'.
+			/// </summary>
+			public static string ClideProvidedComponentsNotFound(object providerType, object providedAssembly, object assemblyFile)
+			{
+				return Resources.DevEnvFactory_ClideProvidedComponentsNotFound.FormatWith(new 
+				{
+					providerType = providerType,
+					providedAssembly = providedAssembly,
+					assemblyFile = assemblyFile,
+				});
+			}
+		
+			/// <summary>
+			/// Looks up a localized string similar to: 
 			///	Composition errors prevented the successfull creation of the development environment API. All {primaryRejectionCount} primary rejection errors will be logged.
 			/// </summary>
 			public static string CompositionErrors(object primaryRejectionCount)
