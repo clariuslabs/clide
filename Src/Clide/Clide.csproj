@@ -109,7 +109,7 @@
     <Compile Include="External\Diagnostics\Tracer\Tracer.cs" />
     <Compile Include="External\Diagnostics\Tracer\Visibility.cs" />
     <Compile Include="IErrorItem.cs" />
-    <Compile Include="Diagnostics\Visibility.cs" />
+    <Compile Include="Patterns\Visibility.cs" />
     <Compile Include="Diagnostics\ITracerManager.cs" />
     <Compile Include="Diagnostics\Tracer.cs" />
     <Compile Include="ErrorItem.cs" />
