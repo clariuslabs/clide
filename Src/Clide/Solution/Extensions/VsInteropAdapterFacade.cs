@@ -2,6 +2,7 @@
 {
 	using Clide.Patterns.Adapter;
 	using Clide.Solution;
+	using Clide.VisualStudio;
 	using EnvDTE;
 	using System;
 	using System.Collections.Generic;
@@ -94,6 +95,47 @@
 		public static VSProject AsVsLangProject(this IAdaptable<IVsProject> adaptable)
 		{
 			return adaptable.AsProjectNode().As<VSProject>();
+		}
+
+		#endregion
+
+		#region VsHierarchyItem
+
+		/// <summary>
+		/// Adapts the specified hierarchy item to supported target types.
+		/// </summary>
+		/// <param name="item">The hierarchy item to adapt.</param>
+		/// <returns>The entry point that exposes supported target types.</returns>
+		public static IAdaptable<VsHierarchyItem> Adapt(this VsHierarchyItem item)
+		{
+			return new Adaptable<VsHierarchyItem>(Adapters.ServiceInstance, item);
+		}
+
+		/// <summary>
+		/// Adapts a <see cref="VsHierarchyItem"/> to an <see cref="ISolutionNode"/>.
+		/// </summary>
+		/// <returns>The <see cref="ISolutionNode"/> or <see langword="null"/> if conversion is not possible.</returns>
+		public static ISolutionNode AsSolutionNode(this IAdaptable<VsHierarchyItem> adaptable)
+		{
+			return adaptable.As<ISolutionNode>();
+		}
+
+		/// <summary>
+		/// Adapts a <see cref="VsHierarchyItem"/> to an <see cref="IProjectNode"/>.
+		/// </summary>
+		/// <returns>The <see cref="IProjectNode"/> or <see langword="null"/> if conversion is not possible.</returns>
+		public static IProjectNode AsProjectNode(this IAdaptable<VsHierarchyItem> adaptable)
+		{
+			return adaptable.As<IProjectNode>();
+		}
+
+		/// <summary>
+		/// Adapts a <see cref="VsHierarchyItem"/> to an <see cref="IItemNode"/>.
+		/// </summary>
+		/// <returns>The <see cref="IItemNode"/> or <see langword="null"/> if conversion is not possible.</returns>
+		public static IItemNode AsItemNode(this IAdaptable<VsHierarchyItem> adaptable)
+		{
+			return adaptable.AsProjectNode().As<IItemNode>();
 		}
 
 		#endregion

@@ -14,15 +14,16 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    using Clide;
-    using Clide.Patterns.Adapter;
-    using EnvDTE;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System;
-    using System.Linq;
-    using VSLangProj;
-    using MsBuild = Microsoft.Build.Evaluation;
+	using Clide;
+	using Clide.Patterns.Adapter;
+	using Clide.VisualStudio;
+	using EnvDTE;
+	using Microsoft.VisualStudio.Shell.Interop;
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+	using System;
+	using System.Linq;
+	using VSLangProj;
+	using MsBuild = Microsoft.Build.Evaluation;
 
     [TestClass]
     public class AdaptersSpec : VsHostedSpec

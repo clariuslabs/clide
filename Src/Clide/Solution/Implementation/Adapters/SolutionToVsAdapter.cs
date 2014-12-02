@@ -14,10 +14,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution.Adapters
 {
-    using Clide.Patterns.Adapter;
-    using Clide.Sdk.Solution;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using System;
+	using Clide.Patterns.Adapter;
+	using Clide.Sdk.Solution;
+	using Clide.VisualStudio;
+	using Microsoft.VisualStudio.Shell.Interop;
+	using System;
 
     [Adapter]
     internal class SolutionToVsAdapter : 

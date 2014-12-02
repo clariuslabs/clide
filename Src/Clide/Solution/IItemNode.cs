@@ -20,7 +20,7 @@ namespace Clide.Solution
 	using System;
     
 	/// <summary>
-    /// Represents an item inside a project or a project folder.
+    /// Represents an item inside a project, a project folder or a solution folder.
     /// </summary>
     public interface IItemNode : IProjectItemNode
 	{

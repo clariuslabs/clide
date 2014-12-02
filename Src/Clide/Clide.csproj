@@ -245,7 +245,6 @@
     <Compile Include="Solution\Implementation\AggregateHierarchyFactory.cs" />
     <Compile Include="Solution\Implementation\DefaultHierarchyFactory.cs" />
     <Compile Include="Solution\Implementation\FallbackFactoryAttribute.cs" />
-    <Compile Include="Solution\VsHierarchyItem.cs" />
     <Compile Include="Sdk\Solution\IVsSolutionHierarchyNode.cs" />
     <Compile Include="UI\TreeNodes\AggregateNodeFactory.cs" />
     <Compile Include="UI\TreeNodes\FallbackNodeFactory.cs" />

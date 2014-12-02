@@ -17,6 +17,7 @@ namespace Clide.Solution.Adapters
     using Clide.Patterns.Adapter;
     using Clide.Sdk.Solution;
     using Clide.Solution.Implementation;
+	using Clide.VisualStudio;
 
     [Adapter]
     internal class VsHierarchyItemToSolutionAdapter :
@@ -50,7 +51,7 @@ namespace Clide.Solution.Adapters
             where TNode : class
         {
             return this.nodeFactory.Create(new VsSolutionHierarchyNode(
-                item.VsHierarchy, item.ItemId))
+                item.Hierarchy, item.ItemId))
                 as TNode;
         }
     }
