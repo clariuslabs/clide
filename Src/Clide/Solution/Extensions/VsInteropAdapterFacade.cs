@@ -135,7 +135,7 @@
 		/// <returns>The <see cref="IItemNode"/> or <see langword="null"/> if conversion is not possible.</returns>
 		public static IItemNode AsItemNode(this IAdaptable<VsHierarchyItem> adaptable)
 		{
-			return adaptable.AsProjectNode().As<IItemNode>();
+			return adaptable.As<IItemNode>();
 		}
 
 		#endregion
