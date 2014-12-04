@@ -51,7 +51,7 @@ namespace Clide
     /// </remarks>
     public static class LocalResolver
     {
-        private static Lazy<HashSet<string>> localAssemblyNames;
+        private static Lazy<Dictionary<string, string>> localAssemblyNames;
 
         /// <summary>
         /// Initializes the resolver to lookup assemblies from the 
@@ -61,28 +61,28 @@ namespace Clide
         /// assembly resolve probing.</param>
         public static void Initialize(string localDirectory)
         {
-            localAssemblyNames = new Lazy<HashSet<string>>(() => LoadAssemblyNames(localDirectory));
+            localAssemblyNames = new Lazy<Dictionary<string, string>>(() => LoadAssemblyNames(localDirectory));
 
             AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
             {
                 // NOTE: since we load our full names only in the local assembly set, 
                 // we will only return our assembly version if it matches exactly the 
                 // full name of the received arguments.
-                if (localAssemblyNames.Value.Contains(args.Name))
-                    return Assembly.LoadFrom(Path.Combine(localDirectory, args.Name.Substring(0, args.Name.IndexOf(',')) + ".dll"));
+				if (localAssemblyNames.Value.ContainsKey (args.Name)) 
+					return Assembly.LoadFrom(localAssemblyNames.Value[args.Name]);
 
                 return null;
             };
         }
 
-        private static HashSet<string> LoadAssemblyNames(string localDirectory)
+        private static Dictionary<string, string> LoadAssemblyNames(string localDirectory)
         {
-            var names = new HashSet<string>();
+            var names = new Dictionary<string, string>();
             foreach (var file in Directory.EnumerateFiles(localDirectory, "*.dll"))
             {
                 try
                 {
-                    names.Add(AssemblyName.GetAssemblyName(file).FullName);
+                    names.Add(AssemblyName.GetAssemblyName(file).FullName, file);
                 }
                 catch (System.Security.SecurityException)
                 {
