@@ -36,6 +36,7 @@
 	<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 	<Import Project="$(MSBuildThisFileDirectory)..\Clide.targets" />
 	<Target Name="BuildNuGet" AfterTargets="AfterBuild" Condition="$(NuGet) == 'true'">
+		<MakeDir Directories="$(DropDirectory.TrimEnd('\'))" Condition="!Exists($(DropDirectory.TrimEnd('\')))" />
 		<Exec Command="&quot;$(NuGetExe)&quot; pack -NoPackageAnalysis &quot;%(NuSpec.FullPath)&quot; -OutputDirectory &quot;$(DropDirectory.TrimEnd('\'))&quot; -Version &quot;$(PackageVersion)&quot;"
               ContinueOnError="false" />
 	</Target>
