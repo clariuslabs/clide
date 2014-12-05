@@ -14,4 +14,7 @@
         <copyright>Copyright 2012</copyright>
         <tags>visualstudio vsx extensibility</tags>
     </metadata>
+	<files>
+		<file src="LocalResolver.cs" target="content\External\Clide\LocalResolver.cs" />
+	</files>
 </package>
