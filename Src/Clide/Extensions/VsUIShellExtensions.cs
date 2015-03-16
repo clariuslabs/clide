@@ -182,7 +182,7 @@ namespace Clide
 		}
 
 		/// <summary>
-		/// See https://msdn.microsoft.com/en-us/library/microsoft.visualstudio.shell.interop.ivsuishell.showmessagebox.aspx?f=255&MSPPError=-2147217396
+		/// See https://msdn.microsoft.com/en-us/library/microsoft.visualstudio.shell.interop.ivsuishell.showmessagebox.aspx
 		/// </summary>
 		internal static class OleMessageBoxResult
 		{
