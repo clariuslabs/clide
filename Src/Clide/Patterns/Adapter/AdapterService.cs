@@ -130,10 +130,11 @@ namespace Clide.Patterns.Adapter
                 {
                     Adapter = info.Adapter,
                     // Gets the distance between the requested From type to the adapter From type.
-                    FromInheritance = fromInheritance.FirstOrDefault(x => x.Type == info.From),
+                    FromInheritance = fromInheritance.FirstOrDefault(x => x.Type.IsEquivalentTo(info.From)),
                     // Gets the distance between the requested To type to the adapter To type.
-                    ToInheritance = GetInheritance(info.To).FirstOrDefault(x => x.Type == toType)
+                    ToInheritance = GetInheritance(info.To).FirstOrDefault(x => x.Type.IsEquivalentTo(toType))
                 })
+				.Where(info => info.FromInheritance != null && info.ToInheritance != null)
                 // We first order by the most specific adapter with regards to the source type
                 .OrderBy(info => info.FromInheritance.Distance)
                 // Then we get the most specific (meaning most derived type, hence descending) 
