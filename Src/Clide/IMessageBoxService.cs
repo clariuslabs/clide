@@ -27,7 +27,12 @@ namespace Clide
         /// <summary>
         /// Shows a message to the user.
         /// </summary>
-        /// <returns><see langword="true"/> if the user clicked on Yes/OK.</returns>
+        /// <returns>
+		/// <see langword="true"/> if the user clicked on Yes/OK, 
+		/// <see langword="false"/> if the user clicked No, 
+		/// <see langword="null"/> if the user cancelled the dialog or clicked 
+		/// <c>Cancel</c> or any other value other than the Yes/OK/No.
+		/// </returns>
 		bool? Show(string message, string title = MessageBoxService.DefaultTitle, MessageBoxButton button = MessageBoxButton.OK, MessageBoxImage icon = MessageBoxImage.None, MessageBoxResult defaultResult = MessageBoxResult.OK);
 
         /// <summary>
