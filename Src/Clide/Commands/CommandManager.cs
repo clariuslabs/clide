@@ -72,9 +72,8 @@ namespace Clide.Commands
             this.commandEvents.BeforeExecute += OnBeforeExecute;
             this.commandEvents.AfterExecute += OnAfterExecute;
 
-			var package = serviceProvider as Package;
-			if (package != null)
-				packageId = package.GetPackageGuidOrThrow ();
+			if (serviceProvider.IsPackage())
+				packageId = serviceProvider.GetPackageGuidOrThrow ();
         }
 
         /// <summary>

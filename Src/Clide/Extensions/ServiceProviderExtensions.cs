@@ -21,12 +21,31 @@ namespace System
     using System.ComponentModel;
     using System.Linq;
     using System.Runtime.InteropServices;
+	using Microsoft.VisualStudio.Shell;
 
     /// <summary>
     /// Provides useful extensions to the IDE service provider.
     /// </summary>
     public static partial class ServiceProviderExtensions
     {
+		static readonly string PackageFullName = typeof (Package).FullName;
+
+		/// <summary>
+		/// Determines whether the given service provider is a package.
+		/// </summary>
+		internal static bool IsPackage(this IServiceProvider serviceProvider)
+		{
+			var type = serviceProvider.GetType ();
+			while (type != typeof(object)) {
+				if (type.FullName == PackageFullName)
+					return true;
+
+				type = type.BaseType;
+			}
+
+			return false;
+		}
+
         /// <summary>
         /// Gets the package GUID or throws an <see cref="ArgumentException"/> if the 
         /// <see cref="GuidAttribute"/> is not found on the given instance type.
