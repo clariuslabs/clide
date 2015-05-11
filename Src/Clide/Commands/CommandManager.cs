@@ -45,6 +45,8 @@ namespace Clide.Commands
         private IVsShell vsShell;
         private CommandEvents commandEvents;
 
+		private Guid packageId = Guid.Empty;
+
         private IEnumerable<Lazy<ICommandExtension, CommandAttribute>> commands;
         private IEnumerable<Lazy<ICommandFilter, CommandFilterAttribute>> filters;
         private IEnumerable<Lazy<ICommandInterceptor, CommandInterceptorAttribute>> interceptors;
@@ -69,6 +71,10 @@ namespace Clide.Commands
 
             this.commandEvents.BeforeExecute += OnBeforeExecute;
             this.commandEvents.AfterExecute += OnAfterExecute;
+
+			var package = serviceProvider as Package;
+			if (package != null)
+				packageId = package.GetPackageGuidOrThrow ();
         }
 
         /// <summary>
@@ -102,7 +108,15 @@ namespace Clide.Commands
         public void AddCommands()
         {
             var menuService = serviceProvider.GetService<IMenuCommandService>();
-            foreach (var command in commands)
+			var candidates = commands;
+			if (packageId != Guid.Empty) {
+				candidates = from candidate in candidates
+							 let id = new Guid (candidate.Metadata.PackageId)
+							 where id == Guid.Empty || id == packageId
+							 select candidate;
+			}
+
+            foreach (var command in candidates)
             {
                 AddCommand(command.Value, command.Metadata);
             }

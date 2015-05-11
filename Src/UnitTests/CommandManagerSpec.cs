@@ -22,6 +22,8 @@ namespace UnitTests
     using System.ComponentModel.Design;
     using System.Linq;
     using Xunit;
+	using System.Runtime.InteropServices;
+	using Microsoft.VisualStudio.Shell;
 
     public class CommandManagerSpec
     {
@@ -42,5 +44,58 @@ namespace UnitTests
             Assert.Throws<ArgumentException>(() =>
                 manager.AddCommand(Mock.Of<ICommandExtension>(), new CommandAttribute(Guid.NewGuid().ToString(), 5)));
         }
+
+        [Fact]
+        public void when_adding_commands_then_skips_commands_for_other_packages()
+        {
+			var menusvc = new Mock<IMenuCommandService> ();
+
+			var package = new Mock<MockPackage> ().As<IServiceProvider>();
+			package.Setup(x => x.GetService(typeof(IMenuCommandService))).Returns(menusvc.Object);
+			package.Setup(x => x.GetService(typeof(SVsShell))).Returns(Mock.Of<IVsShell>());
+			package.Setup(x => x.GetService(typeof(DTE))).Returns(Mock.Of<DTE>(dte =>
+                        dte.Events.get_CommandEvents(It.IsAny<string>(), It.IsAny<int>()) == Mock.Of<CommandEvents>()));
+
+            var manager = new CommandManager(package.Object,
+				new Lazy<ICommandExtension, CommandAttribute>[] {
+					new Lazy<ICommandExtension, CommandAttribute>(() => Mock.Of<ICommandExtension>(), new CommandAttribute("CCB471F4-B764-4B1C-BEB7-26AFE5B9F48E", Guid.NewGuid().ToString(), 1)),
+					new Lazy<ICommandExtension, CommandAttribute>(() => Mock.Of<ICommandExtension>(), new CommandAttribute("CD7DB44E-0472-49C8-92C5-046677F55E27", Guid.NewGuid().ToString(), 1)),
+				},
+                Enumerable.Empty<Lazy<ICommandFilter, CommandFilterAttribute>>(),
+                Enumerable.Empty<Lazy<ICommandInterceptor, CommandInterceptorAttribute>>());
+
+			manager.AddCommands ();
+
+			menusvc.Verify (x => x.AddCommand (It.IsAny<MenuCommand> ()), Times.Once ());
+        }
+
+        [Fact]
+        public void when_adding_commands_then_registers_commands_with_empty_package_guid()
+        {
+			var menusvc = new Mock<IMenuCommandService> ();
+
+			var package = new Mock<MockPackage> ().As<IServiceProvider>();
+			package.Setup(x => x.GetService(typeof(IMenuCommandService))).Returns(menusvc.Object);
+			package.Setup(x => x.GetService(typeof(SVsShell))).Returns(Mock.Of<IVsShell>());
+			package.Setup(x => x.GetService(typeof(DTE))).Returns(Mock.Of<DTE>(dte =>
+                        dte.Events.get_CommandEvents(It.IsAny<string>(), It.IsAny<int>()) == Mock.Of<CommandEvents>()));
+
+            var manager = new CommandManager(package.Object,
+				new Lazy<ICommandExtension, CommandAttribute>[] {
+					new Lazy<ICommandExtension, CommandAttribute>(() => Mock.Of<ICommandExtension>(), new CommandAttribute("CCB471F4-B764-4B1C-BEB7-26AFE5B9F48E", Guid.NewGuid().ToString(), 1)),
+					new Lazy<ICommandExtension, CommandAttribute>(() => Mock.Of<ICommandExtension>(), new CommandAttribute(Guid.Empty.ToString(), Guid.NewGuid().ToString(), 1)),
+				},
+                Enumerable.Empty<Lazy<ICommandFilter, CommandFilterAttribute>>(),
+                Enumerable.Empty<Lazy<ICommandInterceptor, CommandInterceptorAttribute>>());
+
+			manager.AddCommands ();
+
+			menusvc.Verify (x => x.AddCommand (It.IsAny<MenuCommand> ()), Times.Exactly(2));
+        }
+
+		[Guid("CCB471F4-B764-4B1C-BEB7-26AFE5B9F48E")]
+		public class MockPackage : Package
+		{
+		}
     }
 }

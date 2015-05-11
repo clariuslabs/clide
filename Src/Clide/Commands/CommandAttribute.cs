@@ -38,18 +38,38 @@ namespace Clide.Commands
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public CommandAttribute(IDictionary<string, object> attributes)
-            : this((string)attributes["GroupId"], (int)attributes["CommandId"])
+            : this((string)attributes.GetOrAdd("PackageId", _ => Guid.Empty.ToString()), (string)attributes["GroupId"], (int)attributes["CommandId"])
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandAttribute"/> class.
         /// </summary>
+		/// <devdoc>
+		/// Made EditorBrowsableState.Never so that we don't make the mistake of not using it.
+		/// All commands should have the package ID.
+		/// </devdoc>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public CommandAttribute(string groupGuid, int commandId)
+			: this(Guid.Empty.ToString(), groupGuid, commandId)
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommandAttribute"/> class.
+        /// </summary>
+        public CommandAttribute(string packageGuid, string groupGuid, int commandId)
+        {
+			this.PackageId = packageGuid;
             this.GroupId = groupGuid;
             this.CommandId = commandId;
         }
+
+        /// <summary>
+        /// Optional identifier for the package that owns/exposes the given command. 
+		/// If ommited, all commands will be registered.
+        /// </summary>
+        public string PackageId { get; private set; }
 
         /// <summary>
         /// Gets the group GUID.

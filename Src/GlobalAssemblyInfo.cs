@@ -20,8 +20,8 @@ using System.Reflection;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("")]
-[assembly: AssemblyFileVersion("")]
+[assembly: AssemblyVersion("2.3.20.0")]
+[assembly: AssemblyFileVersion("2.3.20.0")]
 
 [assembly: AssemblyConfiguration(ThisAssembly.Configuration)]
 internal class ThisAssembly
