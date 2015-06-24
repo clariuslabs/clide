@@ -55,12 +55,17 @@
 
 		private Type MapType(string serviceTypeName)
 		{
-			Type serviceType = FindInDomain(serviceTypeName);
+			var types = AppDomain.CurrentDomain.GetAssemblies()
+				.Where(asm => !asm.IsDynamic)
+				.SelectMany(asm => TryGetExportedTypes(asm))
+				.ToList();
+
+			var serviceType = Find(serviceTypeName, types);
 
 			if (hasVersion.IsMatch(serviceTypeName))
 			{
 				var noVersionName = hasVersion.Match(serviceTypeName).Value;
-				var noVersionType = FindInDomain(noVersionName);
+				var noVersionType = Find(noVersionName, types);
 				if (noVersionType != null)
 					serviceType = noVersionType;
 			}
@@ -68,7 +73,7 @@
 			if (ivsService.IsMatch(serviceTypeName))
 			{
 				var sVsServiceName = ivsService.Replace(serviceTypeName, svsReplacement);
-				var sVsServiceType = FindInDomain(sVsServiceName);
+				var sVsServiceType = Find(sVsServiceName, types);
 				if (sVsServiceType != null)
 					serviceType = sVsServiceType;
 			}
@@ -76,14 +81,11 @@
 			return serviceType;
 		}
 
-		private Type FindInDomain(string serviceTypeName)
+		private Type Find(string typeName, List<Type> typesInDomain)
 		{
-			return AppDomain.CurrentDomain.GetAssemblies()
-				.Where(asm => !asm.IsDynamic)
-				.SelectMany(asm => TryGetExportedTypes(asm))
-				.FirstOrDefault(t =>
-					t.FullName == serviceTypeName ||
-					t.Name == serviceTypeName.Substring(serviceTypeName.LastIndexOf('.') + 1));
+			return typesInDomain.FirstOrDefault(t =>
+					t.FullName == typeName ||
+					t.Name == typeName.Substring(typeName.LastIndexOf('.') + 1));
 		}
 
 		private static Type[] TryGetExportedTypes(System.Reflection.Assembly asm)
