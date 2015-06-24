@@ -18,6 +18,7 @@
 		private const string svsReplacement = "$1SVs$3";
 
 		private ConcurrentDictionary<string, Type> typeMap = new ConcurrentDictionary<string, Type>();
+		private ConcurrentDictionary<string, IEnumerable<Export>> serviceExports = new ConcurrentDictionary<string, IEnumerable<Export>> ();
 
 		private IServiceProvider services;
 
@@ -34,19 +35,22 @@
 				serviceTypeName.StartsWith("Clide."))
 				return Enumerable.Empty<Export>();
 
-			var serviceType = typeMap.GetOrAdd(serviceTypeName, typeName => MapType(typeName));
+			return serviceExports.GetOrAdd (serviceTypeName, contractName => {
+				var serviceType = typeMap.GetOrAdd(contractName, typeName => MapType(typeName));
+				if (serviceType == null)
+					return Enumerable.Empty<Export>();
 
-			if (serviceType == null)
-			{
-				//typeMap.TryRemove(serviceTypeName, out serviceType);
-				return Enumerable.Empty<Export>();
-			}
+				// NOTE: if we can retrieve a valid instance of the service at least once, we 
+				// assume we'll be able to retrieve it later on. Note also that we don't return 
+				// the single retrieved instance from the export, but rather provide a function 
+				// that does the GetService call every time, since we're caching the export but 
+				// we don't know if the service can be safely cached.
+				var service = services.GetService(serviceType);
+				if (service == null)
+					return Enumerable.Empty<Export>();
 
-			var service = services.GetService(serviceType);
-			if (service == null)
-				return Enumerable.Empty<Export>();
-
-			return new Export[] { new Export(serviceTypeName, () => service) };
+				return new Export[] { new Export(serviceTypeName, () => services.GetService(serviceType)) };
+			});
 		}
 
 		private Type MapType(string serviceTypeName)
