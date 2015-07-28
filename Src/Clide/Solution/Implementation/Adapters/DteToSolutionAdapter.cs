@@ -50,11 +50,19 @@ namespace Clide.Solution.Adapters
 
         public IProjectNode Adapt(Project from)
         {
+			var uniqueName = "";
+			try {
+				// This might throw if the project isn't loaded yet.
+				uniqueName = from.UniqueName;
+			} catch (Exception) {
+				return null;
+			}
+
             IVsHierarchy project;
 
             if (!ErrorHandler.Succeeded(this.serviceProvider
                 .GetService<SVsSolution, IVsSolution>()
-                .GetProjectOfUniqueName(from.UniqueName, out project)))
+                .GetProjectOfUniqueName(uniqueName, out project)))
                 return null;
 
             return this.nodeFactory
