@@ -21,7 +21,7 @@ namespace Clide.VisualStudio
     /// Represents the combination of a Visual Studio hierarchy 
     /// and an item identifier.
     /// </summary>
-    public class VsHierarchyItem : IEquatable<VsHierarchyItem>
+    public class VsHierarchyItem
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VsHierarchyItem"/> class.
@@ -43,68 +43,5 @@ namespace Clide.VisualStudio
         /// Gets the item id.
         /// </summary>
         public uint ItemId { get; private set; }
-
-		#region Equality
-
-		/// <summary>
-		/// Gets whether the given hierarchy items are equal.
-		/// </summary>
-		public static bool operator ==(VsHierarchyItem obj1, VsHierarchyItem obj2)
-		{
-			return Equals(obj1, obj2);
-		}
-
-		/// <summary>
-		/// Gets whether the given hierarchy items are not equal.
-		/// </summary>
-		public static bool operator !=(VsHierarchyItem obj1, VsHierarchyItem obj2)
-		{
-			return !Equals(obj1, obj2);
-		}
-
-		/// <summary>
-		/// Gets whether this hierarchy item is equal to the given one.
-		/// </summary>
-		public bool Equals(VsHierarchyItem other)
-		{
-			return VsHierarchyItem.Equals(this, other);
-		}
-
-		/// <summary>
-		/// Gets whether this hierarchy item is equal to the given one.
-		/// </summary>
-		public override bool Equals(object obj)
-		{
-			return VsHierarchyItem.Equals(this, obj as VsHierarchyItem);
-		}
-
-		/// <summary>
-		/// Gets whether the given hierarchy items are equal.
-		/// </summary>
-		public static bool Equals(VsHierarchyItem obj1, VsHierarchyItem obj2)
-		{
-			if (Object.Equals(null, obj1) ||
-				Object.Equals(null, obj2) ||
-				obj1.GetType() != obj2.GetType())
-				return false;
-
-			if (Object.ReferenceEquals(obj1, obj2)) return true;
-
-			return obj1.Hierarchy == obj2.Hierarchy &&
-				obj1.ItemId == obj2.ItemId;
-		}
-
-		/// <summary>
-		/// Returns a hash code for this instance.
-		/// </summary>
-		/// <returns>
-		/// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
-		/// </returns>
-		public override int GetHashCode()
-		{
-			return Hierarchy.GetHashCode() ^ ItemId.GetHashCode();
-		}
-
-		#endregion
     }
 }
