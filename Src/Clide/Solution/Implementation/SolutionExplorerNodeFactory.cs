@@ -48,11 +48,11 @@ namespace Clide.Solution.Implementation
             Func<IVsSolutionHierarchyNode, Lazy<ITreeNode>> getParent = null;
             Func<IVsSolutionHierarchyNode, ITreeNode> getNode = null;
 
-            getNode = hierarchy => hierarchy == null ? null :
-                this.nodeFactory.Value.CreateNode(getParent(hierarchy), hierarchy);
-
             getParent = hierarchy => hierarchy.Parent == null ? null :
                 new Lazy<ITreeNode>(() => this.nodeFactory.Value.CreateNode(getParent(hierarchy.Parent), hierarchy.Parent));
+
+            getNode = hierarchy => hierarchy == null ? null :
+                this.nodeFactory.Value.CreateNode(getParent(hierarchy), hierarchy);
 
             return getNode(hierarchyNode) as ISolutionExplorerNode;
         }
