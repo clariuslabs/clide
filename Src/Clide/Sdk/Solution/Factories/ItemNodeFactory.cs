@@ -52,13 +52,20 @@ namespace Clide.Sdk.Solution
         /// <param name="hierarchy">The hierarchy node to check.</param>
         /// <returns><see langword="true"/> if the given node is an item supported by this factory; <see langword="false"/> otherwise.</returns>
         public virtual bool Supports(IVsSolutionHierarchyNode hierarchy)
-		{
-			var projectItem = hierarchy.VsHierarchy.Properties(hierarchy.ItemId).ExtenderObject as EnvDTE.ProjectItem;
+	{
+		var projectItem = hierarchy.VsHierarchy.Properties(hierarchy.ItemId).ExtenderObject as EnvDTE.ProjectItem;
+		if (projectItem == null)
+			return false;
+		if (projectItem.ContainingProject.Object is EnvDTE80.SolutionFolder)
+			return false;
 
-			return projectItem != null &&
-				projectItem.Kind == EnvDTE.Constants.vsProjectItemKindPhysicalFile && 
-                !(projectItem.ContainingProject.Object is EnvDTE80.SolutionFolder);
+		try {
+			// Fails in F# projects.
+			return projectItem.Kind == EnvDTE.Constants.vsProjectItemKindPhysicalFile;
+		} catch (Exception) {
+			return false;
 		}
+	}
 
         /// <summary>
         /// Creates the item node if supported by this factory.
