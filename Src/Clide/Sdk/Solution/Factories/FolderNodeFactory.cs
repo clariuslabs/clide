@@ -56,9 +56,18 @@ namespace Clide.Sdk.Solution
             var extenderObject = hierarchy.VsHierarchy.Properties(hierarchy.ItemId).ExtenderObject;
             var projectItem = extenderObject as EnvDTE.ProjectItem;
 
-            return
-                (extenderObject != null && extenderObject.GetType().FullName == "Microsoft.VisualStudio.Project.Automation.OAFolderItem") ||
-                (projectItem != null && projectItem.Kind == EnvDTE.Constants.vsProjectItemKindPhysicalFolder);
+			if (extenderObject == null || projectItem == null)
+				return false;
+
+			if (extenderObject.GetType ().FullName == "Microsoft.VisualStudio.Project.Automation.OAFolderItem")
+				return true;
+
+			try {
+				// Fails in F# projects.
+				return projectItem.Kind == EnvDTE.Constants.vsProjectItemKindPhysicalFolder;
+            } catch (Exception) {
+				return false;
+			}
         }
 
         /// <summary>
