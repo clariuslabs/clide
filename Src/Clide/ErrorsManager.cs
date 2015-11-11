@@ -57,6 +57,7 @@ namespace Clide
             errorTask.Category = TaskCategory.Misc;
             errorTask.ErrorCategory = isWarning ? TaskErrorCategory.Warning : TaskErrorCategory.Error;
             errorTask.Text = text;
+            errorTask.Document = " ";
 
             var errorItem = new ErrorItem(this.errorListProvider, errorTask);
 
