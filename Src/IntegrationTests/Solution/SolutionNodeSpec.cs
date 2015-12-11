@@ -1,5 +1,5 @@
 ﻿#region BSD License
-/* 
+/*
 Copyright (c) 2012, Clarius Consulting
 All rights reserved.
 
@@ -49,7 +49,7 @@ namespace Clide.Solution
                     Mock.Of<ISolutionExplorerNodeFactory>(),
                     Mock.Of<IServiceLocator>(),
                     Mock.Of<IAdapterService>(),
-					Mock.Of<ISolutionEvents>(), 
+					Mock.Of<ISolutionEvents>(),
                     Mock.Of<IUIThread>());
 
 				solutionNode.Create(GetFullPath(TestContext.TestDeploymentDir, "foo.sln"));
@@ -151,7 +151,6 @@ namespace Clide.Solution
 
                 var vbRefs = vbLib.Nodes.FirstOrDefault(n => n.DisplayName == "References");
                 Assert.NotNull(vbRefs);
-                Assert.True(vbRefs.IsHidden);
                 Assert.NotNull(vbLib.OwningSolution);
 
                 var folder2 = folder1.Nodes.FirstOrDefault(n => n.DisplayName == "SolutionFolder2") as ISolutionFolderNode;
@@ -198,9 +197,10 @@ namespace Clide.Solution
 
                 // In VB, References node is hidden, but exists in the hierarchy.
                 var references = project.Nodes.Single(node => node.DisplayName == "References");
-
-                Assert.True(references.IsHidden);
-                Assert.False(references.IsVisible);
+				if (new Version (Dte.Version) < new Version (14, 0)) {
+					Assert.True (references.IsHidden);
+					Assert.False (references.IsVisible);
+				}
             }
 
             [HostType("VS IDE")]
@@ -215,9 +215,12 @@ namespace Clide.Solution
                 var references = project.Nodes.OfType<IReferencesNode>().Single();
                 var reference = references.Nodes.Single(node => node.DisplayName == "System.Xml.Linq");
 
-                Assert.True(reference.IsHidden);
-                Assert.False(reference.IsVisible);
-            }
+				// Only true before VS2015
+				if (new Version(Dte.Version) < new Version(14, 0)) {
+					Assert.True (reference.IsHidden);
+					Assert.False (reference.IsVisible);
+				}
+			}
 
             [HostType("VS IDE")]
             [TestMethod]
@@ -252,10 +255,10 @@ namespace Clide.Solution
                     .FirstOrDefault(node => !node.IsHidden);
 
                 Assert.NotNull(target);
-                Assert.Equal("ClassLibrary", target.OwningProject.DisplayName);
-            }
+				Assert.True (target.OwningProject.DisplayName.EndsWith ("ClassLibrary"));
+			}
 
-            [HostType("VS IDE")]
+			[HostType("VS IDE")]
             [TestMethod]
             public void WhenReferenceFound_ThenOwningProjectIsValid()
             {
@@ -264,7 +267,7 @@ namespace Clide.Solution
                     .FirstOrDefault(node => !node.IsHidden && node.DisplayName == "System.Xml.Linq");
 
                 Assert.NotNull(target);
-                Assert.Equal("ClassLibrary", target.OwningProject.DisplayName);
+                Assert.True(target.OwningProject.DisplayName.EndsWith("ClassLibrary"));
             }
 
             [HostType("VS IDE")]
@@ -366,7 +369,7 @@ namespace Clide.Solution
                     .Traverse().OfType<IItemNode>()
                     .Where(i => i.DisplayName.EndsWith(".cs"))
                     .ToList();
-                
+
                 // First clear whatever other selection there it for another project
                 classes[0].Select(false);
                 classes.ForEach(i => i.Select(true));

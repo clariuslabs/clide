@@ -11,11 +11,8 @@
 
     <ItemGroup>
         <!-- AdditionalProperties are passed to the build task below automatically -->
-        <ProjectToBuild Include="Clide.Resolver\Clide.Resolver.csproj">
-            <AdditionalProperties>VisualStudioVersion=10.0;</AdditionalProperties>
-        </ProjectToBuild>
-        <ProjectToBuild Include="Clide\Clide.csproj">
-            <AdditionalProperties>VisualStudioVersion=10.0;</AdditionalProperties>
+        <ProjectToBuild Include="..\Clide.sln">
+            <AdditionalProperties>VisualStudioVersion=11.0;</AdditionalProperties>
         </ProjectToBuild>
     </ItemGroup>
 
@@ -33,7 +30,7 @@
 
     <Target Name="BuildProjects">
         <MSBuild Projects="@(ProjectToBuild)"
-                 Properties="Configuration=$(Configuration);NuGet=true;PackageVersion=$(PackageVersion)"
+                 Properties="Configuration=$(Configuration);CreateNuGet=true;PackageVersion=$(PackageVersion)"
                  Targets="Build" />
     </Target>
 

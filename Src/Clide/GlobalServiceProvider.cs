@@ -1,5 +1,5 @@
 ﻿#region BSD License
-/* 
+/*
 Copyright (c) 2012, Clarius Consulting
 All rights reserved.
 
@@ -14,14 +14,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using Microsoft.VisualStudio.ComponentModelHost;
     using Microsoft.VisualStudio.Shell;
     using System;
-    using System.Reflection;
 
     /// <summary>
-    /// Locates global services inside Visual Studio, in a thread-safe way, unlike 
-    /// the VS Shell version. To also retrieve components exposed via MEF, 
+    /// Locates global services inside Visual Studio, in a thread-safe way, unlike
+    /// the VS Shell version. To also retrieve components exposed via MEF,
     /// use the <see cref="ServiceLocator"/> instead.
     /// </summary>
     public static class GlobalServiceProvider

@@ -9,7 +9,7 @@
                  Importance="high" />
     </Target>
 
-    <Target Name="CleanCopyLocal" AfterTargets="IlMerge" Condition="$(NuGet) == 'true'">
+    <Target Name="CleanCopyLocal" AfterTargets="IlMerge" Condition="$(CreateNuGet) == 'true'">
         <ItemGroup>
             <AssembliesToBundle Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll' And '%(ReferenceCopyLocalPaths.Bundle)' != 'true'" />
             <AssembliesToClean Include="@(AssembliesToBundle->'$(OutDir)%(Filename)%(Extension)')" />
@@ -26,7 +26,7 @@
         <RemoveDir Directories="$(OutputPath)" Condition="false" />
     </Target>-->
 
-    <Target Name="BuildNuGet" AfterTargets="AfterBuild" Condition="$(NuGet) == 'true'">
+    <Target Name="BuildNuGet" AfterTargets="AfterBuild" Condition="$(CreateNuGet) == 'true'">
         <MakeDir Directories="$(DropDirectory.TrimEnd('\'))" Condition="!Exists($(DropDirectory.TrimEnd('\')))" />
         <Copy SourceFiles="@(NuSpec)" DestinationFiles="@(NuSpec->'nuget\%(Filename)%(Extension)')" SkipUnchangedFiles="true" ContinueOnError="false">
             <Output TaskParameter="DestinationFiles" ItemName="NuSpecOut" />

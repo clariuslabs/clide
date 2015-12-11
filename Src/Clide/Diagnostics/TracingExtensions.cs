@@ -1,5 +1,5 @@
 ﻿#region BSD License
-/* 
+/*
 Copyright (c) 2012, Clarius Consulting
 All rights reserved.
 
@@ -36,15 +36,15 @@ namespace Clide
         private static Action<Exception, string, string[]> DefaultShowExceptionAction = (ex, format, args) =>
         {
             System.Windows.MessageBox.Show(
-                GlobalServiceProvider.Instance.GetService<SVsUIShell, IVsUIShell>().GetMainWindow(), 
+				GlobalServiceProvider.Instance.GetService<SVsUIShell, IVsUIShell>().GetMainWindow(),
                 string.Format(format, args),
-                "Visual Studio", 
-                MessageBoxButton.OK, 
+                "Visual Studio",
+                MessageBoxButton.OK,
                 MessageBoxImage.Error);
         };
 
         /// <summary>
-        /// Executes the given <paramref name="action"/> shielding any non-critical exceptions 
+        /// Executes the given <paramref name="action"/> shielding any non-critical exceptions
         /// and logging them to the <paramref name="tracer"/> with the given <paramref name="format"/> message.
         /// </summary>
         [DebuggerStepThrough]
@@ -79,7 +79,7 @@ namespace Clide
         }
 
         /// <summary>
-        /// Executes the given <paramref name="action"/> shielding any non-critical exceptions 
+        /// Executes the given <paramref name="action"/> shielding any non-critical exceptions
         /// and logging them to the <paramref name="tracer"/> with the given <paramref name="errorMessage"/> message.
         /// </summary>
         [DebuggerStepThrough]
@@ -91,19 +91,19 @@ namespace Clide
         }
 
         /// <summary>
-        /// Traces an event of type <see cref="TraceEventType.Error"/> with the given exception and message and 
+        /// Traces an event of type <see cref="TraceEventType.Error"/> with the given exception and message and
         /// adds an error to the error list that will be handled by the provided function.
         /// </summary>
         /// <param name="tracer">The tracer that will perform the error logging.</param>
         /// <param name="exception">The exception that will be logged.</param>
         /// <param name="text">The message to log.</param>
-        /// <param name="handler">A callback function to call when the user selects the error in the error list. 
-        /// The return value determines if the error has been fixed and can be deleted from the 
+        /// <param name="handler">A callback function to call when the user selects the error in the error list.
+        /// The return value determines if the error has been fixed and can be deleted from the
         /// error list (<see langword="true"/>) or not.
         /// </param>
         /// <remarks>
         /// This overload adds an error to the error list, and allows a callback to run when the user double-clicks
-        /// the error in the error list. The function return value determines if the error will be cleared from the 
+        /// the error in the error list. The function return value determines if the error will be cleared from the
         /// list after the handler finishes running or not.
         /// </remarks>
         public static void Error(this ITracer tracer, Exception exception, string text, Func<bool> handler)
@@ -122,13 +122,13 @@ namespace Clide
         /// </summary>
         /// <param name="tracer">The tracer that will perform the error logging.</param>
         /// <param name="text">The message to log.</param>
-        /// <param name="handler">A callback function to call when the user selects the error in the error list. 
-        /// The return value determines if the error has been fixed and can be deleted from the 
+        /// <param name="handler">A callback function to call when the user selects the error in the error list.
+        /// The return value determines if the error has been fixed and can be deleted from the
         /// error list (<see langword="true"/>) or not.
         /// </param>
         /// <remarks>
         /// This overload adds an error to the error list, and allows a callback to run when the user double-clicks
-        /// the error in the error list. The function return value determines if the error will be cleared from the 
+        /// the error in the error list. The function return value determines if the error will be cleared from the
         /// list after the handler finishes running or not.
         /// </remarks>
         public static void Error(this ITracer tracer, string text, Func<bool> handler)
@@ -142,19 +142,19 @@ namespace Clide
         }
 
         /// <summary>
-        /// Traces an event of type <see cref="TraceEventType.Warning"/> with the given exception and 
+        /// Traces an event of type <see cref="TraceEventType.Warning"/> with the given exception and
         /// message and adds an error to the error list that will be handled by the provided function.
         /// </summary>
         /// <param name="tracer">The tracer that will perform the warning logging.</param>
         /// <param name="exception">The exception that will be logged.</param>
         /// <param name="text">The message to log.</param>
-        /// <param name="handler">A callback function to call when the user selects the error in the error list. 
-        /// The return value determines if the error has been fixed and can be deleted from the 
+        /// <param name="handler">A callback function to call when the user selects the error in the error list.
+        /// The return value determines if the error has been fixed and can be deleted from the
         /// error list (<see langword="true"/>) or not.
         /// </param>
         /// <remarks>
         /// This overload adds an error to the error list, and allows a callback to run when the user double-clicks
-        /// the error in the error list. The function return value determines if the error will be cleared from the 
+        /// the error in the error list. The function return value determines if the error will be cleared from the
         /// list after the handler finishes running or not.
         /// </remarks>
         public static void Warn(this ITracer tracer, Exception exception, string text, Func<bool> handler)
@@ -168,18 +168,18 @@ namespace Clide
         }
 
         /// <summary>
-        /// Traces an event of type <see cref="TraceEventType.Warning"/> with the given message and 
+        /// Traces an event of type <see cref="TraceEventType.Warning"/> with the given message and
         /// adds an error to the error list that will be handled by the provided action.
         /// </summary>
         /// <param name="tracer">The tracer that will perform the warning logging.</param>
         /// <param name="text">The message to log.</param>
-        /// <param name="handler">A callback function to call when the user selects the error in the error list. 
-        /// The return value determines if the error has been fixed and can be deleted from the 
+        /// <param name="handler">A callback function to call when the user selects the error in the error list.
+        /// The return value determines if the error has been fixed and can be deleted from the
         /// error list (<see langword="true"/>) or not.
         /// </param>
         /// <remarks>
         /// This overload adds an error to the error list, and allows a callback to run when the user double-clicks
-        /// the error in the error list. The function return value determines if the error will be cleared from the 
+        /// the error in the error list. The function return value determines if the error will be cleared from the
         /// list after the handler finishes running or not.
         /// </remarks>
         public static void Warn(this ITracer tracer, string text, Func<bool> handler)
@@ -204,8 +204,8 @@ namespace Clide
         }
 
         /// <summary>
-        /// Gets or sets the action that is used to show error messages to 
-        /// the user. The signature has the exception being thrown, a 
+        /// Gets or sets the action that is used to show error messages to
+        /// the user. The signature has the exception being thrown, a
         /// message or format string, and optional formatting arguments.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]

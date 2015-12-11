@@ -1,5 +1,5 @@
 ﻿#region BSD License
-/* 
+/*
 Copyright (c) 2012, Clarius Consulting
 All rights reserved.
 
@@ -115,7 +115,7 @@ namespace Clide.Solution
                 Console.WriteLine("Parent display name: {0}", item.Parent.DisplayName);
                 Console.WriteLine("Owning hierarchy project kind: {0}", ((EnvDTE.Project)item.Parent.ExtensibilityObject).Kind);
 
-                Console.WriteLine("Owning hierarchy is solution folder? {0}", 
+                Console.WriteLine("Owning hierarchy is solution folder? {0}",
                     ((EnvDTE.Project)item.Parent.ExtensibilityObject).Kind.Equals(EnvDTE80.ProjectKinds.vsProjectKindSolutionFolder, StringComparison.OrdinalIgnoreCase));
             }
 		}
