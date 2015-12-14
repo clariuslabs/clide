@@ -2,7 +2,7 @@
 <package>
     <metadata>
         <id>Clide.Resolver</id>
-        <version>1.1</version>
+        <version>$version$</version>
         <title>Clide.Resolver</title>
         <authors>Daniel Cazzulino</authors>
         <owners>Daniel Cazzulino</owners>

@@ -4,30 +4,30 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{779AC312-94DE-4CCA-BEF6-22F568107B98}"
 	ProjectSection(SolutionItems) = preProject
 		build.bat = build.bat
-		Src\Clide.props = Src\Clide.props
-		Src\Clide.targets = Src\Clide.targets
+		Clide.props = Clide.props
+		Clide.targets = Clide.targets
 		Clide.vsmdi = Clide.vsmdi
-		Src\Local.14.testsettings = Src\Local.14.testsettings
-		Src\Local.2010.testsettings = Src\Local.2010.testsettings
-		Src\Local.2012.testsettings = Src\Local.2012.testsettings
-		Src\Local.2013.testsettings = Src\Local.2013.testsettings
-		Src\NuGet.proj = Src\NuGet.proj
+		Local.14.testsettings = Local.14.testsettings
+		Local.2010.testsettings = Local.2010.testsettings
+		Local.2012.testsettings = Local.2012.testsettings
+		Local.2013.testsettings = Local.2013.testsettings
+		NuGet.proj = NuGet.proj
 		Common\nuspec.xsd = Common\nuspec.xsd
 		README.md = README.md
 		ReleaseNotes.md = ReleaseNotes.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clide", "Src\Clide\Clide.csproj", "{EAF59C6D-A973-48E6-A90A-5E894ECEC3F6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clide", "Clide\Clide.csproj", "{EAF59C6D-A973-48E6-A90A-5E894ECEC3F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "Src\IntegrationTests\IntegrationTests.csproj", "{DA6BC069-580E-4248-9E38-F20BDE688271}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{DA6BC069-580E-4248-9E38-F20BDE688271}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "Src\UnitTests\UnitTests.csproj", "{3B640876-2510-4EED-8157-1ACB417C758D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{3B640876-2510-4EED-8157-1ACB417C758D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationPackage", "Src\IntegrationPackage\IntegrationPackage.csproj", "{41C96C7D-BC81-489C-A60E-97CF431B7608}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationPackage", "IntegrationPackage\IntegrationPackage.csproj", "{41C96C7D-BC81-489C-A60E-97CF431B7608}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clide.Resolver", "Src\Clide.Resolver\Clide.Resolver.csproj", "{A023A27B-2AA8-4461-932A-25A6DD17FEA6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clide.Resolver", "Clide.Resolver\Clide.Resolver.csproj", "{A023A27B-2AA8-4461-932A-25A6DD17FEA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestComponents", "Src\TestComponents\TestComponents.csproj", "{E6C899EA-21E8-417A-9A70-A216419836FD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestComponents", "TestComponents\TestComponents.csproj", "{E6C899EA-21E8-417A-9A70-A216419836FD}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
