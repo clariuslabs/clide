@@ -1,4 +1,0 @@
-[submodule "Common"]
-	path = Common
-	url = https://github.com/clariuslabs/common.git
-	branch = master
