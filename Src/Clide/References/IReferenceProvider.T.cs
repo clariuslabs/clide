@@ -1,5 +1,5 @@
 ﻿#region BSD License
-/* 
+/*
 Copyright (c) 2012, Clarius Consulting
 All rights reserved.
 
@@ -21,12 +21,12 @@ namespace Clide
     /// </summary>
     /// <typeparam name="T">The type of instance to be resolved or referenced</typeparam>
     /// <remarks>
-    /// The <see cref="TryCreateReference"/>, if it succeeds, must always 
-    /// return references that start with the <see cref="IReferenceProvider.Scheme"/> 
+    /// The <see cref="TryCreateReference"/>, if it succeeds, must always
+    /// return references that start with the <see cref="IReferenceProvider.Scheme"/>
     /// followed by a colon, like vsix://my-vsix-identifier or project:my-project-guid
     /// <para>
-    /// The references are intentionally strings and not <see cref="Uri"/> because the 
-    /// <see cref="Uri"/> type imposes more strict rules than are required for 
+    /// The references are intentionally strings and not <see cref="Uri"/> because the
+    /// <see cref="Uri"/> type imposes more strict rules than are required for
     /// a general-purpose private referencing service.
     /// </para>
     /// </remarks>
@@ -37,7 +37,7 @@ namespace Clide
         /// Tries to create a reference for the instance of T.
         /// </summary>
         /// <param name="instance">The instance to create a reference for.</param>
-        /// <returns>The reference to the instance or <see langword="null"/> if a reference 
+        /// <returns>The reference to the instance or <see langword="null"/> if a reference
         /// cannot be created for the given instance.</returns>
         string TryCreateReference(T instance);
 
@@ -52,7 +52,7 @@ namespace Clide
         /// Tries to resolve the given reference to an instance of T.
         /// </summary>
         /// <param name="reference">The reference to try to resolve.</param>
-        /// <returns>The resolved reference or <see langword="null"/> if it could 
+        /// <returns>The resolved reference or <see langword="null"/> if it could
         /// not be resolved to a valid instance of <typeparamref name="T"/>.</returns>
         T TryResolveReference(string reference);
     }

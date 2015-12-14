@@ -8,10 +8,6 @@
 		<GitInfoReportImportance>high</GitInfoReportImportance>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<RestoreSolution Include="src\Clide.sln" />
-	</ItemGroup>
-
 	<Target Name="Clean">
 		<Exec Command="rmdir $(Out) /S /Q" ContinueOnError="true" />
 		<Exec Command="rmdir .nuget\packages /S /Q" ContinueOnError="true" />
@@ -25,7 +21,7 @@
 		</PropertyGroup>
 
 		<ItemGroup>
-			<Solution Include="src\Clide\Clide.csproj">
+      <Solution Include="src\Clide.Standalone.sln">
 				<NuSpec>src\Clide.nuspec</NuSpec>
 				<Id>Clide</Id>
 				<Version>$(Version)</Version>
@@ -36,8 +32,16 @@
 	</Target>
 
 	<Target Name="Package" DependsOnTargets="Build">
-		<MakeDir Directories="$(Out)" Condition=" !Exists('$(Out)') " />
-		<Exec Command='"$(NuGet)" Pack "%(Solution.NuSpec)" $(Args) -Properties Id=%(Solution.Id);Configuration=$(Configuration)'
+    <MakeDir Directories="$(Out)" Condition=" !Exists('$(Out)') " />
+    <PropertyGroup>
+      <ReleaseNotes>$([System.IO.File]::ReadAllText('ReleaseNotes.md'))</ReleaseNotes>
+    </PropertyGroup>
+    <XmlPoke XmlInputPath="%(Solution.NuSpec)" Query="/package/metadata/releaseNotes" Value="$(ReleaseNotes)" />
+
+    <!-- By writing the GitInfo.txt file with the version being built, the packaged sources can build the exact same version assemblies -->
+    <WriteLinesToFile File="%(Solution.RootDir)%(Solution.Directory)%(Solution.Id)\bin\$(Configuration)\GitInfo.txt" Lines="$(Version)" Overwrite="true"
+						  Condition=" Exists('%(Solution.RootDir)%(Solution.Directory)%(Solution.Id)\bin\$(Configuration)') "/>
+    <Exec Command='"$(NuGet)" Pack "%(Solution.NuSpec)" $(Args) -Properties Id=%(Solution.Id);Configuration=$(Configuration)'
 			  Condition=" Exists('%(Solution.NuSpec)') " />
 	</Target>
 
