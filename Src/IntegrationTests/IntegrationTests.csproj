@@ -297,10 +297,6 @@
     </AssemblyReport>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Clide.Resolver\Clide.Resolver.csproj">
-      <Project>{a023a27b-2aa8-4461-932a-25a6dd17fea6}</Project>
-      <Name>Clide.Resolver</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Clide\Clide.csproj">
       <Project>{EAF59C6D-A973-48E6-A90A-5E894ECEC3F6}</Project>
       <Name>Clide</Name>
