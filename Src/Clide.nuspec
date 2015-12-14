@@ -81,5 +81,20 @@ v1.0
     <file src="Clide\bin\$configuration$\Clide.dll" target="lib\net45" />
     <file src="Clide\bin\$configuration$\Clide.pdb" target="lib\net45" />
     <file src="Clide\bin\$configuration$\Clide.xml" target="lib\net45" />
+    <file src="Clide\bin\$configuration$\GitInfo.txt" target="src\" />
+    <file src="Clide.Standalone.sln" target="src\Clide.sln" />
+    <file src="Clide.props" target="src\" />
+    <file src="Clide.targets" target="src\" />
+    <file src="Before.Clide.Standalone.sln.targets" target="src\Before.Clide.sln.targets" />
+    <file src="NuGet.Restore.targets" target="src\" />
+    <file src="ClariusLabs.snk" target="src\" />
+    <file src="GlobalAssemblyInfo.cs" target="src\" />
+    <file src="GlobalAssemblyInfo.cs" target="src\" />
+    <file src="Clide\Clide.csproj" target="src\Clide\" />
+    <file src="Clide\**\*.cs" target="src\Clide\" exclude="**\bin\**\*.*;**\obj\**\*.*" />
+    <file src="Clide\**\*.xaml" target="src\Clide\" exclude="**\bin\**\*.*;**\obj\**\*.*" />
+    <file src="Clide\**\*.tt" target="src\Clide\" exclude="**\bin\**\*.*;**\obj\**\*.*" />
+    <file src="Clide\*.config" target="src\Clide\" />
+    <file src="Clide\**\*.resx" target="src\Clide\" />
   </files>
 </package>
