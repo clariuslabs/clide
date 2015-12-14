@@ -1,6 +1,8 @@
 What is Clide?
 =====
 
+[![Join the chat at https://gitter.im/clariuslabs/clide](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/clariuslabs/clide?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Clide is a managed, intuitive, modern and composable API for .NET-based IDEs extensibility and automation. Its goal is to provide a useful and comprehensive abstraction of common IDE automation APIs, so that extensions can remain agnostic of the specifics of a given development environment.
 
 It leverages dependency injection, supports unit testing of automation and extensibility code, and provides useful primitives for both consuming services and tools as well as providing your own to the environment. 
