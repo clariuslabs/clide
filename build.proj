@@ -8,6 +8,10 @@
 		<GitInfoReportImportance>high</GitInfoReportImportance>
 	</PropertyGroup>
 
+	<ItemGroup>
+		<RestoreSolution Include="src\Clide.sln" />
+	</ItemGroup>
+
 	<Target Name="Clean">
 		<Exec Command="rmdir $(Out) /S /Q" ContinueOnError="true" />
 		<Exec Command="rmdir .nuget\packages /S /Q" ContinueOnError="true" />
@@ -21,10 +25,9 @@
 		</PropertyGroup>
 
 		<ItemGroup>
-			<Solution Include="src\*.sln"/>
-			<Solution>
-				<NuSpec>%(RootDir)%(Directory)%(Filename).nuspec</NuSpec>
-				<Id>%(Filename)</Id>
+			<Solution Include="src\Clide\Clide.csproj">
+				<NuSpec>src\Clide.nuspec</NuSpec>
+				<Id>Clide</Id>
 				<Version>$(Version)</Version>
 			</Solution>
 		</ItemGroup>
@@ -46,32 +49,17 @@
 		<Message Text="Published new package: Id=%(Solution.Id), Version=%(Solution.Version)"
 				 Importance="high" />
 	</Target>
-
-	<Target Name="Test" DependsOnTargets="Build">
-		<ItemGroup>
-			<TestAssemblies Include="src/**/*Tests.dll" />
-		</ItemGroup>
-		<xunit Assemblies="@(TestAssemblies)"
-			   Html="$(Out)\tests.html"
-			   Xml="$(Out)\tests.xml"
-			   ContinueOnError="ErrorAndContinue"/>
-	</Target>
 	
-	<Import Project="$(MSBuildThisFileDirectory)src\NuGet.Restore.targets" />
+	<Import Project="src\NuGet.Restore.targets" />
 
 	<!-- Setup/Configure/Restore -->
 	<PropertyGroup>
-		<BuildDir>$(MSBuildThisFileDirectory)build\</BuildDir>
+		<BuildDir>build\</BuildDir>
 		<PackagesDir>$(BuildDir)packages\</PackagesDir>
-		<XunitBuildDir>$(PackagesDir)xunit.runner.msbuild\build</XunitBuildDir>
-		<!-- Xunit evolves by adding/tweaking platforms, so this makes it resilient to that -->
-		<XunitPlatformDir Condition=" Exists('$(XunitBuildDir)') ">$([System.IO.Directory]::GetDirectories($(XunitBuildDir))[0])</XunitPlatformDir>
 		<!-- This file is used to detect whether the restore has been performed or not -->
-		<XunitProps>$([System.IO.Path]::Combine($(XunitPlatformDir), 'xunit.runner.msbuild.props'))</XunitProps>
 		<GitInfoTargets>$(PackagesDir)GitInfo\build\GitInfo.targets</GitInfoTargets>
-		<PendingRestore Condition=" !Exists('$(XunitProps)') Or !Exists('$(GitInfoTargets)') ">true</PendingRestore>
+		<PendingRestore Condition=" !Exists('$(GitInfoTargets)') ">true</PendingRestore>
 	</PropertyGroup>
-	<Import Project="$(XunitProps)" Condition="Exists('$(XunitProps)')"/>
 	<Import Project="$(GitInfoTargets)" Condition="Exists('$(GitInfoTargets)')"/>
 
 	<Target Name="Configure" DependsOnTargets="_GetNuGet"  Condition=" '$(PendingRestore)' == 'true' ">

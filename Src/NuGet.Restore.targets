@@ -37,8 +37,9 @@
 
   <Target Name="RestoreSolutions" Inputs="@(RestoreSolution)" Outputs="%(RestoreSolution.Identity)-BATCH">
     <PropertyGroup>
+      <_NuGet Condition=" $(RestoreDir) == '' ">$(NuGet)</_NuGet>
       <!-- Normalizes paths to all be relative to the RestoreDir, to shorten the Exec Command length -->
-      <_NuGet>$(NuGet.Replace('$(RestoreDir)', '').TrimStart('/').TrimStart('\'))</_NuGet>
+      <_NuGet Condition=" $(RestoreDir) != '' ">$(NuGet.Replace('$(RestoreDir)', '').TrimStart('/').TrimStart('\'))</_NuGet>
     </PropertyGroup>
 
     <CreateProperty Value="%(RestoreSolution.Command)">
@@ -55,8 +56,8 @@
     </CreateProperty>
 
     <PropertyGroup>
-      <_RestoreSolution Condition=" '$(OS)' != 'Unix' ">$(_RestoreSolution.Replace('$(RestoreDir)', '').TrimStart('/').TrimStart('\'))</_RestoreSolution>
-      <_RestoreOutput Condition=" '$(OS)' != 'Unix' And '$(_RestoreOutput)' != ''">$(_RestoreOutput.Replace('$(RestoreDir)', '').TrimStart('/').TrimStart('\'))</_RestoreOutput>
+      <_RestoreSolution Condition=" '$(OS)' != 'Unix' And $(RestoreDir) != '' ">$(_RestoreSolution.Replace('$(RestoreDir)', '').TrimStart('/').TrimStart('\'))</_RestoreSolution>
+      <_RestoreOutput Condition=" '$(OS)' != 'Unix' And $(RestoreDir) != '' And '$(_RestoreOutput)' != ''">$(_RestoreOutput.Replace('$(RestoreDir)', '').TrimStart('/').TrimStart('\'))</_RestoreOutput>
       <!-- The default value from ItemDefinitionGroup isn't being honored by xbuild, sigh :( -->
       <_RestoreCommand Condition=" '$(_RestoreCommand)' == '' ">Restore</_RestoreCommand>
     </PropertyGroup>
