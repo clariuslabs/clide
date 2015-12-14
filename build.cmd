@@ -20,4 +20,4 @@ copy %CACHED_NUGET% src\.nuget\nuget.exe > nul
 src\.nuget\NuGet.exe install build\packages.config -OutputDirectory build\packages -ExcludeVersion
 
 :run
-msbuild build.proj /v:detailed %1 %2 %3 %4 %5 %6 %7 %8 %9
+msbuild build.proj /v:normal %1 %2 %3 %4 %5 %6 %7 %8 %9

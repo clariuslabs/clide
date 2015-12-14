@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Package" InitialTargets="Configure" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 	<PropertyGroup>
-		<IntermediateOutputPath>build\</IntermediateOutputPath>
+		<IntermediateOutputPath>$(MSBuildThisFileDirectory)build\</IntermediateOutputPath>
 		<Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
 		<Out Condition=" '$(Out)' == '' ">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), 'out'))</Out>
 		<GitInfoReportImportance>high</GitInfoReportImportance>
@@ -57,25 +57,26 @@
 			   ContinueOnError="ErrorAndContinue"/>
 	</Target>
 	
-	<Import Project="src\NuGet.Restore.targets" />
+	<Import Project="$(MSBuildThisFileDirectory)src\NuGet.Restore.targets" />
 
 	<!-- Setup/Configure/Restore -->
 	<PropertyGroup>
-		<PackagesDir>build\packages\</PackagesDir>
+		<BuildDir>$(MSBuildThisFileDirectory)build\</BuildDir>
+		<PackagesDir>$(BuildDir)packages\</PackagesDir>
 		<XunitBuildDir>$(PackagesDir)xunit.runner.msbuild\build</XunitBuildDir>
 		<!-- Xunit evolves by adding/tweaking platforms, so this makes it resilient to that -->
 		<XunitPlatformDir Condition=" Exists('$(XunitBuildDir)') ">$([System.IO.Directory]::GetDirectories($(XunitBuildDir))[0])</XunitPlatformDir>
 		<!-- This file is used to detect whether the restore has been performed or not -->
 		<XunitProps>$([System.IO.Path]::Combine($(XunitPlatformDir), 'xunit.runner.msbuild.props'))</XunitProps>
 		<GitInfoTargets>$(PackagesDir)GitInfo\build\GitInfo.targets</GitInfoTargets>
-		<PendingRestore Condition=" !Exists('$(XunitProps)') ">true</PendingRestore>
+		<PendingRestore Condition=" !Exists('$(XunitProps)') Or !Exists('$(GitInfoTargets)') ">true</PendingRestore>
 	</PropertyGroup>
 	<Import Project="$(XunitProps)" Condition="Exists('$(XunitProps)')"/>
 	<Import Project="$(GitInfoTargets)" Condition="Exists('$(GitInfoTargets)')"/>
 
 	<Target Name="Configure" DependsOnTargets="_GetNuGet"  Condition=" '$(PendingRestore)' == 'true' ">
 		<!-- We always run NuGet Install since it already checks for already-installed packages and skips them -->
-		<Exec Command='"$(NuGet)" Install "build\packages.config" -OutputDirectory "build\packages" -ExcludeVersion' />
+		<Exec Command='"$(NuGet)" Install "$(BuildDir)packages.config" -OutputDirectory "$(PackagesDir)" -ExcludeVersion' />
 		<!-- The Wrench build script will pass the Target property as Configure on the configure step, and therefore will properly skip the error -->
 		<Error Text="Build-time packages were missing and were just restored. Please run the build again." Condition=" '$(Target)' != 'Configure' " />
 	</Target>
