@@ -6,9 +6,10 @@
         <title>Clide: An Enjoyable IDE Automation API</title>
         <authors>Daniel Cazzulino</authors>
         <owners>Daniel Cazzulino</owners>
-        <licenseUrl>http://clarius.io/clide-license</licenseUrl>
-        <projectUrl>http://clarius.io/clide</projectUrl>
-        <iconUrl>http://clarius.io/clide-48x48</iconUrl>
+
+        <licenseUrl>https://github.com/clariuslabs/clide/License.txt</licenseUrl>
+        <projectUrl>https://github.com/clariuslabs/clide/</projectUrl>
+        <iconUrl>https://raw.github.com/clariuslabs/clide/master/img/Clide32x32.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>High-level, composable and testable APIs for working with IDEs.
 </description>
