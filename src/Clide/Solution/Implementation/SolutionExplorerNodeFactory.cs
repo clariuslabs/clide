@@ -1,5 +1,5 @@
 ﻿#region BSD License
-/* 
+/*
 Copyright (c) 2012, Clarius Consulting
 All rights reserved.
 
@@ -26,21 +26,17 @@ namespace Clide.Solution.Implementation
     internal class SolutionExplorerNodeFactory : ISolutionExplorerNodeFactory
     {
         private Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory;
-        private ConcurrentDictionary<Tuple<IVsHierarchy, uint>, ISolutionExplorerNode> nodeCache = new ConcurrentDictionary<Tuple<IVsHierarchy,uint>,ISolutionExplorerNode>();
 
         public SolutionExplorerNodeFactory(
             [Named(DefaultHierarchyFactory.RegisterKey)] Lazy<ITreeNodeFactory<IVsSolutionHierarchyNode>> nodeFactory,
             ISolutionEvents solutionEvents)
         {
             this.nodeFactory = nodeFactory;
-            solutionEvents.SolutionClosed += (sender, args) => nodeCache.Clear();
         }
 
         public ISolutionExplorerNode Create(IVsSolutionHierarchyNode hierarchyNode)
         {
-            var cacheKey = Tuple.Create(hierarchyNode.VsHierarchy, hierarchyNode.ItemId);
-
-            return nodeCache.GetOrAdd(cacheKey, _ => CreateNode(hierarchyNode));
+            return CreateNode(hierarchyNode);
         }
 
         private ISolutionExplorerNode CreateNode(IVsSolutionHierarchyNode hierarchyNode)
