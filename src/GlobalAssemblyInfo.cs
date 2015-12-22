@@ -1,5 +1,5 @@
 #region BSD License
-/* 
+/*
 Copyright (c) 2012, Clarius Consulting
 All rights reserved.
 
@@ -28,9 +28,9 @@ using System.Reflection;
 #endif
 
 // AssemblyVersion = full version info, since it's used to determine agents versions
-[assembly: AssemblyVersion(ThisAssembly.Version)]
+[assembly: AssemblyVersion(ThisAssembly.SimpleVersion)]
 // FileVersion = release-like simple version (i.e. 3.11.2 for cycle 5, SR2).
-[assembly: AssemblyFileVersion(ThisAssembly.SimpleVersion)]
+[assembly: AssemblyFileVersion(ThisAssembly.FullVersion)]
 // InformationalVersion = full version + branch + commit sha.
 [assembly: AssemblyInformationalVersion(ThisAssembly.InformationalVersion)]
 
@@ -44,12 +44,12 @@ partial class ThisAssembly
     /// <summary>
     /// Full version, including commits since base version file, like 4.0.1.598
     /// </summary>
-    public const string Version = SimpleVersion + "." + Git.Commits;
+    public const string FullVersion = SimpleVersion + "." + Git.Commits;
 
     /// <summary>
     /// Full version, plus branch and commit short sha.
     /// </summary>
-    public const string InformationalVersion = Version + "-" + Git.Branch + "+" + Git.Commit;
+    public const string InformationalVersion = FullVersion + "-" + Git.Branch + "+" + Git.Commit;
 }
 
 #pragma warning restore 0436
