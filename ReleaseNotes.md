@@ -1,3 +1,7 @@
+v2.4
+
+* Dropped .NET 4.0 and therefore VS2010 support.
+
 v2.2
 
 * Added general-purpose referencing service
