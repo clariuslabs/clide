@@ -7,7 +7,7 @@ build_script:
   - cmd: >-
       build.cmd
       
-      .nuget\packages\coveralls.io\tools\coveralls.net.exe --opencover out\coverage.xml
+      cmd /C ".nuget\packages\coveralls.io\tools\coveralls.net.exe --opencover out\coverage.xml" && exit 0
 
 # we run the tests ourselves in build.cmd for coverage
 test: off
