@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" InitialTargets="Configure" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup>
+		<Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+		<IntermediateOutputPath>.nuget\</IntermediateOutputPath>
+		<PackagesPath>$(IntermediateOutputPath)packages</PackagesPath>
+		<Out Condition=" '$(Out)' == '' ">out</Out>
+		<CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration)</CommonBuildProperties>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Solution Include="src\*.sln"/>
+		<NuSpec Include="src\**\*.nuspec" />
+		<TestProject Include="src\**\*Tests.csproj" />
+	</ItemGroup>
+	
+	<Target Name="Clean">
+		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties)" Targets="Clean" />
+		<Exec Command="rmdir $(Out) /S /Q" ContinueOnError="true" />
+		<Exec Command="rmdir $(PackagesPath) /S /Q" ContinueOnError="true" />
+		<Exec Command="rmdir src\packages /S /Q" ContinueOnError="true" />
+	</Target>
+
+	<Target Name="Rebuild" DependsOnTargets="Clean;Build" />
+	
+	<Target Name="Build" Condition=" '@(Solution)' != '' ">
+		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties)" />
+	</Target>
+
+	<Target Name="Test" DependsOnTargets="TestWin;TestMac" Condition=" '@(TestProject)' != '' "/>
+
+	<Target Name="PrepareTest" DependsOnTargets="Build">
+		<MSBuild Projects="@(TestProject)" BuildInParallel="false" Targets="GetTargetPath" Properties="$(CommonBuildProperties)">
+			<Output TaskParameter="TargetOutputs" ItemName="_TestAssembly" />
+		</MSBuild>
+
+		<ItemGroup>
+			<TestAssembly Include="@(_TestAssembly)" Condition=" Exists('%(_TestAssembly.FullPath)') " />
+		</ItemGroup>
+
+		<MakeDir Directories="$(Out)" Condition="!Exists('$(Out)')" />
+	</Target>
+
+	<Target Name="TestWin" DependsOnTargets="PrepareTest" Condition=" '$(OS)' == 'Windows_NT' ">
+		<PropertyGroup>
+			<XunitConsole>$(PackagesPath)\xunit.runner.console\tools\xunit.console.exe</XunitConsole>
+			<XunitOptions>$(XunitOptions) -html $(Out)\test.html -xml $(Out)\test.xml -parallel all -noshadow</XunitOptions>
+
+			<CoverageConsole>$(PackagesPath)\OpenCover\tools\OpenCover.Console.exe</CoverageConsole>
+			<CoverageOptions>$(CoverageOptions) -output:$(Out)\coverage.xml -returntargetcode -register:user -filter:"+[Merq.*]* -[xunit*]* -[*.Tests]* -[*]*ThisAssembly* -[*]*IFluentInterface*" -excludebyattribute:*ExcludeFromCodeCoverage*;*CompilerGenerated* -skipautoprops -showunvisited -mergebyhash -hideskipped:All</CoverageOptions>
+		</PropertyGroup>
+
+		<Exec Command="$(CoverageConsole) $(CoverageOptions) -target:$(XunitConsole) -targetargs:&quot;@(TestAssembly, ' ') $(XunitOptions)&quot;"
+			  ConsoleToMSBuild="true"
+			  ContinueOnError="ErrorAndContinue" />
+	</Target>
+
+	<Target Name="TestMac" DependsOnTargets="PrepareTest" Condition=" '$(OS)' != 'Windows_NT' ">
+		<xunit Assemblies="@(TestAssembly)"
+			   Html="$(Out)\test.html"
+			   Xml="$(Out)\test.xml"
+			   ParallelizeAssemblies="true"
+			   ParallelizeTestCollections="true"
+			   ContinueOnError="ErrorAndContinue" />
+	</Target>
+
+	<Target Name="Package" DependsOnTargets="Build" Condition=" '@(NuSpec)' != '' ">
+		<!-- By writing the GitInfo.txt file with the version being built, the packaged sources can build the exact same version assemblies -->
+		<WriteLinesToFile File="$(IntermediateOutputPath)GitInfo.txt"
+						  Lines="$(Version)" 
+                          Overwrite="true" />
+		<MakeDir Directories="$(Out)" Condition=" !Exists('$(Out)') " />
+		<Exec Command='"$(NuGet)" Pack "%(NuSpec.Identity)" $(Args) -Properties Id=%(NuSpec.Filename);Configuration=$(Configuration);Version=$(Version) -OutputDirectory $(Out)' />
+	</Target>
+
+	<Target Name="Publish" DependsOnTargets="Package">
+		<Exec Command='$(NuGet) Push "$(Out)\%(NuSpec.Filename).$(Version).nupkg" $(NuGetPushArgs)'
+						StandardErrorImportance="high"
+						StandardOutputImportance="normal" />
+
+		<Message Text="Published new package: Id=%(NuSpec.Filename), Version=$(Version)"
+				 Importance="high" />
+	</Target>
+
+	<!-- Configure and restore initial targets and packages -->
+	<Import Project="src\NuGet.Restore.targets" />
+	<PropertyGroup>
+		<GitInfoTargets>$(PackagesPath)\GitInfo\build\GitInfo.targets</GitInfoTargets>
+		<PendingRestore Condition=" !Exists('$(GitInfoTargets)') ">true</PendingRestore>
+	</PropertyGroup>
+
+	<Target Name="GitVersion" /><!-- Gets overriden by the $(GitInfoTargets) if it exists -->
+	<Import Project="$(GitInfoTargets)" Condition=" Exists('$(GitInfoTargets)') " />
+
+	<Target Name="Configure" DependsOnTargets="_GetNuGet;GitVersion">
+		<!-- We always run NuGet Install since it already checks for already-installed packages and skips them -->
+		<Exec Command='"$(NuGet)" Install "$(MSBuildThisFileDirectory)packages.config" -OutputDirectory "$(PackagesPath)" -ExcludeVersion' />
+
+		<!-- Errors if nuget packages were restored during the build -->
+		<Error Text="Required build-time NuGet packages were missing and were just restored. Please run the build again."
+			   Condition=" '$(PendingRestore)' == 'true' And '$(target)' != 'configure' "/>
+
+		<PropertyGroup>
+			<Version>$(GitSemVerMajor).$(GitSemVerMinor).$(GitSemVerPatch)$(GitSemVerDashLabel)</Version>
+		</PropertyGroup>
+	</Target>
+</Project>
