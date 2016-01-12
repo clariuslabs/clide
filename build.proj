@@ -42,7 +42,7 @@
 		<MakeDir Directories="$(Out)" Condition="!Exists('$(Out)')" />
 	</Target>
 
-	<Target Name="TestWin" DependsOnTargets="PrepareTest" Condition=" '$(OS)' == 'Windows_NT' ">
+	<Target Name="TestWin" DependsOnTargets="PrepareTest" Condition=" '@(TestProject)' != '' And '$(OS)' == 'Windows_NT' ">
 		<PropertyGroup>
 			<XunitConsole>$(PackagesPath)\xunit.runner.console\tools\xunit.console.exe</XunitConsole>
 			<XunitOptions>$(XunitOptions) -html $(Out)\test.html -xml $(Out)\test.xml -parallel all -noshadow</XunitOptions>
@@ -56,7 +56,7 @@
 			  ContinueOnError="ErrorAndContinue" />
 	</Target>
 
-	<Target Name="TestMac" DependsOnTargets="PrepareTest" Condition=" '$(OS)' != 'Windows_NT' ">
+	<Target Name="TestMac" DependsOnTargets="PrepareTest" Condition=" '@(TestProject)' != '' And '$(OS)' != 'Windows_NT' ">
 		<xunit Assemblies="@(TestAssembly)"
 			   Html="$(Out)\test.html"
 			   Xml="$(Out)\test.xml"
