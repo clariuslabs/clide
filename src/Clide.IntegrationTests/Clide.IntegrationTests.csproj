@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\xunit.vsix.0.2.67\build\xunit.vsix.props" Condition="Exists('..\packages\xunit.vsix.0.2.67\build\xunit.vsix.props')" />
+  <Import Project="..\packages\xunit.vsix.0.2.68\build\xunit.vsix.props" Condition="Exists('..\packages\xunit.vsix.0.2.68\build\xunit.vsix.props')" />
   <Import Project="..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -214,12 +214,12 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="xunit.vsix, Version=0.2.67.0, Culture=neutral, PublicKeyToken=5c88f965cbc24ac4, processorArchitecture=x86">
-      <HintPath>..\packages\xunit.vsix.0.2.67\lib\net45\xunit.vsix.dll</HintPath>
+    <Reference Include="xunit.vsix, Version=0.2.68.0, Culture=neutral, PublicKeyToken=5c88f965cbc24ac4, processorArchitecture=x86">
+      <HintPath>..\packages\xunit.vsix.0.2.68\lib\net45\xunit.vsix.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="xunit.vsix.bootstrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5c88f965cbc24ac4, processorArchitecture=x86">
-      <HintPath>..\packages\xunit.vsix.0.2.67\lib\net45\xunit.vsix.bootstrap.dll</HintPath>
+      <HintPath>..\packages\xunit.vsix.0.2.68\lib\net45\xunit.vsix.bootstrap.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -307,10 +307,10 @@
     <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props'))" />
     <Error Condition="!Exists('..\packages\netfx-System.StringResources.3.0.10\build\netfx-System.StringResources.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\netfx-System.StringResources.3.0.10\build\netfx-System.StringResources.targets'))" />
     <Error Condition="!Exists('..\packages\GitInfo.1.0.56-pre\build\GitInfo.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\GitInfo.1.0.56-pre\build\GitInfo.targets'))" />
-    <Error Condition="!Exists('..\packages\xunit.vsix.0.2.67\build\xunit.vsix.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.vsix.0.2.67\build\xunit.vsix.props'))" />
-    <Error Condition="!Exists('..\packages\xunit.vsix.0.2.67\build\xunit.vsix.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.vsix.0.2.67\build\xunit.vsix.targets'))" />
+    <Error Condition="!Exists('..\packages\xunit.vsix.0.2.68\build\xunit.vsix.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.vsix.0.2.68\build\xunit.vsix.props'))" />
+    <Error Condition="!Exists('..\packages\xunit.vsix.0.2.68\build\xunit.vsix.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.vsix.0.2.68\build\xunit.vsix.targets'))" />
   </Target>
   <Import Project="..\packages\netfx-System.StringResources.3.0.10\build\netfx-System.StringResources.targets" Condition="Exists('..\packages\netfx-System.StringResources.3.0.10\build\netfx-System.StringResources.targets')" />
   <Import Project="..\packages\GitInfo.1.0.56-pre\build\GitInfo.targets" Condition="Exists('..\packages\GitInfo.1.0.56-pre\build\GitInfo.targets')" />
-  <Import Project="..\packages\xunit.vsix.0.2.67\build\xunit.vsix.targets" Condition="Exists('..\packages\xunit.vsix.0.2.67\build\xunit.vsix.targets')" />
+  <Import Project="..\packages\xunit.vsix.0.2.68\build\xunit.vsix.targets" Condition="Exists('..\packages\xunit.vsix.0.2.68\build\xunit.vsix.targets')" />
 </Project>
