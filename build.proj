@@ -3,34 +3,40 @@
 
 	<PropertyGroup>
 		<Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+		<CI Condition=" '$(CI)' == '' And '$(Configuration)' == 'Release' ">true</CI>
 		<IntermediateOutputPath>.nuget\</IntermediateOutputPath>
 		<PackagesPath>$(IntermediateOutputPath)packages</PackagesPath>
 		<Out Condition=" '$(Out)' == '' ">out</Out>
-		<CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration)</CommonBuildProperties>
+		<CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration);CI=$(CI);DeployExtension=false</CommonBuildProperties>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<Solution Include="src\*.sln"/>
 		<NuSpec Include="src\**\*.nuspec" />
 		<TestProject Include="src\**\*Tests.csproj" />
+		<SupportedVersion Include="11;12;14" />
 	</ItemGroup>
-	
+
 	<Target Name="Clean">
 		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties)" Targets="Clean" />
 		<Exec Command="rmdir $(Out) /S /Q" ContinueOnError="true" />
-		<Exec Command="rmdir $(PackagesPath) /S /Q" ContinueOnError="true" />
 		<Exec Command="rmdir src\packages /S /Q" ContinueOnError="true" />
+		<!-- Remove all bin/obj recursively under /src -->
+		<Exec Command='for /d /r . %%d in (bin,obj) do @if exist "%%d" rd /s/q "%%d"' WorkingDirectory='$(MSBuildThisFileDirectory)src' ContinueOnError='true' />
 	</Target>
 
 	<Target Name="Rebuild" DependsOnTargets="Clean;Build" />
-	
+
 	<Target Name="Build" Condition=" '@(Solution)' != '' ">
 		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties)" />
 	</Target>
 
-	<Target Name="Test" DependsOnTargets="TestWin;TestMac" Condition=" '@(TestProject)' != '' "/>
+	<Target Name="Test" DependsOnTargets="Build" Condition=" '@(TestProject)' != '' ">
+		<Error Condition=" '$(Configuration)' != 'Release' " Text="Can only run all tests from script for Release configuration, which builds the installer." />
 
-	<Target Name="PrepareTest" DependsOnTargets="Build">
+		<Exec Command="msiexec /x src\Clide.Msi\bin\$(Configuration)\Clide.msi /passive" IgnoreExitCode="true" />
+		<Exec Command="msiexec /i src\Clide.Msi\bin\$(Configuration)\Clide.msi /passive" />
+
 		<MSBuild Projects="@(TestProject)" BuildInParallel="false" Targets="GetTargetPath" Properties="$(CommonBuildProperties)">
 			<Output TaskParameter="TargetOutputs" ItemName="_TestAssembly" />
 		</MSBuild>
@@ -40,58 +46,38 @@
 		</ItemGroup>
 
 		<MakeDir Directories="$(Out)" Condition="!Exists('$(Out)')" />
-	</Target>
-
-	<Target Name="TestWin" DependsOnTargets="PrepareTest" Condition=" '@(TestProject)' != '' And '$(OS)' == 'Windows_NT' ">
-		<PropertyGroup>
-			<XunitConsole>$(PackagesPath)\xunit.runner.console\tools\xunit.console.exe</XunitConsole>
-			<XunitOptions>$(XunitOptions) -html $(Out)\test.html -xml $(Out)\test.xml -parallel all -noshadow</XunitOptions>
-
-			<CoverageConsole>$(PackagesPath)\OpenCover\tools\OpenCover.Console.exe</CoverageConsole>
-			<CoverageOptions>$(CoverageOptions) -output:$(Out)\coverage.xml -returntargetcode -register:user -filter:"+[Merq.*]* -[xunit*]* -[*.Tests]* -[*]*ThisAssembly* -[*]*IFluentInterface*" -excludebyattribute:*ExcludeFromCodeCoverage*;*CompilerGenerated* -skipautoprops -showunvisited -mergebyhash -hideskipped:All</CoverageOptions>
-		</PropertyGroup>
-
-		<Exec Command="$(CoverageConsole) $(CoverageOptions) -target:$(XunitConsole) -targetargs:&quot;@(TestAssembly, ' ') $(XunitOptions)&quot;"
-			  ConsoleToMSBuild="true"
-			  ContinueOnError="ErrorAndContinue" />
-	</Target>
-
-	<Target Name="TestMac" DependsOnTargets="PrepareTest" Condition=" '@(TestProject)' != '' And '$(OS)' != 'Windows_NT' ">
 		<xunit Assemblies="@(TestAssembly)"
 			   Html="$(Out)\test.html"
 			   Xml="$(Out)\test.xml"
 			   ParallelizeAssemblies="true"
 			   ParallelizeTestCollections="true"
+			   IncludeTraits="$(IncludeTraits)"
+			   ExcludeTraits="$(ExcludeTraits)"
 			   ContinueOnError="ErrorAndContinue" />
+
+		<Exec Command="msiexec /x src\Clide.Msi\bin\$(Configuration)\Clide.msi /passive" />
 	</Target>
 
 	<Target Name="Package" DependsOnTargets="Build" Condition=" '@(NuSpec)' != '' ">
-		<!-- By writing the GitInfo.txt file with the version being built, the packaged sources can build the exact same version assemblies -->
-		<WriteLinesToFile File="$(IntermediateOutputPath)GitInfo.txt"
-						  Lines="$(Version)" 
-                          Overwrite="true" />
 		<MakeDir Directories="$(Out)" Condition=" !Exists('$(Out)') " />
-		<Exec Command='"$(NuGet)" Pack "%(NuSpec.Identity)" $(Args) -Properties Id=%(NuSpec.Filename);Configuration=$(Configuration);Version=$(Version) -OutputDirectory $(Out)' />
-	</Target>
-
-	<Target Name="Publish" DependsOnTargets="Package">
-		<Exec Command='$(NuGet) Push "$(Out)\%(NuSpec.Filename).$(Version).nupkg" $(NuGetPushArgs)'
-						StandardErrorImportance="high"
-						StandardOutputImportance="normal" />
-
-		<Message Text="Published new package: Id=%(NuSpec.Filename), Version=$(Version)"
-				 Importance="high" />
+		<Exec Command='"$(NuGet)" Pack "%(NuSpec.Identity)" $(Args) -Version $(Version) -Properties Id=%(NuSpec.Filename);Configuration=$(Configuration) -OutputDirectory $(Out)' />
 	</Target>
 
 	<!-- Configure and restore initial targets and packages -->
 	<Import Project="src\NuGet.Restore.targets" />
 	<PropertyGroup>
 		<GitInfoTargets>$(PackagesPath)\GitInfo\build\GitInfo.targets</GitInfoTargets>
+		<XunitBuildDir>$(PackagesPath)\xunit.runner.msbuild\build</XunitBuildDir>
+		<XunitPlatformDir Condition=" Exists('$(XunitBuildDir)') ">$([System.IO.Directory]::GetDirectories($(XunitBuildDir))[0])</XunitPlatformDir>
+		<!-- This file is used to detect whether the restore has been performed or not -->
+		<XunitProps>$([System.IO.Path]::Combine($(XunitPlatformDir), 'xunit.runner.msbuild.props'))</XunitProps>
 		<PendingRestore Condition=" !Exists('$(GitInfoTargets)') ">true</PendingRestore>
 	</PropertyGroup>
 
-	<Target Name="GitVersion" /><!-- Gets overriden by the $(GitInfoTargets) if it exists -->
+	<Target Name="GitVersion" />
+	<!-- Gets overriden by the $(GitInfoTargets) if it exists -->
 	<Import Project="$(GitInfoTargets)" Condition=" Exists('$(GitInfoTargets)') " />
+	<Import Project="$(XunitProps)" Condition="Exists('$(XunitProps)')"/>
 
 	<Target Name="Configure" DependsOnTargets="_GetNuGet;GitVersion">
 		<!-- We always run NuGet Install since it already checks for already-installed packages and skips them -->

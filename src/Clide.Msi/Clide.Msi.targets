@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	
+	<PropertyGroup>
+		<Manufacturer>ClariusLabs</Manufacturer>
+
+		<!-- Global defaults -->
+		<SupressIces>ICE61</SupressIces>
+		<HarvestDirectorySuppressSpecificWarnings>5151</HarvestDirectorySuppressSpecificWarnings>
+		<LinkerSuppressSpecificWarnings>1076;1103;1102</LinkerSuppressSpecificWarnings>
+		<NoLogo>true</NoLogo>
+
+		<!-- Harvest defaults -->
+		<DefineSolutionProperties>false</DefineSolutionProperties>
+
+		<!-- Cab/Zip defaults -->
+		<DefaultCompressionLevel Condition=" '$(Configuration)' != 'Debug' ">high</DefaultCompressionLevel>
+		<CabinetCachePath Condition=" '$(CabinetCachePath)' == '' ">$(TempDir.TrimEnd('\'))</CabinetCachePath>
+		<ReuseCabinetCache>true</ReuseCabinetCache>
+		<CabinetCreationThreadCount>4</CabinetCreationThreadCount>
+
+		<BuildDependsOn>
+			PrepareConstants;
+			$(BuildDependsOn)
+		</BuildDependsOn>		
+	</PropertyGroup>
+
+	<Target Name="PrepareConstants" DependsOnTargets="GitVersion">
+		<PropertyGroup>
+			<!-- NOTE: MSI version needs the 4 segments, so we hardcode zero for the last one. -->
+			<ProjectDefineConstants>
+				Manufacturer=$(Manufacturer);
+				Version=$(GitSemVerMajor).$(GitSemVerMinor).$(GitSemVerPatch).0;
+				IntermediateOutputPath=$(IntermediateOutputPath);
+				$(ProjectDefineConstants)
+			</ProjectDefineConstants>
+		</PropertyGroup>
+	</Target>
+
+</Project>

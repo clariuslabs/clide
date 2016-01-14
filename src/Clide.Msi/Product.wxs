@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="Clide" Language="1033" Version="1.0.0.0" Manufacturer="ClariusLabs" UpgradeCode="765BEB60-BBD3-4E8F-8299-F4CA395ED892">
+		<Package InstallerVersion="405" Compressed="yes" InstallScope="perMachine" InstallPrivileges="elevated" />
+
+		<MajorUpgrade AllowDowngrades="yes" MigrateFeatures="no" />
+		<Media Cabinet="Clide.cab" EmbedCab="yes" Id="1" />
+
+		<Feature Id="ProductFeature" Title="Clide" Level="1">
+			<ComponentRef Id="Clide" />
+		</Feature>
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="CommonFilesFolder" />
+			</Directory>
+		</Directory>
+	</Fragment>
+</Wix>

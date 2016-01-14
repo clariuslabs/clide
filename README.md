@@ -1,5 +1,5 @@
-![Icon](https://raw.github.com/clariuslabs/clide/master/icon/48.png) Clide
-================
+<img align="center" src="https://raw.github.com/clariuslabs/clide/master/icon/64.png" /> Clide
+==============
 
 [![Build status](https://img.shields.io/appveyor/ci/MobileEssentials/clide.svg)](https://ci.appveyor.com/project/MobileEssentials/clide "CI builds at AppVeyor") 
 [![Code coverage](https://img.shields.io/coveralls/MobileEssentials/clide.svg)](https://coveralls.io/github/MobileEssentials/clide "Latest reported code coverage at Coveralls") 

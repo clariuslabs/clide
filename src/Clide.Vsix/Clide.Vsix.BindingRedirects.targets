@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup>
+		<BindingRedirects>BindingRedirects.pkgdef</BindingRedirects>
+		<BindingRedirectsDependsOn>
+			CollectBindingRedirected;
+			CleanBindingRedirectsPackage;
+			GenerateBindingRedirectsPackage
+		</BindingRedirectsDependsOn>
+		<GetCopyToOutputDirectoryItemsDependsOn>
+			BindingRedirects;
+			$(GetCopyToOutputDirectoryItemsDependsOn)
+		</GetCopyToOutputDirectoryItemsDependsOn>
+		<ResolveReferencesDependsOn>
+			$(ResolveReferencesDependsOn);
+			BindingRedirects
+		</ResolveReferencesDependsOn>
+		<BuildDependsOn>
+			$(BuildDependsOn);
+			ReportBindingRedirects
+		</BuildDependsOn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Content Include="$(IntermediateOutputPath)$(BindingRedirects)">
+			<IncludeInVSIX>true</IncludeInVSIX>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Link>$(BindingRedirects)</Link>
+		</Content>
+	</ItemGroup>
+
+	<ItemDefinitionGroup>
+		<!-- Facade assemblies don't have this metadata attribute, so default it to something. -->
+		<ReferencePath>
+			<FusionName></FusionName>
+		</ReferencePath>
+	</ItemDefinitionGroup>
+
+	<Target Name="BindingRedirects" DependsOnTargets="$(BindingRedirectsDependsOn)" />
+
+	<Target Name="ReportBindingRedirects">
+		<Message Text="Binding redirection applied for @(BindingRedirected -> Count()) assemblies" Importance="high" />
+		<Message Text="    - %(BindingRedirected.Filename)%(BindingRedirected.Extension)" Importance="normal" />
+	</Target>
+
+	<Target Name="CollectBindingRedirected" DependsOnTargets="ResolveAssemblyReferences">
+		<ItemGroup>
+			<BindingRedirected Include="@(ReferencePath)" Condition="$([System.String]::new('%(FusionName)').StartsWith('Clide'))" />
+			<BindingRedirected Include="@(ReferencePath)" Condition="$([System.String]::new('%(FusionName)').StartsWith('Merq'))" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="CleanBindingRedirectsPackage"
+			Inputs="@(ReferencePath);$(MSBuildThisFileFullPath)$(MSBuildProjectFullPath)"
+			Outputs="$(IntermediateOutputPath)$(BindingRedirects)">
+		<!-- If we're in this target, it's because the file is out of date, or it doesn't exist -->
+		<Delete Files="$(IntermediateOutputPath)$(BindingRedirects)" Condition="Exists('$(IntermediateOutputPath)$(BindingRedirects)')" />
+	</Target>
+
+	<Target Name="GenerateBindingRedirectsPackage" Inputs="@(BindingRedirected)" Outputs="%(Identity)-BATCH">
+		<PropertyGroup>
+			<_FusionName>%(BindingRedirected.FusionName)</_FusionName>
+			<_Name>$(_FusionName.Substring(0, $(_FusionName.IndexOf(','))))</_Name>
+			<_IndexOfToken>$(_FusionName.IndexOf('PublicKeyToken='))</_IndexOfToken>
+			<_IndexOfToken>$([MSBuild]::Add($(_IndexOfToken), 15))</_IndexOfToken>
+			<_Token>$(_FusionName.Substring($(_IndexOfToken)))</_Token>
+		</PropertyGroup>
+
+		<ItemGroup>
+			<BindingRedirected>
+				<Guid>$([System.Guid]::NewGuid().ToString().ToUpper())</Guid>
+				<AssemblyName>$(_Name)</AssemblyName>
+				<PublicKeyToken>$(_Token)</PublicKeyToken>
+			</BindingRedirected>
+		</ItemGroup>
+
+		<WriteLinesToFile File="$(IntermediateOutputPath)$(BindingRedirects)" Overwrite="false"
+						  Condition=" '%(BindingRedirected.PublicKeyToken)' != 'null' "
+						  Lines='[$RootKey$\RuntimeConfiguration\dependentAssembly\bindingRedirection\{%(BindingRedirected.Guid)}]
+"name"="%(BindingRedirected.AssemblyName)"
+"publicKeyToken"="%(BindingRedirected.PublicKeyToken)"
+"culture"="neutral"
+"oldVersion"="0.0.0.0-99.9.9.9"
+"newVersion"="%(BindingRedirected.Version)"
+"codeBase"="$PackageFolder$\%(BindingRedirected.Filename)%(BindingRedirected.Extension)"
+'/>
+
+		<ItemGroup>
+			<FileWrites Include="$(IntermediateOutputPath)$(BindingRedirects)" />
+		</ItemGroup>
+	</Target>
+
+</Project>

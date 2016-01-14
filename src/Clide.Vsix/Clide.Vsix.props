@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Project="..\Clide.props" />
+
+	<!-- This is the property that causes VS 2012+ to insist on one-way update of the project -->
+	<PropertyGroup Condition=" '$(VisualStudioVersion)' &gt;= '11.0' ">
+		<MinimumVisualStudioVersion>$(VisualStudioVersion)</MinimumVisualStudioVersion>
+	</PropertyGroup>
+	<!-- This is an additional property added by VS 2013 -->
+	<PropertyGroup Condition=" '$(VisualStudioVersion)' &gt;= '12.0' ">
+		<OldToolsVersion>4.0</OldToolsVersion>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+		<DevEnvDir Condition=" '$(DevEnvDir)' == '' ">$([System.Environment]::ExpandEnvironmentVariables('%$(VSCommToolsVar)%'))..\IDE\</DevEnvDir>
+		<UseCodebase>true</UseCodebase>
+		<IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
+		<IncludeDebugSymbolsInLocalVSIXDeployment>true</IncludeDebugSymbolsInLocalVSIXDeployment>
+		<ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+	</PropertyGroup>
+
+</Project>

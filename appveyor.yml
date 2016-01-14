@@ -4,17 +4,10 @@ init:
   - git config --global core.autocrlf input
 
 build_script:
-  - cmd: >-
-      build.cmd
-      
-      cmd /C ".nuget\packages\coveralls.io\tools\coveralls.net.exe --opencover out\coverage.xml" && exit 0
+  - build.cmd
 
-# we run the tests ourselves in build.cmd for coverage
+# we run the tests ourselves in build.cmd
 test: off
-
-environment:
-  COVERALLS_REPO_TOKEN:
-    secure: l3O4lbgUscsMKm9M580fsx0rBDal/nTrtRTt3ZE6897ps9Q3USzEIwR254Z4CfKv
 
 deploy:
   - provider: NuGet
@@ -22,12 +15,11 @@ deploy:
       secure: 7MS5+XWaFchMXFqzgneQCqo9U0DlxiPXe/KWWUnbCBDEizVn06EjdQZkWu1gbNOJ
     artifact: Package
     on:
-      branch: master
+      branch: /master|v2/
 
 nuget:
   project_feed: true
-  disable_publish_on_pr: true
-  
+
 artifacts:
   - path: out\*.nupkg
     name: Package

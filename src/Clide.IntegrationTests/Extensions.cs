@@ -1,0 +1,142 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using Xunit.Abstractions;
+
+namespace Clide
+{
+	public static class Extensions
+	{
+		public static IVsHierarchyItem NavigateToItem (this IVsHierarchyItem item, string relativePath)
+		{
+			if (string.IsNullOrEmpty (relativePath))
+				return item;
+			if (item == null)
+				return null;
+
+			var paths = relativePath.Split(new [] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
+			if (paths.Length == 0)
+				return item;
+
+			var child = item.Children.FirstOrDefault (x => x.GetProperty<string> (VsHierarchyPropID.Name) == paths[0]) ??
+				// Fall back to using the node text if not found by name.)
+				item.Children.FirstOrDefault (x => x.Text == paths[0]);
+
+			if (child == null)
+				return null;
+
+			return child.NavigateToItem (string.Join (Path.DirectorySeparatorChar.ToString (), paths.Skip (1)));
+		}
+
+		const string PropertyValue = "{0} = {1}";
+
+		public static void Dump (this IVsHierarchyItem item, params int[] additionalProperties)
+		{
+			Dump (item, new DebugTestOutputHelper ());
+		}
+
+		public static void Dump (this IVsHierarchyItem item, ITestOutputHelper output, params int[] additionalProperties)
+		{
+			using (var indented = new IndentedTestOutputHeper (output)) {
+				indented.WriteLine (PropertyValue, "Name", item.GetProperty<string> (VsHierarchyPropID.Name));
+				indented.WriteLine (PropertyValue, "Text", item.Text);
+				foreach (var propertyId in additionalProperties) {
+					if (!WritePropertyIfDefined (item, indented, propertyId, typeof (__VSPROPID)))
+						if (!WritePropertyIfDefined (item, indented, propertyId, typeof (__VSPROPID2)))
+							if (!WritePropertyIfDefined (item, indented, propertyId, typeof (__VSPROPID3)))
+								if (!WritePropertyIfDefined (item, indented, propertyId, typeof (__VSPROPID4)))
+									if (!WritePropertyIfDefined (item, indented, propertyId, typeof (__VSPROPID5)))
+										if (!WritePropertyIfDefined (item, indented, propertyId, typeof (VsHierarchyPropID)))
+											indented.WriteLine (PropertyValue, propertyId, item.GetProperty (propertyId));
+				}
+
+				string fullPath;
+				if (ErrorHandler.Succeeded(item.GetActualHierarchy ().GetCanonicalName (item.GetActualItemId (), out fullPath)) && File.Exists(fullPath))
+					indented.WriteLine (PropertyValue, "FullPath", fullPath);
+
+				if (item.Children.Any ()) {
+					indented.WriteLine ("Children = ");
+					using (var childIndent = new IndentedTestOutputHeper (indented, begin: "[", end: "]")) {
+						foreach (var child in item.Children) {
+							child.Dump (childIndent, additionalProperties);
+						}
+					}
+				}
+			}
+		}
+
+		static bool WritePropertyIfDefined (IVsHierarchyItem item, ITestOutputHelper output, int propertyId, Type enumType)
+		{
+			if (Enum.IsDefined (enumType, propertyId)) {
+				output.WriteLine (PropertyValue,
+					Enum.GetName (enumType, propertyId),
+					item.GetProperty (propertyId));
+
+				return true;
+			}
+
+			return false;
+		}
+
+		class DebugTestOutputHelper : ITestOutputHelper
+		{
+			ITestOutputHelper output;
+
+			public DebugTestOutputHelper (ITestOutputHelper output = null)
+			{
+				this.output = output;
+			}
+
+			public void WriteLine (string message)
+			{
+				Debug.WriteLine (message);
+				Debugger.Log (0, "", message + Environment.NewLine);
+				if (output != null)
+					output.WriteLine (message);
+			}
+
+			public void WriteLine (string format, params object[] args)
+			{
+				Debug.WriteLine (format, args);
+				Debugger.Log (0, "", string.Format (format, args) + Environment.NewLine);
+				if (output != null)
+					output.WriteLine (format, args);
+			}
+		}
+
+		class IndentedTestOutputHeper : ITestOutputHelper, IDisposable
+		{
+			ITestOutputHelper output;
+			string end;
+
+			public IndentedTestOutputHeper (ITestOutputHelper output, string begin = "{", string end = "}")
+			{
+				this.output = output;
+				this.end = end;
+				output.WriteLine (begin);
+			}
+
+			public void Dispose ()
+			{
+				output.WriteLine (end);
+			}
+
+			public void WriteLine (string message)
+			{
+				output.WriteLine ("  " + message);
+			}
+
+			public void WriteLine (string format, params object[] args)
+			{
+				output.WriteLine ("  " + format, args);
+			}
+		}
+	}
+}
