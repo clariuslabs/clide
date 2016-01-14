@@ -26,4 +26,4 @@ IF NOT EXIST packages.config goto run
 
 :run
 rem NOTE: this needs to be a developer command prompt with MSBuild in the path.
-msbuild build.proj /t:build,test,package /v:normal %1 %2 %3 %4 %5 %6 %7 %8 %9
+msbuild build.proj /t:build,unittest,package /v:normal %1 %2 %3 %4 %5 %6 %7 %8 %9
