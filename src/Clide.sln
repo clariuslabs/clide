@@ -11,16 +11,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clide.Interfaces", "Clide.I
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Package", "Package", "{BBE955AB-4E8B-47AD-9832-E93A440D7B46}"
 	ProjectSection(SolutionItems) = preProject
+		Package\Clide.Installer.nuspec = Package\Clide.Installer.nuspec
+		Package\Clide.Installer.targets = Package\Clide.Installer.targets
 		Package\Clide.nuspec = Package\Clide.nuspec
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{9EA05360-2B99-4B6F-BA32-C12D61868A80}"
-	ProjectSection(SolutionItems) = preProject
-		Package\build\Clide.targets = Package\build\Clide.targets
+		Package\Clide.targets = Package\Clide.targets
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8CE52658-6B13-425E-AA75-0B743CFD4A5A}"
 	ProjectSection(SolutionItems) = preProject
+		..\build.cmd = ..\build.cmd
 		..\build.proj = ..\build.proj
 		Clide.props = Clide.props
 		Clide.targets = Clide.targets
@@ -40,11 +39,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clide", "Clide\Clide.csproj", "{E8FABF5D-2FC8-43F6-B866-E3349AFB7538}"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Clide.Msi", "Clide.Msi\Clide.Msi.wixproj", "{F4FCA9E5-F9AB-4FB5-B239-F4274C45407B}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clide", "Clide", "{824C8E96-719F-4683-8D85-185088670BDF}"
-	ProjectSection(SolutionItems) = preProject
-		Package\Clide.nuspec = Package\Clide.nuspec
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -119,9 +113,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{9EA05360-2B99-4B6F-BA32-C12D61868A80} = {824C8E96-719F-4683-8D85-185088670BDF}
-		{824C8E96-719F-4683-8D85-185088670BDF} = {BBE955AB-4E8B-47AD-9832-E93A440D7B46}
 	EndGlobalSection
 EndGlobal
