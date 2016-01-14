@@ -3,13 +3,12 @@
 namespace Clide.Solution.Item
 {
 	[Collection ("OpenSolution")]
-	[Vsix (MinimumVisualStudioVersion = VisualStudioVersion.VS2013)]
 	public class ItemNodeFactorySharedSpec : NodeFactorySpec<ItemNodeFactory>
 	{
 		[InlineData ("Shared\\CppShared\\SharedSource.cpp", "")]
 		[InlineData ("Shared\\CsShared\\SharedClass1.cs", "")]
 		[InlineData ("Shared\\VbShared\\SharedClass1.vb", "14.0")]
-		[VsixTheory]
+		[VsixTheory(MinimumVisualStudioVersion = VisualStudioVersion.VS2013)]
 		public override void when_item_is_supported_then_factory_supports_it (string relativePath, string minimumVersion)
 		{
 			base.when_item_is_supported_then_factory_supports_it (relativePath, minimumVersion);
@@ -18,8 +17,8 @@ namespace Clide.Solution.Item
 		[InlineData ("Shared\\CppShared\\CppSharedFolder", "")]
 		[InlineData ("Shared\\CsShared\\CsSharedFolder", "")]
 		[InlineData ("Shared\\VbShared\\VbSharedFolder", "14.0")]
-		[VsixTheory]
-		public override void when_item_is_not_supported_then_factory_returns_false_and_create_returns_null (string relativePath, string minimumVersion)
+        [VsixTheory(MinimumVisualStudioVersion = VisualStudioVersion.VS2013)]
+        public override void when_item_is_not_supported_then_factory_returns_false_and_create_returns_null(string relativePath, string minimumVersion)
 		{
 			base.when_item_is_not_supported_then_factory_returns_false_and_create_returns_null (relativePath, minimumVersion);
 		}

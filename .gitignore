@@ -1,0 +1,12 @@
+.nuget
+out
+build
+bin
+obj
+packages
+*.suo
+*.user
+*.cache
+.vs
+.*
+log.txt

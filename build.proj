@@ -6,7 +6,7 @@
 		<CI Condition=" '$(CI)' == '' And '$(Configuration)' == 'Release' ">true</CI>
 		<IntermediateOutputPath>.nuget\</IntermediateOutputPath>
 		<PackagesPath>$(IntermediateOutputPath)packages</PackagesPath>
-		<Out Condition=" '$(Out)' == '' ">out</Out>
+		<Out Condition=" '$(Out)' == '' ">$(MSBuildThisFileDirectory)out</Out>
 		<CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration);CI=$(CI);DeployExtension=false</CommonBuildProperties>
 	</PropertyGroup>
 
@@ -52,6 +52,8 @@
 			   ParallelizeTestCollections="true"
 			   IncludeTraits="$(IncludeTraits)"
 			   ExcludeTraits="$(ExcludeTraits)"
+               ShadowCopy="false"
+               WorkingFolder="$(MSBuildThisFileDirectory)src\Clide.IntegrationTests"
 			   ContinueOnError="ErrorAndContinue" />
 
 		<Exec Command="msiexec /x src\Clide.Msi\bin\$(Configuration)\Clide.msi /passive" />
