@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<WixLibrary Include="Clide.Installer">
+			<HintPath>$(MSBuildThisFileDirectory)..\tools\Clide.Installer.wixlib</HintPath>
+			<Name>Clide.Installer</Name>
+		</WixLibrary>
+	</ItemGroup>
+</Project>

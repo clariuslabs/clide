@@ -1,0 +1,20 @@
+This NuGet package targets WiX Toolset projects (.wixproj) that build MSIs.
+By installing this NuGet package in such a .wixproj your MSI will install the
+Clide VSIX that provides the MEF components to consume from Visual Studio 
+2012 or later.
+
+At a minimum, your MSI must define these directories to satisfy symbol references in the .wixlib:
+
+    <Fragment>
+      <Directory Id="TARGETDIR" Name="SourceDir">
+        <Directory Id="ProgramFilesFolder">
+          <Directory Id="CommonFilesFolder" />
+        </Directory>
+      </Directory>
+    </Fragment>
+
+You must also reference this component:
+
+    <ComponentRef Id="Clide" />
+
+You must also reference the WixVSExtension from your MSI project.
