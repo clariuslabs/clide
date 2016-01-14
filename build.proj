@@ -34,7 +34,6 @@
 	<Target Name="Test" DependsOnTargets="Build" Condition=" '@(TestProject)' != '' ">
 		<Error Condition=" '$(Configuration)' != 'Release' " Text="Can only run all tests from script for Release configuration, which builds the installer." />
 
-		<Exec Command="msiexec /x src\Clide.Msi\bin\$(Configuration)\Clide.msi /passive" IgnoreExitCode="true" />
 		<Exec Command="msiexec /i src\Clide.Msi\bin\$(Configuration)\Clide.msi /passive" />
 
 		<MSBuild Projects="@(TestProject)" BuildInParallel="false" Targets="GetTargetPath" Properties="$(CommonBuildProperties)">
