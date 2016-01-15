@@ -4,7 +4,7 @@
 	<Fragment>
 		<Component Id="Clide" Directory="ClideVsixInstallDir">
 			<File Id="Clide.vsix" Source="$(var.Vsix.TargetDir)Clide.vsix">
-				<vs:VsixPackage	PackageId="Clide"	Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" Permanent="no" />
 			</File>
 		</Component>
 	</Fragment>
