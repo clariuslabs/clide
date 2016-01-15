@@ -16,6 +16,6 @@ indent_size = 4
 indent_style = tab
 indent_size = 4
 
-[*.{csproj,wixproj,resx}]
+[*.{csproj,wixproj,resx,user}]
 indent_style = space
 indent_size = 2

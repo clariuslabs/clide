@@ -19,10 +19,6 @@ namespace Clide
 
 		public SolutionFixture (string solutionFile)
 		{
-			var dte = GlobalServices.GetService<DTE>();
-			if (dte.Solution.IsOpen)
-				dte.Solution.Close (false);
-
 			if (!Path.IsPathRooted (solutionFile)) {
 				var rootedFile = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.ManifestModule.FullyQualifiedName), solutionFile);
 				if (!File.Exists (rootedFile)) {
@@ -41,26 +37,29 @@ namespace Clide
 				throw new FileNotFoundException ("Could not find solution file " + solutionFile, solutionFile);
 
 			try {
-				// Ensure no .suo is loaded, since that would dirty the state across runs.
-				var suoFile = Path.ChangeExtension(solutionFile, ".suo");
-				if (File.Exists (suoFile))
-					Try (() => File.Delete (suoFile));
+				var dte = GlobalServices.GetService<DTE>();
+				if (!dte.Solution.IsOpen || !dte.Solution.FullName.Equals (solutionFile, StringComparison.OrdinalIgnoreCase)) {
+					// Ensure no .suo is loaded, since that would dirty the state across runs.
+					var suoFile = Path.ChangeExtension(solutionFile, ".suo");
+					if (File.Exists (suoFile))
+						Try (() => File.Delete (suoFile));
 
-				var sdfFile = Path.ChangeExtension(solutionFile, ".sdf");
-				if (File.Exists (sdfFile))
-					Try (() => File.Delete (sdfFile));
+					var sdfFile = Path.ChangeExtension(solutionFile, ".sdf");
+					if (File.Exists (sdfFile))
+						Try (() => File.Delete (sdfFile));
 
-				var vsDir = Path.Combine(Path.GetDirectoryName(solutionFile), ".vs");
-				if (Directory.Exists (vsDir))
-					Try (() => Directory.Delete (vsDir, true));
+					var vsDir = Path.Combine(Path.GetDirectoryName(solutionFile), ".vs");
+					if (Directory.Exists (vsDir))
+						Try (() => Directory.Delete (vsDir, true));
 
-				dte.Solution.Open (solutionFile);
-				GlobalServices.GetService<SVsSolution, IVsSolution4> ()
-					.EnsureSolutionIsLoaded ((uint)(__VSBSLFLAGS.VSBSLFLAGS_LoadAllPendingProjects | __VSBSLFLAGS.VSBSLFLAGS_LoadBuildDependencies));
+					dte.Solution.Open (solutionFile);
+					GlobalServices.GetService<SVsSolution, IVsSolution4> ()
+						.EnsureSolutionIsLoaded ((uint)(__VSBSLFLAGS.VSBSLFLAGS_LoadAllPendingProjects | __VSBSLFLAGS.VSBSLFLAGS_LoadBuildDependencies));
+				}
 
 				solution = GlobalServices.GetService<SComponentModel, IComponentModel> ().GetService<ISolutionExplorer> ().Solution;
 			} catch (Exception ex) {
-				throw new ArgumentException ("Failed to open solution " + solutionFile, ex);
+				throw new ArgumentException ("Failed to open and access solution: " + solutionFile, ex);
 			}
 		}
 

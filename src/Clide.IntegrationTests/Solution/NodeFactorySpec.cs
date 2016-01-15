@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
@@ -12,10 +13,12 @@ namespace Clide.Solution
 	[Vsix (RecycleOnFailure = false)]
 	public abstract class NodeFactorySpec<TNode>
 	{
+		DTE dte;
 		IVsHierarchyItem solution;
 
 		protected NodeFactorySpec ()
 		{
+			dte = GlobalServices.GetService<DTE>();
 			solution = GlobalServices
 				.GetService<SComponentModel, IComponentModel> ()
 				.GetService<IVsHierarchyItemManager> ()
@@ -36,7 +39,7 @@ namespace Clide.Solution
 				return;
 
 			var item = solution.NavigateToItem(relativePath);
-			Assert.NotNull (item);
+			Assert.True (item != null, string.Format ("Failed to locate solution element at {0} in solution {1}.", relativePath, solution.CanonicalName));
 
 			var factory = GetFactory();
 
@@ -54,11 +57,11 @@ namespace Clide.Solution
 		public virtual void when_item_is_not_supported_then_factory_returns_false_and_create_returns_null (string relativePath, string minimumVersion)
 		{
 			// Skip assertions if the VS is lower than the minimum version.
-			if (!string.IsNullOrEmpty (minimumVersion) && GlobalServices.GetService<DTE> ().Version.CompareTo (minimumVersion) == -1)
+			if (!string.IsNullOrEmpty (minimumVersion) && dte.Version.CompareTo (minimumVersion) == -1)
 				return;
 
 			var item = solution.NavigateToItem(relativePath);
-			Assert.NotNull (item);
+			Assert.True (item != null, string.Format ("Failed to locate solution element at {0} in solution {1}.", relativePath, solution.CanonicalName));
 
 			var factory = GetFactory();
 

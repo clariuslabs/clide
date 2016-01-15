@@ -3,19 +3,17 @@
 
 	<PropertyGroup>
 		<Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
-		<CI Condition=" '$(CI)' == '' And '$(Configuration)' == 'Release' ">true</CI>
 		<IntermediateOutputPath>.nuget\</IntermediateOutputPath>
 		<PackagesPath>$(IntermediateOutputPath)packages</PackagesPath>
 		<Out Condition=" '$(Out)' == '' ">$(MSBuildThisFileDirectory)out</Out>
-		<CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration);CI=$(CI);DeployExtension=false</CommonBuildProperties>
+		<!-- Whether to run integration tests against the MSI-installed Clide in the normal hive or not -->
+		<TestInstalled Condition=" '$(TestInstalled)' == '' And '$(Configuration)' == 'Release' ">true</TestInstalled>
+		<CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration);CI=$(CI)</CommonBuildProperties>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<Solution Include="src\*.sln"/>
 		<NuSpec Include="src\**\*.nuspec" />
-		<UnitTestProject Include="src\**\*UnitTests.csproj" />
-		<IntegrationTestProject Include="src\**\*IntegrationTests.csproj" />
-		<SupportedVersion Include="11;12;14" />
 	</ItemGroup>
 
 	<Target Name="Clean">
@@ -33,18 +31,14 @@
 	</Target>
 
 	<Target Name="Test" DependsOnTargets="UnitTest;IntegrationTest" />
-	
-	<Target Name="UnitTest" DependsOnTargets="Build" Condition=" '@(UnitTestProject)' != '' ">
-		<MSBuild Projects="@(UnitTestProject)" BuildInParallel="false" Targets="GetTargetPath" Properties="$(CommonBuildProperties)">
-			<Output TaskParameter="TargetOutputs" ItemName="_TestAssembly" />
+
+	<Target Name="UnitTest" DependsOnTargets="Build">
+		<MSBuild Projects="src\Clide.UnitTests\Clide.UnitTests.csproj" BuildInParallel="false" Targets="GetTargetPath" Properties="$(CommonBuildProperties)">
+			<Output TaskParameter="TargetOutputs" ItemName="UnitTestAssembly" />
 		</MSBuild>
 
-		<ItemGroup>
-			<TestAssembly Include="@(_TestAssembly)" Condition=" Exists('%(_TestAssembly.FullPath)') " />
-		</ItemGroup>
-
 		<MakeDir Directories="$(Out)" Condition="!Exists('$(Out)')" />
-		<xunit Assemblies="@(TestAssembly)"
+		<xunit Assemblies="@(UnitTestAssembly)"
 			   Html="$(Out)\unit-test.html"
 			   Xml="$(Out)\unit-test.xml"
 			   ParallelizeAssemblies="true"
@@ -56,21 +50,29 @@
 			   ContinueOnError="ErrorAndContinue" />
 	</Target>
 
-	<Target Name="IntegrationTest" DependsOnTargets="Build" Condition=" '@(IntegrationTestProject)' != '' ">
-		<Error Condition=" '$(Configuration)' != 'Release' " Text="Can only run all tests from script for Release configuration, which builds the installer." />
+	<PropertyGroup Condition=" '$(TestInstalled)' == 'true' ">
+		<!-- When testing the installed version of Clide, it's unnecessary to deploy the built VSIX extension, 
+			 since integration tests will run against the normal hive -->
+		<CommonBuildProperties>$(CommonBuildProperties);DeployExtension=false;RootSuffix=.</CommonBuildProperties>
+		<CommonBuildProperties Condition=" '$(CI)' == 'true' ">$(CommonBuildProperties);VisualStudioVersions=$([MSBuild]::ValueOrDefault('$(VisualStudioVersions)', 'All'))</CommonBuildProperties>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(TestInstalled)' != 'true' ">		
+		<!-- If we're not going to test the installed version, then we'll use the default (current) VS version and the experimental hive. -->
+		<CommonBuildProperties>$(CommonBuildProperties);RootSuffix=Exp</CommonBuildProperties>
+	</PropertyGroup>
+	
+	<Target Name="IntegrationTest" DependsOnTargets="Build">
+		<Error Condition=" '$(TestInstalled)' == 'true' And '$(Configuration)' != 'Release' "
+			   Text="Cannot run integration tests with the installed version because the MSI is only built for the Release configuration, and specified configuration is '$(Configuration)'." />
 
-		<Exec Command="msiexec /i src\Clide.Msi\bin\$(Configuration)\Clide.msi /passive" />
+		<Exec Command="msiexec /i src\Clide.Msi\bin\$(Configuration)\Clide.msi /passive" Condition=" '$(TestInstalled)' == 'true' " />
 
-		<MSBuild Projects="@(IntegrationTestProject)" BuildInParallel="false" Targets="GetTargetPath" Properties="$(CommonBuildProperties)">
-			<Output TaskParameter="TargetOutputs" ItemName="_TestAssembly" />
+		<MSBuild Projects="src\Clide.IntegrationTests\Clide.IntegrationTests.csproj" BuildInParallel="false" Targets="GetTargetPath" Properties="$(CommonBuildProperties)">
+			<Output TaskParameter="TargetOutputs" ItemName="IntegrationTestAssembly" />
 		</MSBuild>
 
-		<ItemGroup>
-			<TestAssembly Include="@(_TestAssembly)" Condition=" Exists('%(_TestAssembly.FullPath)') " />
-		</ItemGroup>
-
 		<MakeDir Directories="$(Out)" Condition="!Exists('$(Out)')" />
-		<xunit Assemblies="@(TestAssembly)"
+		<xunit Assemblies="@(IntegrationTestAssembly)"
 			   Html="$(Out)\integration-test.html"
 			   Xml="$(Out)\integration-test.xml"
 			   ParallelizeAssemblies="true"
@@ -81,7 +83,7 @@
                WorkingFolder="$(MSBuildThisFileDirectory)src\Clide.IntegrationTests"
 			   ContinueOnError="ErrorAndContinue" />
 
-		<Exec Command="msiexec /x src\Clide.Msi\bin\$(Configuration)\Clide.msi /passive" />
+		<Exec Command="msiexec /x src\Clide.Msi\bin\$(Configuration)\Clide.msi /passive"  Condition=" '$(TestInstalled)' == 'true' " />
 	</Target>
 
 	<Target Name="Package" DependsOnTargets="Build" Condition=" '@(NuSpec)' != '' ">

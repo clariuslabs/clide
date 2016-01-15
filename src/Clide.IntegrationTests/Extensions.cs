@@ -16,23 +16,30 @@ namespace Clide
 	{
 		public static IVsHierarchyItem NavigateToItem (this IVsHierarchyItem item, string relativePath)
 		{
-			if (string.IsNullOrEmpty (relativePath))
-				return item;
-			if (item == null)
-				return null;
-
+			IVsHierarchyItem child = null;
 			var paths = relativePath.Split(new [] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
-			if (paths.Length == 0)
+			SpinWait.SpinUntil (() => 
+				(child = NavigateToItem (item, paths, 0)) != null, 
+				TimeSpan.FromSeconds (2));
+
+			return child;
+		}
+
+		static IVsHierarchyItem NavigateToItem (this IVsHierarchyItem item, string[] paths, int index)
+		{
+			if (index >= paths.Length || item == null)
 				return item;
 
-			var child = item.Children.FirstOrDefault (x => x.GetProperty<string> (VsHierarchyPropID.Name) == paths[0]) ??
+			var name = paths[index];
+
+			var child = item.Children.FirstOrDefault (x => x.GetProperty<string> (VsHierarchyPropID.Name) == name) ??
 				// Fall back to using the node text if not found by name.)
-				item.Children.FirstOrDefault (x => x.Text == paths[0]);
+				item.Children.FirstOrDefault (x => x.Text == name);
 
 			if (child == null)
 				return null;
 
-			return child.NavigateToItem (string.Join (Path.DirectorySeparatorChar.ToString (), paths.Skip (1)));
+			return child.NavigateToItem (paths, ++index);
 		}
 
 		const string PropertyValue = "{0} = {1}";
