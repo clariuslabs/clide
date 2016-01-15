@@ -4,14 +4,10 @@ init:
   - git config --global core.autocrlf input
 
 build_script:
-  - cmd: build.cmd "/t:build,package,install"
+  - build.cmd "/t:build,test,package"
 
-test:
-  assemblies:
-    - '**\*Tests.dll'
-
-after_test:
-  - cmd: msbuild /t:uninstall
+# we run the tests ourselves
+test: off
 
 deploy:
   - provider: NuGet
