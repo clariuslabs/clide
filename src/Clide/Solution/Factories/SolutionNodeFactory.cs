@@ -9,6 +9,7 @@ namespace Clide
 	[Export (ContractNames.FallbackNodeFactory, typeof (ICustomSolutionExplorerNodeFactory))]
 	public class SolutionNodeFactory : ICustomSolutionExplorerNodeFactory
 	{
+		IServiceProvider services;
 		Lazy<ISolutionExplorerNodeFactory> nodeFactory;
 		IAdapterService adapter;
 		IVsSolutionSelection selection;
@@ -16,11 +17,13 @@ namespace Clide
 
 		[ImportingConstructor]
 		public SolutionNodeFactory(
+			[Import (typeof (SVsServiceProvider))] IServiceProvider services,
 			Lazy<ISolutionExplorerNodeFactory> nodeFactory,
             IAdapterService adapter,
 			IVsSolutionSelection selection,
 			[Import (ContractNames.Interop.SolutionExplorerWindow)] Lazy<IVsUIHierarchyWindow> solutionExplorer)
 		{
+			this.services = services;
 			this.nodeFactory = nodeFactory;
 			this.adapter = adapter;
 			this.selection = selection;
@@ -35,7 +38,7 @@ namespace Clide
         public virtual ISolutionExplorerNode CreateNode(IVsHierarchyItem item)
 		{
 			return Supports(item) ?
-				new SolutionNode(item, nodeFactory.Value, adapter, selection, solutionExplorer) : null;
+				new SolutionNode(services, item, nodeFactory.Value, adapter, selection, solutionExplorer) : null;
 		}
 	}
 }

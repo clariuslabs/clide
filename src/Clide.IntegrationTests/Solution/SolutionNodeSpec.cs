@@ -19,12 +19,12 @@ namespace Clide.Solution
 			var components = GlobalServices.GetService<SComponentModel, IComponentModel>();
 			var factory = components.GetService<ISolutionExplorerNodeFactory> ();
 			var adapter = components.GetService<IAdapterService> ();
-			var manager = components.GetService<IVsHierarchyItemManager>();
+			var manager = components.DefaultExportProvider.GetExportedValue<IVsHierarchyItemManager>(ContractNames.Interop.IVsHierarchyItemManager);
 			var selection = components.GetService<IVsSolutionSelection>();
 			var solutionExplorer = components.DefaultExportProvider.GetExport<IVsUIHierarchyWindow>(ContractNames.Interop.SolutionExplorerWindow);
 			var item = manager.GetHierarchyItem(GlobalServices.GetService<SVsSolution, IVsHierarchy>(), (uint)VSConstants.VSITEMID.Root);
 
-			solution = new SolutionNode (item, factory, adapter, selection, solutionExplorer);
+			solution = new SolutionNode (GlobalServices.Instance, item, factory, adapter, selection, solutionExplorer);
 		}
 
 		public void Dispose ()

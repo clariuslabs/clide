@@ -33,6 +33,7 @@ namespace Clide
 		/// <param name="selection">The solution selection service.</param>
 		/// <param name="solutionExplorer">The solution explorer window.</param>
 		public SolutionNode (
+			IServiceProvider services,
 			IVsHierarchyItem hierarchyNode,
 			ISolutionExplorerNodeFactory nodeFactory,
 			IAdapterService adapter,
@@ -41,7 +42,7 @@ namespace Clide
 			: base (SolutionNodeKind.Solution, hierarchyNode, nodeFactory, adapter, solutionExplorer)
 		{
 			this.nodeFactory = nodeFactory;
-			dteSolution = new Lazy<Solution2> (() => (Solution2)hierarchyNode.GetServiceProvider ().GetService<DTE> ().Solution);
+			dteSolution = new Lazy<Solution2> (() => (Solution2)services.GetService<DTE> ().Solution);
 			this.selection = selection;
 			solution = (IVsSolution2)hierarchyNode.HierarchyIdentity.Hierarchy;
 		}
