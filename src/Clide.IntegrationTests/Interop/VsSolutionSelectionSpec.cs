@@ -24,6 +24,9 @@ namespace Clide.Interop
 			this.fixture = fixture;
 			selection = GlobalServices.Instance.GetServiceLocator ().GetExport<IVsSolutionSelection> ();
 			explorer = GlobalServices.Instance.GetServiceLocator ().GetExport<ISolutionExplorer> ();
+
+			// Clear previous selections before running tests.
+			fixture.Solution.Select (false);
 		}
 
 		[VsixFact]
