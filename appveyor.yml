@@ -6,8 +6,9 @@ init:
 build_script:
   - build.cmd
 
-# we run the tests ourselves in build.cmd
-test: off
+test:
+  assemblies:
+    - '**\*Tests.dll'
 
 deploy:
   - provider: NuGet
