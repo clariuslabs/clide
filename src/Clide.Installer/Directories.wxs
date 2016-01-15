@@ -2,8 +2,8 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Fragment>
 		<DirectoryRef Id="CommonFilesFolder">
-			<Directory Id="VsixMSShared" Name="Microsoft Shared">
-				<Directory Id="VsixInstallDir" Name="VisualStudio" />
+			<Directory Id="ClideVsixShared" Name="Microsoft Shared">
+				<Directory Id="ClideVsixInstallDir" Name="VisualStudio" />
 			</Directory>
 		</DirectoryRef>
 	</Fragment>
