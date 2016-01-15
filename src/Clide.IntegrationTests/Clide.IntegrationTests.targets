@@ -2,7 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 	<PropertyGroup>
-		<MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+		<MinimumVisualStudioVersion Condition=" '$(MinimumVisualStudioVersion)' == '' ">11.0</MinimumVisualStudioVersion>
 	</PropertyGroup>
 
 	<ItemGroup>

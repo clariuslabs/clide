@@ -11,6 +11,19 @@
 		<CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration);CI=$(CI)</CommonBuildProperties>
 	</PropertyGroup>
 
+	<PropertyGroup Condition=" '$(TestInstalled)' == 'true' ">
+		<!-- When testing the installed version of Clide, it's unnecessary to deploy the built VSIX extension, 
+			 since integration tests will run against the normal hive -->
+		<CommonBuildProperties>$(CommonBuildProperties);DeployExtension=false;RootSuffix=.</CommonBuildProperties>
+		<CommonBuildProperties Condition=" '$(CI)' == 'true' ">$(CommonBuildProperties);VisualStudioVersions=$([MSBuild]::ValueOrDefault('$(VisualStudioVersions)', 'All'))</CommonBuildProperties>
+		<!-- AppVeyor doesn't have VS2012 VSSDK installed: see https://www.appveyor.com/docs/installed-software#visual-studio-2012 -->
+		<CommonBuildProperties Condition=" '$(APPVEYOR)' == 'true' ">$(CommonBuildProperties);MinimumVisualStudioVersion=12.0</CommonBuildProperties>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(TestInstalled)' != 'true' ">
+		<!-- If we're not going to test the installed version, then we'll use the default (current) VS version and the experimental hive. -->
+		<CommonBuildProperties>$(CommonBuildProperties);RootSuffix=Exp</CommonBuildProperties>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<Solution Include="src\*.sln"/>
 		<NuSpec Include="src\**\*.nuspec" />
@@ -50,17 +63,6 @@
 			   ContinueOnError="ErrorAndContinue" />
 	</Target>
 
-	<PropertyGroup Condition=" '$(TestInstalled)' == 'true' ">
-		<!-- When testing the installed version of Clide, it's unnecessary to deploy the built VSIX extension, 
-			 since integration tests will run against the normal hive -->
-		<CommonBuildProperties>$(CommonBuildProperties);DeployExtension=false;RootSuffix=.</CommonBuildProperties>
-		<CommonBuildProperties Condition=" '$(CI)' == 'true' ">$(CommonBuildProperties);VisualStudioVersions=$([MSBuild]::ValueOrDefault('$(VisualStudioVersions)', 'All'))</CommonBuildProperties>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(TestInstalled)' != 'true' ">		
-		<!-- If we're not going to test the installed version, then we'll use the default (current) VS version and the experimental hive. -->
-		<CommonBuildProperties>$(CommonBuildProperties);RootSuffix=Exp</CommonBuildProperties>
-	</PropertyGroup>
-	
 	<Target Name="IntegrationTest" DependsOnTargets="Build">
 		<Error Condition=" '$(TestInstalled)' == 'true' And '$(Configuration)' != 'Release' "
 			   Text="Cannot run integration tests with the installed version because the MSI is only built for the Release configuration, and specified configuration is '$(Configuration)'." />
