@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build,Package" InitialTargets="Configure" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build;Package" InitialTargets="Configure" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 	<PropertyGroup>
 		<Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
@@ -88,6 +88,22 @@
 		<CallTarget Targets="Uninstall" Condition=" '$(TestInstalled)' == 'true'" />
 	</Target>
 
+	<Target Name="ReportAppVeyor" AfterTargets="IntegrationTest" Condition=" '$(APPVEYOR)' == 'true' ">
+		<XmlEval XmlInputPath="$(Out)\integration-test.xml" Query="sum(/assemblies/assembly/collection/@passed)">
+			<Output TaskParameter="Result" PropertyName="Passed" />
+		</XmlEval>
+		<XmlEval XmlInputPath="$(Out)\integration-test.xml" Query="sum(/assemblies/assembly/collection/@failed)">
+			<Output TaskParameter="Result" PropertyName="Failed" />
+		</XmlEval>
+		<XmlEval XmlInputPath="$(Out)\integration-test.xml" Query="sum(/assemblies/assembly/collection/@errors)">
+			<Output TaskParameter="Result" PropertyName="Errors" />
+		</XmlEval>
+
+		<Exec Command='appveyor AddCompilationMessage "Integration Tests: Passed: $(Passed), Errors: $(Errors), Failed: $(Failed)" -Category Information' />
+		<Exec Command='appveyor AddCompilationMessage "Integration Tests Failed: $(Failed)" -Category Error'
+			  Condition=" '$(Failed)' != '0' " />
+	</Target>
+	
 	<Target Name="Install" Condition=" Exists('$(Installer)') ">
 		<Exec Command='msiexec /i "$(Installer)" /passive' />
 	</Target>
@@ -129,4 +145,25 @@
 			<Version>$(GitSemVerMajor).$(GitSemVerMinor).$(GitSemVerPatch)$(GitSemVerDashLabel)</Version>
 		</PropertyGroup>
 	</Target>
+
+	<Import Project="$(PackagesPath)\MSBuilder.CodeTaskAssembly\build\MSBuilder.CodeTaskAssembly.props"
+			Condition="Exists('$(PackagesPath)\MSBuilder.CodeTaskAssembly\build\MSBuilder.CodeTaskAssembly.props')" />
+
+	<UsingTask TaskName="XmlEval" TaskFactory="CodeTaskFactory" AssemblyFile="$(CodeTaskAssembly)" Condition=" '$(CodeTaskAssembly)' != '' ">
+		<ParameterGroup>
+			<XmlInputPath Required="true" />
+			<Query Required="true" />
+			<Result Output="true" />
+		</ParameterGroup>
+		<Task>
+			<Reference Include="System.Xml" />
+			<Reference Include="System.Xml.Linq" />
+			<Using Namespace="System.Xml" />
+			<Using Namespace="System.Xml.Linq" />
+			<Using Namespace="System.Xml.XPath" />
+			<Code Type="Fragment" Language="cs">
+				Result = XDocument.Load(XmlInputPath).CreateNavigator().Evaluate(Query).ToString();
+			</Code>
+		</Task>
+	</UsingTask>
 </Project>
