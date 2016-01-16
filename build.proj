@@ -41,6 +41,7 @@
 	<Target Name="Rebuild" DependsOnTargets="Clean;Build" />
 
 	<Target Name="Build" Condition=" '@(Solution)' != '' ">
+		<Message Text="Build properties: $(CommonBuildProperties)" Importance="high" />
 		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties)" />
 	</Target>
 
