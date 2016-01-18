@@ -43,16 +43,16 @@
       <HintPath>..\packages\VSSDK.DTE.9.9.0.4\lib\net20\envdte90a.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Merq.Async, Version=0.3.1.0, Culture=neutral, PublicKeyToken=d1595740b67248ed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Merq.Async.0.3.1-pre\lib\net45\Merq.Async.dll</HintPath>
+    <Reference Include="Merq.Async, Version=0.3.7.0, Culture=neutral, PublicKeyToken=d1595740b67248ed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Merq.Async.0.3.7-pre\lib\net45\Merq.Async.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Merq.Commands, Version=0.3.1.0, Culture=neutral, PublicKeyToken=d1595740b67248ed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Merq.Commands.0.3.1-pre\lib\portable-net45+win8+wpa81\Merq.Commands.dll</HintPath>
+    <Reference Include="Merq.Commands, Version=0.3.7.0, Culture=neutral, PublicKeyToken=d1595740b67248ed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Merq.Commands.0.3.7-pre\lib\portable-net45+win8+wpa81\Merq.Commands.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Merq.Events, Version=0.3.1.0, Culture=neutral, PublicKeyToken=d1595740b67248ed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Merq.Events.0.3.1-pre\lib\portable-net45+win8+wpa81\Merq.Events.dll</HintPath>
+    <Reference Include="Merq.Events, Version=0.3.7.0, Culture=neutral, PublicKeyToken=d1595740b67248ed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Merq.Events.0.3.7-pre\lib\portable-net45+win8+wpa81\Merq.Events.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Threading, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -195,6 +195,8 @@
     <Compile Include="Adapters\ProjectToDte.cs" />
     <Compile Include="Adapters\ReferenceToVsLang.cs" />
     <Compile Include="Adapters\SolutionToHierarchy.cs" />
+    <Compile Include="ObservableAttribute.cs" />
+    <Compile Include="CommandHandlerAttribute.cs" />
     <Compile Include="Components\AsyncManagerProvider.cs" />
     <Compile Include="Components\CommandBus.cs" />
     <Compile Include="Components\ContractNames.cs" />

@@ -27,6 +27,14 @@
       <HintPath>..\packages\VSSDK.DTE.7.0.4\lib\net20\envdte.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Merq.Commands, Version=0.3.7.0, Culture=neutral, PublicKeyToken=d1595740b67248ed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Merq.Commands.0.3.7-pre\lib\portable-net45+win8+wpa81\Merq.Commands.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Merq.Events, Version=0.3.7.0, Culture=neutral, PublicKeyToken=d1595740b67248ed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Merq.Events.0.3.7-pre\lib\portable-net45+win8+wpa81\Merq.Events.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Reactive.Testing, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Rx-Testing.2.2.5\lib\net45\Microsoft.Reactive.Testing.dll</HintPath>
       <Private>True</Private>

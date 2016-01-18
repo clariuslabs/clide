@@ -4,6 +4,9 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
+using Merq;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -54,8 +57,56 @@ namespace Clide
 					.ToArray ();
 			}
 		}
+
+		[Fact]
+		public void when_composing_event_stream_then_can_subscribe_to_exported_observable ()
+		{
+			var container = new CompositionContainer (new AggregateCatalog (
+				new AssemblyCatalog (typeof (ServiceLocator).Assembly),
+				new TypeCatalog (typeof (MockObservable))));
+
+			var stream = container.GetExportedValue<IEventStream> ();
+			string value = null;
+
+			stream.Of<string> ().Subscribe (s => value = s);
+
+			Assert.Equal ("foo", value);
+		}
+
+		[Fact]
+		public void when_composing_command_bus_then_can_execute_exported_command_handler ()
+		{
+			var container = new CompositionContainer (new AggregateCatalog (
+				new AssemblyCatalog (typeof (ServiceLocator).Assembly),
+				new TypeCatalog (typeof (MockCommandHandler))));
+
+			var bus = container.GetExportedValue<ICommandBus> ();
+
+			Assert.True (bus.CanHandle<MockCommand> ());
+			Assert.True (bus.CanExecute (new MockCommand ()));
+			bus.Execute (new MockCommand ());
+		}
 	}
 
+	[Observable]
+	public class MockObservable : IObservable<string>
+	{
+		public IDisposable Subscribe (IObserver<string> observer) =>
+			new[] { "foo" }.ToObservable ().Subscribe (observer);
+	}
+
+	[CommandHandler]
+	public class MockCommandHandler : ICommandHandler<MockCommand>
+	{
+		public bool CanExecute (MockCommand command) => true;
+
+		public void Execute (MockCommand command)
+		{
+		}
+	}
+
+	public class MockCommand : ICommand { }
+ 
 	[PartCreationPolicy (CreationPolicy.Shared)]
 	public class MockServiceProvider
 	{
