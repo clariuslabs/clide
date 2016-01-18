@@ -245,7 +245,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adapters\DteToVsAdapterSpec.cs" />
     <Compile Include="AsyncManagerSpec.cs" />
+    <Compile Include="GlobalServiceLocator.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FixtureState\ISolutionFixture.cs" />

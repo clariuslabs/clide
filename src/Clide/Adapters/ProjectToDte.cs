@@ -4,12 +4,9 @@ using Microsoft.VisualStudio.Shell;
 
 namespace Clide
 {
-	[Export (typeof (IAdapter))]
+	[Adapter]
 	class ProjectToDte : IAdapter<ProjectNode, Project>
 	{
-		public Project Adapt (ProjectNode from)
-		{
-			return from.HierarchyNode.GetExtenderObject () as Project;
-		}
+		public Project Adapt (ProjectNode from) => from.HierarchyNode.GetExtenderObject () as Project;
 	}
 }

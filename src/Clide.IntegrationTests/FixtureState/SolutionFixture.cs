@@ -56,11 +56,11 @@ namespace Clide
 					GlobalServices.GetService<SVsSolution, IVsSolution4> ()
 						.EnsureSolutionIsLoaded ((uint)(__VSBSLFLAGS.VSBSLFLAGS_LoadAllPendingProjects | __VSBSLFLAGS.VSBSLFLAGS_LoadBuildDependencies));
 				}
-
-				solution = GlobalServices.GetService<SComponentModel, IComponentModel> ().GetService<ISolutionExplorer> ().Solution;
 			} catch (Exception ex) {
 				throw new ArgumentException ("Failed to open and access solution: " + solutionFile, ex);
 			}
+
+			solution = GlobalServices.GetService<SComponentModel, IComponentModel> ().GetService<ISolutionExplorer> ().Solution;
 		}
 
 		void Try (Action action)

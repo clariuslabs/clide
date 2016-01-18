@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.Shell;
 
 namespace Clide
 {
-	[Export(typeof(IAdapter))]
+	[Adapter]
 	class SolutionToHierarchy : IAdapter<SolutionExplorerNode, IVsHierarchyItem>
 	{
 		public IVsHierarchyItem Adapt (SolutionExplorerNode from)

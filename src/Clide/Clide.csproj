@@ -192,6 +192,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdapterService.cs" />
+    <Compile Include="Adapters\DteToVsAdapter.cs" />
     <Compile Include="Adapters\ProjectToDte.cs" />
     <Compile Include="Adapters\ReferenceToVsLang.cs" />
     <Compile Include="Adapters\SolutionToHierarchy.cs" />

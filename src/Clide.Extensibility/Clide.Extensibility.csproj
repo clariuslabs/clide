@@ -105,6 +105,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdapterAttribute.cs" />
     <Compile Include="IAdapter.cs" />
     <Compile Include="Solution\ISolutionExplorerNodeFactory.cs" />
     <Compile Include="Solution\ICustomSolutionExplorerNodeFactory.cs" />

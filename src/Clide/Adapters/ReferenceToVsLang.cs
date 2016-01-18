@@ -4,12 +4,9 @@ using VSLangProj;
 
 namespace Clide
 {
-	[Export (typeof (IAdapter))]
+	[Adapter]
 	class ReferenceToVsLang : IAdapter<ReferenceNode, Reference>
 	{
-		public Reference Adapt (ReferenceNode from)
-		{
-			return from.Reference.Value;
-		}
+		public Reference Adapt (ReferenceNode from) => from.Reference.Value;
 	}
 }

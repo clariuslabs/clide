@@ -16,13 +16,13 @@ namespace Clide
 	[PartCreationPolicy(CreationPolicy.Shared)]
 	internal class AdapterService : IAdapterService
 	{
-		private static readonly MethodInfo AdaptExpressionGenerator = typeof(AdapterService).GetMethod("GetAdaptExpression", BindingFlags.NonPublic | BindingFlags.Static);
+		static readonly MethodInfo AdaptExpressionGenerator = typeof(AdapterService).GetMethod("GetAdaptExpression", BindingFlags.NonPublic | BindingFlags.Static);
 
-		private ConcurrentDictionary<Type, IEnumerable<TypeInheritance>> cachedOrderedTypeHierarchies = new ConcurrentDictionary<Type, IEnumerable<TypeInheritance>>();
-		private ConcurrentDictionary<FromTo, Func<IAdapter, object, object>> cachedAdaptMethods = new ConcurrentDictionary<FromTo, Func<IAdapter, object, object>>();
-        private ConcurrentDictionary<FromTo, IAdapter> cachedFromToAdapters = new ConcurrentDictionary<FromTo, IAdapter>();
+		ConcurrentDictionary<Type, IEnumerable<TypeInheritance>> cachedOrderedTypeHierarchies = new ConcurrentDictionary<Type, IEnumerable<TypeInheritance>>();
+		ConcurrentDictionary<FromTo, Func<IAdapter, object, object>> cachedAdaptMethods = new ConcurrentDictionary<FromTo, Func<IAdapter, object, object>>();
+        ConcurrentDictionary<FromTo, IAdapter> cachedFromToAdapters = new ConcurrentDictionary<FromTo, IAdapter>();
 
-		private List<AdapterInfo> allAdapters;
+		List<AdapterInfo> allAdapters;
 
         /// <summary>
         /// Initializes the adapter service with the given set of adapters.
@@ -67,13 +67,9 @@ namespace Clide
                         string.Format("{0}->{1}: {2}", adapter.From, adapter.To, adapter.Adapter))));
 		}
 
-        public IAdaptable<TSource> Adapt<TSource>(TSource source)
-            where TSource : class
-        {
-            return new Adaptable<TSource>(this, source);
-        }
+		public IAdaptable<TSource> Adapt<TSource> (TSource source) where TSource : class => new Adaptable<TSource> (this, source);
 
-		private TTarget Adapt<TSource, TTarget>(TSource source)
+		TTarget Adapt<TSource, TTarget>(TSource source)
             where TSource : class
             where TTarget : class
 		{
@@ -138,9 +134,9 @@ namespace Clide
             return adapter;
         }
 
-		private Func<IAdapter, object, object> GetAdaptMethod(FromTo fromTo, IAdapter adapter)
+		Func<IAdapter, object, object> GetAdaptMethod(FromTo fromTo, IAdapter adapter)
 		{
-			return this.cachedAdaptMethods.GetOrAdd(
+			return cachedAdaptMethods.GetOrAdd(
 				fromTo,
 				key => ((Expression<Func<IAdapter, object, object>>)
                     AdaptExpressionGenerator.MakeGenericMethod(key.Item1, key.Item2).Invoke(null, null))
@@ -170,14 +166,14 @@ namespace Clide
                     .ToList());
 		}
 
-        private class AdapterInfo
+        class AdapterInfo
         {
             public IAdapter Adapter;
             public Type From;
             public Type To;
         }
 
-        private class Adaptable<TSource> : IAdaptable<TSource>
+        class Adaptable<TSource> : IAdaptable<TSource>
             where TSource : class
         {
             AdapterService service;
@@ -189,10 +185,7 @@ namespace Clide
                 this.source = source;
             }
 
-            public T As<T>() where T : class
-            {
-                return service.Adapt<TSource, T>(source);
-            }
-        }
+			public T As<T> () where T : class => service.Adapt<TSource, T> (source);
+		}
 	}
 }
