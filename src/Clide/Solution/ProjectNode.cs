@@ -76,18 +76,20 @@ namespace Clide
 		public virtual string LogicalPath => this.RelativePathTo (OwningSolution);
 
 		/// <summary>
-		/// Gets the physical path of the project.
+		/// Gets the physical path of the project if it's file-based. 
+		/// Returns <see langword="null"/> otherwise.
 		/// </summary>
 		public virtual string PhysicalPath
 		{
 			get
 			{
 				var project = HierarchyNode.GetActualHierarchy() as IVsProject;
-				string projectFile;
-				if (ErrorHandler.Succeeded (project.GetMkDocument ((uint)VSConstants.VSITEMID.Root, out projectFile)))
-					return projectFile;
+				string filePath;
+				if (project != null && ErrorHandler.Succeeded (project.GetMkDocument (HierarchyNode.GetActualItemId (), out filePath)) &&
+					File.Exists (filePath))
+					return filePath;
 
-				return string.Empty;
+				return null;
 			}
 		}
 

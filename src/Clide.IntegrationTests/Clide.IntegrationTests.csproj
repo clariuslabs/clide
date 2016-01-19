@@ -246,7 +246,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adapters\DteToVsAdapterSpec.cs" />
-    <Compile Include="Adapters\SolutionToHierarchySpec.cs" />
+    <Compile Include="Adapters\SolutionToVsAdapterSpec.cs" />
+    <Compile Include="Adapters\SolutionToVsLangAdapterSpec.cs" />
     <Compile Include="AsyncManagerSpec.cs" />
     <Compile Include="GlobalServiceLocator.cs" />
     <Compile Include="Constants.cs" />

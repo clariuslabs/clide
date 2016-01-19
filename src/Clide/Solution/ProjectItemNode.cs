@@ -37,11 +37,8 @@ namespace Clide
 		/// </summary>
 		public virtual IProjectNode OwningProject => owningProject.Value;
 
-		Lazy<ISolutionExplorerNode> GetParent(IVsHierarchyItem hierarchy)
-		{
-			return hierarchy.Parent == null ? null :
-			   new Lazy<ISolutionExplorerNode>(() => this.nodeFactory.CreateNode(hierarchy.Parent));
-		}
+		Lazy<ISolutionExplorerNode> GetParent (IVsHierarchyItem hierarchy) => hierarchy.Parent == null ? null :
+			new Lazy<ISolutionExplorerNode> (() => this.nodeFactory.CreateNode (hierarchy.Parent));
 
 		#region Equality
 

@@ -1,6 +1,5 @@
 ﻿namespace Clide
 {
-
 	/// <summary>
 	/// Represents an item inside a project, a project folder or a solution folder.
 	/// </summary>

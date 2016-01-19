@@ -1,8 +1,8 @@
-﻿namespace Clide
-{
-	using System;
-	using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
+namespace Clide
+{
 	/// <summary>
 	/// Interface implemented by all nodes in the solution explorer tree.
 	/// </summary>

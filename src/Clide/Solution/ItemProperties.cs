@@ -17,7 +17,7 @@ namespace Clide
 
 		IVsHierarchyItem node;
 		ProjectItem item;
-		private IVsBuildPropertyStorage msBuild;
+		IVsBuildPropertyStorage msBuild;
 
 		public ItemProperties (ItemNode item)
 		{

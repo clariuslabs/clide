@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 
 namespace Clide
-{
-    
+{    
     /// <summary>
     /// Exposes the solution explorer toolwindow.
     /// </summary>

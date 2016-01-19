@@ -55,6 +55,19 @@ public static class ServiceLocatorFacades
 	}
 
 	/// <summary>
+	/// Retrieves the <see cref="IServiceLocator"/> for the given <see cref="Solution"/>.
+	/// </summary>
+	/// <exception cref="ArgumentNullException">The <paramref name="solution"/> parameter was null.</exception>
+	/// <exception cref="InvalidOperationException">The required <see cref="IComponentModel"/> service was not found.</exception>
+	public static IServiceLocator GetServiceLocator (this Solution solution)
+	{
+		Guard.NotNull (nameof (solution), solution);
+
+		return solution.DTE.GetServiceLocator ();
+	}
+
+
+	/// <summary>
 	/// Retrieves the <see cref="IServiceLocator"/> for the given project.
 	/// </summary>
 	/// <exception cref="ArgumentNullException">The <paramref name="project"/> parameter was null.</exception>

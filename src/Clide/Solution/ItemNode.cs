@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using EnvDTE;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
@@ -26,23 +28,29 @@ namespace Clide
             : base(SolutionNodeKind.Item, hierarchyNode, nodeFactory, adapter, solutionExplorer)
         {
             properties = new Lazy<ItemProperties>(() => new ItemProperties(this));
-            Item = new Lazy<ProjectItem>(() => (ProjectItem)hierarchyNode.GetExtenderObject());
         }
-
-        /// <summary>
-        /// Gets the project item corresponding to this node.
-        /// </summary>
-        internal Lazy<ProjectItem> Item { get; }
 
 		/// <summary>
 		/// Gets the logical path of the item, relative to its containing project.
 		/// </summary>
-		public virtual string LogicalPath => this.RelativePathTo (this.OwningProject);
+		public virtual string LogicalPath => this.RelativePathTo (OwningProject);
 
 		/// <summary>
 		/// Gets the physical path of the item.
 		/// </summary>
-		public virtual string PhysicalPath => this.Item.Value.get_FileNames (1);
+		public virtual string PhysicalPath
+		{
+			get
+			{
+				var project = HierarchyNode.GetActualHierarchy() as IVsProject;
+				string filePath;
+				if (project != null && ErrorHandler.Succeeded (project.GetMkDocument (HierarchyNode.GetActualItemId (), out filePath)) &&
+					File.Exists (filePath))
+					return filePath;
+
+				return HierarchyNode.CanonicalName;
+			}
+		}
 
 		/// <summary>
 		/// Gets the dynamic properties of the item.
@@ -52,7 +60,7 @@ namespace Clide
 		/// MSBuild item metadata properties using this property,
 		/// and allows getting and setting them.
 		/// </remarks>
-		public virtual dynamic Properties => this.properties.Value;
+		public virtual dynamic Properties => properties.Value;
 
 		/// <summary>
 		/// Accepts the specified visitor for traversal.

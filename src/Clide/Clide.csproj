@@ -194,8 +194,8 @@
     <Compile Include="AdapterService.cs" />
     <Compile Include="Adapters\DteToVsAdapter.cs" />
     <Compile Include="Adapters\ProjectToDte.cs" />
-    <Compile Include="Adapters\ReferenceToVsLang.cs" />
-    <Compile Include="Adapters\SolutionToHierarchy.cs" />
+    <Compile Include="Adapters\SolutionToVsAdapter.cs" />
+    <Compile Include="Adapters\SolutionToVsLangAdapter.cs" />
     <Compile Include="ObservableAttribute.cs" />
     <Compile Include="CommandHandlerAttribute.cs" />
     <Compile Include="Components\AsyncManagerProvider.cs" />

@@ -24,8 +24,6 @@ namespace Clide
 			Lazy<IVsUIHierarchyWindow> solutionExplorer)
 			: base(SolutionNodeKind.ReferencesFolder, hierarchyNode, nodeFactory, adapter, solutionExplorer)
 		{
-            References = new Lazy<References>(() =>
-                ((VSProject)((Project)hierarchyNode.GetExtenderObject()).Object).References);
         }
 
 		/// <summary>
@@ -42,10 +40,5 @@ namespace Clide
 		/// </returns>
 		/// <exception cref="System.NotImplementedException"></exception>
 		public override T As<T> () => Adapter.Adapt (this).As<T> ();
-
-		/// <summary>
-		/// Gets the references represented by this node.
-		/// </summary>
-		internal Lazy<References> References { get; }
 	}
 }

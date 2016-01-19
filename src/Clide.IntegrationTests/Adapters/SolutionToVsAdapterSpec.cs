@@ -9,12 +9,12 @@ using Xunit;
 namespace Clide.Adapters
 {
 	[Collection ("OpenSolution11")]
-	public class SolutionToHierarchySpec
+	public class SolutionToVsAdapterSpec
 	{
 		ISolutionFixture fixture;
 		IAdapterService adapters;
 
-		public SolutionToHierarchySpec (OpenSolution11Fixture fixture)
+		public SolutionToVsAdapterSpec (OpenSolution11Fixture fixture)
 		{
 			this.fixture = fixture;
 			adapters = GlobalServiceLocator.Instance.GetExport<IAdapterService> ();
