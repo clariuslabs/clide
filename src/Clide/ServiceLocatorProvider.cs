@@ -13,35 +13,35 @@ namespace Clide
 	{
 		public IServiceLocator GetServiceLocator (IServiceProvider services)
 		{
-			Guard.NotNull ("services", services);
+			Guard.NotNull (nameof (services), services);
 
 			return new ServiceLocator (services);
 		}
 
 		public IServiceLocator GetServiceLocator (DTE dte)
 		{
-			Guard.NotNull ("dte", dte);
+			Guard.NotNull (nameof (dte), dte);
 
 			return new ServiceLocator (new ServiceProvider ((Ole.IServiceProvider)dte));
 		}
 
 		public IServiceLocator GetServiceLocator (Project project)
 		{
-			Guard.NotNull ("project", project);
+			Guard.NotNull (nameof (project), project);
 
 			return GetServiceLocator (project.DTE);
 		}
 
 		public IServiceLocator GetServiceLocator (IVsProject project)
 		{
-			Guard.NotNull ("project", project);
+			Guard.NotNull (nameof (project), project);
 
 			return GetServiceLocator ((IVsHierarchy)project);
 		}
 
 		public IServiceLocator GetServiceLocator (IVsHierarchy hierarchy)
 		{
-			Guard.NotNull ("hierarchy", hierarchy);
+			Guard.NotNull (nameof (hierarchy), hierarchy);
 
 			IServiceProvider services;
 			Ole.IServiceProvider site;

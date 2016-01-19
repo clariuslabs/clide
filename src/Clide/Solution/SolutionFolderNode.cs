@@ -35,23 +35,20 @@ namespace Clide
         /// <param name="name">The name of the folder to create.</param>
         public virtual ISolutionFolderNode CreateSolutionFolder(string name)
 		{
-			Guard.NotNullOrEmpty("name", name);
+			Guard.NotNullOrEmpty(nameof (name), name);
 
 			SolutionFolder.Value.AddSolutionFolder(name);
 			
 			var solutionfolder = HierarchyNode.Children.Single(child => 
 				child.GetProperty<string>((int)VsHierarchyPropID.Name) == name);
 
-			return this.CreateNode(solutionfolder) as ISolutionFolderNode;
+			return CreateNode(solutionfolder) as ISolutionFolderNode;
 		}
 
-        /// <summary>
-        /// Accepts the specified visitor for traversal.
-        /// </summary>
-        public override bool Accept(ISolutionVisitor visitor)
-        {
-            return SolutionVisitable.Accept(this, visitor);
-        }
+		/// <summary>
+		/// Accepts the specified visitor for traversal.
+		/// </summary>
+		public override bool Accept (ISolutionVisitor visitor) => SolutionVisitable.Accept (this, visitor);
 
 		/// <summary>
 		/// Tries to smart-cast this node to the give type.
@@ -61,14 +58,11 @@ namespace Clide
 		/// The casted value or null if it cannot be converted to that type.
 		/// </returns>
 		/// <exception cref="System.NotImplementedException"></exception>
-		public override T As<T>()
-		{
-			return this.Adapter.Adapt(this).As<T>();
-		}
+		public override T As<T> () => Adapter.Adapt (this).As<T> ();
 
-        /// <summary>
-        /// Gets the solution folder represented by this node.
-        /// </summary>
-        internal Lazy<SolutionFolder> SolutionFolder { get; private set; }
+		/// <summary>
+		/// Gets the solution folder represented by this node.
+		/// </summary>
+		internal Lazy<SolutionFolder> SolutionFolder { get; }
 	}
 }

@@ -32,46 +32,40 @@ internal class TypeInheritance : IEquatable<TypeInheritance>
 	/// </summary>
 	public TypeInheritance(Type type, int distance)
 	{
-		Guard.NotNull("type", type);
+		Guard.NotNull(nameof (type), type);
 
-		this.Distance = distance;
-		this.Inheritance = new List<TypeInheritance>();
-		this.Type = type;
+		Distance = distance;
+		Inheritance = new List<TypeInheritance>();
+		Type = type;
 	}
 
 	/// <summary>
 	/// Gets the distance from the current type inheritance to the root that was used 
 	/// to build the hierarchy.
 	/// </summary>
-	public int Distance { get; private set; }
+	public int Distance { get; }
 
 	/// <summary>
 	/// Gets the type that owns the <see cref="Inheritance"/>.
 	/// </summary>
-	public Type Type { get; private set; }
+	public Type Type { get; }
 
 	/// <summary>
 	/// Gets the inherited types from <see cref="Type"/>.
 	/// </summary>
-	public List<TypeInheritance> Inheritance { get; private set; }
+	public List<TypeInheritance> Inheritance { get; }
 
 	#region Equality
 
 	/// <summary>
 	/// Compares the current instance with the value provided.
 	/// </summary>
-	public bool Equals(TypeInheritance other)
-	{
-		return TypeInheritance.Equals(this, other);
-	}
+	public bool Equals (TypeInheritance other) => TypeInheritance.Equals (this, other);
 
 	/// <summary>
 	/// Compares the current instance with the value provided.
 	/// </summary>
-	public override bool Equals(object obj)
-	{
-		return TypeInheritance.Equals(this, obj as TypeInheritance);
-	}
+	public override bool Equals (object obj) => TypeInheritance.Equals (this, obj as TypeInheritance);
 
 	/// <summary>
 	/// Compares two instances for equality.
@@ -92,10 +86,7 @@ internal class TypeInheritance : IEquatable<TypeInheritance>
 	/// <summary>
 	/// Returns a hash code for this instance.
 	/// </summary>
-	public override int GetHashCode()
-	{
-		return this.Type.GetHashCode() ^ this.Distance.GetHashCode();
-	}
+	public override int GetHashCode () => Type.GetHashCode () ^ Distance.GetHashCode ();
 
 	#endregion
 }

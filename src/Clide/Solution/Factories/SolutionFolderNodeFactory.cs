@@ -31,10 +31,7 @@ namespace Clide
 				project.Object is EnvDTE80.SolutionFolder;
 		}
 
-        public virtual ISolutionExplorerNode CreateNode(IVsHierarchyItem item)
-		{
-			return Supports(item) ?
-				new SolutionFolderNode(item, childNodeFactory.Value, adapter, solutionExplorer) : null;
-		}
+		public virtual ISolutionExplorerNode CreateNode (IVsHierarchyItem item) => Supports (item) ?
+			new SolutionFolderNode (item, childNodeFactory.Value, adapter, solutionExplorer) : null;
 	}
 }

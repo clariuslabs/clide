@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -30,15 +31,9 @@ namespace Clide
 			this.solutionExplorer = solutionExplorer;
 		}
 
-        public virtual bool Supports(IVsHierarchyItem item)
-		{
-			return item.HierarchyIdentity.Hierarchy is IVsSolution;
-		}
+		public virtual bool Supports (IVsHierarchyItem item) => item.HierarchyIdentity.Hierarchy is IVsSolution;
 
-        public virtual ISolutionExplorerNode CreateNode(IVsHierarchyItem item)
-		{
-			return Supports(item) ?
-				new SolutionNode(services, item, nodeFactory.Value, adapter, selection, solutionExplorer) : null;
-		}
+		public virtual ISolutionExplorerNode CreateNode (IVsHierarchyItem item) => Supports (item) ?
+			new SolutionNode (services, item, nodeFactory.Value, adapter, selection, solutionExplorer) : null;
 	}
 }

@@ -44,32 +44,20 @@ namespace Clide
 			return names.Distinct();
 		}
 
-		public override bool TryGetMember(GetMemberBinder binder, out object result)
-		{
-			return accessor.TryGetMember(binder, out result, base.TryGetMember);
-		}
+		public override bool TryGetMember (GetMemberBinder binder, out object result) => accessor.TryGetMember (binder, out result, base.TryGetMember);
 
-		public override bool TrySetMember(SetMemberBinder binder, object value)
-		{
-			return accessor.TrySetMember(binder, value, base.TrySetMember);
-		}
+		public override bool TrySetMember (SetMemberBinder binder, object value) => accessor.TrySetMember (binder, value, base.TrySetMember);
 
-		public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result)
-		{
-			return accessor.TryGetIndex(binder, indexes, out result, base.TryGetIndex);
-		}
+		public override bool TryGetIndex (GetIndexBinder binder, object[] indexes, out object result) => accessor.TryGetIndex (binder, indexes, out result, base.TryGetIndex);
 
-		public override bool TrySetIndex(SetIndexBinder binder, object[] indexes, object value)
-		{
-			return accessor.TrySetIndex(binder, indexes, value, base.TrySetIndex);
-		}
+		public override bool TrySetIndex (SetIndexBinder binder, object[] indexes, object value) => accessor.TrySetIndex (binder, indexes, value, base.TrySetIndex);
 
 		bool IPropertyAccessor.TryGetProperty(string propertyName, out object result)
 		{
 			if (TryGetDteProperty(propertyName, out result))
 				return true;
 
-			if (this.vsBuild != null)
+			if (vsBuild != null)
 			{
 				string value = "";
 				if (ErrorHandler.Succeeded(vsBuild.GetPropertyValue(
@@ -82,7 +70,7 @@ namespace Clide
 				if (msBuildProject != null)
 				{
 					var configName = this.dteProject.ConfigurationManager.ActiveConfiguration.ConfigurationName + "|" +
-						this.dteProject.ConfigurationManager.ActiveConfiguration.PlatformName;
+						dteProject.ConfigurationManager.ActiveConfiguration.PlatformName;
 
 					if (ErrorHandler.Succeeded(vsBuild.GetPropertyValue(
 						propertyName, configName, (uint)_PersistStorageType.PST_PROJECT_FILE, out value)))
@@ -129,14 +117,14 @@ namespace Clide
 			return false;
 		}
 
-		private bool TrySetDteProperty(string propertyName, object value)
+		bool TrySetDteProperty(string propertyName, object value)
 		{
 			if (dteProject != null)
 			{
 				EnvDTE.Property property;
 				try
 				{
-					property = this.dteProject.Properties.Item(propertyName);
+					property = dteProject.Properties.Item(propertyName);
 				}
 				catch (ArgumentException)
 				{
@@ -152,7 +140,7 @@ namespace Clide
 			return false;
 		}
 
-		private bool TryGetDteProperty(string propertyName, out object result)
+		bool TryGetDteProperty(string propertyName, out object result)
 		{
 			if (dteProject != null)
 			{

@@ -8,7 +8,7 @@ namespace Clide
 	{
 		public IVsHierarchyItem Adapt (SolutionExplorerNode from)
 		{
-			Guard.NotNull ("from", from);
+			Guard.NotNull (nameof (from), from);
 
 			return from.HierarchyNode;
 		}

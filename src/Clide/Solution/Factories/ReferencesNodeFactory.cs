@@ -35,10 +35,7 @@ namespace Clide
             return extObj == null && item.Text == "References";
 		}
 
-        public virtual ISolutionExplorerNode CreateNode(IVsHierarchyItem item)
-		{
-			return Supports(item) ?
-				new ReferencesNode(item, childNodeFactory.Value, adapter, solutionExplorer) : null;
-		}
+		public virtual ISolutionExplorerNode CreateNode (IVsHierarchyItem item) => Supports (item) ?
+			new ReferencesNode (item, childNodeFactory.Value, adapter, solutionExplorer) : null;
 	}
 }

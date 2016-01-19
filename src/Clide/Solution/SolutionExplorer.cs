@@ -28,9 +28,9 @@ namespace Clide
 			[Import (ContractNames.Interop.IVsHierarchyItemManager)] IVsHierarchyItemManager hierarchy,
 			ISolutionExplorerNodeFactory factory)
 		{
-			Guard.NotNull ("services", services);
-			Guard.NotNull ("hierarchy", hierarchy);
-			Guard.NotNull ("factory", factory);
+			Guard.NotNull (nameof (services), services);
+			Guard.NotNull (nameof (hierarchy), hierarchy);
+			Guard.NotNull (nameof (factory), factory);
 
 			this.services = services;
 			this.hierarchy = hierarchy;
@@ -49,7 +49,7 @@ namespace Clide
 			}
 		}
 
-		public bool IsVisible { get { return toolWindow.Value.IsVisible; } }
+		public bool IsVisible => toolWindow.Value.IsVisible;
 
 		public void Show ()
 		{

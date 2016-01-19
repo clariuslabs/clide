@@ -26,15 +26,9 @@ namespace Clide
 			msBuild = item.HierarchyNode.GetRoot ().HierarchyIdentity.Hierarchy as IVsBuildPropertyStorage;
 		}
 
-		public override IEnumerable<string> GetDynamicMemberNames ()
-		{
-			return GetPropertyNames ();
-		}
+		public override IEnumerable<string> GetDynamicMemberNames () => GetPropertyNames ();
 
-		public override bool TrySetMember (SetMemberBinder binder, object value)
-		{
-			return SetValue (binder.Name, value);
-		}
+		public override bool TrySetMember (SetMemberBinder binder, object value) => SetValue (binder.Name, value);
 
 		public override bool TryGetMember (GetMemberBinder binder, out object result)
 		{

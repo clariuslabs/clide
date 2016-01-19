@@ -35,10 +35,7 @@ namespace Clide
 		/// <summary>
 		/// Gets the owning project.
 		/// </summary>
-		public virtual IProjectNode OwningProject
-		{
-			get { return owningProject.Value; }
-		}
+		public virtual IProjectNode OwningProject => owningProject.Value;
 
 		Lazy<ISolutionExplorerNode> GetParent(IVsHierarchyItem hierarchy)
 		{
@@ -46,40 +43,27 @@ namespace Clide
 			   new Lazy<ISolutionExplorerNode>(() => this.nodeFactory.CreateNode(hierarchy.Parent));
 		}
 
-
 		#region Equality
 
 		/// <summary>
 		/// Gets whether the given nodes are equal.
 		/// </summary>
-		public static bool operator ==(ProjectItemNode obj1, ProjectItemNode obj2)
-		{
-			return Equals(obj1, obj2);
-		}
+		public static bool operator == (ProjectItemNode obj1, ProjectItemNode obj2) => Equals (obj1, obj2);
 
 		/// <summary>
 		/// Gets whether the given nodes are not equal.
 		/// </summary>
-		public static bool operator !=(ProjectItemNode obj1, ProjectItemNode obj2)
-		{
-			return !Equals(obj1, obj2);
-		}
+		public static bool operator != (ProjectItemNode obj1, ProjectItemNode obj2) => !Equals (obj1, obj2);
 
 		/// <summary>
 		/// Gets whether the current node equals the given node.
 		/// </summary>
-		public bool Equals(ProjectItemNode other)
-		{
-			return ProjectItemNode.Equals(this, other);
-		}
+		public bool Equals (ProjectItemNode other) => ProjectItemNode.Equals (this, other);
 
 		/// <summary>
 		/// Gets whether the current node equals the given node.
 		/// </summary>
-		public override bool Equals(object obj)
-		{
-			return ProjectItemNode.Equals(this, obj as ProjectItemNode);
-		}
+		public override bool Equals (object obj) => ProjectItemNode.Equals (this, obj as ProjectItemNode);
 
 		/// <summary>
 		/// Gets whether the given nodes are equal.
@@ -105,11 +89,9 @@ namespace Clide
 		/// <returns>
 		/// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
 		/// </returns>
-		public override int GetHashCode()
-		{
-			return HierarchyNode.GetActualHierarchy().GetHashCode() ^
-				HierarchyNode.GetActualItemId().GetHashCode();
-		}
+		public override int GetHashCode () =>
+			HierarchyNode.GetActualHierarchy ().GetHashCode () ^
+			HierarchyNode.GetActualItemId ().GetHashCode ();
 
 		#endregion
 	}

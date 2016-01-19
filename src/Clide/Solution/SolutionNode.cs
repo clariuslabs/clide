@@ -70,10 +70,7 @@ namespace Clide
 		/// <summary>
 		/// Gets a value indicating whether a solution is open.
 		/// </summary>
-		public virtual bool IsOpen
-		{
-			get { return solution.GetProperty<bool> (__VSPROPID.VSPROPID_IsSolutionOpen); }
-		}
+		public virtual bool IsOpen => solution.GetProperty<bool> (__VSPROPID.VSPROPID_IsSolutionOpen);
 
 		/// <summary>
 		/// Gets the physical path of the solution, if it has been saved already.
@@ -97,21 +94,15 @@ namespace Clide
 		/// <summary>
 		/// Gets the currently selected nodes in the solution.
 		/// </summary>
-		public virtual IEnumerable<ISolutionExplorerNode> SelectedNodes
-		{
-			get
-			{
-				return selection.GetSelection ()
-					.Select (item => nodeFactory.CreateNode (item));
-			}
-		}
+		public virtual IEnumerable<ISolutionExplorerNode> SelectedNodes => selection.GetSelection ()
+			.Select (item => nodeFactory.CreateNode (item));
 
 		/// <summary>
 		/// Opens the specified solution file.
 		/// </summary>
 		public virtual void Open (string solutionFile)
 		{
-			Guard.NotNullOrEmpty ("solutionFile", solutionFile);
+			Guard.NotNullOrEmpty (nameof (solutionFile), solutionFile);
 
 			Close ();
 
@@ -123,9 +114,9 @@ namespace Clide
 		/// </summary>
 		public virtual void Create (string solutionFile)
 		{
-			Guard.NotNullOrEmpty ("solutionFile", solutionFile);
+			Guard.NotNullOrEmpty (nameof (solutionFile), solutionFile);
 			Guard.IsValid (
-				"solutionFile",
+				nameof (solutionFile),
 				solutionFile,
 				s => Path.IsPathRooted (s),
 				Strings.SolutionNode.InvalidSolutionFile (solutionFile));
@@ -175,9 +166,9 @@ namespace Clide
 		/// </summary>
 		public virtual void SaveAs (string solutionFile)
 		{
-			Guard.NotNullOrEmpty ("solutionFile", solutionFile);
+			Guard.NotNullOrEmpty (nameof (solutionFile), solutionFile);
 			Guard.IsValid (
-				"solutionFile",
+				nameof (solutionFile),
 				solutionFile,
 				s => Path.IsPathRooted (s),
 				Strings.SolutionNode.InvalidSolutionFile (solutionFile));
@@ -190,7 +181,7 @@ namespace Clide
 		/// </summary>
 		public virtual ISolutionFolderNode CreateSolutionFolder (string name)
 		{
-			Guard.NotNullOrEmpty ("name", name);
+			Guard.NotNullOrEmpty (nameof (name), name);
 
 			dteSolution.Value.AddSolutionFolder (name);
 
@@ -203,10 +194,7 @@ namespace Clide
 		/// <summary>
 		/// Accepts the specified visitor for traversal.
 		/// </summary>
-		public override bool Accept (ISolutionVisitor visitor)
-		{
-			return SolutionVisitable.Accept (this, visitor);
-		}
+		public override bool Accept (ISolutionVisitor visitor) => SolutionVisitable.Accept (this, visitor);
 
 		/// <summary>
 		/// Tries to smart-cast this node to the give type.
@@ -216,9 +204,6 @@ namespace Clide
 		/// The casted value or null if it cannot be converted to that type.
 		/// </returns>
 		/// <exception cref="System.NotImplementedException"></exception>
-		public override T As<T>()
-		{
-			return Adapter.Adapt (this).As<T> ();
-		}
+		public override T As<T> () => Adapter.Adapt (this).As<T> ();
 	}
 }

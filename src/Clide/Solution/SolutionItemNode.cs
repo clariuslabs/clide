@@ -37,34 +37,22 @@ namespace Clide
 		/// Gets the logical path of the item, relative to the solution, 
 		/// considering any containing solution folders.
 		/// </summary>
-		public virtual string LogicalPath
-		{
-			get { return this.RelativePathTo(OwningSolution); }
-		}
+		public virtual string LogicalPath => this.RelativePathTo (OwningSolution);
 
-        /// <summary>
-        /// Gets the physical path of the solution item.
-        /// </summary>
-        public virtual string PhysicalPath
-        {
-            get { return Item.Value.get_FileNames(1); }
-        }
+		/// <summary>
+		/// Gets the physical path of the solution item.
+		/// </summary>
+		public virtual string PhysicalPath => Item.Value.get_FileNames (1);
 
-        /// <summary>
-        /// Gets the owning solution folder.
-        /// </summary>
-        public virtual ISolutionFolderNode OwningSolutionFolder
-        {
-            get { return owningFolder.Value; }
-        }
+		/// <summary>
+		/// Gets the owning solution folder.
+		/// </summary>
+		public virtual ISolutionFolderNode OwningSolutionFolder => owningFolder.Value;
 
-        /// <summary>
-        /// Accepts the specified visitor for traversal.
-        /// </summary>
-        public override bool Accept(ISolutionVisitor visitor)
-        {
-            return SolutionVisitable.Accept(this, visitor);
-        }
+		/// <summary>
+		/// Accepts the specified visitor for traversal.
+		/// </summary>
+		public override bool Accept (ISolutionVisitor visitor) => SolutionVisitable.Accept (this, visitor);
 
 		/// <summary>
 		/// Tries to smart-cast this node to the give type.
@@ -74,14 +62,11 @@ namespace Clide
 		/// The casted value or null if it cannot be converted to that type.
 		/// </returns>
 		/// <exception cref="System.NotImplementedException"></exception>
-		public override T As<T>()
-		{
-			return Adapter.Adapt(this).As<T>();
-		}
+		public override T As<T> () => Adapter.Adapt (this).As<T> ();
 
-        /// <summary>
-        /// Gets the item represented by this node.
-        /// </summary>
-        internal Lazy<ProjectItem> Item { get; private set; }
-    }
+		/// <summary>
+		/// Gets the item represented by this node.
+		/// </summary>
+		internal Lazy<ProjectItem> Item { get; }
+	}
 }

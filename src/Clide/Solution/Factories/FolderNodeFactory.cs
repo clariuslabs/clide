@@ -42,10 +42,7 @@ namespace Clide
 			}
 		}
 
-		public virtual ISolutionExplorerNode CreateNode (IVsHierarchyItem item)
-		{
-			return Supports (item) ?
-				 new FolderNode (item, childNodeFactory.Value, adapter, solutionExplorer) : null;
-		}
+		public virtual ISolutionExplorerNode CreateNode (IVsHierarchyItem item) => Supports (item) ?
+			new FolderNode (item, childNodeFactory.Value, adapter, solutionExplorer) : null;
 	}
 }

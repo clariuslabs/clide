@@ -58,40 +58,22 @@ public static class ISolutionNodeExtensions
 	{
 		public ProjectsVisitor ()
 		{
-			this.Projects = new List<IProjectNode> ();
+			Projects = new List<IProjectNode> ();
 		}
 
 		public List<IProjectNode> Projects { get; private set; }
 
-		public bool VisitEnter (ISolutionNode solution)
-		{
-			return true;
-		}
+		public bool VisitEnter (ISolutionNode solution) => true;
 
-		public bool VisitLeave (ISolutionNode solution)
-		{
-			return true;
-		}
+		public bool VisitLeave (ISolutionNode solution) => true;
 
-		public bool VisitEnter (ISolutionItemNode solutionItem)
-		{
-			return false;
-		}
+		public bool VisitEnter (ISolutionItemNode solutionItem) => false;
 
-		public bool VisitLeave (ISolutionItemNode solutionItem)
-		{
-			return true;
-		}
+		public bool VisitLeave (ISolutionItemNode solutionItem) => true;
 
-		public bool VisitEnter (ISolutionFolderNode solutionFolder)
-		{
-			return true;
-		}
+		public bool VisitEnter (ISolutionFolderNode solutionFolder) => true;
 
-		public bool VisitLeave (ISolutionFolderNode solutionFolder)
-		{
-			return true;
-		}
+		public bool VisitLeave (ISolutionFolderNode solutionFolder) => true;
 
 		public bool VisitEnter (IProjectNode project)
 		{
@@ -101,10 +83,7 @@ public static class ISolutionNodeExtensions
 			return false;
 		}
 
-		public bool VisitLeave (IProjectNode project)
-		{
-			return true;
-		}
+		public bool VisitLeave (IProjectNode project) => true;
 
 		public bool VisitEnter (IFolderNode folder)
 		{
@@ -157,17 +136,17 @@ public static class ISolutionNodeExtensions
 		}
 	}
 
-	private class FilteringProjectsVisitor : ISolutionVisitor
+	class FilteringProjectsVisitor : ISolutionVisitor
 	{
-		private Func<IProjectNode, bool> predicate;
-		private bool firstOnly;
-		private bool done;
+		Func<IProjectNode, bool> predicate;
+		bool firstOnly;
+		bool done;
 
 		public FilteringProjectsVisitor (Func<IProjectNode, bool> predicate, bool firstOnly = false)
 		{
 			this.predicate = predicate;
 			this.firstOnly = firstOnly;
-			this.Projects = new List<IProjectNode> ();
+			Projects = new List<IProjectNode> ();
 		}
 
 		public List<IProjectNode> Projects { get; private set; }
@@ -186,41 +165,20 @@ public static class ISolutionNodeExtensions
 			return false;
 		}
 
-		public bool VisitLeave (IProjectNode project)
-		{
-			return !done;
-		}
+		public bool VisitLeave (IProjectNode project) => !done;
 
 		// Don't traverse child items of a solution item.
-		public bool VisitEnter (ISolutionItemNode solutionItem)
-		{
-			return false;
-		}
+		public bool VisitEnter (ISolutionItemNode solutionItem) => false;
 
-		public bool VisitLeave (ISolutionItemNode solutionItem)
-		{
-			return true;
-		}
+		public bool VisitLeave (ISolutionItemNode solutionItem) => true;
 
-		public bool VisitEnter (ISolutionFolderNode solutionFolder)
-		{
-			return !done;
-		}
+		public bool VisitEnter (ISolutionFolderNode solutionFolder) => !done;
 
-		public bool VisitLeave (ISolutionFolderNode solutionFolder)
-		{
-			return !done;
-		}
+		public bool VisitLeave (ISolutionFolderNode solutionFolder) => !done;
 
-		public bool VisitEnter (ISolutionNode solution)
-		{
-			return true;
-		}
+		public bool VisitEnter (ISolutionNode solution) => true;
 
-		public bool VisitLeave (ISolutionNode solution)
-		{
-			return true;
-		}
+		public bool VisitLeave (ISolutionNode solution) => true;
 
 		public bool VisitEnter (IFolderNode folder)
 		{

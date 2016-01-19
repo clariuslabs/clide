@@ -114,6 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\MissingDependencyException.cs" />
+    <Compile Include="Extensions\ServiceLocatorFacades.cs" />
     <Compile Include="IFluentInterface.cs" />
     <Compile Include="Solution\ISolutionExplorerNodeExtensions.cs" />
     <Compile Include="Solution\ISolutionNodeExtensions.cs" />

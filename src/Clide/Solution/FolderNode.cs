@@ -24,7 +24,7 @@ namespace Clide
 			Lazy<IVsUIHierarchyWindow> solutionExplorer)
             : base(SolutionNodeKind.Folder, hierarchyNode, nodeFactory, adapter, solutionExplorer)
 		{
-			this.Folder = new Lazy<ProjectItem>(() => hierarchyNode.GetExtenderObject() as ProjectItem);
+			Folder = new Lazy<ProjectItem>(() => hierarchyNode.GetExtenderObject() as ProjectItem);
 		}
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Clide
         /// <param name="name">The name of the folder to create.</param>
         public virtual IFolderNode CreateFolder(string name)
 		{
-			Guard.NotNullOrEmpty("name", name);
+			Guard.NotNullOrEmpty(nameof (name), name);
 
 			// NOTE: via DTE, you can't retrieve the created item/project/folder 
 			// right from the method call, you need to find it afterwards.
@@ -50,13 +50,10 @@ namespace Clide
 			return CreateNode(newFolder) as IFolderNode;
 		}
 
-        /// <summary>
-        /// Accepts the specified visitor for traversal.
-        /// </summary>
-        public override bool Accept(ISolutionVisitor visitor)
-        {
-            return SolutionVisitable.Accept(this, visitor);
-        }
+		/// <summary>
+		/// Accepts the specified visitor for traversal.
+		/// </summary>
+		public override bool Accept (ISolutionVisitor visitor) => SolutionVisitable.Accept (this, visitor);
 
 		/// <summary>
 		/// Tries to smart-cast this node to the give type.
@@ -66,9 +63,6 @@ namespace Clide
 		/// The casted value or null if it cannot be converted to that type.
 		/// </returns>
 		/// <exception cref="System.NotImplementedException"></exception>
-		public override T As<T>()
-		{
-			return Adapter.Adapt(this).As<T>();
-		}
+		public override T As<T> () => Adapter.Adapt (this).As<T> ();
 	}
 }

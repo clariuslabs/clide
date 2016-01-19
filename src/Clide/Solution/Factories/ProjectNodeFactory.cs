@@ -30,16 +30,10 @@ namespace Clide
 			this.solutionExplorer = solutionExplorer;
 		}
 
-        public virtual bool Supports(IVsHierarchyItem item)
-		{
-			return Supports (item, out item);
-		}
+		public virtual bool Supports (IVsHierarchyItem item) => Supports (item, out item);
 
-        public virtual ISolutionExplorerNode CreateNode(IVsHierarchyItem item)
-		{
-			return Supports(item, out item) ?
-				new ProjectNode(item, childNodeFactory.Value, adapter, solutionExplorer) : null;
-		}
+		public virtual ISolutionExplorerNode CreateNode (IVsHierarchyItem item) => Supports (item, out item) ?
+			new ProjectNode (item, childNodeFactory.Value, adapter, solutionExplorer) : null;
 
 		bool Supports (IVsHierarchyItem item, out IVsHierarchyItem actualItem)
 		{

@@ -3,6 +3,7 @@
 	using System;
 	using Microsoft.VisualStudio.Shell;
 	using Microsoft.VisualStudio.Shell.Interop;
+
 	/// <summary>
 	/// Represents a generic node that has no custom or fallback factory associated with it.
 	/// Used internally by the <see cref="AggregateSolutionExplorerNodeFactory"/> to expose 
@@ -25,13 +26,10 @@
 		{
 		}
 
-        /// <summary>
-        /// Accepts the specified visitor for traversal.
-        /// </summary>
-        public override bool Accept(ISolutionVisitor visitor)
-        {
-            return SolutionVisitable.Accept(this, visitor);
-        }
+		/// <summary>
+		/// Accepts the specified visitor for traversal.
+		/// </summary>
+		public override bool Accept (ISolutionVisitor visitor) => SolutionVisitable.Accept (this, visitor);
 
 		/// <summary>
 		/// Tries to smart-cast this node to the give type.
@@ -41,9 +39,6 @@
 		/// The casted value or null if it cannot be converted to that type.
 		/// </returns>
 		/// <exception cref="System.NotImplementedException"></exception>
-		public override T As<T>()
-		{
-			return this.Adapter.Adapt(this).As<T>();
-		}
+		public override T As<T> () => Adapter.Adapt (this).As<T> ();
 	}
 }

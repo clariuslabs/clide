@@ -23,15 +23,9 @@ namespace Clide
 			this.solutionExplorer = solutionExplorer;
 		}
 
-		public virtual bool Supports(IVsHierarchyItem item)
-		{
-            return item.GetExtenderObject() is VSLangProj.Reference;
-		}
+		public virtual bool Supports (IVsHierarchyItem item) => item.GetExtenderObject () is VSLangProj.Reference;
 
-        public virtual ISolutionExplorerNode CreateNode(IVsHierarchyItem item)
-		{
-			return Supports(item) ?
-				new ReferenceNode(item, childNodeFactory.Value, adapter, solutionExplorer) : null;
-		}
+		public virtual ISolutionExplorerNode CreateNode (IVsHierarchyItem item) => Supports (item) ?
+			new ReferenceNode (item, childNodeFactory.Value, adapter, solutionExplorer) : null;
 	}
 }

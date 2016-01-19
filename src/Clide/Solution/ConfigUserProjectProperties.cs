@@ -43,25 +43,13 @@ namespace Clide
             return Enumerable.Empty<string>();
         }
 
-		public override bool TryGetMember(GetMemberBinder binder, out object result)
-		{
-			return accessor.TryGetMember(binder, out result, base.TryGetMember);
-		}
+		public override bool TryGetMember (GetMemberBinder binder, out object result) => accessor.TryGetMember (binder, out result, base.TryGetMember);
 
-		public override bool TrySetMember(SetMemberBinder binder, object value)
-		{
-			return accessor.TrySetMember(binder, value, base.TrySetMember);
-		}
+		public override bool TrySetMember (SetMemberBinder binder, object value) => accessor.TrySetMember (binder, value, base.TrySetMember);
 
-		public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result)
-		{
-			return accessor.TryGetIndex(binder, indexes, out result, base.TryGetIndex);
-		}
+		public override bool TryGetIndex (GetIndexBinder binder, object[] indexes, out object result) => accessor.TryGetIndex (binder, indexes, out result, base.TryGetIndex);
 
-		public override bool TrySetIndex(SetIndexBinder binder, object[] indexes, object value)
-		{
-			return accessor.TrySetIndex(binder, indexes, value, base.TrySetIndex);
-		}
+		public override bool TrySetIndex (SetIndexBinder binder, object[] indexes, object value) => accessor.TrySetIndex (binder, indexes, value, base.TrySetIndex);
 
 		bool IPropertyAccessor.TryGetProperty(string propertyName, out object result)
 		{
@@ -69,7 +57,7 @@ namespace Clide
 			{
 				string value = "";
 				if (ErrorHandler.Succeeded(vsBuild.GetPropertyValue(
-					propertyName, this.configName, (uint)_PersistStorageType.PST_PROJECT_FILE, out value)))
+					propertyName, configName, (uint)_PersistStorageType.PST_PROJECT_FILE, out value)))
 				{
 					result = value;
 					return true;
@@ -85,7 +73,7 @@ namespace Clide
 
 		bool IPropertyAccessor.TrySetProperty(string propertyName, object value)
 		{
-			if (this.vsBuild != null)
+			if (vsBuild != null)
 			{
 				return ErrorHandler.Succeeded(vsBuild.SetPropertyValue(
 					propertyName, this.configName, (uint)_PersistStorageType.PST_USER_FILE, value.ToString()));

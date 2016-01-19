@@ -32,35 +32,20 @@ namespace Clide
 			accessor = new DynamicPropertyAccessor(this);
 		}
 
-		public override IEnumerable<string> GetDynamicMemberNames()
-		{
-			// Enumeration is not supported by the underlying VS API.
-			return Enumerable.Empty<string>();
-		}
+		// Enumeration is not supported by the underlying VS API.
+		public override IEnumerable<string> GetDynamicMemberNames () => Enumerable.Empty<string> ();
 
-		public override bool TryGetMember(GetMemberBinder binder, out object result)
-		{
-			return accessor.TryGetMember(binder, out result, base.TryGetMember);
-		}
+		public override bool TryGetMember (GetMemberBinder binder, out object result) => accessor.TryGetMember (binder, out result, base.TryGetMember);
 
-		public override bool TrySetMember(SetMemberBinder binder, object value)
-		{
-			return accessor.TrySetMember(binder, value, base.TrySetMember);
-		}
+		public override bool TrySetMember (SetMemberBinder binder, object value) => accessor.TrySetMember (binder, value, base.TrySetMember);
 
-		public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result)
-		{
-			return accessor.TryGetIndex(binder, indexes, out result, base.TryGetIndex);
-		}
+		public override bool TryGetIndex (GetIndexBinder binder, object[] indexes, out object result) => accessor.TryGetIndex (binder, indexes, out result, base.TryGetIndex);
 
-		public override bool TrySetIndex(SetIndexBinder binder, object[] indexes, object value)
-		{
-			return accessor.TrySetIndex(binder, indexes, value, base.TrySetIndex);
-		}
+		public override bool TrySetIndex (SetIndexBinder binder, object[] indexes, object value) => accessor.TrySetIndex (binder, indexes, value, base.TrySetIndex);
 
 		bool IPropertyAccessor.TryGetProperty(string propertyName, out object result)
 		{
-			if (this.vsBuild != null)
+			if (vsBuild != null)
 			{
 				string value = "";
 				if (ErrorHandler.Succeeded(vsBuild.GetPropertyValue(
@@ -73,7 +58,7 @@ namespace Clide
 				if (msBuildProject != null && dteProject != null)
 				{
 					var configName = this.dteProject.ConfigurationManager.ActiveConfiguration.ConfigurationName + "|" +
-						this.dteProject.ConfigurationManager.ActiveConfiguration.PlatformName;
+						dteProject.ConfigurationManager.ActiveConfiguration.PlatformName;
 
 					if (ErrorHandler.Succeeded(vsBuild.GetPropertyValue(
 						propertyName, configName, (uint)_PersistStorageType.PST_USER_FILE, out value)))
@@ -93,7 +78,7 @@ namespace Clide
 
 		bool IPropertyAccessor.TrySetProperty(string propertyName, object value)
 		{
-			if (this.vsBuild != null)
+			if (vsBuild != null)
 			{
 				if (ErrorHandler.Succeeded(vsBuild.SetPropertyValue(
 					propertyName, "", (uint)_PersistStorageType.PST_USER_FILE, value.ToString())))

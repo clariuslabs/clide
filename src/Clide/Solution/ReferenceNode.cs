@@ -26,13 +26,10 @@ namespace Clide
 			Reference = new Lazy<Reference>(() => (Reference)hierarchyNode.GetExtenderObject());
 		}
 
-        /// <summary>
-        /// Accepts the specified visitor for traversal.
-        /// </summary>
-        public override bool Accept(ISolutionVisitor visitor)
-        {
-            return SolutionVisitable.Accept(this, visitor);
-        }
+		/// <summary>
+		/// Accepts the specified visitor for traversal.
+		/// </summary>
+		public override bool Accept (ISolutionVisitor visitor) => SolutionVisitable.Accept (this, visitor);
 
 		/// <summary>
 		/// Tries to smart-cast this node to the give type.
@@ -42,14 +39,11 @@ namespace Clide
 		/// The casted value or null if it cannot be converted to that type.
 		/// </returns>
 		/// <exception cref="System.NotImplementedException"></exception>
-		public override T As<T>()
-		{
-			return Adapter.Adapt(this).As<T>();
-		}
+		public override T As<T> () => Adapter.Adapt (this).As<T> ();
 
 		/// <summary>
-        /// Gets the reference represented by this node.
-        /// </summary>
-        internal Lazy<Reference> Reference { get; private set; }
+		/// Gets the reference represented by this node.
+		/// </summary>
+		internal Lazy<Reference> Reference { get; }
 	}
 }

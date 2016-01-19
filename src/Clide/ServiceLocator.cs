@@ -45,10 +45,7 @@ namespace Clide
 			}
 		}
 
-		public Lazy<object, object> GetExport (Type contractType, Type metadataType, string contractName = null)
-		{
-			return GetExports (contractType, metadataType, contractName).FirstOrDefault ();
-		}
+		public Lazy<object, object> GetExport (Type contractType, Type metadataType, string contractName = null) => GetExports (contractType, metadataType, contractName).FirstOrDefault ();
 
 		public IEnumerable<object> GetExports (Type contractType, string contractName = null)
 		{
