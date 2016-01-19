@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Xunit;
 
-namespace Clide.Adapters
+namespace Clide
 {
 	[Collection ("OpenSolution11")]
 	public class DteToVsAdapterSpec
