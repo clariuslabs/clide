@@ -2,7 +2,6 @@
 ==============
 
 [![Build status](https://img.shields.io/appveyor/ci/MobileEssentials/clide.svg)](https://ci.appveyor.com/project/MobileEssentials/clide "CI builds at AppVeyor") 
-[![Code coverage](https://img.shields.io/coveralls/MobileEssentials/clide.svg)](https://coveralls.io/github/MobileEssentials/clide "Latest reported code coverage at Coveralls") 
 [![Latest version](https://img.shields.io/nuget/v/clide.svg)](https://www.nuget.org/packages/clide "Latest  package at NuGet.org")
 [![Join the chat at https://gitter.im/MobileEssentials](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/MobileEssentials?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge "MobileEssentials chatroom with the team")
 [![License](http://img.shields.io/:license-mit-blue.svg)](opensource.org/licenses/mit-license.php)
