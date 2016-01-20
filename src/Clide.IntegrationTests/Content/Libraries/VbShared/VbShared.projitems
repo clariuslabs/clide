@@ -12,6 +12,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)SharedClass1.vb" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)VbSharedFolder\" />
+    <Content Include="$(MSBuildThisFileDirectory)VbSharedFolder\TextFile1.txt" />
   </ItemGroup>
 </Project>

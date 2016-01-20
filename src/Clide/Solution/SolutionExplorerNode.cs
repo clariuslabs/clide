@@ -96,14 +96,15 @@ namespace Clide
 		public virtual ISolutionNode OwningSolution => solutionNode.Value;
 
 		/// <summary>
-		/// Gets the node display name.
+		/// Gets the node display name, as returned by the <see cref="VsHierarchyPropID.Name"/> property.
 		/// </summary>
 		public virtual string Name => name.Value;
 
 		/// <summary>
 		/// Gets the node text as shown in the solution explorer window. 
 		/// May not be the same as the <see cref="Name"/> (i.e. for the 
-		/// solution node itself, it isn't).
+		/// solution node itself, it isn't). Returns same value as 
+		/// <see cref="IVsHierarchyItem.Text"/>
 		/// </summary>
 		public virtual string Text => hierarchyItem.Text;
 

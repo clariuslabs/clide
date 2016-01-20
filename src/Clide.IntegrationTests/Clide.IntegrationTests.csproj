@@ -245,9 +245,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Adapters\DteToVsAdapterFacadeSpec.cs" />
+    <Compile Include="Adapters\DteAdapterFacadeSpec.cs" />
     <Compile Include="Adapters\DteToVsAdapterSpec.cs" />
-    <Compile Include="Adapters\SolutionToVsAdapterFacadeSpec.cs" />
+    <Compile Include="Adapters\SolutionAdapterFacadeSpec.cs" />
     <Compile Include="Adapters\SolutionToVsAdapterSpec.cs" />
     <Compile Include="Adapters\SolutionToVsLangAdapterSpec.cs" />
     <Compile Include="AsyncManagerSpec.cs" />
@@ -263,6 +263,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Retry.cs" />
     <Compile Include="ServiceLocatorExtensionsSpec.cs" />
+    <Compile Include="Solution\SharedProjectSpec.cs" />
+    <Compile Include="Solution\SolutionExplorerNodeSpec.cs" />
     <Compile Include="Solution\SolutionItemNodeFactorySpec.cs" />
     <Compile Include="Solution\SolutionFolderNodeFactorySpec.cs" />
     <Compile Include="Solution\ReferencesNodeFactorySpec.cs" />

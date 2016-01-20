@@ -5,11 +5,11 @@ using Xunit;
 namespace Clide.Adapters
 {
 	[Collection ("OpenSolution11")]
-	public class SolutionToVsAdapterFacadeSpec
+	public class SolutionAdapterFacadeSpec
 	{
 		ISolutionFixture fixture;
 
-		public SolutionToVsAdapterFacadeSpec (OpenSolution11Fixture fixture)
+		public SolutionAdapterFacadeSpec (OpenSolution11Fixture fixture)
 		{
 			this.fixture = fixture;
 		}

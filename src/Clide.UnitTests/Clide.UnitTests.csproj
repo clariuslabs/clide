@@ -187,7 +187,7 @@
     <Compile Include="Extensions\StringExtensionsSpec.cs" />
     <Compile Include="Extensions\ServiceLocatorExtensionsSpec.cs" />
     <Compile Include="FakeSolutionExplorer.cs" />
-    <Compile Include="Extensions\SolutionExtensionsSpec.cs" />
+    <Compile Include="Extensions\SolutionNodeExtensionsSpec.cs" />
     <Compile Include="ServiceLocatorSpec.cs" />
     <Compile Include="StaFact.cs" />
     <None Include="App.config" />
