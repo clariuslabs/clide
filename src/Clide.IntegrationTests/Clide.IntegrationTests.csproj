@@ -245,7 +245,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adapters\DteToVsAdapterFacadeSpec.cs" />
     <Compile Include="Adapters\DteToVsAdapterSpec.cs" />
+    <Compile Include="Adapters\SolutionToVsAdapterFacadeSpec.cs" />
     <Compile Include="Adapters\SolutionToVsAdapterSpec.cs" />
     <Compile Include="Adapters\SolutionToVsLangAdapterSpec.cs" />
     <Compile Include="AsyncManagerSpec.cs" />

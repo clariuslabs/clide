@@ -1,5 +1,6 @@
 ﻿using Clide;
 using EnvDTE;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using VSLangProj;
 
@@ -35,6 +36,20 @@ public static partial class AdapterFacade
 		project.GetServiceLocator ().GetExport<IAdapterService> ().Adapt (project).As<IVsProject> ();
 
 	/// <summary>
+	/// Adapts a <see cref="Project"/> to an <see cref="IVsProject"/>.
+	/// </summary>
+	/// <returns>The <see cref="IVsHierarchy"/> or <see langword="null"/> if conversion is not possible.</returns>
+	public static IVsHierarchy AsVsHierarchy (this Project project) =>
+		project.GetServiceLocator ().GetExport<IAdapterService> ().Adapt (project).As<IVsHierarchy> ();
+
+	/// <summary>
+	/// Adapts a <see cref="Project"/> to an <see cref="IVsProject"/>.
+	/// </summary>
+	/// <returns>The <see cref="IVsHierarchyItem"/> or <see langword="null"/> if conversion is not possible.</returns>
+	public static IVsHierarchyItem AsVsHierarchyItem (this Project project) =>
+		project.GetServiceLocator ().GetExport<IAdapterService> ().Adapt (project).As<IVsHierarchyItem> ();
+
+	/// <summary>
 	/// Adapts a <see cref="Project"/> to a <see cref="VSProject"/>.
 	/// </summary>
 	/// <returns>The <see cref="VSProject"/> or <see langword="null"/> if conversion is not possible.</returns>
@@ -54,4 +69,11 @@ public static partial class AdapterFacade
 	/// <returns>The <see cref="VSProjectItem"/> or <see langword="null"/> if conversion is not possible.</returns>
 	public static VSProjectItem AsVsLangItem (this ProjectItem item) =>
 		item.DTE.GetServiceLocator ().GetExport<IAdapterService> ().Adapt (item).As<VSProjectItem> ();
+
+	/// <summary>
+	/// Adapts a <see cref="ProjectItem"/> to an <see cref="IVsHierarchyItem"/>.
+	/// </summary>
+	/// <returns>The <see cref="IVsHierarchyItem"/> or <see langword="null"/> if conversion is not possible.</returns>
+	public static IVsHierarchyItem AsVsHierarchyItem (this ProjectItem item) =>
+		item.ContainingProject.GetServiceLocator ().GetExport<IAdapterService> ().Adapt (item).As<IVsHierarchyItem> ();
 }
