@@ -47,6 +47,7 @@
     <ProjectReference Include="..\Clide\Clide.csproj">
       <Project>{e8fabf5d-2fc8-43f6-b866-e3349afb7538}</Project>
       <Name>Clide</Name>
+      <OldVersion>3.0.0.0</OldVersion>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

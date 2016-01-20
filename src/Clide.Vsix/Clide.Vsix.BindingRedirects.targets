@@ -35,6 +35,9 @@
 		<ReferencePath>
 			<FusionName></FusionName>
 		</ReferencePath>
+		<BindingRedirected>
+			<OldVersion>0.0.0.0</OldVersion>			
+		</BindingRedirected>
 	</ItemDefinitionGroup>
 
 	<Target Name="BindingRedirects" DependsOnTargets="$(BindingRedirectsDependsOn)" />
@@ -81,7 +84,7 @@
 "name"="%(BindingRedirected.AssemblyName)"
 "publicKeyToken"="%(BindingRedirected.PublicKeyToken)"
 "culture"="neutral"
-"oldVersion"="0.0.0.0-99.9.9.9"
+"oldVersion"="%(OldVersion)-99.9.9.9"
 "newVersion"="%(BindingRedirected.Version)"
 "codeBase"="$PackageFolder$\%(BindingRedirected.Filename)%(BindingRedirected.Extension)"
 '/>
