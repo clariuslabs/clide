@@ -1,16 +1,15 @@
 ﻿using System;
 using System.IO;
-using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Clide
 {
-    /// <summary>
-    /// Default implementation of an item node in a managed project.
-    /// </summary>
-    public class ItemNode : ProjectItemNode, IItemNode
+	/// <summary>
+	/// Default implementation of an item node in a managed project.
+	/// </summary>
+	public class ItemNode : ProjectItemNode, IItemNode
     {
         Lazy<ItemProperties> properties;
 

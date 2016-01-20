@@ -1,10 +1,7 @@
-﻿using System;
-using System.Runtime.CompilerServices;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Threading;
-using Microsoft.VisualStudio.ComponentModelHost;
 using Merq;
+using Microsoft.VisualStudio.ComponentModelHost;
 using Xunit;
 using Xunit.Abstractions;
 

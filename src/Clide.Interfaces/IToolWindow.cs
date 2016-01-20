@@ -1,8 +1,8 @@
 ﻿namespace Clide
 {
-    /// <summary>
-    /// Common interface for tool windows.
-    /// </summary>
+	/// <summary>
+	/// Common interface for tool windows.
+	/// </summary>
 	public interface IToolWindow : IFluentInterface
 	{
         /// <summary>

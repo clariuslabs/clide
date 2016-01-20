@@ -4,7 +4,7 @@
 	using System.Linq;
 	using Xunit;
 
-    public class SolutionExtensionsSpec
+	public class SolutionExtensionsSpec
 	{
         ISolutionExplorer explorer;
 

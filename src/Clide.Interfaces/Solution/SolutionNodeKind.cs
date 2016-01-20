@@ -1,8 +1,8 @@
 ﻿namespace Clide
 {
-    /// <summary>
-    /// The kind of solution node.
-    /// </summary>
+	/// <summary>
+	/// The kind of solution node.
+	/// </summary>
 	public enum SolutionNodeKind
 	{
         /// <summary>

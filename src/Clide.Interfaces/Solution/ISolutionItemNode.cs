@@ -1,9 +1,9 @@
 ﻿namespace Clide
 {
-    /// <summary>
-    /// Interface implemented by solution item nodes.
-    /// </summary>
-    public interface ISolutionItemNode : ISolutionExplorerNode
+	/// <summary>
+	/// Interface implemented by solution item nodes.
+	/// </summary>
+	public interface ISolutionItemNode : ISolutionExplorerNode
 	{
         /// <summary>
         /// Gets the owning solution folder.

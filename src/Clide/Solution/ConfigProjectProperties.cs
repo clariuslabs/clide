@@ -2,10 +2,10 @@
 using System.Diagnostics;
 using System.Dynamic;
 using System.Linq;
+using Clide.Properties;
 using Microsoft.Build.Evaluation;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
-using Clide.Properties;
 
 namespace Clide
 {

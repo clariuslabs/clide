@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Clide;
+﻿using Clide;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell.Interop;
 using VSLangProj;

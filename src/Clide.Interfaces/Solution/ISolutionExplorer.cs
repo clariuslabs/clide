@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
 namespace Clide
-{    
-    /// <summary>
-    /// Exposes the solution explorer toolwindow.
-    /// </summary>
+{
+	/// <summary>
+	/// Exposes the solution explorer toolwindow.
+	/// </summary>
 	public interface ISolutionExplorer : IToolWindow
 	{
         /// <summary>

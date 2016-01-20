@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
+using Clide.Interop;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Clide.Interop;
 using Xunit;
 
 namespace Clide.Solution

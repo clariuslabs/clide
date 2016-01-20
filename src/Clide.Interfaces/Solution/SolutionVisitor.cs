@@ -1,11 +1,11 @@
 ﻿namespace Clide
 {
 
-    /// <summary>
-    /// Convenience default implementation of <see cref="ISolutionVisitor"/> that 
-    /// just visits the entire solution hierarchy.
-    /// </summary>
-    public abstract class SolutionVisitor : ISolutionVisitor
+	/// <summary>
+	/// Convenience default implementation of <see cref="ISolutionVisitor"/> that 
+	/// just visits the entire solution hierarchy.
+	/// </summary>
+	public abstract class SolutionVisitor : ISolutionVisitor
     {
 		/// <summary>
 		/// Begins visiting the solution.

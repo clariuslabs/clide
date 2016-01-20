@@ -3,7 +3,7 @@ namespace Clide
 	/// <summary>
 	/// Marker interface for all static adapters.
 	/// </summary>
-    public interface IAdapter
+	public interface IAdapter
 	{
 	}
 

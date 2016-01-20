@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Linq;
-using Microsoft.VisualStudio.ComponentModelHost;
 using Clide.Properties;
+using Microsoft.VisualStudio.ComponentModelHost;
 
 namespace Clide
 {

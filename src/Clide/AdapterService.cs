@@ -9,9 +9,9 @@ using FromTo = System.Tuple<System.Type, System.Type>;
 
 namespace Clide
 {
-    /// <summary>
-    /// Default implementation of the <see cref="IAdapterService"/>.
-    /// </summary>
+	/// <summary>
+	/// Default implementation of the <see cref="IAdapterService"/>.
+	/// </summary>
 	[Export(typeof(IAdapterService))]
 	[PartCreationPolicy(CreationPolicy.Shared)]
 	internal class AdapterService : IAdapterService

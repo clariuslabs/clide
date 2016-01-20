@@ -6,10 +6,10 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Clide
 {
-    /// <summary>
-    /// Default implementation of a folder node in a managed project.
-    /// </summary>
-    public class FolderNode : ProjectItemNode, IFolderNode
+	/// <summary>
+	/// Default implementation of a folder node in a managed project.
+	/// </summary>
+	public class FolderNode : ProjectItemNode, IFolderNode
 	{
         /// <summary>
         /// Initializes a new instance of the <see cref="FolderNode"/> class.

@@ -1,9 +1,9 @@
 ﻿namespace Clide
 {
-    /// <summary>
-    /// Provides a hierarchical visitor pattern interface for the solution model.
-    /// </summary>
-    public interface ISolutionVisitor
+	/// <summary>
+	/// Provides a hierarchical visitor pattern interface for the solution model.
+	/// </summary>
+	public interface ISolutionVisitor
     {
         /// <summary>
         /// Begins visiting the solution.

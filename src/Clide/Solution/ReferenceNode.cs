@@ -1,14 +1,13 @@
 ﻿using System;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using VSLangProj;
 
 namespace Clide
 {
-    /// <summary>
-    /// Default implementation of a reference node in a managed project.
-    /// </summary>
-    public class ReferenceNode : ProjectItemNode, IReferenceNode
+	/// <summary>
+	/// Default implementation of a reference node in a managed project.
+	/// </summary>
+	public class ReferenceNode : ProjectItemNode, IReferenceNode
 	{
         /// <summary>
         /// Initializes a new instance of the <see cref="ReferenceNode"/> class.

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.Composition;
-using EnvDTE;
-using Microsoft.VisualStudio.Shell;
+﻿using EnvDTE;
 
 namespace Clide
 {

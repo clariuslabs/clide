@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Clide.Interop
 {
-    internal class VsToolWindow
+	internal class VsToolWindow
     {
         private IVsUIShell uiShell;
         private Guid toolWindowId;

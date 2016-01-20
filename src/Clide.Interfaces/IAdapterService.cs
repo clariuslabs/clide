@@ -3,7 +3,7 @@ namespace Clide
 	/// <summary>
 	/// Service that provides pluggable adaptation of types.
 	/// </summary>
-    public interface IAdapterService
+	public interface IAdapterService
 	{
 		/// <summary>
 		/// Returns an adaptable object for the given <paramref name="source"/>.

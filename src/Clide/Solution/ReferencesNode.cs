@@ -1,8 +1,6 @@
 ﻿using System;
-using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using VSLangProj;
 
 namespace Clide
 {
