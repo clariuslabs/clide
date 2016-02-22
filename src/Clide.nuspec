@@ -11,7 +11,11 @@
     <iconUrl>https://raw.github.com/clariuslabs/clide/master/img/Clide32x32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>High-level, composable and testable APIs for working with IDEs.</description>
-    <releaseNotes>v2.2
+    <releaseNotes>v2.4
+
+* Dropped .NET 4.0 and therefore VS2010 support.
+
+v2.2
 
 * Added general-purpose referencing service
 
