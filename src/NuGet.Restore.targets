@@ -83,7 +83,7 @@
 
     <MakeDir Directories="$(NuGetPath)" Condition=" !Exists($(NuGetPath)) " />
     <MakeDir Directories="$(LocalAppData)\NuGet" Condition=" !Exists('$(LocalAppData)\NuGet') " />    
-    <Exec Command="&quot;$(PowerShell)&quot; -Command &quot;&amp; { (New-Object System.Net.WebClient).DownloadFile('http://nuget.org/nuget.exe', '$(CachedNuGet)') }&quot;"
+    <Exec Command="&quot;$(PowerShell)&quot; -Command &quot;&amp; { (New-Object System.Net.WebClient).DownloadFile('https://dist.nuget.org/win-x86-commandline/v3.3.0/nuget.exe', '$(CachedNuGet)') }&quot;"
           Condition=" !Exists($(NuGet)) And !Exists($(CachedNuGet)) " />
     <Copy SourceFiles="$(CachedNuGet)" DestinationFolder="$(NuGetPath)" Condition="!Exists($(NuGet))" />
     <Exec Command='"$(NuGet)" Update -Self' ContinueOnError='true' />  	  

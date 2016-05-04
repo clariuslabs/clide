@@ -314,11 +314,11 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props'))" />
     <Error Condition="!Exists('..\packages\netfx-System.StringResources.3.0.10\build\netfx-System.StringResources.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\netfx-System.StringResources.3.0.10\build\netfx-System.StringResources.targets'))" />
-    <Error Condition="!Exists('..\packages\GitInfo.1.0.56-pre\build\GitInfo.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\GitInfo.1.0.56-pre\build\GitInfo.targets'))" />
     <Error Condition="!Exists('..\packages\xunit.vsix.0.2.69\build\xunit.vsix.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.vsix.0.2.69\build\xunit.vsix.props'))" />
     <Error Condition="!Exists('..\packages\xunit.vsix.0.2.69\build\xunit.vsix.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.vsix.0.2.69\build\xunit.vsix.targets'))" />
+    <Error Condition="!Exists('..\packages\GitInfo.1.1.12\build\GitInfo.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\GitInfo.1.1.12\build\GitInfo.targets'))" />
   </Target>
   <Import Project="..\packages\netfx-System.StringResources.3.0.10\build\netfx-System.StringResources.targets" Condition="Exists('..\packages\netfx-System.StringResources.3.0.10\build\netfx-System.StringResources.targets')" />
-  <Import Project="..\packages\GitInfo.1.0.56-pre\build\GitInfo.targets" Condition="Exists('..\packages\GitInfo.1.0.56-pre\build\GitInfo.targets')" />
   <Import Project="..\packages\xunit.vsix.0.2.69\build\xunit.vsix.targets" Condition="Exists('..\packages\xunit.vsix.0.2.69\build\xunit.vsix.targets')" />
+  <Import Project="..\packages\GitInfo.1.1.12\build\GitInfo.targets" Condition="Exists('..\packages\GitInfo.1.1.12\build\GitInfo.targets')" />
 </Project>

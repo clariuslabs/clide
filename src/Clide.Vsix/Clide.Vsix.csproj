@@ -30,7 +30,6 @@
     <None Include="app.config" />
     <None Include="Clide.Vsix.BindingRedirects.targets" />
     <None Include="Clide.Vsix.props" />
-    <None Include="Clide.Vsix.Versioning.targets" />
     <None Include="packages.config" />
     <None Include="Clide.Vsix.targets" />
     <None Include="source.extension.vsixmanifest" />
@@ -169,7 +168,9 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.VisualStudio.SDK.VsixSuppression.14.1.15\build\Microsoft.VisualStudio.SDK.VsixSuppression.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.VisualStudio.SDK.VsixSuppression.14.1.15\build\Microsoft.VisualStudio.SDK.VsixSuppression.targets'))" />
-    <Error Condition="!Exists('..\packages\GitInfo.1.0.56-pre\build\GitInfo.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\GitInfo.1.0.56-pre\build\GitInfo.targets'))" />
+    <Error Condition="!Exists('..\packages\GitInfo.1.1.12\build\GitInfo.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\GitInfo.1.1.12\build\GitInfo.targets'))" />
+    <Error Condition="!Exists('..\packages\GitInfo.Vsix.1.1.12\build\GitInfo.Vsix.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\GitInfo.Vsix.1.1.12\build\GitInfo.Vsix.targets'))" />
   </Target>
-  <Import Project="..\packages\GitInfo.1.0.56-pre\build\GitInfo.targets" Condition="Exists('..\packages\GitInfo.1.0.56-pre\build\GitInfo.targets')" />
+  <Import Project="..\packages\GitInfo.1.1.12\build\GitInfo.targets" Condition="Exists('..\packages\GitInfo.1.1.12\build\GitInfo.targets')" />
+  <Import Project="..\packages\GitInfo.Vsix.1.1.12\build\GitInfo.Vsix.targets" Condition="Exists('..\packages\GitInfo.Vsix.1.1.12\build\GitInfo.Vsix.targets')" />
 </Project>

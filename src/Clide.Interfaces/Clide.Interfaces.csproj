@@ -201,7 +201,7 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\netfx-System.StringResources.3.0.10\build\netfx-System.StringResources.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\netfx-System.StringResources.3.0.10\build\netfx-System.StringResources.targets'))" />
-    <Error Condition="!Exists('..\packages\GitInfo.1.0.56-pre\build\GitInfo.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\GitInfo.1.0.56-pre\build\GitInfo.targets'))" />
+    <Error Condition="!Exists('..\packages\GitInfo.1.1.12\build\GitInfo.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\GitInfo.1.1.12\build\GitInfo.targets'))" />
   </Target>
-  <Import Project="..\packages\GitInfo.1.0.56-pre\build\GitInfo.targets" Condition="Exists('..\packages\GitInfo.1.0.56-pre\build\GitInfo.targets')" />
+  <Import Project="..\packages\GitInfo.1.1.12\build\GitInfo.targets" Condition="Exists('..\packages\GitInfo.1.1.12\build\GitInfo.targets')" />
 </Project>
