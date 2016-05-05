@@ -17,25 +17,32 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using Clide.CommonComposition;
-    using Clide.Composition;
-    using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using System;
-    using System.Windows;
-    using System.Windows.Interop;
-
-    /// <summary>
-    /// Implements dialog creation in Visual Studio.
-    /// </summary>
-    [Component(IsSingleton = true)]
+	using Clide.CommonComposition;
+	using Clide.Composition;
+	using Microsoft.VisualStudio;
+	using Microsoft.VisualStudio.Shell.Interop;
+	using System;
+	using System.Windows;
+	using System.Windows.Interop;
+	using System.ComponentModel.Composition;
+	using Microsoft.VisualStudio.Shell; 
+	
+	/// <summary>
+	/// Implements dialog creation in Visual Studio.
+	/// </summary>
+	[Component(IsSingleton = true)]
     internal class DialogWindowFactory : IDialogWindowFactory
     {
         private Lazy<IDevEnv> devEnv;
         private IVsUIShell uiShell;
         private IUIThread uiThread;
 
-        public DialogWindowFactory(Lazy<IDevEnv> devEnv, IVsUIShell uiShell, IUIThread uiThread)
+		public DialogWindowFactory (IServiceProvider serviceProvider, Lazy<IDevEnv> devEnv, IUIThread uiThread)
+			: this(devEnv, serviceProvider.GetService<SVsUIShell, IVsUIShell>(), uiThread)
+		{
+		}
+
+        internal DialogWindowFactory(Lazy<IDevEnv> devEnv, IVsUIShell uiShell, IUIThread uiThread)
         {
             this.devEnv = devEnv;
             this.uiShell = uiShell;

@@ -22,18 +22,15 @@
     {
         private ITracer tracer;
 
-        static ClideIntegrationPackage()
-        {
-            LocalResolver.Initialize(Path.GetDirectoryName(typeof(ClideIntegrationPackage).Assembly.Location));
-        }
-
         protected override void Initialize()
         {
             base.Initialize();
 
             IDevEnv devEnv = Host.Initialize(this);
 
-            Tracer.Manager.SetTracingLevel(this.GetType().Namespace, SourceLevels.All);
+			var shell = devEnv.ServiceLocator.TryGetService<SVsShell, IVsShell>();
+
+			Tracer.Manager.SetTracingLevel(this.GetType().Namespace, SourceLevels.All);
             Tracer.Manager.AddListener(this.GetType().Namespace, new TextTraceListener(devEnv.OutputWindow.GetPane(this)));
 
             this.tracer = Tracer.Get<ClideIntegrationPackage>();

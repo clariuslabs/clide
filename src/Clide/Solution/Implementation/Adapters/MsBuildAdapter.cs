@@ -37,7 +37,12 @@ namespace Clide.Solution.Adapters
         ISolutionExplorerNodeFactory nodeFactory;
         ISolutionExplorer solutionExplorer;
 
-        public MsBuildAdapter(IVsSolution vsSolution, ISolutionExplorerNodeFactory nodeFactory, ISolutionExplorer solutionExplorer)
+		public MsBuildAdapter(IServiceProvider serviceProvider, ISolutionExplorerNodeFactory nodeFactory, ISolutionExplorer solutionExplorer)
+			: this(serviceProvider.GetService<SVsSolution, IVsSolution>(), nodeFactory, solutionExplorer)
+		{
+		}
+
+		internal MsBuildAdapter(IVsSolution vsSolution, ISolutionExplorerNodeFactory nodeFactory, ISolutionExplorer solutionExplorer)
         {
             this.vsSolution = vsSolution;
             this.nodeFactory = nodeFactory;

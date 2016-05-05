@@ -17,17 +17,19 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using Clide.CommonComposition;
-    using Clide.Composition;
-    using Clide.Diagnostics;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using System;
-    using System.Windows;
-
-    /// <summary>
-    /// Default implementation of the <see cref="IMessageBoxService"/>.
-    /// </summary>
-    [Component(IsSingleton = true)]
+	using Clide.CommonComposition;
+	using Clide.Composition;
+	using Clide.Diagnostics;
+	using Microsoft.VisualStudio.Shell.Interop;
+	using System;
+	using System.Windows;
+	using Microsoft.VisualStudio.Shell;
+	using System.ComponentModel.Composition;
+	
+	/// <summary>
+	/// Default implementation of the <see cref="IMessageBoxService"/>.
+	/// </summary>
+	[Component(IsSingleton = true)]
     internal class MessageBoxService : IMessageBoxService
     {
         public const string DefaultTitle = "Microsoft Visual Studio";
@@ -39,10 +41,19 @@ namespace Clide
         private IVsUIShell uiShell;
         private IUIThread uiThread;
 
-        /// <summary>
-        /// Default constructor for runtime behavior that can't be mocked.
-        /// </summary>
-        public MessageBoxService(IVsUIShell uiShell, IUIThread uiThread)
+
+		/// <summary>
+		/// Default constructor for runtime behavior that can't be mocked.
+		/// </summary>
+		public MessageBoxService (IServiceProvider serviceProvider, IUIThread uiThread)
+			: this(serviceProvider.GetService<SVsUIShell, IVsUIShell>(), uiThread)
+		{
+		}
+
+		/// <summary>
+		/// Default constructor for runtime behavior that can't be mocked.
+		/// </summary>
+		internal MessageBoxService (IVsUIShell uiShell, IUIThread uiThread)
         {
             Guard.NotNull(() => uiShell, uiShell);
             Guard.NotNull(() => uiThread, uiThread);

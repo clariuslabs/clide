@@ -178,9 +178,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Clide.Resolver\LocalResolver.cs">
-      <Link>LocalResolver.cs</Link>
-    </Compile>
     <Compile Include="Adornment.cs" />
     <Compile Include="BuildCommandInterceptor.cs" />
     <Compile Include="Constants.cs" />

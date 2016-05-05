@@ -116,8 +116,8 @@ namespace Clide
 
                 var catalog = new ComponentCatalog(addedAssemblies.Values.ToArray());
 				var providers = composition != null ? 
-					new ExportProvider[] { new ServicesExportProvider(services), composition.DefaultExportProvider } : 
-					new ExportProvider[] { new ServicesExportProvider(services) };
+					new ExportProvider[] { composition.DefaultExportProvider } : 
+					new ExportProvider[0];
 
                 var container = new CompositionContainer(catalog, providers);
 
@@ -125,7 +125,7 @@ namespace Clide
                 var serviceLocator = new ServicesAccessor(services, new Lazy<IServiceLocator>(() => serviceLocators[services]));
                 container.ComposeParts(serviceLocator);
 
-                return new ExportsServiceLocator(container);
+                return new FallbackServiceLocator(new ExportsServiceLocator(container), new ServiceProviderLocator(services));
             }
         }
 

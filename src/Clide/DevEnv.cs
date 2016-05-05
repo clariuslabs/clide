@@ -23,8 +23,8 @@ namespace Clide
     public static class DevEnv
     {
         private static Lazy<DevEnvFactory> defaultFactory = new Lazy<DevEnvFactory>(() => new DevEnvFactory());
-        private static AmbientSingleton<Func<IServiceProvider, IDevEnv>> devEnvFactory =
-            new AmbientSingleton<Func<IServiceProvider, IDevEnv>>(services => defaultFactory.Value.Get(services));
+        //private static AmbientSingleton<Func<IServiceProvider, IDevEnv>> devEnvFactory =
+        //    new AmbientSingleton<Func<IServiceProvider, IDevEnv>>(services => defaultFactory.Value.Get(services));
 
         /// <summary>
         /// Gets the developer environment for the given service provider. 
@@ -43,7 +43,7 @@ namespace Clide
         /// package Clide components.</param>
         public static IDevEnv Get(IServiceProvider serviceProvider)
         {
-            return devEnvFactory.Value.Invoke(serviceProvider);
+            return defaultFactory.Value.Get(serviceProvider);
         }
 
         /// <summary>
@@ -63,21 +63,7 @@ namespace Clide
         /// package Clide components.</param>
         public static IDevEnv Get(Guid packageId)
         {
-            return devEnvFactory.Value.Invoke(GlobalServiceProvider.Instance.GetLoadedPackage(packageId));
-        }
-
-        /// <summary>
-        /// Gets or sets the factory that will create instances of 
-        /// <see cref="IDevEnv"/> when the <see cref="Get(Guid)"/>
-        /// or <see cref="Get(IServiceProvider)"/> methods 
-        /// are invoked by consumers. This is an ambient singleton, so 
-        /// it is safe to replace it in multi-threaded test runs.
-        /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public static Func<IServiceProvider, IDevEnv> DevEnvFactory
-        {
-            get { return devEnvFactory.Value; }
-            set { devEnvFactory.Value = value; }
+            return defaultFactory.Value.Get(GlobalServiceProvider.Instance.GetLoadedPackage(packageId));
         }
     }
 }

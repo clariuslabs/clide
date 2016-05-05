@@ -14,11 +14,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using Clide.CommonComposition;
-    using Microsoft.VisualStudio.Shell;
-    using System;
+	using Clide.CommonComposition;
+	using Microsoft.VisualStudio.Shell;
+	using System;
+	using System.ComponentModel.Composition;
 
-    [Component(IsSingleton = true)]
+	[Component(IsSingleton = true)]
     internal class ErrorsManager : IErrorsManager
     {
         private IServiceProvider serviceProvider;

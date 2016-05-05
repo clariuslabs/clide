@@ -14,18 +14,20 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Events
 {
-    using Clide.CommonComposition;
-    using Clide.Composition;
-    using Clide.Sdk.Solution;
-    using Clide.Solution;
-    using Clide.Solution.Implementation;
-    using EnvDTE;
-    using EnvDTE80;
-    using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using System;
+	using Clide.CommonComposition;
+	using Clide.Composition;
+	using Clide.Sdk.Solution;
+	using Clide.Solution;
+	using Clide.Solution.Implementation;
+	using EnvDTE;
+	using EnvDTE80;
+	using Microsoft.VisualStudio;
+	using Microsoft.VisualStudio.Shell.Interop;
+	using System;
+	using System.ComponentModel.Composition;
+	using Microsoft.VisualStudio.Shell;
 
-    [Component(IsSingleton = true)]
+	[Component(IsSingleton = true)]
     internal class SolutionEvents : IDisposable, IVsSolutionEvents, ISolutionEvents
 	{
 		private bool isDisposed;

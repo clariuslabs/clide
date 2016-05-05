@@ -14,27 +14,27 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using Clide.CommonComposition;
-    using Clide.Diagnostics;
-    using Clide.Properties;
-    using Microsoft.CSharp;
-    using Microsoft.CSharp.RuntimeBinder;
-    using Microsoft.VisualStudio.Shell;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using Microsoft.Win32;
-    using System;
-    using System.CodeDom.Compiler;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Diagnostics;
-    using System.Dynamic;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text.RegularExpressions;
-
-    [Component(IsSingleton = true)]
+	using Clide.CommonComposition;
+	using Clide.Diagnostics;
+	using Clide.Properties;
+	using Microsoft.CSharp;
+	using Microsoft.CSharp.RuntimeBinder;
+	using Microsoft.VisualStudio.Shell;
+	using Microsoft.VisualStudio.Shell.Interop;
+	using Microsoft.Win32;
+	using System;
+	using System.CodeDom.Compiler;
+	using System.Collections.Concurrent;
+	using System.Collections.Generic;
+	using System.ComponentModel;
+	using System.Diagnostics;
+	using System.Dynamic;
+	using System.IO;
+	using System.Linq;
+	using System.Reflection;
+	using System.Text.RegularExpressions;
+	using System.ComponentModel.Composition;
+	[Component(IsSingleton = true)]
     internal class OptionsManager : IOptionsManager
     {
         private static readonly ITracer tracer = Tracer.Get<OptionsManager>();
@@ -44,7 +44,12 @@ namespace Clide
         private string registryRoot;
         private IEnumerable<Lazy<IOptionsPage>> optionPages;
 
-        public OptionsManager(IServiceProvider serviceProvider, IVsShell vsShell, IEnumerable<Lazy<IOptionsPage>> optionPages)
+		public OptionsManager ([Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider, IEnumerable<Lazy<IOptionsPage>> optionPages)
+			: this(serviceProvider, serviceProvider.GetService<SVsShell, IVsShell>(), optionPages)
+		{
+		}
+
+		internal OptionsManager (IServiceProvider serviceProvider, IVsShell vsShell, IEnumerable<Lazy<IOptionsPage>> optionPages)
         {
             this.serviceProvider = serviceProvider;
             this.vsShell = vsShell;

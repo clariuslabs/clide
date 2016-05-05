@@ -1,3 +1,16 @@
+v2.5
+
+* VS services are no longer automatically imported via constructor dependencies.
+  This was causing significant performance degradation for little additional 
+  simplicity over just taking a dependency on a single constructor parameter 
+  `[Import(typeof(SVsServiceProvider))] IServiceProvider services` which can 
+  provide the same behavior in a much more explicit way. Typical pattern is 
+  for this parameter to be used in a public constructor together with the other 
+  MEF dependencies, and invoke an internal constructor with the actual dependencies 
+  (i.e. DTE, IVsShell, etc.) which are just extracted from the service provider 
+  at construction time. Also, this allows the component to decide to delay 
+  retrieval of these services, marshall to the UI thread as needed, etc.
+
 v2.4
 
 * Dropped .NET 4.0 and therefore VS2010 support.

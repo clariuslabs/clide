@@ -22,83 +22,17 @@ namespace Clide
     {
         internal static readonly IAssertion Assert = new Assertion();
 
-        [HostType("VS IDE")]
-        [TestMethod]
-        public void WhenRetrievingServiceProvider_ThenSucceeds()
-        {
-            var servicesExports = new ServicesExportProvider(GlobalServiceProvider.Instance);
+		[HostType ("VS IDE")]
+		[TestMethod]
+		public void WhenRetrievingVsService_ThenSucceeds ()
+		{
+			var devenv = DevEnv.Get(Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider);
+			var shell = devenv.ServiceLocator.TryGetService<SVsShell, IVsShell>();
 
-        }
+			Assert.NotNull (shell);
+		}
 
-        [HostType("VS IDE")]
-        [TestMethod]
-        public void WhenRetrievingVsService_ThenCanGetFromCompositionContainer()
-        {
-            var servicesExports = new ServicesExportProvider(GlobalServiceProvider.Instance);
-
-            var container = new CompositionContainer(servicesExports);
-
-            var shell = container.GetExportedValue<IVsUIShell>();
-
-            Assert.NotNull(shell);
-
-            var shell2 = GlobalServiceProvider.Instance.GetService<SVsUIShell, IVsUIShell>();
-
-            Assert.Same(shell, shell2);
-        }
-
-        [HostType("VS IDE")]
-        [TestMethod]
-        public void WhenRetrievingVsServiceWithVersionNumber_ThenCanGetFromCompositionContainer()
-        {
-            var servicesExports = new ServicesExportProvider(GlobalServiceProvider.Instance);
-
-            var container = new CompositionContainer(servicesExports);
-
-            var shell = container.GetExportedValue<IVsUIShell4>();
-
-            Assert.NotNull(shell);
-
-            var shell2 = GlobalServiceProvider.Instance.GetService<SVsUIShell, IVsUIShell>();
-
-            Assert.Same(shell, shell2);
-        }
-
-        [HostType("VS IDE")]
-        [TestMethod]
-        public void WhenRetrievingDTE_ThenCanGetFromCompositionContainer()
-        {
-            var servicesExports = new ServicesExportProvider(GlobalServiceProvider.Instance);
-
-            var container = new CompositionContainer(servicesExports);
-
-            var service1 = container.GetExportedValue<DTE>();
-
-            Assert.NotNull(service1);
-
-            var service2 = GlobalServiceProvider.Instance.GetService<SDTE, DTE>();
-
-            Assert.Same(service1, service2);
-        }
-
-        [HostType("VS IDE")]
-        [TestMethod]
-        public void WhenRetrievingDTE2_ThenCanGetFromCompositionContainer()
-        {
-            var servicesExports = new ServicesExportProvider(GlobalServiceProvider.Instance);
-
-            var container = new CompositionContainer(servicesExports);
-
-            var service1 = container.GetExportedValue<DTE2>();
-
-            Assert.NotNull(service1);
-
-            var service2 = GlobalServiceProvider.Instance.GetService<SDTE, DTE>();
-
-            Assert.Same(service1, service2);
-        }
-
-        [HostType("VS IDE")]
+		[HostType ("VS IDE")]
         [TestMethod]
         public void WhenRetrievingExportedValueOrDefaultForMany_ThenThrowsImportCardinalityException()
         {

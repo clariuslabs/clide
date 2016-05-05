@@ -34,7 +34,9 @@ namespace Clide
         private static readonly Lazy<IServiceLocator> globalLocator = new Lazy<IServiceLocator>(() =>
             new FallbackServiceLocator(
                 DevEnv.Get(GlobalServiceProvider.Instance).ServiceLocator,
-                new ExportsServiceLocator(GlobalServiceProvider.Instance.GetService<SComponentModel, IComponentModel>().DefaultExportProvider)));
+				new FallbackServiceLocator(
+					new ExportsServiceLocator(GlobalServiceProvider.Instance.GetService<SComponentModel, IComponentModel>().DefaultExportProvider),
+					new ServiceProviderLocator(GlobalServiceProvider.Instance))));
 
         /// <summary>
         /// Gets the global locator.

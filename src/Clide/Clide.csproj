@@ -161,7 +161,7 @@
     <Compile Include="Commands\ICommandInterceptor.cs" />
     <Compile Include="Composition\FallbackServiceLocator.cs" />
     <Compile Include="Composition\ExportsServiceLocator.cs" />
-    <Compile Include="Composition\ServicesExportProvider.cs" />
+    <Compile Include="Composition\ServiceProviderLocator.cs" />
     <Compile Include="Diagnostics\TextTraceListener.cs" />
     <Compile Include="External\Diagnostics\Tracer\ITracer.cs" />
     <Compile Include="External\Diagnostics\Tracer\ITracerExtensions.cs" />
