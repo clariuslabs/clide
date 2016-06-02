@@ -4,6 +4,9 @@ build
 bin
 obj
 packages
+*.nuget.targets
+*.nuget.props
+*.lock.json
 *.suo
 *.user
 *.cache

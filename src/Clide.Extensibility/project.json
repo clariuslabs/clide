@@ -1,0 +1,13 @@
+﻿{
+  "dependencies": {
+    "GitInfo": "1.1.19",
+    "VSSDK.IDE.11": "11.0.4",
+    "VSSDK.Shell.11": "11.0.4",
+  },
+  "frameworks": {
+    "net45": {}
+  },
+  "runtimes": {
+    "win": {}
+  }
+}

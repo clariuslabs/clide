@@ -1,0 +1,23 @@
+﻿{
+  "dependencies": {
+    "GitInfo": "1.1.19",
+    "IFluentInterface": "2.0.1",
+    "Merq": "0.3.30-pre",
+    "Merq.Async": "0.3.30-pre",
+    "netfx-System.StringResources": "3.0.12",
+    "Rx-Main": "2.2.5",
+    "System.Diagnostics.Tracer": "1.0.7",
+    "VSSDK.ComponentModelHost.11": "11.0.4",
+    "VSSDK.DTE.10": "10.0.4",
+    "VSSDK.IDE.11": "11.0.4",
+    "VSSDK.Shell.11": "11.0.4",
+    "VSSDK.VSLangProj.11": "11.0.4",
+    "Microsoft.VisualStudio.SDK.VsixSuppression": "14.1.25"
+  },
+  "frameworks": {
+    "net45": {}
+  },
+  "runtimes": {
+    "win": {}
+  }
+}

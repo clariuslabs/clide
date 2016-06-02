@@ -1,0 +1,28 @@
+﻿{
+  "dependencies": {
+    "GitInfo": "1.1.19",
+    "IFluentInterface": "2.0.1",
+    "Merq": "0.3.30-pre",
+    "Merq.Async": "0.3.30-pre",
+    "Moq": "4.5.8",
+    "netfx-System.StringResources": "3.0.12",
+    "Rx-Main": "2.2.5",
+    "Rx-Testing": "2.2.5",
+    "System.Diagnostics.Tracer": "1.0.7",
+    "VSSDK.ComponentModelHost.11": "11.0.4",
+    "VSSDK.DTE.10": "10.0.4",
+    "VSSDK.IDE.11": "11.0.4",
+    "VSSDK.Shell.11": "11.0.4",
+    "VSSDK.Text.11": "11.0.4",
+    "VSSDK.VSLangProj.11": "11.0.4",
+    "xunit": "2.1.0",
+    "xunit.runner.visualstudio": "2.1.0",
+    "xunit.vsix": "0.2.70"
+  },
+  "frameworks": {
+    "net45": {}
+  },
+  "runtimes": {
+    "win-x86": {}
+  }
+}

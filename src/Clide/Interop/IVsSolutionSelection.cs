@@ -18,7 +18,6 @@ namespace Clide.Interop
 		/// <summary>
 		/// Gets all currently selected items.
 		/// </summary>
-		/// <returns></returns>
 		IEnumerable<IVsHierarchyItem> GetSelection ();
 	}
 }

@@ -4,7 +4,8 @@ using Microsoft.Internal.VisualStudio.PlatformUI;
 namespace Clide.Interop
 {
 	/// <summary>
-	/// Provides a nicer abstraction over a hierarchy selection.
+	/// Provides a nicer abstraction over a hierarchy selection. 
+	/// Available as a MEF component.
 	/// </summary>
 	public interface IVsHierarchySelection
 	{
@@ -18,7 +19,6 @@ namespace Clide.Interop
 		/// <summary>
 		/// Gets all currently selected items.
 		/// </summary>
-		/// <returns></returns>
 		IEnumerable<HierarchyItemPair> GetSelection ();
 	}
 }
