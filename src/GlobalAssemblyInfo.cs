@@ -20,7 +20,7 @@ using System.Reflection;
 
 partial class ThisAssembly
 {
-	public const string Version = ThisAssembly.Git.SemVer.Major + "." + ThisAssembly.Git.SemVer.Minor + "." + ThisAssembly.Git.SemVer.Patch;
+	public const string Version = Git.SemVer.Major + "." + Git.SemVer.Minor + "." + Git.SemVer.Patch;
 	public const string InformationalVersion = Version + "-" + Git.Branch + "+" + Git.Commit;
 }
 

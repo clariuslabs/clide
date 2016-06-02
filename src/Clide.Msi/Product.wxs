@@ -9,6 +9,9 @@
 		<Feature Id="ProductFeature" Title="Clide" Level="1">
 			<ComponentRef Id="Clide" />
 		</Feature>
+
+		<Icon Id="Clide.ico" SourceFile="..\..\icon\Clide.ico" />
+		<Property Id="ARPPRODUCTICON" Value="Clide.ico" />
 	</Product>
 
 	<Fragment>

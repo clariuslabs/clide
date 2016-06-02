@@ -69,7 +69,7 @@
 		<Error Condition=" '$(TestInstalled)' == 'true' And '$(Configuration)' != 'Release' "
 			   Text="Cannot run integration tests with the installed version because the MSI is only built for the Release configuration, and specified configuration is '$(Configuration)'." />
 		<CallTarget Targets="Install" Condition=" '$(TestInstalled)' == 'true'" />
-		
+
 		<MSBuild Projects="src\Clide.IntegrationTests\Clide.IntegrationTests.csproj" BuildInParallel="false" Targets="GetTargetPath" Properties="$(CommonBuildProperties)">
 			<Output TaskParameter="TargetOutputs" ItemName="IntegrationTestAssembly" />
 		</MSBuild>
@@ -104,7 +104,7 @@
 		<Exec Command='appveyor AddCompilationMessage "Integration Tests Failed: $(Failed)" -Category Error'
 			  Condition=" '$(Failed)' != '0' " />
 	</Target>
-	
+
 	<Target Name="Install" Condition=" Exists('$(Installer)') ">
 		<Exec Command='msiexec /i "$(Installer)" /passive' />
 	</Target>
@@ -145,9 +145,9 @@
 		<PropertyGroup>
 			<Version>$(GitSemVerMajor).$(GitSemVerMinor).$(GitSemVerPatch)$(GitSemVerDashLabel)</Version>
 		</PropertyGroup>
-        
-        <!-- Update AppVeyor build # to match the actual one being used -->
-        <Exec Command="appveyor UpdateBuild -Version $(Version)" Condition=" '$(APPVEYOR)' == 'true' " />
+
+		<!-- Update AppVeyor build # to match the actual one being used -->
+		<Exec Command="appveyor UpdateBuild -Version $(Version)" Condition=" '$(APPVEYOR)' == 'true' " />
 
 	</Target>
 

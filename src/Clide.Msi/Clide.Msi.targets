@@ -22,7 +22,7 @@
 		<BuildDependsOn>
 			PrepareConstants;
 			$(BuildDependsOn)
-		</BuildDependsOn>		
+		</BuildDependsOn>
 	</PropertyGroup>
 
 	<Target Name="PrepareConstants" DependsOnTargets="GitVersion">
@@ -35,6 +35,10 @@
 				$(ProjectDefineConstants)
 			</ProjectDefineConstants>
 		</PropertyGroup>
+	</Target>
+
+	<Target Name="AfterBuild">
+		
 	</Target>
 
 </Project>

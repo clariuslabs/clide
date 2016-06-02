@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\WiX.3.10.1\build\wix.props" Condition="Exists('..\packages\WiX.3.10.1\build\wix.props')" />
+  <Import Project="..\packages\WiX.3.10.2\build\wix.props" Condition="Exists('..\packages\WiX.3.10.2\build\wix.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -11,6 +11,9 @@
     <OutputType>Package</OutputType>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <TargetFrameworkIdentifier>WiX</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>$(ProductVersion)</TargetFrameworkVersion>
+    <TargetFrameworkMoniker>$(TargetFrameworkIdentifier),Version=v$(TargetFrameworkVersion)</TargetFrameworkMoniker>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
@@ -37,7 +40,8 @@
       <Name>Clide.Installer</Name>
       <Project>{859ed305-ee37-48d6-a1b6-f5d7b30317f1}</Project>
       <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
+      <DoNotHarvest>
+      </DoNotHarvest>
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
       <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
@@ -48,8 +52,8 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\WiX.3.10.1\build\wix.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\WiX.3.10.1\build\wix.props'))" />
     <Error Condition="!Exists('..\packages\GitInfo.1.1.12\build\GitInfo.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\GitInfo.1.1.12\build\GitInfo.targets'))" />
+    <Error Condition="!Exists('..\packages\WiX.3.10.2\build\wix.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\WiX.3.10.2\build\wix.props'))" />
   </Target>
   <Import Project="..\packages\GitInfo.1.1.12\build\GitInfo.targets" Condition="Exists('..\packages\GitInfo.1.1.12\build\GitInfo.targets')" />
 </Project>
