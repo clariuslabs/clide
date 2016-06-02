@@ -6,4 +6,17 @@
 			<Name>Clide.Installer</Name>
 		</WixLibrary>
 	</ItemGroup>
+
+	<!-- If the WixVSExtension is not added, add it automatically -->
+	<Target Name="AddWixVSExtension" BeforeTargets="ResolveWixExtensionReferences">
+		<ItemGroup>
+			<WixVSExtension Include="@(WixExtension)" Condition=" '%(Identity)' == 'WixVSExtension' " />
+		</ItemGroup>
+		<ItemGroup Condition="@(WixVSExtension -> Count())' == '0'">
+			<WixExtension Include="WixVSExtension">
+				<HintPath>$(WixExtDir)WixVSExtension.dll</HintPath>
+				<Name>WixVSExtension</Name>
+			</WixExtension>
+		</ItemGroup>
+	</Target>
 </Project>

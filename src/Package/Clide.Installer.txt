@@ -13,8 +13,18 @@ At a minimum, your MSI must define these directories to satisfy symbol reference
       </Directory>
     </Fragment>
 
-You must also reference this component:
+
+Alternatively, you can reference an already declared TARGETDIR:
+
+    <Fragment>
+      <DirectoryRef Id="TARGETDIR">
+        <Directory Id="ProgramFilesFolder">
+          <Directory Id="CommonFilesFolder" />
+        </Directory>
+      </Directory>
+    </Fragment>
+
+
+You must also reference this component as part of one of your features:
 
     <ComponentRef Id="Clide" />
-
-You must also reference the WixVSExtension from your MSI project.
