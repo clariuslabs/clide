@@ -16,6 +16,7 @@
 		<!-- When testing the installed version of Clide, it's unnecessary to deploy the built VSIX extension, 
 			 since integration tests will run against the normal hive -->
 		<CommonBuildProperties>$(CommonBuildProperties);DeployExtension=false;RootSuffix=.</CommonBuildProperties>
+		<!-- When running a CI build, either use the explicit VisualStudioVersion or fallback to All -->
 		<CommonBuildProperties Condition=" '$(CI)' == 'true' ">$(CommonBuildProperties);VisualStudioVersions=$([MSBuild]::ValueOrDefault('$(VisualStudioVersions)', 'All'))</CommonBuildProperties>
 		<!-- AppVeyor doesn't have VS2012 VSSDK installed: see https://www.appveyor.com/docs/installed-software#visual-studio-2012 -->
 		<CommonBuildProperties Condition=" '$(APPVEYOR)' == 'true' ">$(CommonBuildProperties);MinimumVisualStudioVersion=12.0</CommonBuildProperties>
