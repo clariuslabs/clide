@@ -8,7 +8,7 @@ namespace Clide
 
 		static GlobalServiceLocator()
 		{
-			Instance = new ServiceLocator (GlobalServices.Instance);
+			Instance = new ServiceLocatorImpl (GlobalServices.Instance);
 		}
 	}
 }

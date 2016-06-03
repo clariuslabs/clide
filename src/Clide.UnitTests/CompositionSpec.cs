@@ -21,7 +21,7 @@ namespace Clide
 		public CompositionSpec ()
 		{
 			container = new CompositionContainer (new AggregateCatalog (
-				new AssemblyCatalog (typeof (ServiceLocator).Assembly),
+				new AssemblyCatalog (typeof (ServiceLocatorProvider).Assembly),
 				new TypeCatalog (typeof (MockServiceProvider), typeof (MockHierarchyItemManager))));
 
 			services = container.GetExportedValue<Mock<IServiceProvider>> ();
@@ -47,7 +47,7 @@ namespace Clide
 		{
 			get
 			{
-				return typeof (ServiceLocator).Assembly
+				return typeof (ServiceLocatorProvider).Assembly
 					.GetTypes ()
 					.Select (x => new { Type = x, Export = x.GetCustomAttributes (typeof (ExportAttribute), true).OfType<ExportAttribute> ().FirstOrDefault () })
 					.Where (x => x.Export != null)
@@ -60,7 +60,7 @@ namespace Clide
 		public void when_composing_event_stream_then_can_subscribe_to_exported_observable ()
 		{
 			var container = new CompositionContainer (new AggregateCatalog (
-				new AssemblyCatalog (typeof (ServiceLocator).Assembly),
+				new AssemblyCatalog (typeof (ServiceLocatorProvider).Assembly),
 				new TypeCatalog (typeof (MockObservable))));
 
 			var stream = container.GetExportedValue<IEventStream> ();
@@ -75,7 +75,7 @@ namespace Clide
 		public void when_composing_command_bus_then_can_execute_exported_command_handler ()
 		{
 			var container = new CompositionContainer (new AggregateCatalog (
-				new AssemblyCatalog (typeof (ServiceLocator).Assembly),
+				new AssemblyCatalog (typeof (ServiceLocatorProvider).Assembly),
 				new TypeCatalog (typeof (MockCommandHandler))));
 
 			var bus = container.GetExportedValue<ICommandBus> ();

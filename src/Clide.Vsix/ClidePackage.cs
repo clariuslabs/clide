@@ -21,11 +21,17 @@ namespace Clide
 	public class ClidePackage : Package
 	{
 		/// <summary>
+		/// Whether the package has already been initialized.
+		/// </summary>
+		public static bool Initialized { get; private set; }
+
+		/// <summary>
 		/// Initializes the package.
 		/// </summary>
 		protected override void Initialize ()
 		{
 			base.Initialize ();
+			Initialized = true;
 		}
 	}
 }

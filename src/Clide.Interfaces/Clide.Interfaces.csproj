@@ -41,6 +41,11 @@
     <Compile Include="Adapters\DteAdapterFacade.cs" />
     <Compile Include="Extensions\MissingDependencyException.cs" />
     <Compile Include="Extensions\ServiceLocatorFacades.cs" />
+    <Compile Include="FallbackServiceProvider.cs" />
+    <Compile Include="Interop\NativeMethods.cs" />
+    <Compile Include="Interop\RunningObjects.cs" />
+    <Compile Include="ServiceProvider.cs" />
+    <Compile Include="ServiceLocator.cs" />
     <Compile Include="Solution\ISolutionExplorerNodeExtensions.cs" />
     <Compile Include="Solution\ISolutionNodeExtensions.cs" />
     <Compile Include="IAdaptable.cs" />

@@ -8,17 +8,20 @@ using Microsoft.VisualStudio.ComponentModelHost;
 
 namespace Clide
 {
-	internal class ServiceLocator : IServiceLocator
+	/// <summary>
+	/// Default implementation of the <see cref="IServiceLocator"/>.
+	/// </summary>
+	internal class ServiceLocatorImpl : IServiceLocator
 	{
 		readonly IServiceProvider services;
-		readonly ExportProvider exports;
+		readonly Lazy<ExportProvider> exports;
 
-		public ServiceLocator (IServiceProvider services)
-			: this (services, services.GetService<SComponentModel, IComponentModel> ().DefaultExportProvider)
+		public ServiceLocatorImpl (IServiceProvider services)
+			: this (services, new Lazy<ExportProvider>(() => services.GetService<SComponentModel, IComponentModel> ().DefaultExportProvider))
 		{
 		}
 
-		public ServiceLocator (IServiceProvider services, ExportProvider exports)
+		public ServiceLocatorImpl (IServiceProvider services, Lazy<ExportProvider> exports)
 		{
 			this.services = services;
 			this.exports = exports;
@@ -39,7 +42,7 @@ namespace Clide
 				contractName = AttributedModelServices.GetContractName (contractType);
 
 			try {
-				return exports.GetExportedValue<object> (contractName);
+				return exports.Value.GetExportedValue<object> (contractName);
 			} catch (ImportCardinalityMismatchException ex) {
 				throw new MissingDependencyException(Strings.ServiceLocator.MissingDependency(contractName), ex);
 			}
@@ -52,7 +55,7 @@ namespace Clide
 			if (contractName == null)
 				contractName = AttributedModelServices.GetContractName (contractType);
 
-			return exports.GetExportedValues<object> (contractName);
+			return exports.Value.GetExportedValues<object> (contractName);
 		}
 
 		public IEnumerable<Lazy<object, object>> GetExports (Type contractType, Type metadataType, string contractName = null)
@@ -60,7 +63,7 @@ namespace Clide
 			if (contractName == null)
 				contractName = AttributedModelServices.GetContractName (contractType);
 
-			return exports.GetExports (contractType, metadataType, contractName);
+			return exports.Value.GetExports (contractType, metadataType, contractName);
 		}
 	}
 }

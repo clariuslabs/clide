@@ -110,12 +110,12 @@ namespace Clide
 			if (item.HierarchyIdentity.IsNestedItem &&
 				ErrorHandler.Succeeded (item.HierarchyIdentity.NestedHierarchy.GetSite (out oleSp)) &&
 				oleSp != null) {
-				return new ServiceProvider (oleSp);
+				return new Microsoft.VisualStudio.Shell.ServiceProvider (oleSp);
 			}
 
 			if (ErrorHandler.Succeeded (item.HierarchyIdentity.Hierarchy.GetSite (out oleSp)) &&
 				oleSp != null) {
-				return new ServiceProvider (oleSp);
+				return new Microsoft.VisualStudio.Shell.ServiceProvider (oleSp);
 			}
 
 			// Try the hierarchy root as a fallback.
@@ -123,7 +123,7 @@ namespace Clide
 			if (root != null &&
 				ErrorHandler.Succeeded (root.HierarchyIdentity.Hierarchy.GetSite (out oleSp)) &&
 				oleSp != null) {
-				return new ServiceProvider (oleSp);
+				return new Microsoft.VisualStudio.Shell.ServiceProvider (oleSp);
 			}
 
 			// Try the hierarchy top-most node as a fallback (this would be the solution itself)
@@ -131,12 +131,12 @@ namespace Clide
 			if (root != null &&
 				ErrorHandler.Succeeded (root.HierarchyIdentity.Hierarchy.GetSite (out oleSp)) &&
 				oleSp != null) {
-				return new ServiceProvider (oleSp);
+				return new Microsoft.VisualStudio.Shell.ServiceProvider (oleSp);
 			}
 
 			// Default to a global service provider provided by VS shell.
 			// TODO: may require us to switch to the UI thread to get the right one.
-			return ServiceProvider.GlobalProvider;
+			return Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider;
 		}
 
 		/// <summary>

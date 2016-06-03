@@ -27,6 +27,7 @@ public static class ServiceLocatorFacades
 		Guard.NotNull (nameof (services), services);
 
 		var components = services.GetService<SComponentModel, IComponentModel>();
+
 		try {
 			return components.GetService<IServiceLocatorProvider> ().GetServiceLocator (services);
 		} catch (ImportCardinalityMismatchException ex) {
@@ -43,7 +44,7 @@ public static class ServiceLocatorFacades
 	{
 		Guard.NotNull (nameof (dte), dte);
 
-		var components = new ServiceProvider((Ole.IServiceProvider)dte).GetService<SComponentModel, IComponentModel>();
+		var components = new Microsoft.VisualStudio.Shell.ServiceProvider((Ole.IServiceProvider)dte).GetService<SComponentModel, IComponentModel>();
 
 		try {
 			return components.GetService<IServiceLocatorProvider> ().GetServiceLocator (dte);
@@ -74,7 +75,7 @@ public static class ServiceLocatorFacades
 	{
 		Guard.NotNull (nameof (project), project);
 
-		var components = new ServiceProvider((Ole.IServiceProvider)project.DTE).GetService<SComponentModel, IComponentModel>();
+		var components = new Microsoft.VisualStudio.Shell.ServiceProvider((Ole.IServiceProvider)project.DTE).GetService<SComponentModel, IComponentModel>();
 		try {
 			return components.GetService<IServiceLocatorProvider> ().GetServiceLocator (project);
 		} catch (ImportCardinalityMismatchException ex) {
@@ -89,14 +90,14 @@ public static class ServiceLocatorFacades
 	/// <exception cref="InvalidOperationException">The required <see cref="IComponentModel"/> service was not found.</exception>
 	public static IServiceLocator GetServiceLocator (this IVsHierarchy hierarchy)
 	{
-		Guard.NotNull ( nameof (hierarchy), hierarchy);
+		Guard.NotNull (nameof (hierarchy), hierarchy);
 
 		IServiceProvider services;
 		Ole.IServiceProvider site;
 		if (ErrorHandler.Failed (hierarchy.GetSite (out site)))
-			services = ServiceProvider.GlobalProvider;
+			services = Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider;
 		else
-			services = new ServiceProvider (site);
+			services = new Microsoft.VisualStudio.Shell.ServiceProvider (site);
 
 		var components = services.GetService<SComponentModel, IComponentModel>();
 		try {
@@ -118,9 +119,9 @@ public static class ServiceLocatorFacades
 		IServiceProvider serviceProvider;
 		Ole.IServiceProvider site;
 		if (ErrorHandler.Failed (((IVsHierarchy)project).GetSite (out site)))
-			serviceProvider = ServiceProvider.GlobalProvider;
+			serviceProvider = Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider;
 		else
-			serviceProvider = new ServiceProvider (site);
+			serviceProvider = new Microsoft.VisualStudio.Shell.ServiceProvider (site);
 
 		var components = serviceProvider.GetService<SComponentModel, IComponentModel>();
 

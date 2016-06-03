@@ -19,7 +19,8 @@ namespace Clide.Adapters
 		IVsHierarchyItemManager hierarchyManager;
 
 		[ImportingConstructor]
-		public DteToVsAdapter (IServiceProvider serviceProvider,
+		public DteToVsAdapter (
+			[Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider,
 			[Import(ContractNames.Interop.IVsHierarchyItemManager)] IVsHierarchyItemManager hierarchyManager)
 		{
 			this.serviceProvider = serviceProvider;

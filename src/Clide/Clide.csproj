@@ -66,7 +66,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ServiceLocator.cs" />
+    <Compile Include="ServiceLocatorImpl.cs" />
     <Compile Include="ServiceLocatorProvider.cs" />
     <Compile Include="Solution\ConfigProjectProperties.cs" />
     <Compile Include="Solution\ConfigUserProjectProperties.cs" />

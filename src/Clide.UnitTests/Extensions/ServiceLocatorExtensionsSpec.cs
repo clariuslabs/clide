@@ -16,7 +16,7 @@ namespace Clide
 		public void when_getting_typed_export_then_succeeds ()
 		{
 			var container = new CompositionContainer(new TypeCatalog(typeof(Foo)));
-			var locator = new ServiceLocator(Mock.Of<IServiceProvider>(), container);
+			var locator = new ServiceLocatorImpl(Mock.Of<IServiceProvider>(), new Lazy<ExportProvider>(() => container));
 
 			var foo = locator.GetExport<Foo>();
 
@@ -27,7 +27,7 @@ namespace Clide
 		public void when_getting_typed_export_with_metadata_then_succeeds ()
 		{
 			var container = new CompositionContainer(new TypeCatalog(typeof(Foo)));
-			var locator = new ServiceLocator(Mock.Of<IServiceProvider>(), container);
+			var locator = new ServiceLocatorImpl(Mock.Of<IServiceProvider>(), new Lazy<ExportProvider>(() => container));
 
 			var foo = locator.GetExport<Foo, IFooMetadata>();
 
@@ -40,7 +40,7 @@ namespace Clide
 		public void when_getting_typed_export_with_metadata_dictionary_then_succeeds ()
 		{
 			var container = new CompositionContainer(new TypeCatalog(typeof(Foo)));
-			var locator = new ServiceLocator(Mock.Of<IServiceProvider>(), container);
+			var locator = new ServiceLocatorImpl(Mock.Of<IServiceProvider>(), new Lazy<ExportProvider>(() => container));
 
 			var foo = locator.GetExport<Foo, IDictionary<string, object>>();
 
@@ -52,7 +52,7 @@ namespace Clide
 		public void when_getting_typed_exports_then_succeeds ()
 		{
 			var container = new CompositionContainer(new TypeCatalog(typeof(Foo)));
-			var locator = new ServiceLocator(Mock.Of<IServiceProvider>(), container);
+			var locator = new ServiceLocatorImpl(Mock.Of<IServiceProvider>(), new Lazy<ExportProvider>(() => container));
 
 			var foo = locator.GetExports<Foo>().FirstOrDefault();
 
@@ -63,7 +63,7 @@ namespace Clide
 		public void when_getting_typed_exports_with_metadata_then_succeeds ()
 		{
 			var container = new CompositionContainer(new TypeCatalog(typeof(Foo)));
-			var locator = new ServiceLocator(Mock.Of<IServiceProvider>(), container);
+			var locator = new ServiceLocatorImpl(Mock.Of<IServiceProvider>(), new Lazy<ExportProvider>(() => container));
 
 			var foo = locator.GetExports<Foo, IFooMetadata>().FirstOrDefault();
 
@@ -75,7 +75,7 @@ namespace Clide
 		public void when_getting_typed_exports_with_metadata_dictionary_then_succeeds ()
 		{
 			var container = new CompositionContainer(new TypeCatalog(typeof(Foo)));
-			var locator = new ServiceLocator(Mock.Of<IServiceProvider>(), container);
+			var locator = new ServiceLocatorImpl(Mock.Of<IServiceProvider>(), new Lazy<ExportProvider>(() => container));
 
 			var foo = locator.GetExports<Foo, IDictionary<string, object>>().FirstOrDefault();
 
@@ -86,9 +86,9 @@ namespace Clide
 		[Fact]
 		public void when_retrieving_service_then_invokes_service_provider ()
 		{
-			var locator = new ServiceLocator(
+			var locator = new ServiceLocatorImpl (
 				Mock.Of<IServiceProvider>(x => x.GetService(typeof(Foo)) == new Foo()),
-				Mock.Of<ExportProvider>());
+				new Lazy<ExportProvider>(() => Mock.Of<ExportProvider>()));
 
 			var foo = locator.GetService(typeof(Foo));
 

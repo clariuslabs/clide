@@ -2,6 +2,7 @@
   "dependencies": {
     "GitInfo": "1.1.19",
     "IFluentInterface": "2.0.1",
+    "Merq.Async": "0.3.30-pre",
     "netfx-System.StringResources": "3.0.12",
     "Rx-Interfaces": "2.2.5",
     "VSSDK.ComponentModelHost.11": "11.0.4",

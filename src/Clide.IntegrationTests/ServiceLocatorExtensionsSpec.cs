@@ -11,6 +11,20 @@ using Xunit;
 namespace Clide
 {
 	[Trait("Feature", "Service Locator")]
+	public class ServiceLocatorSpec
+	{
+		[VsixFact(RootSuffix = "Exp")]
+		public void when_requesting_locator_for_package_guid_then_loads_package()
+		{
+			Assert.False (ClidePackage.Initialized);
+
+			var locator = ServiceLocator.Get(Constants.SdkPackageGuid);
+
+			Assert.True (ClidePackage.Initialized); 
+		}
+	}
+
+	[Trait("Feature", "Service Locator")]
 	[Collection("SingleProject")]
 	public class ServiceLocatorExtensionsSpec
 	{

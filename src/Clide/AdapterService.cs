@@ -81,14 +81,20 @@ namespace Clide
             // actual implementation.
 			var sourceType = source.GetType();
             var targetType = typeof(TTarget);
-            // Avoid the more costly conversion if types are 
-            // directly assignable.
+
+			if (sourceType.FullName == "System.__ComObject")
+				sourceType = typeof (TSource);
+
+			// Avoid the more costly conversion if types are 
+			// directly assignable.
 			if (targetType.IsAssignableFrom(sourceType) || targetType.IsAssignableFrom(typeof(TSource)))
 				return source as TTarget;
 
             var fromTo = new FromTo(sourceType, targetType);
             var adapter = cachedFromToAdapters.GetOrAdd(fromTo, FindAdapter);
-            if (adapter == null)
+			// Only retry if the TSource hasn't been looked up already, i.e. 
+			// if the instance type was a COM object.
+            if (adapter == null && sourceType != typeof(TSource))
             {
                 // Try again but with the explicit TSource we were passed-in.
                 fromTo = new FromTo(typeof(TSource), targetType);
@@ -96,7 +102,11 @@ namespace Clide
                 if (adapter == null)
                     return default(TTarget);
             }
-
+			else if (adapter == null) 
+			{
+				return default (TTarget);
+			}
+			 
             var adaptMethod = GetAdaptMethod(fromTo, adapter);
 
             return adaptMethod.Invoke(adapter, source) as TTarget;
