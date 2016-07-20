@@ -9,7 +9,7 @@
 		<!-- Whether to run integration tests against the MSI-installed Clide in the normal hive or not -->
 		<TestInstalled Condition=" '$(TestInstalled)' == '' And '$(Configuration)' == 'Release' ">true</TestInstalled>
 		<CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration);CI=$(CI)</CommonBuildProperties>
-		<Installer>$(MSBuildThisFileDirectory)src\Clide.Msi\bin\$(Configuration)\Clide.msi</Installer>
+		<Installer>$(MSBuildThisFileDirectory)src\Installers\Clide.Msi\bin\$(Configuration)\Clide.msi</Installer>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(TestInstalled)' == 'true' ">
@@ -107,10 +107,12 @@
 	</Target>
 
 	<Target Name="Install" Condition=" Exists('$(Installer)') ">
-		<Exec Command='msiexec /i "$(Installer)" /passive' />
+		<Message Importance="high" Text="Installing $(Installer)..." />
+		<Exec Command='msiexec /i "$(Installer)" /passive' ConsoleToMSBuild='true' />
 	</Target>
 
 	<Target Name="Uninstall" Condition=" Exists('$(Installer)') ">
+		<Message Importance="high" Text="Uninstalling $(Installer)..." />
 		<Exec Command='msiexec /x "$(Installer)" /passive' />
 	</Target>
 
