@@ -53,6 +53,9 @@ EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "SampleBundle", "Installers\SampleBundle\SampleBundle.wixproj", "{E932A2E0-2594-4B6A-9C65-97718C1C1B42}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleExtension", "Installers\SampleExtension\SampleExtension.csproj", "{690FA191-9900-4505-AFB2-A7CC1A9BE12B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C9A505CA-F826-473A-8290-B36AF6BE56FB} = {C9A505CA-F826-473A-8290-B36AF6BE56FB}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
