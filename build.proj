@@ -9,7 +9,7 @@
 		<!-- Whether to run integration tests against the MSI-installed Clide in the normal hive or not -->
 		<TestInstalled Condition=" '$(TestInstalled)' == '' And '$(Configuration)' == 'Release' ">true</TestInstalled>
 		<CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration);CI=$(CI)</CommonBuildProperties>
-		<Installer>$(MSBuildThisFileDirectory)src\Installers\Clide.Msi\bin\$(Configuration)\Clide.msi</Installer>
+		<Installer>$(MSBuildThisFileDirectory)src\Clide.Vsix\bin\$(Configuration)\Clide.vsix</Installer>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(TestInstalled)' == 'true' ">
@@ -108,12 +108,12 @@
 
 	<Target Name="Install" Condition=" Exists('$(Installer)') ">
 		<Message Importance="high" Text="Installing $(Installer)..." />
-		<Exec Command='msiexec /i "$(Installer)" /passive' ConsoleToMSBuild='true' />
+		<Exec Command='"$(VSINSTALLDIR)Common7\IDE\VSIXInstaller.exe" /q "$(Installer)"' />
 	</Target>
 
 	<Target Name="Uninstall" Condition=" Exists('$(Installer)') ">
 		<Message Importance="high" Text="Uninstalling $(Installer)..." />
-		<Exec Command='msiexec /x "$(Installer)" /passive' />
+		<Exec Command='"$(VSINSTALLDIR)Common7\IDE\VSIXInstaller.exe" /q /u:Clide' />
 	</Target>
 
 	<Target Name="Package" DependsOnTargets="Build" Condition=" '@(NuSpec)' != '' ">
