@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+	<Metadata>
+		<Identity Id="Clide.SampleExtension" Version="1.0" Language="en-US" Publisher="ClariusLabs" />
+		<DisplayName>Clide.SampleExtension</DisplayName>
+		<Description>Sample extension embedding Clide VSIX installer.</Description>
+	</Metadata>
+	<Installation>
+		<InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[11.0,]" />
+	</Installation>
+	<Dependencies>
+		<Dependency d:Source="File" DisplayName="Clide" Id="Clide" Version="[3.0,)" d:InstallSource="Embed" Location="Clide.vsix" />
+	</Dependencies>
+</PackageManifest>

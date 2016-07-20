@@ -18,27 +18,6 @@
 		<CabinetCachePath Condition=" '$(CabinetCachePath)' == '' ">$(TempDir.TrimEnd('\'))</CabinetCachePath>
 		<ReuseCabinetCache>true</ReuseCabinetCache>
 		<CabinetCreationThreadCount>4</CabinetCreationThreadCount>
-
-		<BuildDependsOn>
-			PrepareConstants;
-			$(BuildDependsOn)
-		</BuildDependsOn>
 	</PropertyGroup>
-
-	<Target Name="PrepareConstants" DependsOnTargets="GitVersion">
-		<PropertyGroup>
-			<!-- NOTE: MSI version needs the 4 segments, so we hardcode zero for the last one. -->
-			<ProjectDefineConstants>
-				Manufacturer=$(Manufacturer);
-				Version=$(GitSemVerMajor).$(GitSemVerMinor).$(GitSemVerPatch).0;
-				IntermediateOutputPath=$(IntermediateOutputPath);
-				$(ProjectDefineConstants)
-			</ProjectDefineConstants>
-		</PropertyGroup>
-	</Target>
-
-	<Target Name="AfterBuild">
-		
-	</Target>
-
+	
 </Project>

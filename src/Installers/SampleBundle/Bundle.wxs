@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:bal="http://schemas.microsoft.com/wix/BalExtension">
+
+	<Bundle Name="Clide"
+			Version="$(var.ProductVersion)"
+			Manufacturer="$(var.Manufacturer)"
+			IconSourceFile="$(var.ProductIcon)"
+			UpgradeCode="{B6D3903A-59DE-4DA9-B494-25D6601DE007}"
+			Condition="VersionNT >= v6.0"
+			Compressed="no">
+
+		<BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.HyperlinkLicense" >
+			<bal:WixStandardBootstrapperApplication
+		        LogoFile="Resources/banner.bmp"
+				ThemeFile="Resources/ClassicTheme.xml"
+				LocalizationFile="Resources/ClassicTheme.wxl"
+				LicenseUrl="https://github.com/clariuslabs/clide/blob/master/LICENSE" />
+		</BootstrapperApplicationRef>
+
+		<Chain>
+			<MsiPackage SourceFile="$(var.Clide.Msi.TargetPath)" />
+		</Chain>
+	</Bundle>
+
+</Wix>
