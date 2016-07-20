@@ -10,6 +10,7 @@
 		<TestInstalled Condition=" '$(TestInstalled)' == '' And '$(Configuration)' == 'Release' ">true</TestInstalled>
 		<CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration);CI=$(CI)</CommonBuildProperties>
 		<Installer>$(MSBuildThisFileDirectory)src\Clide.Vsix\bin\$(Configuration)\Clide.vsix</Installer>
+		<VsixInstaller>$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\$(VisualStudioVersion)', 'InstallDir', null, RegistryView.Registry32))VSIXInstaller.exe</VsixInstaller>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(TestInstalled)' == 'true' ">
@@ -107,13 +108,15 @@
 	</Target>
 
 	<Target Name="Install" Condition=" Exists('$(Installer)') ">
+		<Error Condition=" !Exists('$(VsixInstaller)') " Text="No VSIX installer found at expected path $(VsixInstaller). Cannot run installed Clide tests." />
 		<Message Importance="high" Text="Installing $(Installer)..." />
-		<Exec Command='"$(VSINSTALLDIR)Common7\IDE\VSIXInstaller.exe" /q "$(Installer)"' />
+		<Exec Command='"$(VsixInstaller)" /q "$(Installer)"' />
 	</Target>
 
 	<Target Name="Uninstall" Condition=" Exists('$(Installer)') ">
+		<Error Condition=" !Exists('$(VsixInstaller)') " Text="No VSIX installer found at expected path $(VsixInstaller). Cannot run installed Clide tests." />
 		<Message Importance="high" Text="Uninstalling $(Installer)..." />
-		<Exec Command='"$(VSINSTALLDIR)Common7\IDE\VSIXInstaller.exe" /q /u:Clide' />
+		<Exec Command='"$(VsixInstaller)" /q /u:Clide' />
 	</Target>
 
 	<Target Name="Package" DependsOnTargets="Build" Condition=" '@(NuSpec)' != '' ">
