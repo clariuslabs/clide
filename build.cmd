@@ -1,29 +1,34 @@
-@echo off
-rem Optional batch file to quickly build with some defaults.
-rem Alternatively, this batch file can be invoked passing msbuild parameters, like: build.cmd /v:detailed /t:Rebuild
+:: Optional batch file to quickly build with some defaults.
+:: Alternatively, this batch file can be invoked passing msbuild parameters, like: build.cmd "/v:detailed" "/t:Rebuild"
 
-cd %~dp0
+@ECHO OFF
 
-SETLOCAL
-SET CACHED_NUGET=%LocalAppData%\NuGet\NuGet.exe
+:: Ensure MSBuild can be located. Allows for a better error message below.
+where msbuild > %TEMP%\msbuild.txt
+set /p msb=<%TEMP%\msbuild.txt
 
-IF EXIST %CACHED_NUGET% goto copynuget
-echo Downloading latest version of NuGet.exe...
-IF NOT EXIST %LocalAppData%\NuGet md %LocalAppData%\NuGet
-@powershell -NoProfile -ExecutionPolicy unrestricted -Command "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest 'https://www.nuget.org/nuget.exe' -OutFile '%CACHED_NUGET%'"
+IF "%msb%"=="" (
+    echo Please run %~n0 from a Visual Studio Developer Command Prompt.
+    exit /b -1
+)
 
-:copynuget
+SETLOCAL ENABLEEXTENSIONS ENABLEDELAYEDEXPANSION
+PUSHD "%~dp0" >NUL
+
 IF EXIST .nuget\nuget.exe goto restore
-md .nuget
-copy %CACHED_NUGET% .nuget\nuget.exe > nul
-.nuget\nuget.exe update -self
+IF NOT EXIST .nuget md .nuget
+echo Downloading latest version of NuGet.exe...
+@powershell -NoProfile -ExecutionPolicy unrestricted -Command "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest 'https://dist.nuget.org/win-x86-commandline/latest/nuget.exe' -OutFile .nuget/nuget.exe"
 
 :restore
-rem Build script packages have no version in the path, so we install them to .nuget\packages to avoid conflicts with 
-rem solution/project packages.
+:: Build script packages have no version in the path, so we install them to .nuget\packages to avoid conflicts with 
+:: solution/project packages.
 IF NOT EXIST packages.config goto run
-.nuget\NuGet.exe install packages.config -OutputDirectory .nuget\packages -ExcludeVersion
+.nuget\nuget.exe install packages.config -OutputDirectory .nuget\packages -ExcludeVersion
 
 :run
-rem NOTE: this needs to be a developer command prompt with MSBuild in the path.
-msbuild build.proj /v:minimal %1 %2 %3 %4 %5 %6 %7 %8 %9
+"%msb%" build.proj /v:minimal %1 %2 %3 %4 %5 %6 %7 %8 %9
+
+POPD >NUL
+ENDLOCAL
+ECHO ON

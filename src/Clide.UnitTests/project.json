@@ -1,11 +1,12 @@
 ﻿{
   "dependencies": {
-    "GitInfo": "1.1.19",
+    "GitInfo": "1.1.20",
     "IFluentInterface": "2.0.1",
-    "Merq": "0.3.30-pre",
-    "Merq.Async": "0.3.30-pre",
-    "Moq": "4.5.8",
-    "netfx-System.StringResources": "3.0.12",
+    "Merq": "0.3.39-pre",
+    "Merq.Async": "0.3.39-pre",
+    "Microsoft.VisualStudio.Threading": "12.2.0",
+    "Moq": "4.5.13",
+    "netfx-System.StringResources": "3.0.13",
     "Rx-Main": "2.2.5",
     "Rx-Testing": "2.2.5",
     "System.Diagnostics.Tracer": "1.0.7",

@@ -36,10 +36,6 @@
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Runtime" />
-    <Reference Include="System.Threading.Tasks" />
-    <Reference Include="System.Text.Encoding" />
-    <Reference Include="System.IO" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />

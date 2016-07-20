@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 
 [assembly: ProvideCodeBase]
-[assembly: ProvideCodeBase (AssemblyName = "Clide")]
+[assembly: ProvideCodeBase (AssemblyName = "Clide.Core")]
 [assembly: ProvideCodeBase (AssemblyName = "Clide.Extensibility")]
 [assembly: ProvideCodeBase (AssemblyName = "Clide.Interfaces")]
 [assembly: ProvideCodeBase (AssemblyName = "Merq.Async")]

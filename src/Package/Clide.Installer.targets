@@ -1,10 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<ItemGroup>
+
+	<PropertyGroup>
+		<DefineConstants>
+			Clide.Msi=$(MSBuildThisFileDirectory)..\tools\Clide.msi
+			Clide.Lib=$(MSBuildThisFileDirectory)..\tools\Clide.wixlib
+			$(DefineConstants)
+		</DefineConstants>
+	</PropertyGroup>
+
+	<!-- Bundles can reference the MSI directly from the Chain -->
+	<ItemGroup Condition=" '$(OutputType)' == 'Package' ">
 		<WixLibrary Include="Clide.Installer">
-			<HintPath>$(MSBuildThisFileDirectory)..\tools\Clide.Installer.wixlib</HintPath>
+			<HintPath>$(MSBuildThisFileDirectory)..\tools\Clide.wixlib</HintPath>
 			<Name>Clide.Installer</Name>
 		</WixLibrary>
+	</ItemGroup>
+
+	<!-- VSIXes will need to reference the payload directly -->
+	<ItemGroup Condition=" '$(DetokenizeVsixManifestFileDependsOn)' != '' ">
+		<Content Include="$(MSBuildThisFileDirectory)..\tools\Clide.vsix">
+			<Link>Clide.vsix</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<IncludeInVsix>true</IncludeInVsix>
+		</Content>
 	</ItemGroup>
 
 	<!-- If the WixVSExtension is not added, add it automatically -->
@@ -19,4 +38,5 @@
 			</WixExtension>
 		</ItemGroup>
 	</Target>
+
 </Project>

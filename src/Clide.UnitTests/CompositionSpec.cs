@@ -22,7 +22,9 @@ namespace Clide
 		{
 			container = new CompositionContainer (new AggregateCatalog (
 				new AssemblyCatalog (typeof (ServiceLocatorProvider).Assembly),
-				new TypeCatalog (typeof (MockServiceProvider), typeof (MockHierarchyItemManager))));
+				new AssemblyCatalog (typeof (MockServiceProvider).Assembly)));
+
+			ExportProviderProvider.SetExportProvider(container);
 
 			services = container.GetExportedValue<Mock<IServiceProvider>> ();
 		}
@@ -59,10 +61,6 @@ namespace Clide
 		[Fact]
 		public void when_composing_event_stream_then_can_subscribe_to_exported_observable ()
 		{
-			var container = new CompositionContainer (new AggregateCatalog (
-				new AssemblyCatalog (typeof (ServiceLocatorProvider).Assembly),
-				new TypeCatalog (typeof (MockObservable))));
-
 			var stream = container.GetExportedValue<IEventStream> ();
 			string value = null;
 
@@ -74,19 +72,26 @@ namespace Clide
 		[Fact]
 		public void when_composing_command_bus_then_can_execute_exported_command_handler ()
 		{
-			var container = new CompositionContainer (new AggregateCatalog (
-				new AssemblyCatalog (typeof (ServiceLocatorProvider).Assembly),
-				new TypeCatalog (typeof (MockCommandHandler))));
-
 			var bus = container.GetExportedValue<ICommandBus> ();
 
 			Assert.True (bus.CanHandle<MockCommand> ());
 			Assert.True (bus.CanExecute (new MockCommand ()));
 			bus.Execute (new MockCommand ());
 		}
+
+		[Fact]
+		public void when_retrieving_services_shared_part_then_shares_instance()
+		{
+			var container = new CompositionContainer(new TypeCatalog(typeof(MockComponent)));
+
+			var service = container.GetExportedValue<IService>();
+			var component = container.GetExportedValue<IComponent>();
+
+			Assert.Same(service, component);
+		}
 	}
 
-	[Observable]
+	[Export(typeof(IObservable<string>))]
 	public class MockObservable : IObservable<string>
 	{
 		public IDisposable Subscribe (IObserver<string> observer) =>
@@ -108,8 +113,15 @@ namespace Clide
 	[PartCreationPolicy (CreationPolicy.Shared)]
 	public class MockServiceProvider
 	{
-		public MockServiceProvider ()
+		[ImportingConstructor]
+		public MockServiceProvider (ExportProvider exports)
 		{
+			object zombie = false;
+
+			var vsShell = new Mock<SVsShell>()
+				.As<IVsShell>();
+			vsShell.Setup(x => x.GetProperty((int)__VSSPROPID.VSSPROPID_Zombie, out zombie)).Returns(0);
+
 			Instance = Mock.Of<IServiceProvider> (x =>
 				x.GetService (typeof (SVsSolution)) ==
 					new Mock<IVsSolution> ()
@@ -117,10 +129,12 @@ namespace Clide
 						.As<SVsSolution> ().Object &&
 				x.GetService (typeof (SComponentModel)) ==
 					Mock.Of<IComponentModel> (c =>
-						 c.GetService<IVsHierarchyItemManager> () == Mock.Of<IVsHierarchyItemManager> ()) &&
+						 c.GetService<IVsHierarchyItemManager> () == Mock.Of<IVsHierarchyItemManager> () && 
+						 c.DefaultExportProvider == exports) &&
 				x.GetService (typeof (SVsShellMonitorSelection)) ==
 					new Mock<SVsShellMonitorSelection> ()
 						.As<IVsMonitorSelection> ().Object &&
+				x.GetService(typeof(SVsShell)) == vsShell.Object &&
 				x.GetService (typeof (SVsUIShell)) ==
 					new Mock<SVsUIShell> ()
 						.As<IVsUIShell> ().Object
@@ -128,7 +142,7 @@ namespace Clide
 		}
 
 		[Export (typeof (SVsServiceProvider))]
-		public IServiceProvider Instance { get; private set; }
+		public IServiceProvider Instance { get; }
 
 		[Export (typeof (Mock<IServiceProvider>))]
 		public Mock<IServiceProvider> InstanceMock { get { return Mock.Get (Instance); } }
@@ -137,7 +151,6 @@ namespace Clide
 	[PartCreationPolicy (CreationPolicy.Shared)]
 	public class MockHierarchyItemManager
 	{
-
 		public MockHierarchyItemManager ()
 		{
 			Mock = new Mock<IVsHierarchyItemManager> ();
@@ -149,4 +162,28 @@ namespace Clide
 		[Export (typeof (Mock<IVsHierarchyItemManager>))]
 		public Mock<IVsHierarchyItemManager> Mock { get; private set; }
 	}
+
+	[PartCreationPolicy(CreationPolicy.Shared)]
+	[Export(typeof(IComponent))]
+	[Export(typeof(IService))]
+	public class MockComponent : IComponent, IService
+	{
+	}
+
+	[PartCreationPolicy(CreationPolicy.Shared)]
+	public class ExportProviderProvider
+	{
+		static ExportProvider exports;
+
+		public static void SetExportProvider(ExportProvider exports)
+		{
+			ExportProviderProvider.exports = exports;
+		}
+
+		[Export]
+		public ExportProvider Exports { get { return exports; } }
+	}
+
+	public interface IComponent { }
+	public interface IService { }
 }

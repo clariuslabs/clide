@@ -10,7 +10,7 @@ namespace Clide
 	/// locator, as well as package-specific service locator. 
 	/// Complements the <c>GetServiceLocator</c> extension methods 
 	/// provided for most common Visual Studio entry points such 
-	/// as <see cref="DTE"/>, <see cref="Solution"/>, <see cref="Project"/>, 
+	/// as <see cref="EnvDTE.DTE"/>, <see cref="EnvDTE.Solution"/>, <see cref="EnvDTE.Project"/>, 
 	/// <see cref="IVsHierarchy"/> and <see cref="IVsProject"/>.
 	/// </summary>
 	public static class ServiceLocator
@@ -23,7 +23,7 @@ namespace Clide
 		public static IServiceLocator Global { get { return globalLocator.Value; } }
 
 		/// <summary>
-		/// Loads the given package and retrieves an <see cref="IServiceLocator"/> for it.
+		/// Loads the given package and retrieves the <see cref="IServiceLocator"/> for it.
 		/// </summary>
 		public static IServiceLocator Get(string packageGuid)
 		{
@@ -31,7 +31,7 @@ namespace Clide
 		}
 
 		/// <summary>
-		/// Loads the given package and retrieves an <see cref="IServiceLocator"/> for it.
+		/// Loads the given package and retrieves the <see cref="IServiceLocator"/> for it.
 		/// </summary>
 		public static IServiceLocator Get(Guid packageGuid)
 		{

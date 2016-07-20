@@ -9,6 +9,7 @@
 			public const string SolutionExplorerWindow = Prefix + "SolutionExplorerWindow";
 			public const string SolutionExplorerSelection = Prefix + "SolutionExplorerSelection";
 			public const string IVsHierarchyItemManager = Prefix + "IVsHierarchyItemManager";
+			public const string IVsShell = Prefix + "IVsShell";
 		}
 	}
 }

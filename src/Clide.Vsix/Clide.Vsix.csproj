@@ -13,8 +13,6 @@
     <AssemblyName>Clide.Vsix</AssemblyName>
     <TargetVsixContainerName>Clide.vsix</TargetVsixContainerName>
     <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
