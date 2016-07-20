@@ -57,7 +57,7 @@ namespace Clide.Events
 
 			callback.OnShellPropertyChange(ZombieProperty, false);
 
-			SpinWait.SpinUntil(() => completed, 200);
+			SpinWait.SpinUntil(() => completed, 500);
 
 			Assert.True(completed);
 			Assert.NotNull(data);
