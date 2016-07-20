@@ -2,6 +2,7 @@
 
 namespace Clide.Solution.Reference
 {
+	[Trait ("LongRunning", "true")]
 	[Collection ("OpenSolution11")]
 	public class ReferenceNodeFactorySpec : NodeFactorySpec<ReferenceNodeFactory>
 	{

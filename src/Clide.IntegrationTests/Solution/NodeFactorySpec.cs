@@ -8,6 +8,7 @@ using Xunit;
 
 namespace Clide.Solution
 {
+	[Trait ("LongRunning", "true")]
 	[Trait ("Feature", "Solution Traversal")]
 	[Vsix (RecycleOnFailure = false)]
 	public abstract class NodeFactorySpec<TNode>

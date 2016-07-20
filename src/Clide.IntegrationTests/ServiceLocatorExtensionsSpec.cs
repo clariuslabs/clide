@@ -13,14 +13,20 @@ namespace Clide
 	[Trait("Feature", "Service Locator")]
 	public class ServiceLocatorSpec
 	{
-		[VsixFact(RootSuffix = "Exp")]
+		[VsixFact]
 		public void when_requesting_locator_for_package_guid_then_loads_package()
 		{
-			Assert.False (ClidePackage.Initialized);
+			var shell = GlobalServices.GetService<SVsShell, IVsShell>();
+			var guid = Constants.SdkPackageGuid;
+			IVsPackage package = null;
+
+			Assert.Equal(VSConstants.E_FAIL, shell.IsPackageLoaded(guid, out package));
+			Assert.Null(package);
 
 			var locator = ServiceLocator.Get(Constants.SdkPackageGuid);
 
-			Assert.True (ClidePackage.Initialized); 
+			Assert.Equal(VSConstants.S_OK, shell.IsPackageLoaded(guid, out package));
+			Assert.NotNull(package);
 		}
 	}
 

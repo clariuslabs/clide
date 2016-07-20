@@ -2,6 +2,7 @@
 
 namespace Clide.Solution.SolutionItem
 {
+	[Trait ("LongRunning", "true")]
 	[Collection ("OpenSolution11")]
 	public class SolutionItemNodeFactorySpec : NodeFactorySpec<SolutionItemNodeFactory>
 	{

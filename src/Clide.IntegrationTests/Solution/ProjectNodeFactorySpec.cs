@@ -2,7 +2,7 @@
 
 namespace Clide.Solution.Project
 {
-
+	[Trait ("LongRunning", "true")]
 	[Collection ("OpenSolution")]
 	public class ProjectNodeFactorySharedSpec : NodeFactorySpec<ProjectNodeFactory>
 	{
@@ -25,6 +25,7 @@ namespace Clide.Solution.Project
 		}
 	}
 
+	[Trait ("LongRunning", "true")]
 	[Collection ("OpenSolution11")]
 	public class ProjectNodeFactorySpec : NodeFactorySpec<ProjectNodeFactory>
 	{

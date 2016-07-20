@@ -2,6 +2,7 @@
 
 namespace Clide.Solution.Folder
 {
+	[Trait("LongRunning", "true")]
 	[Collection ("OpenSolution")]
 	public class FolderNodeFactorySharedSpec : NodeFactorySpec<FolderNodeFactory>
 	{

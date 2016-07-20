@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace Clide.Solution
 {
+	[Trait ("LongRunning", "true")]
 	[Trait ("Feature", "Solution Traversal")]
 	[Collection ("OpenSolution11")]
 	internal class SolutionExplorerNodeSpec

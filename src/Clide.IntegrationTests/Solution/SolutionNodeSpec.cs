@@ -9,6 +9,7 @@ using Xunit;
 
 namespace Clide.Solution
 {
+	[Trait ("LongRunning", "true")]
 	[Trait ("Feature", "Solution Traversal")]
 	public class SolutionNodeSpec : IDisposable
 	{

@@ -4,6 +4,7 @@ using Xunit.Abstractions;
 
 namespace Clide.Solution
 {
+	[Trait ("LongRunning", "true")]
 	[Vsix (MinimumVisualStudioVersion = VisualStudioVersion.VS2013)]
 	[Collection ("OpenSolution")]
 	public class SharedProjectSpec

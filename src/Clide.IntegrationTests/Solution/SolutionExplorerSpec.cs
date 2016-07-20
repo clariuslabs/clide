@@ -3,6 +3,7 @@ using Xunit;
 
 namespace Clide.Solution.Explorer
 {
+	[Trait ("LongRunning", "true")]
 	[Trait ("Feature", "Solution Traversal")]
 	public class SolutionExplorerSpec
 	{
