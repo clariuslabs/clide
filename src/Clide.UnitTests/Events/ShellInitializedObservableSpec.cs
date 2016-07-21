@@ -52,14 +52,14 @@ namespace Clide.Events
 
 			observable.Subscribe(e => data = e, () => completed = true);
 
-			Assert.False(completed);
+			Assert.False(completed, "Observable shouldn't have completed yet.");
 			Assert.Null(data);
 
 			callback.OnShellPropertyChange(ZombieProperty, false);
 
 			SpinWait.SpinUntil(() => completed, 500);
 
-			Assert.True(completed);
+			Assert.True(completed, "Observable should have completed already.");
 			Assert.NotNull(data);
 
 			shell.Verify(x => x.UnadviseShellPropertyChanges(cookie));

@@ -12,12 +12,6 @@
     <RootNamespace>Clide</RootNamespace>
     <AssemblyName>Clide.Vsix</AssemblyName>
     <TargetVsixContainerName>Clide.vsix</TargetVsixContainerName>
-    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
   </PropertyGroup>
   <Import Project="Clide.Vsix.props" />
   <ItemGroup>
