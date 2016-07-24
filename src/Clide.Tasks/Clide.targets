@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<UsingTask TaskName="FindComponents" AssemblyFile="Clide.Tasks.dll" />
+	<UsingTask TaskName="ExportComponents" AssemblyFile="Clide.Tasks.dll" />
+
+	<PropertyGroup>
+		<GenerateExports Condition=" '$(GenerateExports)' == '' ">true</GenerateExports>
+		<BuildDependsOn Condition=" '$(GenerateExports)' == 'true' ">
+			Clide::GenerateExports;
+			$(BuildDependsOn)
+		</BuildDependsOn>
+		<GenerateExportsDependsOn>
+			Clide::ClearComponentsCache;
+			Clide::ReadComponentsCache;
+			Clide::FindComponents;
+			Clide::ExportComponents;
+			Clide::IncludeExports;
+		</GenerateExportsDependsOn>
+	</PropertyGroup>
+
+	<Target Name="Clide::GenerateExports" DependsOnTargets="$(GenerateExportsDependsOn)" Returns="@(GeneratedExport)" />
+
+	<Target Name="Clide::ClearComponentsCache" Inputs="@(Compile)" Outputs="$(IntermediateOutputPath)ComponentFiles.cache">
+		<Delete Files="$(IntermediateOutputPath)ComponentFiles.cache" Condition="Exists('$(IntermediateOutputPath)ComponentFiles.cache')" />
+	</Target>
+
+	<Target Name="Clide::ReadComponentsCache" Condition="Exists('$(IntermediateOutputPath)ComponentFiles.cache')"
+			Returns="@(ComponentFile)">
+		<ReadLinesFromFile File="$(IntermediateOutputPath)ComponentFiles.cache">
+			<Output TaskParameter="Lines" ItemName="ComponentFile" />
+		</ReadLinesFromFile>
+	</Target>
+	
+	<Target Name="Clide::FindComponents" Inputs="@(Compile)" Outputs="$(IntermediateOutputPath)ComponentFiles.cache" Returns="@(ComponentFile)">
+		<FindComponents SourceFiles="@(Compile)" ProjectFullPath="$(MSBuildProjectFullPath)" Language="$(Language)">
+			<Output TaskParameter="ComponentFiles" ItemName="ComponentFile" />
+		</FindComponents>
+		<WriteLinesToFile File="$(IntermediateOutputPath)ComponentFiles.cache"
+						  Lines="@(ComponentFile)" />
+	</Target>
+
+	<Target Name="Clide::ExportComponents" Inputs="@(ComponentFile)" Outputs="@(ComponentFile -> '$(IntermediateOutputPath)Clide\%(RelativeDir)%(Filename).g%(Extension)')"
+			DependsOnTargets="Clide::FindComponents"
+			Returns="@(_NewGeneratedExport)">
+		<ExportComponents ComponentFiles="@(ComponentFile)" IntermediateOutputPath="$(IntermediateOutputPath)Clide" ProjectFullPath="$(MSBuildProjectFullPath)" Language="$(Language)">
+			<Output TaskParameter="OutputFiles" ItemName="_NewGeneratedExport" />
+		</ExportComponents>
+	</Target>
+
+	<Target Name="Clide::IncludeExports" Returns="@(GeneratedExport)">
+		<ItemGroup>
+			<GeneratedExport Include="@(ComponentFile -> '$(IntermediateOutputPath)Clide\%(RelativeDir)%(Filename).g%(Extension)')" />
+			<Compile Include="@(GeneratedExport)" />
+		</ItemGroup>
+	</Target>
+</Project>
