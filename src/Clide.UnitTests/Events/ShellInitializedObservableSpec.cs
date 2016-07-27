@@ -57,7 +57,7 @@ namespace Clide.Events
 
 			callback.OnShellPropertyChange(ZombieProperty, false);
 
-			SpinWait.SpinUntil(() => completed, 500);
+			SpinWait.SpinUntil(() => completed, 5000);
 
 			Assert.True(completed, "Observable should have completed already.");
 			Assert.NotNull(data);

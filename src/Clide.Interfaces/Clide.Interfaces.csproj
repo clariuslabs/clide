@@ -27,10 +27,16 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adapters\BehaviorAdapterFacade.cs" />
     <Compile Include="Adapters\SolutionAdapterFacade.cs" />
     <Compile Include="Adapters\VsLangAdapterFacade.cs" />
     <Compile Include="Adapters\DteAdapterFacade.cs" />
     <Compile Include="Events\ShellInitialized.cs" />
+    <Compile Include="Solution\Behavior\IRemovableNode.cs" />
+    <Compile Include="Solution\Extensions\IItemNodeExtensions.cs" />
+    <Compile Include="Solution\Extensions\IReferencesNodeExtensions.cs" />
+    <Compile Include="Solution\Extensions\IProjectNodeExtensions.cs" />
+    <Compile Include="Solution\Extensions\IFolderNodeExtensions.cs" />
     <Compile Include="Extensions\MissingDependencyException.cs" />
     <Compile Include="Extensions\ServiceLocatorFacades.cs" />
     <Compile Include="FallbackServiceProvider.cs" />
@@ -39,6 +45,9 @@
     <Compile Include="Interop\RunningObjects.cs" />
     <Compile Include="ServiceProvider.cs" />
     <Compile Include="ServiceLocator.cs" />
+    <Compile Include="Solution\Behavior\IDeletableNode.cs" />
+    <Compile Include="Solution\Behavior\IProjectItemContainerNode.cs" />
+    <Compile Include="Solution\Behavior\IReferenceContainerNode.cs" />
     <Compile Include="Solution\ISolutionExplorerNodeExtensions.cs" />
     <Compile Include="Solution\ISolutionNodeExtensions.cs" />
     <Compile Include="IAdaptable.cs" />

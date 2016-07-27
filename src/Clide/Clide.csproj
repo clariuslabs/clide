@@ -33,6 +33,7 @@
     <Compile Include="AdapterService.cs" />
     <Compile Include="Adapters\DteToVsAdapter.cs" />
     <Compile Include="Adapters\ProjectToDte.cs" />
+    <Compile Include="Adapters\SolutionToBehaviorAdapter.cs" />
     <Compile Include="Adapters\SolutionToVsAdapter.cs" />
     <Compile Include="Adapters\SolutionToVsLangAdapter.cs" />
     <Compile Include="ComponentAttribute.cs" />
@@ -52,8 +53,10 @@
     <Compile Include="Extensions\System\TypeInheritanceExtension.cs" />
     <Compile Include="Extensions\VisualStudio\IVsHierarchyItemExtensions.cs" />
     <Compile Include="Extensions\VisualStudio\IVsSolutionExtensions.cs" />
+    <Compile Include="Interop\IVsSharedProjectReferencesHelper.cs" />
     <Compile Include="Interop\IVsSolutionSelection.cs" />
     <Compile Include="Interop\IVsTaskSchedulerService2.cs" />
+    <Compile Include="Interop\SVsSharedProjectReferencesHelper.cs" />
     <Compile Include="Interop\VsHierarchySelection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -63,6 +66,13 @@
     </Compile>
     <Compile Include="ServiceLocatorImpl.cs" />
     <Compile Include="ServiceLocatorProvider.cs" />
+    <Compile Include="Solution\Behavior\RemovableProjectItemNode.cs" />
+    <Compile Include="Solution\Behavior\DeletableProjectItemNode.cs" />
+    <Compile Include="Solution\Behavior\BehaviorNode.cs" />
+    <Compile Include="Solution\Behavior\ProjectItemContainerNode.cs" />
+    <Compile Include="Solution\Behavior\ReferenceContainerNode.cs" />
+    <Compile Include="Solution\Behavior\ProjectContainerNode.cs" />
+    <Compile Include="Solution\Behavior\FolderContainerNode.cs" />
     <Compile Include="Solution\ConfigProjectProperties.cs" />
     <Compile Include="Solution\ConfigUserProjectProperties.cs" />
     <Compile Include="Solution\DynamicPropertyAccessor.cs" />

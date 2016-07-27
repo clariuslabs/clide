@@ -24,30 +24,6 @@ namespace Clide
 			Lazy<IVsUIHierarchyWindow> solutionExplorer)
             : base(SolutionNodeKind.Folder, hierarchyNode, nodeFactory, adapter, solutionExplorer)
 		{
-			Folder = new Lazy<ProjectItem>(() => hierarchyNode.GetExtenderObject() as ProjectItem);
-		}
-
-        /// <summary>
-        /// Gets the folder project item corresponding to this node.
-        /// </summary>
-        internal Lazy<ProjectItem> Folder { get; private set; }
-
-        /// <summary>
-        /// Creates a nested folder.
-        /// </summary>
-        /// <param name="name">The name of the folder to create.</param>
-        public virtual IFolderNode CreateFolder(string name)
-		{
-			Guard.NotNullOrEmpty(nameof (name), name);
-
-			// NOTE: via DTE, you can't retrieve the created item/project/folder 
-			// right from the method call, you need to find it afterwards.
-			Folder.Value.ProjectItems.AddFolder(name);
-			
-			var newFolder = HierarchyNode.Children.Single(child => 
-				child.GetProperty<string>(VsHierarchyPropID.Name) == name);
-
-			return CreateNode(newFolder) as IFolderNode;
 		}
 
 		/// <summary>

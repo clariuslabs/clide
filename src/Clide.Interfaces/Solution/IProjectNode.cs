@@ -11,12 +11,6 @@
 		//IProjectConfiguration Configuration { get; }
 
 		/// <summary>
-		/// Creates a folder inside the project.
-		/// </summary>
-		/// <param name="name">The name of the folder to create.</param>
-		IFolderNode CreateFolder(string name);
-
-		/// <summary>
 		/// Gets the physical path of the project.
 		/// </summary>
 		string PhysicalPath { get; }
@@ -63,5 +57,10 @@
 		/// <c>project.UserPropertiesFor(project.Configuration.ActiveConfigurationName)</c>.
 		/// </remarks>
 		dynamic UserPropertiesFor(string configurationName);
+
+		/// <summary>
+		/// Returns true if it's a shared project
+		/// </summary>
+		bool IsSharedProject { get; }
 	}
 }
