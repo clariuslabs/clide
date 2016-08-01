@@ -28,7 +28,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Solution Include="src\*.sln"/>
+		<Solution Include="src\Clide.Tasks.sln"/>
+		<Solution Include="src\Clide.sln"/>
 		<NuSpec Include="src\**\*.nuspec" />
 	</ItemGroup>
 
