@@ -39,7 +39,7 @@ namespace Clide
 
 			await initializedEvent.SetAsync();
 
-			SpinWait.SpinUntil(() => completed1, 500);
+			SpinWait.SpinUntil(() => completed1, 5000);
 
 			Assert.True(completed1);
 			Assert.Same(e, obj1);

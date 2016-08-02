@@ -6,6 +6,7 @@ using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using VSLangProj;
 
 namespace Clide
 {
@@ -14,66 +15,45 @@ namespace Clide
 	/// </summary>
 	public class ProjectNode : SolutionExplorerNode, IProjectNode
 	{
-        Lazy<GlobalProjectProperties> properties;
+		const string SharedProjectExtension = ".shproj";
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ProjectNode"/> class.
-        /// </summary>
-        /// <param name="hierarchyNode">The underlying hierarchy represented by this node.</param>
-        /// <param name="nodeFactory">The factory for child nodes.</param>
-        /// <param name="adapter">The adapter service that implements the smart cast <see cref="ITreeNode.As{T}"/>.</param>
-        public ProjectNode(
+		Lazy<GlobalProjectProperties> properties;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ProjectNode"/> class.
+		/// </summary>
+		/// <param name="hierarchyNode">The underlying hierarchy represented by this node.</param>
+		/// <param name="nodeFactory">The factory for child nodes.</param>
+		/// <param name="adapter">The adapter service that implements the smart cast <see cref="ITreeNode.As{T}"/>.</param>
+		public ProjectNode(
 			IVsHierarchyItem hierarchyNode,
 			ISolutionExplorerNodeFactory nodeFactory,
 			IAdapterService adapter,
 			Lazy<IVsUIHierarchyWindow> solutionExplorer)
-            : base(SolutionNodeKind.Project, hierarchyNode, nodeFactory, adapter, solutionExplorer)
+			: base(SolutionNodeKind.Project, hierarchyNode, nodeFactory, adapter, solutionExplorer)
 		{
-            properties = new Lazy<GlobalProjectProperties>(() => new GlobalProjectProperties(this));
+			properties = new Lazy<GlobalProjectProperties>(() => new GlobalProjectProperties(this));
 		}
 
 		/// <summary>
-		/// Creates a folder inside the project.
+		/// Saves pending changes to the project file.
 		/// </summary>
-		/// <param name="name">The name of the folder to create.</param>
-		public virtual IFolderNode CreateFolder(string name)
+		public virtual void Save()
 		{
-			Guard.NotNullOrEmpty(nameof (name), name);
-
-			var automation = HierarchyNode.GetExtenderObject() as Project;
-			if (automation == null)
-				throw new NotSupportedException (Strings.ProjectNode.AddFolderNotSupported (Name, name));
-
-			automation.ProjectItems.AddFolder(name);
-
-			var folder = HierarchyNode.Children.FirstOrDefault(child => 
-				child.GetProperty<string>(VsHierarchyPropID.Name) == name);
-
-			if (folder == null)
-				throw new InvalidOperationException (Strings.ProjectNode.AddFolderFailed (name, Name));
-
-			return CreateNode(folder) as IFolderNode;
-		}
-
-        /// <summary>
-        /// Saves pending changes to the project file.
-        /// </summary>
-        public virtual void Save()
-        {
-            ErrorHandler.ThrowOnFailure(HierarchyNode
+			ErrorHandler.ThrowOnFailure(HierarchyNode
 				.GetServiceProvider()
-                .GetService<SVsSolution, IVsSolution>()
-                .SaveSolutionElement(
-                    (uint)__VSSLNSAVEOPTIONS.SLNSAVEOPT_ForceSave, 
-                    HierarchyNode.HierarchyIdentity.Hierarchy, 
-                    0));
-        }
+				.GetService<SVsSolution, IVsSolution>()
+				.SaveSolutionElement(
+					(uint)__VSSLNSAVEOPTIONS.SLNSAVEOPT_ForceSave,
+					HierarchyNode.HierarchyIdentity.Hierarchy,
+					0));
+		}
 
 		/// <summary>
 		/// Gets the logical path of the project, relative to the solution, 
 		/// considering any containing solution folders.
 		/// </summary>
-		public virtual string LogicalPath => this.RelativePathTo (OwningSolution);
+		public virtual string LogicalPath => this.RelativePathTo(OwningSolution);
 
 		/// <summary>
 		/// Gets the physical path of the project if it's file-based. 
@@ -85,8 +65,8 @@ namespace Clide
 			{
 				var project = HierarchyNode.GetActualHierarchy() as IVsProject;
 				string filePath;
-				if (project != null && ErrorHandler.Succeeded (project.GetMkDocument (HierarchyNode.GetActualItemId (), out filePath)) &&
-					File.Exists (filePath))
+				if (project != null && ErrorHandler.Succeeded(project.GetMkDocument(HierarchyNode.GetActualItemId(), out filePath)) &&
+					File.Exists(filePath))
 					return filePath;
 
 				return null;
@@ -113,13 +93,13 @@ namespace Clide
 		/// To set properties for the current project configuration only, use 
 		/// <c>project.PropertiesFor(project.Configuration.ActiveConfigurationName)</c>.
 		/// </remarks>
-		public virtual dynamic PropertiesFor (string configurationAndPlatform) => new ConfigProjectProperties (this, configurationAndPlatform);
+		public virtual dynamic PropertiesFor(string configurationAndPlatform) => new ConfigProjectProperties(this, configurationAndPlatform);
 
 		/// <summary>
 		/// Gets the user-specific properties of the project.
 		/// </summary>
 		/// <exception cref="System.NotImplementedException"></exception>
-		public dynamic UserProperties => new UserProjectProperties (this);
+		public dynamic UserProperties => new UserProjectProperties(this);
 
 		/// <summary>
 		/// Gets the configuration-specific user properties for the project.
@@ -132,12 +112,12 @@ namespace Clide
 		/// To set properties for the current project configuration only, use
 		/// <c>project.UserPropertiesFor(project.Configuration.ActiveConfigurationName)</c>.
 		/// </remarks>
-		public dynamic UserPropertiesFor (string configurationName) => new ConfigUserProjectProperties (this, configurationName);
+		public dynamic UserPropertiesFor(string configurationName) => new ConfigUserProjectProperties(this, configurationName);
 
 		/// <summary>
 		/// Accepts the specified visitor for traversal.
 		/// </summary>
-		public override bool Accept (ISolutionVisitor visitor) => SolutionVisitable.Accept (this, visitor);
+		public override bool Accept(ISolutionVisitor visitor) => SolutionVisitable.Accept(this, visitor);
 
 		/// <summary>
 		/// Tries to smart-cast this node to the give type.
@@ -147,6 +127,11 @@ namespace Clide
 		/// The casted value or null if it cannot be converted to that type.
 		/// </returns>
 		/// <exception cref="System.NotImplementedException"></exception>
-		public override T As<T> () => Adapter.Adapt (this).As<T> ();
+		public override T As<T>() => Adapter.Adapt(this).As<T>();
+
+		public bool IsSharedProject =>
+			SharedProjectExtension.Equals(
+				Path.GetExtension(PhysicalPath),
+				StringComparison.InvariantCultureIgnoreCase);
 	}
 }

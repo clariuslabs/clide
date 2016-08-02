@@ -1,5 +1,6 @@
 ﻿namespace Clide
 {
+	using System;
 	using System.Collections.Concurrent;
 	using System.Collections.Generic;
 	using System.Collections.ObjectModel;
@@ -155,6 +156,10 @@
 			return folder;
 		}
 
+		public virtual void AddReference(IProjectNode referencedProject)
+		{
+		}
+
 		public virtual string PhysicalPath { get; set; }
 
 		public virtual void Save ()
@@ -169,6 +174,8 @@
 		}
 
 		public virtual dynamic UserProperties { get { return userProperties; } }
+
+		public bool IsSharedProject => false;
 
 		public virtual dynamic UserPropertiesFor (string configurationName)
 		{
