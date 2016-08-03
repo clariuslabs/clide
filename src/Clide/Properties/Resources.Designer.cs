@@ -133,6 +133,24 @@ namespace Clide.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The template {0} ({1}) could not be found.
+        /// </summary>
+        internal static string ProjectContainerNode_TemplateNotFound {
+            get {
+                return ResourceManager.GetString("ProjectContainerNode_TemplateNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to unfold template {0} ({1}).
+        /// </summary>
+        internal static string ProjectContainerNode_UnfoldTemplateFailed {
+            get {
+                return ResourceManager.GetString("ProjectContainerNode_UnfoldTemplateFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to find {0} in {1}.
         /// </summary>
         internal static string ProjectItemContainerNode_ItemNotFound {

@@ -141,6 +141,12 @@
   <data name="ItemProperties_InvalidNullValue" xml:space="preserve">
     <value>Cannot set null value for item property {0}.</value>
   </data>
+  <data name="ProjectContainerNode_TemplateNotFound" xml:space="preserve">
+    <value>The template {0} ({1}) could not be found</value>
+  </data>
+  <data name="ProjectContainerNode_UnfoldTemplateFailed" xml:space="preserve">
+    <value>Failed to unfold template {0} ({1})</value>
+  </data>
   <data name="ProjectItemContainerNode_ItemNotFound" xml:space="preserve">
     <value>Failed to find {0} in {1}</value>
   </data>

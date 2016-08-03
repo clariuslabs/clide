@@ -34,9 +34,17 @@ namespace Clide
 		/// <summary>
 		/// Gets the DTE extensibility object for the given hierarchy item.
 		/// </summary>
-		public static object GetExtenderObject (this IVsHierarchyItem item)
+		public static object GetExtenderObject(this IVsHierarchyItem item)
 		{
-			return item.GetProperty ((int)__VSHPROPID.VSHPROPID_ExtObject);
+			return item.GetProperty((int)__VSHPROPID.VSHPROPID_ExtObject);
+		}
+
+		/// <summary>
+		/// Gets the DTE extensibility object for the given hierarchy item.
+		/// </summary>
+		public static T GetExtenderObject<T>(this IVsHierarchyItem item)
+		{
+			return (T)GetExtenderObject(item);
 		}
 
 		public static object GetProperty (this IVsHierarchyItem item, int propId, object defaultValue = null)

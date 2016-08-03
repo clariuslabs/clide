@@ -32,8 +32,10 @@
     <Compile Include="Adapters\VsLangAdapterFacade.cs" />
     <Compile Include="Adapters\DteAdapterFacade.cs" />
     <Compile Include="Events\ShellInitialized.cs" />
+    <Compile Include="Solution\Behavior\IProjectIContainerNode.cs" />
     <Compile Include="Solution\Behavior\IRemovableNode.cs" />
     <Compile Include="Solution\Extensions\IItemNodeExtensions.cs" />
+    <Compile Include="Solution\Extensions\ISolutionNodeExtensions.cs" />
     <Compile Include="Solution\Extensions\IReferencesNodeExtensions.cs" />
     <Compile Include="Solution\Extensions\IProjectNodeExtensions.cs" />
     <Compile Include="Solution\Extensions\IFolderNodeExtensions.cs" />
