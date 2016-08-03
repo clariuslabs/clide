@@ -25,4 +25,7 @@ public static partial class AdapterFacade
 
 	internal static IReferenceContainerNode AsReferenceContainerNode(this IProjectNode project) =>
 		project.As<IReferenceContainerNode>();
+
+	internal static IProjectContainerNode AsProjectContainerNode (this ISolutionNode solution) =>
+		solution.As<IProjectContainerNode>();
 }

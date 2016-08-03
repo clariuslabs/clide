@@ -14,7 +14,8 @@ namespace Clide
 		IAdapter<ItemNode, IRemovableNode>,
 		IAdapter<FolderNode, IRemovableNode>,
 		IAdapter<ProjectNode, IReferenceContainerNode>,
-		IAdapter<ReferencesNode, IReferenceContainerNode>
+		IAdapter<ReferencesNode, IReferenceContainerNode>,
+		IAdapter<SolutionNode, IProjectContainerNode>
 	{
 		readonly Lazy<ISolutionExplorerNodeFactory> nodeFactory;
 
@@ -25,10 +26,10 @@ namespace Clide
 		}
 
 		IProjectItemContainerNode IAdapter<ProjectNode, IProjectItemContainerNode>.Adapt(ProjectNode from) =>
-			new ProjectContainerNode(from, nodeFactory);
+			new ProjectItemContainerNode(from, nodeFactory);
 
 		IProjectItemContainerNode IAdapter<FolderNode, IProjectItemContainerNode>.Adapt(FolderNode from) =>
-			new FolderContainerNode(from, nodeFactory);
+			new ProjectItemContainerNode(from, nodeFactory);
 
 		IDeletableNode IAdapter<ItemNode, IDeletableNode>.Adapt(ItemNode from) =>
 			new DeletableProjectItemNode(from);
@@ -47,5 +48,8 @@ namespace Clide
 
 		IReferenceContainerNode IAdapter<ReferencesNode, IReferenceContainerNode>.Adapt(ReferencesNode from) =>
 			new ReferenceContainerNode(from);
+
+		IProjectContainerNode IAdapter<SolutionNode, IProjectContainerNode>.Adapt(SolutionNode from) =>
+			new ProjectContainerNode(from);
 	}
 }

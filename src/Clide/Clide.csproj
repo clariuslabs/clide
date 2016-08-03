@@ -70,11 +70,9 @@
     <Compile Include="ServiceLocatorProvider.cs" />
     <Compile Include="Solution\Behavior\RemovableProjectItemNode.cs" />
     <Compile Include="Solution\Behavior\DeletableProjectItemNode.cs" />
-    <Compile Include="Solution\Behavior\BehaviorNode.cs" />
     <Compile Include="Solution\Behavior\ProjectItemContainerNode.cs" />
     <Compile Include="Solution\Behavior\ReferenceContainerNode.cs" />
     <Compile Include="Solution\Behavior\ProjectContainerNode.cs" />
-    <Compile Include="Solution\Behavior\FolderContainerNode.cs" />
     <Compile Include="Solution\ConfigProjectProperties.cs" />
     <Compile Include="Solution\ConfigUserProjectProperties.cs" />
     <Compile Include="Solution\DynamicPropertyAccessor.cs" />
