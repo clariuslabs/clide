@@ -175,12 +175,14 @@
 
 		public virtual dynamic UserProperties { get { return userProperties; } }
 
-		public bool IsSharedProject => false;
-
 		public virtual dynamic UserPropertiesFor (string configurationName)
 		{
 			return userPropertiesFor.GetOrAdd (configurationName, _ => new ExpandoObject ());
 		}
+
+		public bool Supports(string capabilities) => true;
+
+		public bool Supports(KnownCapabilities capabilities) => true;
 	}
 
 	public class FakeFolder : FakeSolutionExplorerNode, IFolderNode

@@ -37,6 +37,7 @@
     <Compile Include="Adapters\SolutionToVsAdapter.cs" />
     <Compile Include="Adapters\SolutionToVsLangAdapter.cs" />
     <Compile Include="ComponentAttribute.cs" />
+    <Compile Include="Components\Interop\VsBooleanSymbolExpressionEvaluatorProvider.cs" />
     <Compile Include="Components\Interop\VsShellProvider.cs" />
     <Compile Include="Events\ShellInitializedObservable.cs" />
     <Compile Include="CommandHandlerAttribute.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="Extensions\System\TypeInheritanceExtension.cs" />
     <Compile Include="Extensions\VisualStudio\IVsHierarchyItemExtensions.cs" />
     <Compile Include="Extensions\VisualStudio\IVsSolutionExtensions.cs" />
+    <Compile Include="Interop\BooleanSymbolExpressionEvaluator.cs" />
     <Compile Include="Interop\IVsSharedProjectReferencesHelper.cs" />
     <Compile Include="Interop\IVsSolutionSelection.cs" />
     <Compile Include="Interop\IVsTaskSchedulerService2.cs" />

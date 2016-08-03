@@ -59,8 +59,17 @@
 		dynamic UserPropertiesFor(string configurationName);
 
 		/// <summary>
-		/// Returns true if it's a shared project
+		/// Returns true if the project supports the given capabilities
 		/// </summary>
-		bool IsSharedProject { get; }
+		/// <param name="capabilities">The expression to evaluate, for example, C1 & C2 & (!C3 | C4) where C1, C2, etc are the capabilities names</param>
+		/// <returns><see langword="true"/> if the project supports the specified capabilities</returns>
+		bool Supports(string capabilities);
+
+		/// <summary>
+		/// Returns true if the project supports the given capabilities
+		/// </summary>
+		/// <param name="capabilities">The known capabilities to evaluate</param>
+		/// <returns><see langword="true"/> if the project supports the specified capabilities</returns>
+		bool Supports(KnownCapabilities capabilities);
 	}
 }

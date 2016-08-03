@@ -14,6 +14,7 @@ namespace Clide
 		Lazy<ISolutionExplorerNodeFactory> childNodeFactory;
 		IAdapterService adapter;
 		Lazy<IVsUIHierarchyWindow> solutionExplorer;
+		Lazy<IVsBooleanSymbolExpressionEvaluator> expressionEvaluator;
 
 		[ImportingConstructor]
 		public ProjectNodeFactory (
@@ -21,19 +22,21 @@ namespace Clide
 			IVsHierarchyItemManager hierarchyManager,
 			Lazy<ISolutionExplorerNodeFactory> childNodeFactory,
 			IAdapterService adapter,
-			[Import (ContractNames.Interop.SolutionExplorerWindow)] Lazy<IVsUIHierarchyWindow> solutionExplorer)
+			[Import (ContractNames.Interop.SolutionExplorerWindow)] Lazy<IVsUIHierarchyWindow> solutionExplorer,
+			[Import(Clide.ContractNames.Interop.IVsBooleanSymbolExpressionEvaluator)] Lazy<IVsBooleanSymbolExpressionEvaluator> expressionEvaluator)
 		{
 			solution = new Lazy<IVsSolution> (() => services.GetService<SVsSolution, IVsSolution> ());
 			this.hierarchyManager = hierarchyManager;
             this.childNodeFactory = childNodeFactory;
 			this.adapter = adapter;
 			this.solutionExplorer = solutionExplorer;
+			this.expressionEvaluator = expressionEvaluator;
 		}
 
 		public virtual bool Supports (IVsHierarchyItem item) => Supports (item, out item);
 
 		public virtual ISolutionExplorerNode CreateNode (IVsHierarchyItem item) => Supports (item, out item) ?
-			new ProjectNode (item, childNodeFactory.Value, adapter, solutionExplorer) : null;
+			new ProjectNode (item, childNodeFactory.Value, adapter, solutionExplorer, expressionEvaluator) : null;
 
 		bool Supports (IVsHierarchyItem item, out IVsHierarchyItem actualItem)
 		{
