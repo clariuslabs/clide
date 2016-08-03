@@ -34,7 +34,7 @@ namespace Clide
 			if (langProject == null)
 				throw new NotSupportedException(Strings.ProjectNode.AddProjectReferenceNotSupported(Node.Name));
 
-			if (referencedProject.IsSharedProject)
+			if (referencedProject.Supports(KnownCapabilities.SharedAssetsProject))
 			{
 				var sharedProjectReferencesHelper = HierarchyNode.Value
 					.GetServiceProvider()

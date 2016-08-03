@@ -1,12 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using Clide.Properties;
-using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using VSLangProj;
 
 namespace Clide
 {
@@ -15,8 +12,6 @@ namespace Clide
 	/// </summary>
 	public class ProjectNode : SolutionExplorerNode, IProjectNode
 	{
-		const string SharedProjectExtension = ".shproj";
-
 		Lazy<GlobalProjectProperties> properties;
 
 		/// <summary>
@@ -29,11 +24,15 @@ namespace Clide
 			IVsHierarchyItem hierarchyNode,
 			ISolutionExplorerNodeFactory nodeFactory,
 			IAdapterService adapter,
-			Lazy<IVsUIHierarchyWindow> solutionExplorer)
+			Lazy<IVsUIHierarchyWindow> solutionExplorer,
+			Lazy<IVsBooleanSymbolExpressionEvaluator> expressionEvaluator)
 			: base(SolutionNodeKind.Project, hierarchyNode, nodeFactory, adapter, solutionExplorer)
 		{
 			properties = new Lazy<GlobalProjectProperties>(() => new GlobalProjectProperties(this));
+			ExpressionEvaluator = expressionEvaluator;
 		}
+
+		Lazy<IVsBooleanSymbolExpressionEvaluator> ExpressionEvaluator { get; }
 
 		/// <summary>
 		/// Saves pending changes to the project file.
@@ -129,9 +128,27 @@ namespace Clide
 		/// <exception cref="System.NotImplementedException"></exception>
 		public override T As<T>() => Adapter.Adapt(this).As<T>();
 
-		public bool IsSharedProject =>
-			SharedProjectExtension.Equals(
-				Path.GetExtension(PhysicalPath),
-				StringComparison.InvariantCultureIgnoreCase);
+		public bool Supports(string capabilities)
+		{
+			if (!string.IsNullOrEmpty(capabilities))
+			{
+				string projectCapabilities = HierarchyNode
+					.GetProperty<string>((int)__VSHPROPID5.VSHPROPID_ProjectCapabilities);
+
+				if (!string.IsNullOrEmpty(projectCapabilities))
+					return ExpressionEvaluator.Value.EvaluateExpression(capabilities, projectCapabilities);
+			}
+
+			return false;
+		}
+
+		public bool Supports(KnownCapabilities capabilities)
+		{
+			return Supports(string.Join(" & ", Enum
+				.GetValues(typeof(KnownCapabilities))
+				.OfType<KnownCapabilities>()
+				.Where(x => (x & capabilities) == x)
+				.Select(x => x.ToString())));
+		}
 	}
 }

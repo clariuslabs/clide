@@ -78,6 +78,7 @@
     <Compile Include="Solution\ISolutionItemNode.cs" />
     <Compile Include="Solution\ISolutionNode.cs" />
     <Compile Include="Solution\ISolutionVisitor.cs" />
+    <Compile Include="Solution\KnownCapabilities.cs" />
     <Compile Include="Solution\SolutionNodeKind.cs" />
     <Compile Include="Solution\SolutionVisitor.cs" />
   </ItemGroup>

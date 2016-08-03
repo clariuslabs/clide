@@ -10,6 +10,7 @@
 			public const string SolutionExplorerSelection = Prefix + "SolutionExplorerSelection";
 			public const string IVsHierarchyItemManager = Prefix + "IVsHierarchyItemManager";
 			public const string IVsShell = Prefix + "IVsShell";
+			public const string IVsBooleanSymbolExpressionEvaluator = Prefix + "IVsBooleanSymbolExpressionEvaluator";
 		}
 	}
 }
