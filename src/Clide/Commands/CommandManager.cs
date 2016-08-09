@@ -17,26 +17,27 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Commands
 {
-    using Clide.CommonComposition;
-    using Clide.Composition;
-    using Clide.Diagnostics;
-    using Clide.Properties;
-    using EnvDTE;
-    using Microsoft.CSharp.RuntimeBinder;
-    using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.Shell;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.ComponentModel.Design;
-    using System.Dynamic;
-    using System.Linq;
+	using Clide.CommonComposition;
+	using Clide.Composition;
+	using Clide.Diagnostics;
+	using Clide.Properties;
+	using EnvDTE;
+	using Microsoft.CSharp.RuntimeBinder;
+	using Microsoft.VisualStudio;
+	using Microsoft.VisualStudio.Shell;
+	using Microsoft.VisualStudio.Shell.Interop;
+	using System;
+	using System.Collections.Concurrent;
+	using System.Collections.Generic;
+	using System.ComponentModel.Design;
+	using System.Dynamic;
+	using System.Linq;
+	using System.Diagnostics;
 
-    /// <summary>
-    /// Implements the command registration mechanism.
-    /// </summary>
-    [Component(IsSingleton = true)]
+	/// <summary>
+	/// Implements the command registration mechanism.
+	/// </summary>
+	[Component(IsSingleton = true)]
     internal class CommandManager : ICommandManager
     {
         private static readonly ITracer tracer = Tracer.Get<CommandManager>();

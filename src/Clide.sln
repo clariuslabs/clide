@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{779AC312-94DE-4CCA-BEF6-22F568107B98}"
 	ProjectSection(SolutionItems) = preProject
@@ -9,10 +9,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Clide.nuspec = Clide.nuspec
 		Clide.props = Clide.props
 		Clide.targets = Clide.targets
-		Local.14.testsettings = Local.14.testsettings
 		Local.2010.testsettings = Local.2010.testsettings
 		Local.2012.testsettings = Local.2012.testsettings
 		Local.2013.testsettings = Local.2013.testsettings
+		Local.2015.testsettings = Local.2015.testsettings
 		..\ReleaseNotes.md = ..\ReleaseNotes.md
 	EndProjectSection
 EndProject

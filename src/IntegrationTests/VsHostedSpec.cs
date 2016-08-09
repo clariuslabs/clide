@@ -72,8 +72,8 @@ public abstract class VsHostedSpec
 		this.listener = new TextWriterTraceListener(new StringWriter(this.strings));
 
 		// Just in case, re-set the tracers.
-		Tracer.Manager.SetTracingLevel(TracerManager.DefaultSourceName, SourceLevels.All);
-		Tracer.Manager.AddListener(TracerManager.DefaultSourceName, this.listener);
+		Tracer.Configuration.SetTracingLevel(Tracer.Configuration.GlobalSourceName, SourceLevels.All);
+		Tracer.Configuration.AddListener(Tracer.Configuration.GlobalSourceName, this.listener);
 
 		tracer.Info("Running test from: " + this.TestContext.TestDeploymentDir);
 

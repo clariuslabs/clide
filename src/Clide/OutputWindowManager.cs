@@ -17,22 +17,23 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using Clide.CommonComposition;
-    using Clide.Diagnostics;
-    using Clide.Events;
-    using Clide.Properties;
-    using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using System;
-    using System.Collections.Concurrent;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
+	using Clide.CommonComposition;
+	using Clide.Diagnostics;
+	using Clide.Events;
+	using Clide.Properties;
+	using Microsoft.VisualStudio;
+	using Microsoft.VisualStudio.Shell.Interop;
+	using System;
+	using System.Collections.Concurrent;
+	using System.IO;
+	using System.Linq;
+	using System.Text;
+	using System.Diagnostics;
 
-    /// <summary>
-    ///  Manages the output of trace messages to an output window pane.
-    /// </summary>
-    [Component(IsSingleton = true)]
+	/// <summary>
+	///  Manages the output of trace messages to an output window pane.
+	/// </summary>
+	[Component(IsSingleton = true)]
     internal class OutputWindowManager : IOutputWindowManager
     {
         private static readonly ITracer tracer = Tracer.Get<OutputWindowManager>();

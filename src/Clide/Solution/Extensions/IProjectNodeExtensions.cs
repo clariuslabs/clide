@@ -14,24 +14,25 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    using Clide.Diagnostics;
-    using Clide.Properties;
-    using Microsoft.VisualStudio.Shell.Design;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.Design;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using VSLangProj;
+	using Clide.Diagnostics;
+	using Clide.Properties;
+	using Microsoft.VisualStudio.Shell.Design;
+	using Microsoft.VisualStudio.Shell.Interop;
+	using System;
+	using System.Collections.Generic;
+	using System.ComponentModel.Design;
+	using System.IO;
+	using System.Linq;
+	using System.Reflection;
+	using System.Threading;
+	using System.Threading.Tasks;
+	using VSLangProj;
+	using System.Diagnostics;
 
-    /// <summary>
-    /// Provides usability extensions to the <see cref="IProjectNode"/> interface.
-    /// </summary>
-    public static class IProjectNodeExtensions
+	/// <summary>
+	/// Provides usability extensions to the <see cref="IProjectNode"/> interface.
+	/// </summary>
+	public static class IProjectNodeExtensions
     {
         private static readonly ITracer tracer = Tracer.Get(typeof(IProjectNodeExtensions));
 

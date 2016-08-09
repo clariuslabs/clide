@@ -24,6 +24,7 @@ namespace Clide.Solution.Implementation
 	using System.Collections.Generic;
 	using System.Dynamic;
 	using System.Linq;
+	using System.Diagnostics;
 
 	class UserProjectProperties : DynamicObject, IPropertyAccessor
 	{

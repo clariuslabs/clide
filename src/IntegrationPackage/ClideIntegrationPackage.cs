@@ -30,8 +30,8 @@
 
 			var shell = devEnv.ServiceLocator.TryGetService<SVsShell, IVsShell>();
 
-			Tracer.Manager.SetTracingLevel(this.GetType().Namespace, SourceLevels.All);
-            Tracer.Manager.AddListener(this.GetType().Namespace, new TextTraceListener(devEnv.OutputWindow.GetPane(this)));
+			Tracer.Configuration.SetTracingLevel(this.GetType().Namespace, SourceLevels.All);
+            Tracer.Configuration.AddListener(this.GetType().Namespace, new TextTraceListener(devEnv.OutputWindow.GetPane(this)));
 
             this.tracer = Tracer.Get<ClideIntegrationPackage>();
 

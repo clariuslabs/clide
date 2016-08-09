@@ -17,41 +17,42 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using Clide.Diagnostics;
-    using Clide.Properties;
-    using System;
-    using System.ComponentModel;
-    using System.Linq;
+	using Clide.Diagnostics;
+	using Clide.Properties;
+	using System;
+	using System.ComponentModel;
+	using System.Linq;
+	using System.Diagnostics;
 
-    /// <summary>
-    /// Helper base class that can be used to provide transparent loading and saving of settings. 
-    /// </summary>
-    /// <remarks>
-    /// Derived classes typically expose an interface that is exported to the composition container, 
-    /// and declares an importing constructor that receives the settings manager, which is already 
-    /// exported in the environment by the runtime.
-    /// </remarks>
-    /// <example>
-    /// The following is an example of a settings class:
-    /// <code>
-    /// [Settings]
-    /// public class ServerSettings : Settings, IServerSettings
-    /// {
-    ///     public ServerSettings(ISettingsManager manager)
-    ///         : base(manager)
-    ///     {
-    ///     }
-    ///     
-    ///     public string Name { get; set; }
-    ///     public int Port { get; set; }
-    /// }
-    /// </code>
-    /// Note how the class specifies what is the exported settings interface 
-    /// for other consuming code. Also, the imported settings manager is passed 
-    /// to the base class which takes care of reading and saving the state as 
-    /// necessary.
-    /// </example>
-    public abstract class Settings : ISettings, INotifyPropertyChanged, ISupportInitialize, ISupportInitializeNotification
+	/// <summary>
+	/// Helper base class that can be used to provide transparent loading and saving of settings. 
+	/// </summary>
+	/// <remarks>
+	/// Derived classes typically expose an interface that is exported to the composition container, 
+	/// and declares an importing constructor that receives the settings manager, which is already 
+	/// exported in the environment by the runtime.
+	/// </remarks>
+	/// <example>
+	/// The following is an example of a settings class:
+	/// <code>
+	/// [Settings]
+	/// public class ServerSettings : Settings, IServerSettings
+	/// {
+	///     public ServerSettings(ISettingsManager manager)
+	///         : base(manager)
+	///     {
+	///     }
+	///     
+	///     public string Name { get; set; }
+	///     public int Port { get; set; }
+	/// }
+	/// </code>
+	/// Note how the class specifies what is the exported settings interface 
+	/// for other consuming code. Also, the imported settings manager is passed 
+	/// to the base class which takes care of reading and saving the state as 
+	/// necessary.
+	/// </example>
+	public abstract class Settings : ISettings, INotifyPropertyChanged, ISupportInitialize, ISupportInitializeNotification
     {
         private ITracer tracer;
 

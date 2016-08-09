@@ -14,18 +14,19 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution
 {
-    using Clide.Diagnostics;
-    using Clide.Properties;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
+	using Clide.Diagnostics;
+	using Clide.Properties;
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Threading;
+	using System.Threading.Tasks;
+	using System.Diagnostics;
 
-    /// <summary>
-    /// Provides usability extensions to the <see cref="ISolutionNode"/> interface.
-    /// </summary>
-    public static class ISolutionNodeExtensions
+	/// <summary>
+	/// Provides usability extensions to the <see cref="ISolutionNode"/> interface.
+	/// </summary>
+	public static class ISolutionNodeExtensions
     {
         private static ITracer tracer = Tracer.Get(typeof(ISolutionNodeExtensions));
 

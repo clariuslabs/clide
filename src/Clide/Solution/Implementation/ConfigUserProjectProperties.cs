@@ -25,8 +25,9 @@ namespace Clide.Solution.Implementation
 	using System.Dynamic;
 	using System.IO;
 	using System.Linq;
+	using System.Diagnostics;
 
-    class ConfigUserProjectProperties : DynamicObject, IPropertyAccessor
+	class ConfigUserProjectProperties : DynamicObject, IPropertyAccessor
     {
 		static readonly ITracer tracer = Tracer.Get<ConfigUserProjectProperties>();
 

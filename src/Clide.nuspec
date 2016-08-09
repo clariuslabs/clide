@@ -93,6 +93,9 @@ v1.0
 * Tools options pages support</releaseNotes>
     <copyright>Copyright 2012</copyright>
     <tags>visualstudio vsx extensibility</tags>
+    <dependencies>
+      <dependency id="System.Diagnostics.Tracer" version="1.0.7" />
+    </dependencies>
   </metadata>
   <files>
     <file src="Clide\bin\$configuration$\Clide.dll" target="lib\net45" />

@@ -149,6 +149,10 @@
       <HintPath>..\packages\VSSDK.DTE.7.0.4\lib\net20\stdole.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="System.Diagnostics.Tracer, Version=1.0.7.0, Culture=neutral, PublicKeyToken=173d89ffae9ce988, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.Tracer.1.0.7\lib\net40\System.Diagnostics.Tracer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <HintPath>..\packages\VSSDK.VSLangProj.7.0.4\lib\net20\VSLangProj.dll</HintPath>
@@ -183,9 +187,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="BadCommandFilter.cs" />
     <Compile Include="CustomProjectNodeFactory.cs" />
-    <Compile Include="FooOptionsPage.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="FooOptionsPage.cs" />
     <Compile Include="FooSettings.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -14,17 +14,18 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide.Solution.Implementation
 {
-    using Clide.Diagnostics;
-    using Clide.Sdk.Solution;
-    using EnvDTE;
-    using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using System;
-    using System.Collections.Generic;
-    using System.Dynamic;
-    using System.Linq;
+	using Clide.Diagnostics;
+	using Clide.Sdk.Solution;
+	using EnvDTE;
+	using Microsoft.VisualStudio;
+	using Microsoft.VisualStudio.Shell.Interop;
+	using System;
+	using System.Collections.Generic;
+	using System.Dynamic;
+	using System.Linq;
+	using System.Diagnostics;
 
-    internal class ItemProperties : DynamicObject
+	internal class ItemProperties : DynamicObject
     {
         private static readonly ITracer tracer = Tracer.Get<ItemProperties>();
 

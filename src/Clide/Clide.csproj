@@ -112,6 +112,10 @@
       <HintPath>..\packages\VSSDK.DTE.7.0.4\lib\net20\stdole.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Diagnostics.Tracer, Version=1.0.7.0, Culture=neutral, PublicKeyToken=173d89ffae9ce988, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.Tracer.1.0.7\lib\net40\System.Diagnostics.Tracer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <HintPath>..\packages\VSSDK.VSLangProj.7.0.4\lib\net20\VSLangProj.dll</HintPath>
@@ -163,13 +167,6 @@
     <Compile Include="Composition\ExportsServiceLocator.cs" />
     <Compile Include="Composition\ServiceProviderLocator.cs" />
     <Compile Include="Diagnostics\TextTraceListener.cs" />
-    <Compile Include="External\Diagnostics\Tracer\ITracer.cs" />
-    <Compile Include="External\Diagnostics\Tracer\ITracerExtensions.cs" />
-    <Compile Include="External\Diagnostics\Tracer\ITracerManager.cs" />
-    <Compile Include="External\Diagnostics\Tracer\SystemDiagnostics\StartActivityExtension.cs" />
-    <Compile Include="External\Diagnostics\Tracer\SystemDiagnostics\TracerManager.cs" />
-    <Compile Include="External\Diagnostics\Tracer\Tracer.cs" />
-    <Compile Include="External\Diagnostics\Tracer\Visibility.cs" />
     <Compile Include="IErrorItem.cs" />
     <Compile Include="netfx\System\AmbientSingleton.cs" />
     <Compile Include="netfx\System\Guard.cs" />
@@ -180,9 +177,6 @@
     <Compile Include="Patterns\Adapter\IAdapter.cs" />
     <Compile Include="Patterns\Adapter\IAdapterService.cs" />
     <Compile Include="Patterns\Adapter\IFluentInterface.cs" />
-    <Compile Include="Patterns\Visibility.cs" />
-    <Compile Include="Diagnostics\ITracerManager.cs" />
-    <Compile Include="Diagnostics\Tracer.cs" />
     <Compile Include="ErrorItem.cs" />
     <Compile Include="ErrorsManager.cs" />
     <Compile Include="External\CommonComposition.Mef\ComponentCatalog.cs" />
@@ -386,9 +380,6 @@
     <Compile Include="VisualStudio\VsToolWindow.cs" />
   </ItemGroup>
   <ItemGroup>
-    <AssemblyReport Include="Adapters.tt">
-      <OutputExtension>.md</OutputExtension>
-    </AssemblyReport>
     <None Include="app.config" />
     <None Include="ClariusLabs.snk" />
     <None Include="ilmerge.exclude" />

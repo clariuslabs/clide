@@ -73,11 +73,11 @@ namespace Clide
 
             if (settings.Debug)
             {
-                Tracer.Manager.AddListener(Strings.Trace.RootSource,
+                Tracer.Configuration.AddListener(Strings.Trace.RootSource,
                     new TextTraceListener(outputWindow.Value.GetPane(new Guid(Strings.Trace.OutputPaneId), Strings.Trace.OutputPaneTitle)));
             }
 
-            Tracer.Manager.SetTracingLevel(Strings.Trace.RootSource, settings.TracingLevel);
+            Tracer.Configuration.SetTracingLevel(Strings.Trace.RootSource, settings.TracingLevel);
 
             this.isElevated = new Lazy<bool>(() =>
             {

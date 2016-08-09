@@ -14,23 +14,24 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 namespace Clide
 {
-    using Clide.CommonComposition;
-    using Clide.Composition;
-    using Clide.Diagnostics;
-    using Clide.Properties;
-    using Microsoft.Practices.ServiceLocation;
-    using Microsoft.VisualStudio.ComponentModelHost;
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Xml.Linq;
+	using Clide.CommonComposition;
+	using Clide.Composition;
+	using Clide.Diagnostics;
+	using Clide.Properties;
+	using Microsoft.Practices.ServiceLocation;
+	using Microsoft.VisualStudio.ComponentModelHost;
+	using System;
+	using System.Collections.Concurrent;
+	using System.Collections.Generic;
+	using System.ComponentModel.Composition;
+	using System.ComponentModel.Composition.Hosting;
+	using System.IO;
+	using System.Linq;
+	using System.Reflection;
+	using System.Xml.Linq;
+	using System.Diagnostics;
 
-    internal class DevEnvFactory
+	internal class DevEnvFactory
     {
         private static readonly string ClideAssembly = Path.GetFileName(typeof(IDevEnv).Assembly.ManifestModule.FullyQualifiedName);
         private static readonly ITracer tracer = Tracer.Get<DevEnvFactory>();

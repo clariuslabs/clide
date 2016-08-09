@@ -22,11 +22,12 @@ namespace Clide.Solution
 	using System.Linq;
 	using System.Threading;
 	using System.Threading.Tasks;
+	using System.Diagnostics;
 
-    /// <summary>
-    /// Provides usability extensions to the <see cref="ISolutionNode"/> interface.
-    /// </summary>
-    public static class ISolutionExplorerNodeExtensions
+	/// <summary>
+	/// Provides usability extensions to the <see cref="ISolutionNode"/> interface.
+	/// </summary>
+	public static class ISolutionExplorerNodeExtensions
     {
         private static ITracer tracer = Tracer.Get(typeof(ISolutionExplorerNodeExtensions));
 
