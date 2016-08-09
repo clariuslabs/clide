@@ -1,23 +1,39 @@
-@echo off
-rem Only need to run this the first time after clone. Subsequent builds can be just "msbuild" or "xbuild".
+:: Optional batch file to quickly build with some defaults.
+:: Alternatively, this batch file can be invoked passing msbuild parameters, like: build.cmd "/v:detailed" "/t:Rebuild"
 
-cd %~dp0
+@ECHO OFF
 
-SETLOCAL
-SET CACHED_NUGET=%LocalAppData%\NuGet\NuGet.exe
+:: Ensure MSBuild can be located. Allows for a better error message below.
+where msbuild > %TEMP%\msbuild.txt
+set /p msb=<%TEMP%\msbuild.txt
 
-IF EXIST %CACHED_NUGET% goto copynuget
+IF "%msb%"=="" (
+    echo Please run %~n0 from a Visual Studio Developer Command Prompt.
+    exit /b -1
+)
+
+SETLOCAL ENABLEEXTENSIONS ENABLEDELAYEDEXPANSION
+PUSHD "%~dp0" >NUL
+
+IF EXIST .nuget\nuget.exe goto restore
+IF NOT EXIST .nuget md .nuget
 echo Downloading latest version of NuGet.exe...
-IF NOT EXIST %LocalAppData%\NuGet md %LocalAppData%\NuGet
-@powershell -NoProfile -ExecutionPolicy unrestricted -Command "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest 'https://www.nuget.org/nuget.exe' -OutFile '%CACHED_NUGET%'"
-
-:copynuget
-IF EXIST src\.nuget\nuget.exe goto restore
-md src\.nuget
-copy %CACHED_NUGET% src\.nuget\nuget.exe > nul
+@powershell -NoProfile -ExecutionPolicy unrestricted -Command "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest 'https://dist.nuget.org/win-x86-commandline/latest/nuget.exe' -OutFile .nuget/nuget.exe"
 
 :restore
-src\.nuget\NuGet.exe install build\packages.config -OutputDirectory build\packages -ExcludeVersion
+:: Build script packages have no version in the path, so we install them to .nuget\packages to avoid conflicts with 
+:: solution/project packages.
+IF NOT EXIST packages.config goto run
+.nuget\nuget.exe install packages.config -OutputDirectory .nuget\packages -ExcludeVersion -Verbosity quiet
 
 :run
-msbuild build.proj /v:normal %1 %2 %3 %4 %5 %6 %7 %8 %9
+IF "%Verbosity%"=="" (
+    set Verbosity=minimal
+)
+
+ECHO ON
+"%msb%" build.proj /v:%Verbosity% /nr:true /m %1 %2 %3 %4 %5 %6 %7 %8 %9
+@ECHO OFF
+
+POPD >NUL
+ENDLOCAL

@@ -2,18 +2,31 @@
 <Project ToolsVersion="4.0" DefaultTargets="Package" InitialTargets="Configure" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 	<PropertyGroup>
-		<IntermediateOutputPath>$(MSBuildThisFileDirectory)build\</IntermediateOutputPath>
 		<Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
-		<Out Condition=" '$(Out)' == '' ">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), 'out'))</Out>
+		<IntermediateOutputPath>.nuget\</IntermediateOutputPath>
+		<PackagesPath>$(IntermediateOutputPath)packages</PackagesPath>
+		<Out Condition=" '$(Out)' == '' ">$(MSBuildThisFileDirectory)out</Out>
 		<GitInfoReportImportance>high</GitInfoReportImportance>
+        <GitIgnoreTagVersion>true</GitIgnoreTagVersion>
+        <GitIgnoreBranchVersion>true</GitIgnoreBranchVersion>
+
+		<!-- We always use DeployExtension=false from the build script to ensure a clean build, but 
+			 also because if we run integration tests, we do so by installing the resulting VSIX, 
+			 which makes for a cleaner test too. 	-->
+		<CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration);Out=$(Out);DeployExtension=false</CommonBuildProperties>
+		<DefaultImportance Condition=" '$(DefaultImportance)' == '' ">high</DefaultImportance>
 	</PropertyGroup>
 
 	<Target Name="Clean">
 		<Exec Command="rmdir $(Out) /S /Q" ContinueOnError="true" />
-		<Exec Command="rmdir .nuget\packages /S /Q" ContinueOnError="true" />
-		<Exec Command="rmdir packages /S /Q" ContinueOnError="true" />
+		<Delete Files=".nuget\GitInfo.cache" ContinueOnError="true" />
+		<Exec Command="rmdir src\packages /S /Q" ContinueOnError="true" />
+		<!-- Remove all bin/obj recursively under /src -->
+		<Exec Command='for /d /r . %%d in (bin,obj) do @if exist "%%d" rd /s/q "%%d"' WorkingDirectory='$(MSBuildThisFileDirectory)src' ContinueOnError='true' />
 	</Target>
 
+	<Target Name="Rebuild" DependsOnTargets="Clean;Build" />
+	
 	<Target Name="Build" DependsOnTargets="GitVersion">
 		<PropertyGroup>
 			<Version>$(GitSemVerMajor).$(GitSemVerMinor).$(GitSemVerPatch)$(GitSemVerDashLabel)</Version>
@@ -21,28 +34,33 @@
 		</PropertyGroup>
 
 		<ItemGroup>
-      <Solution Include="src\Clide.Standalone.sln">
+			<Solution Include="src\Clide.Standalone.sln">
 				<NuSpec>src\Clide.nuspec</NuSpec>
 				<Id>Clide</Id>
 				<Version>$(Version)</Version>
 			</Solution>
 		</ItemGroup>
 
-		<MSBuild Projects="@(Solution)" Properties="Configuration=$(Configuration)" />
+		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties)" />
 	</Target>
 
 	<Target Name="Package" DependsOnTargets="Build">
-    <MakeDir Directories="$(Out)" Condition=" !Exists('$(Out)') " />
-    <PropertyGroup>
-      <ReleaseNotes>$([System.IO.File]::ReadAllText('ReleaseNotes.md'))</ReleaseNotes>
-    </PropertyGroup>
-    <XmlPoke XmlInputPath="%(Solution.NuSpec)" Query="/package/metadata/releaseNotes" Value="$(ReleaseNotes)" />
+		<MakeDir Directories="$(Out)" Condition=" !Exists('$(Out)') " />
+		<PropertyGroup>
+			<ReleaseNotes>$([System.IO.File]::ReadAllText('ReleaseNotes.md'))</ReleaseNotes>
+		</PropertyGroup>
+		<XmlPoke XmlInputPath="%(Solution.NuSpec)" Query="/package/metadata/releaseNotes" Value="$(ReleaseNotes)" />
 
-    <!-- By writing the GitInfo.txt file with the version being built, the packaged sources can build the exact same version assemblies -->
-    <WriteLinesToFile File="%(Solution.RootDir)%(Solution.Directory)%(Solution.Id)\bin\$(Configuration)\GitInfo.txt" Lines="$(Version)" Overwrite="true"
-						  Condition=" Exists('%(Solution.RootDir)%(Solution.Directory)%(Solution.Id)\bin\$(Configuration)') "/>
-    <Exec Command='"$(NuGet)" Pack "%(Solution.NuSpec)" $(Args) -Properties Id=%(Solution.Id);Configuration=$(Configuration)'
-			  Condition=" Exists('%(Solution.NuSpec)') " />
+		<!-- By writing the GitInfo.txt file with the version being built, the packaged sources can build the exact same version assemblies -->
+		<WriteLinesToFile File="%(Solution.RootDir)%(Solution.Directory)%(Solution.Id)\bin\$(Configuration)\GitInfo.txt" Lines="$(Version)" Overwrite="true"
+							  Condition=" Exists('%(Solution.RootDir)%(Solution.Directory)%(Solution.Id)\bin\$(Configuration)') "/>
+
+		<!-- Enable smart debugging with sources via GitLink -->
+		<Exec Command="$(PackagesPath)\gitlink\lib\net45\GitLink.exe . -f &quot;$([System.String]::new('%(Solution.FullPath)').Replace('$(MSBuildProjectDirectory)', '').TrimStart('\').TrimStart('/'))&quot; -u https://github.com/clariuslabs/Clide -b &quot;$(GitBranch)&quot; -c &quot;$(Configuration)&quot;" StandardOutputImportance="low" />
+		
+
+		<Exec Command='"$(NuGet)" Pack "%(Solution.NuSpec)" $(Args) -Properties Id=%(Solution.Id);Configuration=$(Configuration)'
+				  Condition=" Exists('%(Solution.NuSpec)') " />
 	</Target>
 
 	<Target Name="Publish" DependsOnTargets="Package">
@@ -53,23 +71,21 @@
 		<Message Text="Published new package: Id=%(Solution.Id), Version=%(Solution.Version)"
 				 Importance="high" />
 	</Target>
-	
+
 	<Import Project="src\NuGet.Restore.targets" />
 
 	<!-- Setup/Configure/Restore -->
 	<PropertyGroup>
-		<BuildDir>build\</BuildDir>
-		<PackagesDir>$(BuildDir)packages\</PackagesDir>
+		<PackagesDir>$(IntermediateOutputPath)packages\</PackagesDir>
 		<!-- This file is used to detect whether the restore has been performed or not -->
 		<GitInfoTargets>$(PackagesDir)GitInfo\build\GitInfo.targets</GitInfoTargets>
 		<PendingRestore Condition=" !Exists('$(GitInfoTargets)') ">true</PendingRestore>
 	</PropertyGroup>
 	<Import Project="$(GitInfoTargets)" Condition="Exists('$(GitInfoTargets)')"/>
 
-	<Target Name="Configure" DependsOnTargets="_GetNuGet"  Condition=" '$(PendingRestore)' == 'true' ">
+	<Target Name="Configure" DependsOnTargets="DownloadNuGet"  Condition=" '$(PendingRestore)' == 'true' ">
 		<!-- We always run NuGet Install since it already checks for already-installed packages and skips them -->
-		<Exec Command='"$(NuGet)" Install "$(BuildDir)packages.config" -OutputDirectory "$(PackagesDir)" -ExcludeVersion' />
-		<!-- The Wrench build script will pass the Target property as Configure on the configure step, and therefore will properly skip the error -->
+		<Exec Command='"$(NuGet)" Install packages.config -OutputDirectory "$(PackagesDir)" -ExcludeVersion' />
 		<Error Text="Build-time packages were missing and were just restored. Please run the build again." Condition=" '$(Target)' != 'Configure' " />
 	</Target>
 
