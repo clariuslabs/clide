@@ -19,6 +19,10 @@
 		</GenerateExportsDependsOn>
 	</PropertyGroup>
 
+	<ItemGroup>
+		<ExcludeInterfaceNamespace Include="Microsoft.VisualStudio" />
+	</ItemGroup>
+	
 	<Target Name="Clide::GenerateExports" DependsOnTargets="$(GenerateExportsDependsOn)" Returns="@(GeneratedExport)" />
 
 	<Target Name="Clide::ClearComponentsCache" Inputs="@(Compile)" Outputs="$(IntermediateOutputPath)ComponentFiles.cache">
@@ -32,7 +36,10 @@
 		</ReadLinesFromFile>
 	</Target>
 	
-	<Target Name="Clide::FindComponents" Inputs="@(Compile)" Outputs="$(IntermediateOutputPath)ComponentFiles.cache" Returns="@(ComponentFile)">
+	<Target Name="Clide::FindComponents" 
+			Inputs="@(Compile)" 
+			Outputs="$(IntermediateOutputPath)ComponentFiles.cache" 
+			Returns="@(ComponentFile)">
 		<FindComponents SourceFiles="@(Compile)" ProjectFullPath="$(MSBuildProjectFullPath)" Language="$(Language)">
 			<Output TaskParameter="ComponentFiles" ItemName="ComponentFile" />
 		</FindComponents>
@@ -40,10 +47,16 @@
 						  Lines="@(ComponentFile)" />
 	</Target>
 
-	<Target Name="Clide::ExportComponents" Inputs="@(ComponentFile)" Outputs="@(ComponentFile -> '$(IntermediateOutputPath)Clide\%(RelativeDir)%(Filename).g%(Extension)')"
+	<Target Name="Clide::ExportComponents" 
+			Inputs="@(ComponentFile)" 
+			Outputs="@(ComponentFile -> '$(IntermediateOutputPath)Clide\%(RelativeDir)%(Filename).g%(Extension)')"
 			DependsOnTargets="Clide::FindComponents"
 			Returns="@(_NewGeneratedExport)">
-		<ExportComponents ComponentFiles="@(ComponentFile)" IntermediateOutputPath="$(IntermediateOutputPath)Clide" ProjectFullPath="$(MSBuildProjectFullPath)" Language="$(Language)">
+		<ExportComponents ComponentFiles="@(ComponentFile)" 
+						  IntermediateOutputPath="$(IntermediateOutputPath)Clide" 
+						  ProjectFullPath="$(MSBuildProjectFullPath)" 
+						  ExcludeInterfaceNamespaces="@(ExcludeInterfaceNamespace)"
+						  Language="$(Language)">
 			<Output TaskParameter="OutputFiles" ItemName="_NewGeneratedExport" />
 		</ExportComponents>
 	</Target>

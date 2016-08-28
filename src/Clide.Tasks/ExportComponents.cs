@@ -15,6 +15,8 @@ namespace Clide.Tasks
 		[Required]
 		public ITaskItem[] ComponentFiles { get; set; }
 
+		public ITaskItem[] ExcludeInterfaceNamespaces { get; set; }
+
 		[Output]
 		public ITaskItem[] OutputFiles { get; set; }
 
@@ -30,7 +32,11 @@ namespace Clide.Tasks
 				return false;
 
 			var generator = new ExportsGenerator(Compilation);
-			var exports = generator.GenerateExports(documents.Select(doc => doc.Value), Cancellation);
+			var exports = generator.GenerateExports(documents.Select(doc => doc.Value), 
+				ExcludeInterfaceNamespaces == null ? 
+					new HashSet<string>() : 
+					new HashSet<string>(ExcludeInterfaceNamespaces.Select(x => x.ItemSpec)),
+				Cancellation);
 
 			if (Cancellation.IsCancellationRequested)
 				return false;

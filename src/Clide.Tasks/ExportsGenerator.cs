@@ -23,12 +23,16 @@ namespace Clide.Tasks
 			this.compilation = compilation;
 		}
 
-		public IEnumerable<Document> GenerateExports(IEnumerable<Document> components, CancellationToken cancellation =	default(CancellationToken))
+		public IEnumerable<Document> GenerateExports(IEnumerable<Document> components, 
+			ISet<string> excludedNamespaces,
+			CancellationToken cancellation =	 default(CancellationToken))
 		{
-			return GenerateExportsAsync(components, cancellation).Result;
+			return GenerateExportsAsync(components, excludedNamespaces, cancellation).Result;
 		}
 
-		async Task<IEnumerable<Document>> GenerateExportsAsync(IEnumerable<Document> components, CancellationToken cancellation)
+		async Task<IEnumerable<Document>> GenerateExportsAsync(IEnumerable<Document> components,
+			ISet<string> excludedNamespaces, 
+			CancellationToken cancellation)
 		{
 			var attribute = compilation.FindTypeByName("Clide", "Clide", "ComponentAttribute");
 			var documents = new List<Document>();
@@ -59,8 +63,14 @@ namespace Clide.Tasks
 						.Append(policy.ToString())
 						.AppendLine(")]");
 
+					var componentInterfaces = from iface in component.AllInterfaces
+											  let fullName = iface.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat)
+											  where fullName != "System.IDisposable" && 
+												!excludedNamespaces.Any(ns => fullName.StartsWith(ns))
+											  select iface;
+
 					// Export each implemented interface
-					foreach (var iface in component.AllInterfaces)
+					foreach (var iface in componentInterfaces)
 					{
 						text.Append("\t")
 							.Append("[Export(typeof(")

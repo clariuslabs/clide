@@ -53,13 +53,15 @@ using System.ComponentModel.Composition;
 namespace Clide 
 {
 	[Component(CreationPolicy.Shared)]
-	public partial class Producer : IObservable<DerivedEvent>
+	public partial class Producer : IObservable<DerivedEvent>, IDisposable, Microsoft.VisualStudio.Shell.Interop.IVsNonSolutionProjectFactory
 	{
 		public IDisposable Subscribe(IObserver<DerivedEvent> observer)
 		{
 			observer.OnNext(new DerivedEvent());
 			return Disposable.Empty;
 		}
+
+		public void Dispose() { }
 	}
 
 	public class BaseEvent { }
@@ -78,7 +80,7 @@ namespace Clide
 			}
 
 			var generator = new ExportsGenerator(compilation);
-			var exports = generator.GenerateExports(new[] { document }).ToArray();
+			var exports = generator.GenerateExports(new[] { document }, new HashSet<string>(new[] { "Microsoft.VisualStudio" })).ToArray();
 
 			Assert.Equal(1, exports.Length);
 
