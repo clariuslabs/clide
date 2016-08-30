@@ -41,10 +41,7 @@
     <Compile Include="Components\Interop\VsShellProvider.cs" />
     <Compile Include="Events\ShellInitializedObservable.cs" />
     <Compile Include="CommandHandlerAttribute.cs" />
-    <Compile Include="Components\AsyncManagerProvider.cs" />
-    <Compile Include="Components\CommandBus.cs" />
     <Compile Include="Components\ContractNames.cs" />
-    <Compile Include="Components\EventStream.cs" />
     <Compile Include="Components\Interop\ContractNames.cs" />
     <Compile Include="Components\Interop\VsUIHierarchyWindowProvider.cs" />
     <Compile Include="Components\Interop\VsHierarchyItemManagerProvider.cs" />
