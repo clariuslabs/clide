@@ -33,7 +33,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\EventStreamSpec.cs" />
     <Compile Include="CompositionSpec.cs" />
     <Compile Include="Events\ShellInitializedObservableSpec.cs" />
     <Compile Include="Extensions\ServiceProviderExtensionsSpec.cs" />
