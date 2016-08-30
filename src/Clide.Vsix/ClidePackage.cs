@@ -6,9 +6,6 @@ using Microsoft.VisualStudio.Shell;
 [assembly: ProvideCodeBase (AssemblyName = "Clide.Core")]
 [assembly: ProvideCodeBase (AssemblyName = "Clide.Extensibility")]
 [assembly: ProvideCodeBase (AssemblyName = "Clide.Interfaces")]
-[assembly: ProvideCodeBase (AssemblyName = "Merq.Async")]
-[assembly: ProvideCodeBase (AssemblyName = "Merq.Commands")]
-[assembly: ProvideCodeBase (AssemblyName = "Merq.Events")]
 
 namespace Clide
 {
