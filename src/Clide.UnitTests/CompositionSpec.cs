@@ -4,12 +4,14 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Merq;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Moq;
 using Xunit;
+using System.Runtime.CompilerServices;
 
 namespace Clide
 {
@@ -18,65 +20,44 @@ namespace Clide
 		Mock<IServiceProvider> services;
 		CompositionContainer container;
 
-		public CompositionSpec ()
+		public CompositionSpec()
 		{
-			container = new CompositionContainer (new AggregateCatalog (
-				new AssemblyCatalog (typeof (ServiceLocatorProvider).Assembly),
-				new AssemblyCatalog (typeof (MockServiceProvider).Assembly)));
+			container = new CompositionContainer(new AggregateCatalog(
+				new AssemblyCatalog(typeof(ServiceLocatorProvider).Assembly),
+				new AssemblyCatalog(typeof(MockServiceProvider).Assembly)));
 
 			ExportProviderProvider.SetExportProvider(container);
 
-			services = container.GetExportedValue<Mock<IServiceProvider>> ();
+			services = container.GetExportedValue<Mock<IServiceProvider>>();
 		}
 
-		[MemberData ("GetExportedComponents", DisableDiscoveryEnumeration = true)]
+		[MemberData("GetExportedComponents", DisableDiscoveryEnumeration = true)]
 		[Theory]
-		public void when_retrieving_exported_component_then_succeeds (Type contractType, string contractName)
+		public void when_retrieving_exported_component_then_succeeds(Type contractType, string contractName)
 		{
-			if (string.IsNullOrEmpty (contractName))
-				contractName = AttributedModelServices.GetContractName (contractType);
+			if (string.IsNullOrEmpty(contractName))
+				contractName = AttributedModelServices.GetContractName(contractType);
 
 			var export = container.GetExports(contractType, typeof(IDictionary<string, object>), contractName).FirstOrDefault();
 
-			Assert.NotNull (export);
+			Assert.NotNull(export);
 
 			var value = export.Value;
 
-			Assert.NotNull (value);
+			Assert.NotNull(value);
 		}
 
 		public static IEnumerable<object[]> GetExportedComponents
 		{
 			get
 			{
-				return typeof (ServiceLocatorProvider).Assembly
-					.GetTypes ()
-					.Select (x => new { Type = x, Export = x.GetCustomAttributes (typeof (ExportAttribute), true).OfType<ExportAttribute> ().FirstOrDefault () })
-					.Where (x => x.Export != null)
-					.Select (x => new object[] { x.Export.ContractType ?? x.Type, x.Export.ContractName })
-					.ToArray ();
+				return typeof(ServiceLocatorProvider).Assembly
+					.GetTypes()
+					.Select(x => new { Type = x, Export = x.GetCustomAttributes(typeof(ExportAttribute), true).OfType<ExportAttribute>().FirstOrDefault() })
+					.Where(x => x.Export != null)
+					.Select(x => new object[] { x.Export.ContractType ?? x.Type, x.Export.ContractName })
+					.ToArray();
 			}
-		}
-
-		[Fact]
-		public void when_composing_event_stream_then_can_subscribe_to_exported_observable ()
-		{
-			var stream = container.GetExportedValue<IEventStream> ();
-			string value = null;
-
-			stream.Of<string> ().Subscribe (s => value = s);
-
-			Assert.Equal ("foo", value);
-		}
-
-		[Fact]
-		public void when_composing_command_bus_then_can_execute_exported_command_handler ()
-		{
-			var bus = container.GetExportedValue<ICommandBus> ();
-
-			Assert.True (bus.CanHandle<MockCommand> ());
-			Assert.True (bus.CanExecute (new MockCommand ()));
-			bus.Execute (new MockCommand ());
 		}
 
 		[Fact]
@@ -94,27 +75,27 @@ namespace Clide
 	[Export(typeof(IObservable<string>))]
 	public class MockObservable : IObservable<string>
 	{
-		public IDisposable Subscribe (IObserver<string> observer) =>
-			new[] { "foo" }.ToObservable ().Subscribe (observer);
+		public IDisposable Subscribe(IObserver<string> observer) =>
+			new[] { "foo" }.ToObservable().Subscribe(observer);
 	}
 
 	[CommandHandler]
 	public class MockCommandHandler : ICommandHandler<MockCommand>
 	{
-		public bool CanExecute (MockCommand command) => true;
+		public bool CanExecute(MockCommand command) => true;
 
-		public void Execute (MockCommand command)
+		public void Execute(MockCommand command)
 		{
 		}
 	}
 
 	public class MockCommand : ICommand { }
- 
-	[PartCreationPolicy (CreationPolicy.Shared)]
+
+	[PartCreationPolicy(CreationPolicy.Shared)]
 	public class MockServiceProvider
 	{
 		[ImportingConstructor]
-		public MockServiceProvider (ExportProvider exports)
+		public MockServiceProvider(ExportProvider exports)
 		{
 			object zombie = false;
 
@@ -122,44 +103,44 @@ namespace Clide
 				.As<IVsShell>();
 			vsShell.Setup(x => x.GetProperty((int)__VSSPROPID.VSSPROPID_Zombie, out zombie)).Returns(0);
 
-			Instance = Mock.Of<IServiceProvider> (x =>
-				x.GetService (typeof (SVsSolution)) ==
-					new Mock<IVsSolution> ()
-						.As<IVsHierarchy> ()
-						.As<SVsSolution> ().Object &&
-				x.GetService (typeof (SComponentModel)) ==
-					Mock.Of<IComponentModel> (c =>
-						 c.GetService<IVsHierarchyItemManager> () == Mock.Of<IVsHierarchyItemManager> () && 
-						 c.DefaultExportProvider == exports) &&
-				x.GetService (typeof (SVsShellMonitorSelection)) ==
-					new Mock<SVsShellMonitorSelection> ()
-						.As<IVsMonitorSelection> ().Object &&
-				x.GetService(typeof(SVsShell)) == vsShell.Object &&
-				x.GetService (typeof (SVsUIShell)) ==
-					new Mock<SVsUIShell> ()
-						.As<IVsUIShell> ().Object
+			Instance = Mock.Of<IServiceProvider>(x =>
+			   x.GetService(typeof(SVsSolution)) ==
+				   new Mock<IVsSolution>()
+					   .As<IVsHierarchy>()
+					   .As<SVsSolution>().Object &&
+			   x.GetService(typeof(SComponentModel)) ==
+				   Mock.Of<IComponentModel>(c =>
+					   c.GetService<IVsHierarchyItemManager>() == Mock.Of<IVsHierarchyItemManager>() &&
+					   c.DefaultExportProvider == exports) &&
+			   x.GetService(typeof(SVsShellMonitorSelection)) ==
+				   new Mock<SVsShellMonitorSelection>()
+					   .As<IVsMonitorSelection>().Object &&
+			   x.GetService(typeof(SVsShell)) == vsShell.Object &&
+			   x.GetService(typeof(SVsUIShell)) ==
+				   new Mock<SVsUIShell>()
+					   .As<IVsUIShell>().Object
 			);
 		}
 
-		[Export (typeof (SVsServiceProvider))]
+		[Export(typeof(SVsServiceProvider))]
 		public IServiceProvider Instance { get; }
 
-		[Export (typeof (Mock<IServiceProvider>))]
-		public Mock<IServiceProvider> InstanceMock { get { return Mock.Get (Instance); } }
+		[Export(typeof(Mock<IServiceProvider>))]
+		public Mock<IServiceProvider> InstanceMock { get { return Mock.Get(Instance); } }
 	}
 
-	[PartCreationPolicy (CreationPolicy.Shared)]
+	[PartCreationPolicy(CreationPolicy.Shared)]
 	public class MockHierarchyItemManager
 	{
-		public MockHierarchyItemManager ()
+		public MockHierarchyItemManager()
 		{
-			Mock = new Mock<IVsHierarchyItemManager> ();
+			Mock = new Mock<IVsHierarchyItemManager>();
 		}
 
 		[Export]
 		public IVsHierarchyItemManager Instance { get { return Mock.Object; } }
 
-		[Export (typeof (Mock<IVsHierarchyItemManager>))]
+		[Export(typeof(Mock<IVsHierarchyItemManager>))]
 		public Mock<IVsHierarchyItemManager> Mock { get; private set; }
 	}
 
@@ -182,6 +163,118 @@ namespace Clide
 
 		[Export]
 		public ExportProvider Exports { get { return exports; } }
+	}
+
+
+	[Export(typeof(IAsyncManager))]
+	public class MockAsyncManagerProvider : IAsyncManager
+	{
+		public void Run(Func<System.Threading.Tasks.Task> asyncMethod)
+		{
+			asyncMethod().Wait();
+		}
+
+		public TResult Run<TResult>(Func<Task<TResult>> asyncMethod)
+		{
+			return asyncMethod().Result;
+		}
+
+		public IAwaitable RunAsync(Func<System.Threading.Tasks.Task> asyncMethod)
+		{
+			return new TaskAwaitable (asyncMethod());
+		}
+
+		public IAwaitable<TResult> RunAsync<TResult>(Func<Task<TResult>> asyncMethod)
+		{
+			return new TaskAwaitable<TResult>(asyncMethod());
+		}
+
+		public IAwaitable SwitchToBackground()
+		{
+			return new TaskAwaitable(System.Threading.Tasks.Task.FromResult(0));
+		}
+
+		public IAwaitable SwitchToMainThread()
+		{
+			return new TaskAwaitable(System.Threading.Tasks.Task.FromResult(0));
+		}
+	}
+
+	class TaskAwaitable : IAwaitable
+	{
+		System.Threading.Tasks.Task task;
+
+		public TaskAwaitable(System.Threading.Tasks.Task task)
+		{
+			this.task = task;
+		}
+
+		public IAwaiter GetAwaiter() => new Awaiter(task.GetAwaiter());
+
+		class Awaiter : IAwaiter
+		{
+			TaskAwaiter awaiter;
+
+			public Awaiter(TaskAwaiter awaiter)
+			{
+				this.awaiter = awaiter;
+			}
+
+			public bool IsCompleted => awaiter.IsCompleted;
+
+			public void GetResult()
+			{
+				awaiter.GetResult();
+			}
+
+			public void OnCompleted(Action continuation)
+			{
+				awaiter.OnCompleted(continuation);
+			}
+		}
+	}
+
+	class TaskAwaitable<TResult> : IAwaitable<TResult>
+	{
+		Task<TResult> task;
+
+		public TaskAwaitable(Task<TResult> task)
+		{
+			this.task = task;
+		}
+
+		public IAwaiter<TResult> GetAwaiter() => new Awaiter(task.GetAwaiter());
+
+		class Awaiter : IAwaiter<TResult>
+		{
+			TaskAwaiter<TResult> awaiter;
+
+			public Awaiter(TaskAwaiter<TResult> awaiter)
+			{
+				this.awaiter = awaiter;
+			}
+
+			public bool IsCompleted => awaiter.IsCompleted;
+
+			public TResult GetResult() => awaiter.GetResult();
+
+			public void OnCompleted(Action continuation)
+			{
+				awaiter.OnCompleted(continuation);
+			}
+		}
+	}
+
+	public class MockCommandBusProvider
+	{
+		[Export(typeof(ICommandBus))]
+		public ICommandBus Value => Mock.Of<ICommandBus>();
+	}
+
+	public class MockEventStreamProvider
+	{
+		[Export(typeof(IEventStream))]
+		public IEventStream Value => Mock.Of<IEventStream>();
 	}
 
 	public interface IComponent { }
