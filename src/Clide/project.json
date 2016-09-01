@@ -7,7 +7,7 @@
     "Microsoft.VisualStudio.Threading": "12.2.0",
     "netfx-System.StringResources": "3.0.13",
     "Rx-Main": "2.2.5",
-    "System.Diagnostics.Tracer": "1.0.7",
+    "System.Diagnostics.Tracer": "2.0.1",
     "VSSDK.ComponentModelHost.11": "11.0.4",
     "VSSDK.DTE.10": "10.0.4",
     "VSSDK.IDE.11": "11.0.4",
