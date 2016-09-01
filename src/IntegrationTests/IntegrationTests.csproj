@@ -181,8 +181,8 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Design" />
-    <Reference Include="System.Diagnostics.Tracer, Version=1.1.0.0, Culture=neutral, PublicKeyToken=173d89ffae9ce988, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.Tracer.1.1.0\lib\net40\System.Diagnostics.Tracer.dll</HintPath>
+    <Reference Include="System.Diagnostics.Tracer, Version=2.0.0.0, Culture=neutral, PublicKeyToken=173d89ffae9ce988, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.Tracer.2.0.1\lib\net45\System.Diagnostics.Tracer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Drawing" />
