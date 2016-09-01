@@ -112,8 +112,8 @@
       <HintPath>..\packages\VSSDK.DTE.7.0.4\lib\net20\stdole.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Diagnostics.Tracer, Version=1.1.0.0, Culture=neutral, PublicKeyToken=173d89ffae9ce988, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.Tracer.1.1.0\lib\net40\System.Diagnostics.Tracer.dll</HintPath>
+    <Reference Include="System.Diagnostics.Tracer, Version=2.0.0.0, Culture=neutral, PublicKeyToken=173d89ffae9ce988, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.Tracer.2.0.1\lib\net45\System.Diagnostics.Tracer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
