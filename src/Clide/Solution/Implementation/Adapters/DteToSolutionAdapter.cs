@@ -55,7 +55,9 @@ namespace Clide.Solution.Adapters
 				// This might throw if the project isn't loaded yet.
 				uniqueName = from.UniqueName;
 			} catch (Exception) {
-				return null;
+				// As a fallback, in C#/VB, the UniqueName == FullName.
+				// It may still fail in the ext call though, but we do our best
+				uniqueName = from.FullName;
 			}
 
             IVsHierarchy project;

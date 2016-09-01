@@ -46,9 +46,22 @@ namespace Clide.Solution.Adapters
         {
             IVsHierarchy project;
 
-            if (!ErrorHandler.Succeeded(this.serviceProvider
+			var uniqueName = "";
+			try
+			{
+				// This might throw if the project isn't loaded yet.
+				uniqueName = from.UniqueName;
+			}
+			catch (Exception)
+			{
+				// As a fallback, in C#/VB, the UniqueName == FullName.
+				// It may still fail in the ext call though, but we do our best
+				uniqueName = from.FullName;
+			}
+
+			if (!ErrorHandler.Succeeded(this.serviceProvider
                 .GetService<SVsSolution, IVsSolution>()
-                .GetProjectOfUniqueName(from.UniqueName, out project)))
+                .GetProjectOfUniqueName(uniqueName, out project)))
                 return null;
 
 			return project as IVsProject;
@@ -58,9 +71,22 @@ namespace Clide.Solution.Adapters
         {
             IVsHierarchy project;
 
-            if (!ErrorHandler.Succeeded(this.serviceProvider
+			var uniqueName = "";
+			try
+			{
+				// This might throw if the project isn't loaded yet.
+				uniqueName = from.UniqueName;
+			}
+			catch (Exception)
+			{
+				// As a fallback, in C#/VB, the UniqueName == FullName.
+				// It may still fail in the ext call though, but we do our best
+				uniqueName = from.FullName;
+			}
+
+			if (!ErrorHandler.Succeeded(this.serviceProvider
                 .GetService<SVsSolution, IVsSolution>()
-                .GetProjectOfUniqueName(from.UniqueName, out project)))
+                .GetProjectOfUniqueName(uniqueName, out project)))
                 return null;
 
 			return new VsHierarchyItem(project, VSConstants.VSITEMID_ROOT);
@@ -70,9 +96,22 @@ namespace Clide.Solution.Adapters
         {
             IVsHierarchy project;
 
-            if (!ErrorHandler.Succeeded(this.serviceProvider
+			var uniqueName = "";
+			try
+			{
+				// This might throw if the project isn't loaded yet.
+				uniqueName = from.ContainingProject.UniqueName;
+			}
+			catch (Exception)
+			{
+				// As a fallback, in C#/VB, the UniqueName == FullName.
+				// It may still fail in the ext call though, but we do our best
+				uniqueName = from.ContainingProject.FullName;
+			}
+
+			if (!ErrorHandler.Succeeded(this.serviceProvider
                 .GetService<SVsSolution, IVsSolution>()
-                .GetProjectOfUniqueName(from.ContainingProject.UniqueName, out project)))
+                .GetProjectOfUniqueName(uniqueName, out project)))
                 return null;
 
             var fileName = from.FileNames[0];
