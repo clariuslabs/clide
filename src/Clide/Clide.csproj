@@ -8,6 +8,7 @@
     <RootNamespace>Clide</RootNamespace>
     <AssemblyName>Clide.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <GenerateExports>true</GenerateExports>
   </PropertyGroup>
   <Import Project="..\Clide.props" />
   <ItemGroup>
@@ -40,7 +41,6 @@
     <Compile Include="Components\Interop\VsBooleanSymbolExpressionEvaluatorProvider.cs" />
     <Compile Include="Components\Interop\VsShellProvider.cs" />
     <Compile Include="Events\ShellInitializedObservable.cs" />
-    <Compile Include="CommandHandlerAttribute.cs" />
     <Compile Include="Components\ContractNames.cs" />
     <Compile Include="Components\Interop\ContractNames.cs" />
     <Compile Include="Components\Interop\VsUIHierarchyWindowProvider.cs" />
@@ -54,7 +54,6 @@
     <Compile Include="Interop\BooleanSymbolExpressionEvaluator.cs" />
     <Compile Include="Interop\IVsSharedProjectReferencesHelper.cs" />
     <Compile Include="Interop\IVsSolutionSelection.cs" />
-    <Compile Include="Interop\IVsTaskSchedulerService2.cs" />
     <Compile Include="Interop\SVsSharedProjectReferencesHelper.cs" />
     <Compile Include="Interop\VsHierarchySelection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -122,9 +121,7 @@
   <ItemGroup>
     <None Include="project.json" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Commands\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\Clide.targets" />
   <Import Project="..\Clide.Tasks\bin\Clide.targets" Condition="Exists('..\Clide.Tasks\bin\Clide.targets')" />

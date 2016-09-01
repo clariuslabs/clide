@@ -7,7 +7,7 @@
 		<DisplayName>Clide</DisplayName>
 		<Description xml:space="preserve">Clide</Description>
 	</Metadata>
-	<Installation InstalledByMsi="false" AllUsers="true">
+	<Installation>
 		<InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[11.0,)" />
 	</Installation>
 	<Dependencies>
