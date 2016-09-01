@@ -35,7 +35,7 @@ namespace Clide.Adapters
 
 			if (!ErrorHandler.Succeeded (serviceProvider
 				.GetService<SVsSolution, IVsSolution> ()
-				.GetProjectOfUniqueName (from.UniqueName, out project)))
+				.GetProjectOfUniqueName (from.GetUniqueNameOrFullName(), out project)))
 				return null;
 
 			return project as IVsProject;
@@ -50,7 +50,7 @@ namespace Clide.Adapters
 
 			if (!ErrorHandler.Succeeded (this.serviceProvider
 				.GetService<SVsSolution, IVsSolution> ()
-				.GetProjectOfUniqueName (from.UniqueName, out project)))
+				.GetProjectOfUniqueName (from.GetUniqueNameOrFullName(), out project)))
 				return null;
 
 			return hierarchyManager.GetHierarchyItem (project, VSConstants.VSITEMID_ROOT);
@@ -62,7 +62,7 @@ namespace Clide.Adapters
 
 			if (!ErrorHandler.Succeeded (this.serviceProvider
 				.GetService<SVsSolution, IVsSolution> ()
-				.GetProjectOfUniqueName (from.ContainingProject.UniqueName, out project)))
+				.GetProjectOfUniqueName (from.ContainingProject.GetUniqueNameOrFullName(), out project)))
 				return null;
 
 			var fileName = from.FileNames[0];
