@@ -49,6 +49,7 @@
     <Compile Include="Extensions\System\Collections\Generic\IEnumerable\Traverser.cs" />
     <Compile Include="Extensions\System\TypeInheritance.cs" />
     <Compile Include="Extensions\System\TypeInheritanceExtension.cs" />
+    <Compile Include="Extensions\VisualStudio\DteExtensions.cs" />
     <Compile Include="Extensions\VisualStudio\IVsHierarchyItemExtensions.cs" />
     <Compile Include="Extensions\VisualStudio\IVsSolutionExtensions.cs" />
     <Compile Include="Interop\BooleanSymbolExpressionEvaluator.cs" />
