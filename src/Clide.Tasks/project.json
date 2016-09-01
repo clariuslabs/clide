@@ -2,7 +2,8 @@
   "dependencies": {
     "GitInfo": "1.1.20",
     "Microsoft.CodeAnalysis": "1.1.1",
-    "MSBuilder.DumpItems": "0.1.7"
+    "MSBuilder.DumpItems": "0.1.7",
+    "MSBuilder.Roslyn":  "0.2.4"
   },
   "frameworks": {
     "net452": {}

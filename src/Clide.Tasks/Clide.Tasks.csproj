@@ -15,14 +15,6 @@
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Tasks.v4.0" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
-    <Reference Include="MSBuilder.Roslyn">
-      <Private>true</Private>
-      <HintPath>..\..\..\..\Xamarin\mobessen\MSBuilder\src\Roslyn\Roslyn\bin\MSBuilder.Roslyn.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuilder.Roslyn.ProjectReader">
-      <Private>true</Private>
-      <HintPath>..\..\..\..\Xamarin\mobessen\MSBuilder\src\Roslyn\Roslyn\bin\MSBuilder.Roslyn.ProjectReader.exe</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
