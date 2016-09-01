@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<Content Include="..\Clide.Lib\bin\$(Configuration)\Clide.wixlib">
+			<Link>tools\%(Filename)%(Extension)</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="..\Clide.Msi\bin\$(Configuration)\Clide.msi">
+			<Link>tools\%(Filename)%(Extension)</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="..\..\Clide.Vsix\bin\$(Configuration)\Clide.vsix">
+			<Link>tools\%(Filename)%(Extension)</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="..\..\Clide.Vsix\bin\$(Configuration)\extension.vsixmanifest">
+			<Link>tools\%(Filename)%(Extension)</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<PropertyGroup>
+		<VersionDependsOn>GetVersion</VersionDependsOn>
+		<GetTargetPathDependsOn>EstablishNuGetPaths;$(GetTargetPathDependsOn)</GetTargetPathDependsOn>
+		<GitInfoBaseDir>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), ClariusLabs.snk))</GitInfoBaseDir>
+		<!-- Prevents the MS common targets from automatically adding the build dependency projects as 
+		     project references to be processed by NuProj, since we're already linking to the right files 
+			 to end up in the right folders. -->
+		<AddSyntheticProjectReferencesForSolutionDependencies>false</AddSyntheticProjectReferencesForSolutionDependencies>
+	</PropertyGroup>
+	
+	<Target Name="GetVersion" DependsOnTargets="GitVersion" Returns="$(Version)">
+		<PropertyGroup>
+			<Version>$(GitSemVerMajor).$(GitSemVerMinor).$(GitSemVerPatch)$(GitSemVerDashLabel)</Version>
+		</PropertyGroup>
+	</Target>
+
+	<!-- Overriden by the GitInfo import if it exists -->
+	<Target Name="GitVersion">
+		<PropertyGroup>
+			<GitSemVerMajor>1</GitSemVerMajor>
+			<GitSemVerMinor>0</GitSemVerMinor>
+			<GitSemVerPatch>0</GitSemVerPatch>
+			<GitSemVerDashLabel></GitSemVerDashLabel>
+		</PropertyGroup>
+	</Target>
+
+	<Import Project="..\..\..\.nuget\packages\GitInfo\build\GitInfo.targets"
+			Condition="Exists('..\..\..\.nuget\packages\GitInfo\build\GitInfo.targets')"/>
+</Project>

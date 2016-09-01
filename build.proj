@@ -30,7 +30,6 @@
 	<ItemGroup>
 		<Solution Include="src\Clide.Tasks.sln"/>
 		<Solution Include="src\Clide.sln"/>
-		<NuSpec Include="src\**\*.nuspec" />
 	</ItemGroup>
 
 	<Target Name="Clean">
@@ -120,9 +119,19 @@
 		<Exec Command='"$(VsixInstaller)" /q /u:Clide' />
 	</Target>
 
-	<Target Name="Package" DependsOnTargets="Build" Condition=" '@(NuSpec)' != '' ">
+	<Target Name="Package" DependsOnTargets="GitInfo;Build">
+
+		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties);IsSystemComponent=true" />
+		<Exec Command="$(PackagesPath)\gitlink\lib\net45\GitLink.exe . -f &quot;%(Solution.Identity)&quot; -u https://github.com/clariuslabs/clide -b &quot;$(GitBranch)&quot; -c &quot;$(Configuration)&quot;" StandardOutputImportance="low" />
 		<MakeDir Directories="$(Out)" Condition=" !Exists('$(Out)') " />
-		<Exec Command='"$(NuGet)" Pack "%(NuSpec.Identity)" $(Args) -Version $(Version) -Properties Id=%(NuSpec.Filename);Configuration=$(Configuration) -OutputDirectory $(Out)' />
+		
+		<MSBuild Projects="src\Installers\Clide.Installer\Clide.Installer.nuproj"
+				 Properties="$(CommonBuildProperties)"
+				 Targets="Build;GetTargetPath">
+			<Output ItemName='InstallerPackage' TaskParameter='TargetOutputs' />
+		</MSBuild>
+
+		<Copy SourceFiles='%(InstallerPackage.Identity)' DestinationFiles='$(Out)\%(InstallerPackage.Filename)%(InstallerPackage.Extension)' />
 	</Target>
 
 	<!-- Configure and restore initial targets and packages -->

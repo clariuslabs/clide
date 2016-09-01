@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|AnyCPU">
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|AnyCPU">
+      <Configuration>Release</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <Dependency Include="MSBuilder.VsixDependency">
+      <Version>0.1.0</Version>
+    </Dependency>
+    <Dependency Include="Merq.Installer">
+      <Version>1.0.30-pre</Version>
+    </Dependency>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="build\Clide.Installer.WiX.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="build\Clide.Installer.Vsix.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="build\Clide.Installer.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Readme.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>e579dfbe-3b42-4004-971e-d4de2f28c965</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NuProjPath Condition=" '$(NuProjPath)' == '' ">..\..\..\.nuget\packages\NuProj\tools\</NuProjPath>
+  </PropertyGroup>
+  <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
+  <Import Project="Clide.Installer.targets" />
+  <PropertyGroup Label="Configuration">
+    <Id>Clide.Installer</Id>
+    <Version>1.0.0</Version>
+    <Title>Clide.Installer</Title>
+    <Authors>Daniel Cazzulino</Authors>
+    <Owners>clariuslabs, kzu</Owners>
+    <Summary>Clide.Installer</Summary>
+    <Description>Clide Installer: VSIX, MSI and EXE (chained) installer integration.</Description>
+    <ProjectUrl>https://github.com/MobileEssentials/Clide</ProjectUrl>
+    <LicenseUrl>https://raw.github.com/MobileEssentials/Clide/master/LICENSE</LicenseUrl>
+    <IconUrl>https://raw.github.com/MobileEssentials/Clide/master/icon/48.png</IconUrl>
+    <Copyright>Copyright 2016 © Clarius Labs</Copyright>
+    <Tags>Clide vsix wix msi bundle</Tags>
+    <GenerateSymbolPackage>false</GenerateSymbolPackage>
+  </PropertyGroup>
+  <Import Project="$(NuProjPath)\NuProj.targets" />
+</Project>

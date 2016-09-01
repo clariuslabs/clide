@@ -58,9 +58,11 @@
     <Error Condition="!Exists('..\..\packages\MSBuilder.CodeTaskAssembly.0.2.3\build\MSBuilder.CodeTaskAssembly.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\MSBuilder.CodeTaskAssembly.0.2.3\build\MSBuilder.CodeTaskAssembly.props'))" />
     <Error Condition="!Exists('..\..\packages\MSBuilder.IsXBuild.0.1.0\build\MSBuilder.IsXBuild.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\MSBuilder.IsXBuild.0.1.0\build\MSBuilder.IsXBuild.props'))" />
     <Error Condition="!Exists('..\..\packages\MSBuilder.0.1.0\build\MSBuilder.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\MSBuilder.0.1.0\build\MSBuilder.props'))" />
-    <Error Condition="!Exists('..\..\packages\MSBuilder.VsixInstaller.0.1.9\build\MSBuilder.VsixInstaller.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\MSBuilder.VsixInstaller.0.1.9\build\MSBuilder.VsixInstaller.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Merq.Installer.1.0.12-pre\build\Merq.Installer.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Merq.Installer.1.0.12-pre\build\Merq.Installer.targets'))" />
+    <Error Condition="!Exists('..\..\packages\MSBuilder.VsixInstaller.0.2.4\build\MSBuilder.VsixInstaller.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\MSBuilder.VsixInstaller.0.2.4\build\MSBuilder.VsixInstaller.targets'))" />
+    <Error Condition="!Exists('..\..\packages\MSBuilder.VsixDependency.0.1.0\build\MSBuilder.VsixDependency.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\MSBuilder.VsixDependency.0.1.0\build\MSBuilder.VsixDependency.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Merq.Installer.1.0.30-pre\build\Merq.Installer.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Merq.Installer.1.0.30-pre\build\Merq.Installer.targets'))" />
   </Target>
-  <Import Project="..\..\packages\MSBuilder.VsixInstaller.0.1.9\build\MSBuilder.VsixInstaller.targets" Condition="Exists('..\..\packages\MSBuilder.VsixInstaller.0.1.9\build\MSBuilder.VsixInstaller.targets')" />
-  <Import Project="..\..\packages\Merq.Installer.1.0.12-pre\build\Merq.Installer.targets" Condition="Exists('..\..\packages\Merq.Installer.1.0.12-pre\build\Merq.Installer.targets')" />
+  <Import Project="..\..\packages\MSBuilder.VsixInstaller.0.2.4\build\MSBuilder.VsixInstaller.targets" Condition="Exists('..\..\packages\MSBuilder.VsixInstaller.0.2.4\build\MSBuilder.VsixInstaller.targets')" />
+  <Import Project="..\..\packages\MSBuilder.VsixDependency.0.1.0\build\MSBuilder.VsixDependency.targets" Condition="Exists('..\..\packages\MSBuilder.VsixDependency.0.1.0\build\MSBuilder.VsixDependency.targets')" />
+  <Import Project="..\..\packages\Merq.Installer.1.0.30-pre\build\Merq.Installer.targets" Condition="Exists('..\..\packages\Merq.Installer.1.0.30-pre\build\Merq.Installer.targets')" />
 </Project>
