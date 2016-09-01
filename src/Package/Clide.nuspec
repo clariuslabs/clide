@@ -15,7 +15,6 @@
 	<files>
 		<file src="..\Clide.Interfaces\bin\$Configuration$\Clide.Interfaces.dll" target="lib\net45" />
 		<file src="..\Clide.Interfaces\bin\$Configuration$\Clide.Interfaces.xml" target="lib\net45" />
-		<!-- The targets must match the package Id in order to be automatically imported by NuGet/VS -->
-		<file src="Clide.targets" target="build\Clide.targets" />
+		<file src="..\Clide.Tasks\bin\*.*" target="build" />
 	</files>
 </package>

@@ -30,6 +30,7 @@
 	<ItemGroup>
 		<Solution Include="src\Clide.Tasks.sln"/>
 		<Solution Include="src\Clide.sln"/>
+		<NuSpec Include="src\Package\Clide.nuspec" />
 	</ItemGroup>
 
 	<Target Name="Clean">
@@ -132,6 +133,7 @@
 		</MSBuild>
 
 		<Copy SourceFiles='%(InstallerPackage.Identity)' DestinationFiles='$(Out)\%(InstallerPackage.Filename)%(InstallerPackage.Extension)' />
+		<Exec Command='"$(NuGet)" Pack "%(NuSpec.Identity)" $(Args) -Version $(Version) -Properties Id=%(NuSpec.Filename);Configuration=$(Configuration) -OutputDirectory $(Out)' />
 	</Target>
 
 	<!-- Configure and restore initial targets and packages -->
