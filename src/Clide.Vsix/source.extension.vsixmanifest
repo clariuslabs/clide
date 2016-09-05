@@ -3,11 +3,11 @@
                  xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011"
                  xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
 	<Metadata>
-		<Identity Id="Clide" Version="|Clide;GetVersion|" Language="en-US" Publisher="ClariusLabs" />
+		<Identity Id="Clide" Version="|Clide.Vsix;GetVersion|" Language="en-US" Publisher="ClariusLabs" />
 		<DisplayName>Clide</DisplayName>
 		<Description xml:space="preserve">Clide</Description>
 	</Metadata>
-	<Installation InstalledByMsi="false" AllUsers="true">
+	<Installation>
 		<InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[11.0,)" />
 	</Installation>
 	<Dependencies>

@@ -2,8 +2,8 @@
   "dependencies": {
     "GitInfo": "1.1.20",
     "IFluentInterface": "2.0.1",
-    "Merq": "1.0.26-pre",
-    "Merq.Async": "1.0.26-pre",
+    "Merq": "1.0.30-pre",
+    "Merq.Async": "1.0.30-pre",
     "Microsoft.VisualStudio.SDK.VsixSuppression": "14.1.25",
     "netfx-System.StringResources": "3.0.13",
     "Rx-Main": "2.2.5",

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup>
+		<DefineConstants>
+			Merq.Msi=$(MSBuildThisFileDirectory)..\tools\Merq.msi
+			Merq.Lib=$(MSBuildThisFileDirectory)..\tools\Merq.wixlib
+			$(DefineConstants)
+		</DefineConstants>
+	</PropertyGroup>
+
+	<!-- Bundles can reference the MSI directly from the Chain -->
+	<ItemGroup Condition=" '$(OutputType)' == 'Package' ">
+		<WixLibrary Include="Merq.Installer">
+			<HintPath>$(MSBuildThisFileDirectory)..\tools\Merq.wixlib</HintPath>
+			<Name>Merq.Installer</Name>
+		</WixLibrary>
+	</ItemGroup>
+
+	<!-- If the WixVSExtension is not added, add it automatically -->
+	<Target Name="AddWixVSExtension" BeforeTargets="ResolveWixExtensionReferences">
+		<ItemGroup>
+			<WixVSExtension Include="@(WixExtension)" Condition=" '%(Identity)' == 'WixVSExtension' " />
+		</ItemGroup>
+		<ItemGroup Condition="@(WixVSExtension -> Count())' == '0'">
+			<WixExtension Include="WixVSExtension">
+				<HintPath>$(WixExtDir)WixVSExtension.dll</HintPath>
+				<Name>WixVSExtension</Name>
+			</WixExtension>
+		</ItemGroup>
+	</Target>
+
+</Project>

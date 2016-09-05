@@ -11,6 +11,9 @@
 		<CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration);CI=$(CI)</CommonBuildProperties>
 		<Installer>$(MSBuildThisFileDirectory)src\Clide.Vsix\bin\$(Configuration)\Clide.vsix</Installer>
 		<VsixInstaller>$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\$(VisualStudioVersion)', 'InstallDir', null, RegistryView.Registry32))VSIXInstaller.exe</VsixInstaller>
+		<GitInfoReportImportance>high</GitInfoReportImportance>
+		<GitIgnoreTagVersion>true</GitIgnoreTagVersion>
+		<GitIgnoreBranchVersion>true</GitIgnoreBranchVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(TestInstalled)' == 'true' ">
@@ -28,8 +31,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Solution Include="src\*.sln"/>
-		<NuSpec Include="src\**\*.nuspec" />
+		<Solution Include="src\Clide.Tasks.sln"/>
+		<Solution Include="src\Clide.sln"/>
+		<NuSpec Include="src\Package\Clide.nuspec" />
 	</ItemGroup>
 
 	<Target Name="Clean">
@@ -119,8 +123,19 @@
 		<Exec Command='"$(VsixInstaller)" /q /u:Clide' />
 	</Target>
 
-	<Target Name="Package" DependsOnTargets="Build" Condition=" '@(NuSpec)' != '' ">
+	<Target Name="Package" DependsOnTargets="GitInfo;Build">
+
+		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties);IsSystemComponent=true" />
+		<Exec Command="$(PackagesPath)\gitlink\lib\net45\GitLink.exe . -f &quot;%(Solution.Identity)&quot; -u https://github.com/clariuslabs/clide -b &quot;$(GitBranch)&quot; -c &quot;$(Configuration)&quot;" StandardOutputImportance="low" />
 		<MakeDir Directories="$(Out)" Condition=" !Exists('$(Out)') " />
+		
+		<MSBuild Projects="src\Installers\Clide.Installer\Clide.Installer.nuproj"
+				 Properties="$(CommonBuildProperties)"
+				 Targets="Build;GetTargetPath">
+			<Output ItemName='InstallerPackage' TaskParameter='TargetOutputs' />
+		</MSBuild>
+
+		<Copy SourceFiles='%(InstallerPackage.Identity)' DestinationFiles='$(Out)\%(InstallerPackage.Filename)%(InstallerPackage.Extension)' />
 		<Exec Command='"$(NuGet)" Pack "%(NuSpec.Identity)" $(Args) -Version $(Version) -Properties Id=%(NuSpec.Filename);Configuration=$(Configuration) -OutputDirectory $(Out)' />
 	</Target>
 
@@ -135,12 +150,16 @@
 		<PendingRestore Condition=" !Exists('$(GitInfoTargets)') ">true</PendingRestore>
 	</PropertyGroup>
 
+	<!-- Overriden by the GitInfo.targets imports after nuget restore. These are here to satisfy DependsOn -->
+	<Target Name="GitInfoReport" />
+	<Target Name="GitInfo" />
 	<Target Name="GitVersion" />
+
 	<!-- Gets overriden by the $(GitInfoTargets) if it exists -->
 	<Import Project="$(GitInfoTargets)" Condition=" Exists('$(GitInfoTargets)') " />
 	<Import Project="$(XunitProps)" Condition="Exists('$(XunitProps)')"/>
 
-	<Target Name="Configure" DependsOnTargets="_GetNuGet;GitVersion">
+	<Target Name="Configure" DependsOnTargets="_GetNuGet;GitInfoReport">
 		<!-- We always run NuGet Install since it already checks for already-installed packages and skips them -->
 		<Exec Command='"$(NuGet)" Install "$(MSBuildThisFileDirectory)packages.config" -OutputDirectory "$(PackagesPath)" -ExcludeVersion' />
 
@@ -153,7 +172,7 @@
 		</PropertyGroup>
 
 		<!-- Update AppVeyor build # to match the actual one being used -->
-		<Exec Command="appveyor UpdateBuild -Version $(Version)" Condition=" '$(APPVEYOR)' == 'true' " ContinueOnError="true" />
+		<Exec Command="appveyor UpdateBuild -Version $(Version)" Condition=" '$(APPVEYOR)' == 'true' " ContinueOnError="WarnAndContinue" />
 
 	</Target>
 

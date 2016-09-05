@@ -9,8 +9,6 @@ using System.Reactive.Disposables;
 namespace Clide.Events
 {
 	[Component(CreationPolicy.Shared)]
-	[PartCreationPolicy(CreationPolicy.Shared)]
-	[Export(typeof(IObservable<ShellInitialized>))]
 	internal partial class ShellInitializedObservable : IObservable<ShellInitialized>, IVsShellPropertyEvents
 	{
 		IVsShell shell;

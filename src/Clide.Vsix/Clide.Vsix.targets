@@ -2,4 +2,20 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<Import Project="..\Clide.targets" />
 	<Import Project="Clide.Vsix.BindingRedirects.targets" />
+
+	<Target Name="GetVersion" DependsOnTargets="GitVersion" Returns="$(Version)">
+		<PropertyGroup>
+			<Version>$(GitSemVerMajor).$(GitSemVerMinor).$(GitSemVerPatch)</Version>
+		</PropertyGroup>
+	</Target>
+
+	<Target Name="SetVsixDeploymentPath"
+			DependsOnTargets="GetVsixDeploymentPath"
+			AfterTargets="GetVsixDeploymentPath"
+			Returns="$(VsixDeploymentPath)"
+			Condition=" '$(DeployExtension)' == 'true' ">
+		<PropertyGroup>
+			<VsixDeploymentPath>$(ExtensionsPath)ClariusLabs\Clide\</VsixDeploymentPath>
+		</PropertyGroup>
+	</Target>
 </Project>

@@ -22,6 +22,15 @@ namespace Clide
 		}
 
 		[VsixFact]
+		public void when_getting_non_existent_service_then_returns_null()
+		{
+			var components = GlobalServices.GetService<SComponentModel, IComponentModel>();
+			var formattable = components.GetExtensions<IFormattable>().ToArray();
+
+			Assert.Equal(0, formattable.Length);
+		}
+
+		[VsixFact]
 		public void when_reopening_solution_then_vssolution_is_same ()
 		{
 			var dte = GlobalServices.GetService<DTE>();

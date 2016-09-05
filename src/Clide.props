@@ -25,6 +25,9 @@
 		<DefineConstants>TRACE</DefineConstants>
 		<ErrorReport>prompt</ErrorReport>
 		<WarningLevel>4</WarningLevel>
+
+		<GitIgnoreTagVersion>true</GitIgnoreTagVersion>
+		<GitIgnoreBranchVersion>true</GitIgnoreBranchVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
