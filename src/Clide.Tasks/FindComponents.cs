@@ -18,13 +18,12 @@ namespace Clide.Tasks
 
 		bool DoExecute()
 		{
-			// TODO: this isn't exactly cheap. We should cache the list 
-			// of files we know are components, and make it a simple 
-			// item list of files, dependent on @Compile.
-
 			var documents = Project.FindDocuments(SourceFiles, Cancellation);
 			if (Cancellation.IsCancellationRequested)
+			{
+				Log.LogWarning("Cancellation was requested. Aborting task.");
 				return false;
+			}
 
 			var attribute = Compilation.FindTypeByName("Clide", "Clide", "ComponentAttribute");
 			if (attribute == null)

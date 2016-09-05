@@ -34,7 +34,10 @@ namespace Clide.Tasks
 
 			Project = this.GetOrAddProject(ProjectFullPath);
 			if (cancellation.IsCancellationRequested)
+			{
+				Log.LogWarning("Cancellation was requested. Aborting task.");
 				return false;
+			}
 
 			Compilation = Project.GetCompilationAsync(cancellation.Token).Result;
 
@@ -43,7 +46,7 @@ namespace Clide.Tasks
 				Log.LogWarning("Code generation may not be complete, since there are compilation errors: " +
 					string.Join(Environment.NewLine, diagnostics.Select(d => d.GetMessage())));
 
-			return !cancellation.IsCancellationRequested;
+			return true;
 		}
 
 		public void Cancel()

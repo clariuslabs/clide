@@ -29,7 +29,10 @@ namespace Clide.Tasks
 		{
 			var documents = Project.FindDocuments(ComponentFiles, Cancellation);
 			if (Cancellation.IsCancellationRequested)
+			{
+				Log.LogWarning("Cancellation was requested. Aborting task.");
 				return false;
+			}
 
 			var generator = new ExportsGenerator(Compilation);
 			var exports = generator.GenerateExports(documents.Select(doc => doc.Value), 
@@ -39,13 +42,19 @@ namespace Clide.Tasks
 				Cancellation);
 
 			if (Cancellation.IsCancellationRequested)
+			{
+				Log.LogWarning("Cancellation was requested. Aborting task.");
 				return false;
+			}
 
 			var outputs = new List<ITaskItem>();
 			foreach (var export in exports)
 			{
 				if (Cancellation.IsCancellationRequested)
+				{
+					Log.LogWarning("Cancellation was requested. Aborting task.");
 					return false;
+				}
 
 				var targetDir = Path.Combine(IntermediateOutputPath, Path.Combine(export.Folders.ToArray()));
 				var targetFile = Path.Combine(targetDir, export.Name);
@@ -56,7 +65,10 @@ namespace Clide.Tasks
 				{
 					var text = export.GetTextAsync(Cancellation).Result;
 					if (Cancellation.IsCancellationRequested)
+					{
+						Log.LogWarning("Cancellation was requested. Aborting task.");
 						return false;
+					}
 
 					text.Write(writer);
 				}
