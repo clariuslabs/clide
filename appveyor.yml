@@ -6,7 +6,7 @@ init:
 build_script:
   - cmd: >-
       msbuild build.proj /t:configure /p:target=configure /v:quiet &&
-      msbuild build.proj /t:build /v:diag &&
+      msbuild build.proj /t:build /v:normal &&
       msbuild build.proj /t:unittest,package /v:minimal
 
 # we run the tests ourselves
