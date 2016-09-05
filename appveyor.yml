@@ -4,7 +4,7 @@ init:
   - git config --global core.autocrlf input
 
 build_script:
-  - build.cmd "/t:build,unittest,package" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - build.cmd "/t:build,unittest,package" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" "/v:diag"
 
 # we run the tests ourselves
 test: off
