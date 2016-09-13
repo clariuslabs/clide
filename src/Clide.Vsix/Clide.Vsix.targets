@@ -8,14 +8,4 @@
 			<Version>$(GitSemVerMajor).$(GitSemVerMinor).$(GitSemVerPatch)</Version>
 		</PropertyGroup>
 	</Target>
-
-	<Target Name="SetVsixDeploymentPath"
-			DependsOnTargets="GetVsixDeploymentPath"
-			AfterTargets="GetVsixDeploymentPath"
-			Returns="$(VsixDeploymentPath)"
-			Condition=" '$(DeployExtension)' == 'true' ">
-		<PropertyGroup>
-			<VsixDeploymentPath>$(ExtensionsPath)ClariusLabs\Clide\</VsixDeploymentPath>
-		</PropertyGroup>
-	</Target>
 </Project>
