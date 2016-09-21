@@ -1,6 +1,6 @@
 ﻿{
   "dependencies": {
-    "GitInfo": "1.1.20",
+    "GitInfo": "1.1.31",
     "IFluentInterface": "2.0.1",
     "Merq.Async": "1.0.30-pre",
     "netfx-System.StringResources": "3.0.13",
