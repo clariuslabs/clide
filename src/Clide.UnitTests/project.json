@@ -1,7 +1,7 @@
 ﻿{
   "dependencies": {
     "GitInfo": "1.1.31",
-    "IFluentInterface": "2.0.1",
+    "IFluentInterface": "2.0.3",
     "Merq": "1.0.30-pre",
     "Merq.Async": "1.0.30-pre",
     "Microsoft.VisualStudio.Threading": "12.2.0",
