@@ -159,7 +159,7 @@
 	<Import Project="$(GitInfoTargets)" Condition=" Exists('$(GitInfoTargets)') " />
 	<Import Project="$(XunitProps)" Condition="Exists('$(XunitProps)')"/>
 
-	<Target Name="Configure" DependsOnTargets="_GetNuGet;GitInfoReport">
+	<Target Name="Configure" DependsOnTargets="DownloadNuGet;GitInfoReport">
 		<!-- We always run NuGet Install since it already checks for already-installed packages and skips them -->
 		<Exec Command='"$(NuGet)" Install "$(MSBuildThisFileDirectory)packages.config" -OutputDirectory "$(PackagesPath)" -ExcludeVersion' />
 
