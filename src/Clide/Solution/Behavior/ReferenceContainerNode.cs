@@ -3,6 +3,7 @@ using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
+using System.IO;
 using System.Linq;
 using VSLangProj;
 
@@ -26,14 +27,6 @@ namespace Clide
 
 		public void AddReference(IProjectNode referencedProject)
 		{
-			var automationReferencedProject = referencedProject.AsVsHierarchyItem().GetExtenderObject() as Project;
-			if (automationReferencedProject == null)
-				throw new NotSupportedException(Strings.ProjectNode.AddProjectReferenceNotSupported(referencedProject.Name));
-
-			var langProject = node.AsVsLangProject();
-			if (langProject == null)
-				throw new NotSupportedException(Strings.ProjectNode.AddProjectReferenceNotSupported(node.Name));
-
 			if (referencedProject.Supports(KnownCapabilities.SharedAssetsProject))
 			{
 				var sharedProjectReferencesHelper = hierarchyNode.Value
@@ -46,9 +39,24 @@ namespace Clide
 					null,
 					1,
 					new object[] { referencedProject.AsVsHierarchy() });
+
+				sharedProjectReferencesHelper.ChangeSharedMSBuildFileImports(
+					node.AsVsHierarchy(),
+					new[] { referencedProject.PhysicalPath },
+					new[] { Path.ChangeExtension(referencedProject.PhysicalPath, ".projitems") },
+					"Shared"
+					);
 			}
 			else
 			{
+				var automationReferencedProject = referencedProject.AsVsHierarchyItem().GetExtenderObject() as Project;
+				if (automationReferencedProject == null)
+					throw new NotSupportedException(Strings.ProjectNode.AddProjectReferenceNotSupported(referencedProject.Name));
+
+				var langProject = node.AsVsLangProject();
+				if (langProject == null)
+					throw new NotSupportedException(Strings.ProjectNode.AddProjectReferenceNotSupported(node.Name));
+
 				langProject.References.AddProject(automationReferencedProject);
 
 				var reference = langProject
