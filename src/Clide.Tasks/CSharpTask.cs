@@ -18,6 +18,8 @@ namespace Clide.Tasks
 		[Required]
 		public string Language { get; set; }
 
+		public string LogWarnings { get; set; }
+
 		protected CancellationToken Cancellation { get { return cancellation.Token; } }
 
 		protected Compilation Compilation { get; private set; }
@@ -41,10 +43,14 @@ namespace Clide.Tasks
 
 			Compilation = Project.GetCompilationAsync(cancellation.Token).Result;
 
-			var diagnostics = Compilation.GetDiagnostics(cancellation.Token);
-			if (diagnostics.Any(d => d.Severity == DiagnosticSeverity.Error))
-				Log.LogWarning("Code generation may not be complete, since there are compilation errors: " +
-					string.Join(Environment.NewLine, diagnostics.Select(d => d.GetMessage())));
+			var logWarnings = false;
+			if (!string.IsNullOrEmpty(LogWarnings) && bool.TryParse(LogWarnings, out logWarnings) && logWarnings)
+			{
+				var diagnostics = Compilation.GetDiagnostics(cancellation.Token);
+				if (diagnostics.Any(d => d.Severity == DiagnosticSeverity.Error))
+					Log.LogWarning("Code generation may not be complete, since there are compilation errors: " +
+						string.Join(Environment.NewLine, diagnostics.Select(d => d.GetMessage())));
+			}
 
 			return true;
 		}
