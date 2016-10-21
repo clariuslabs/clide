@@ -14,6 +14,8 @@
     <TargetFrameworkIdentifier>WiX</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>$(ProductVersion)</TargetFrameworkVersion>
     <TargetFrameworkMoniker>$(TargetFrameworkIdentifier),Version=v$(TargetFrameworkVersion)</TargetFrameworkMoniker>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' " />
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' " />
@@ -62,12 +64,12 @@
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" Condition=" Exists('$(WixTargetsPath)') " />
   <Import Project="..\Clide.Installer.targets" />
-  <Import Project="..\..\packages\GitInfo.1.1.20\build\GitInfo.targets" Condition="Exists('..\..\packages\GitInfo.1.1.20\build\GitInfo.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\GitInfo.1.1.20\build\GitInfo.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\GitInfo.1.1.20\build\GitInfo.targets'))" />
     <Error Condition="!Exists('..\..\packages\WiX.3.10.3\build\wix.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\WiX.3.10.3\build\wix.props'))" />
+    <Error Condition="!Exists('..\..\packages\GitInfo.1.1.32\build\GitInfo.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\GitInfo.1.1.32\build\GitInfo.targets'))" />
   </Target>
+  <Import Project="..\..\packages\GitInfo.1.1.32\build\GitInfo.targets" Condition="Exists('..\..\packages\GitInfo.1.1.32\build\GitInfo.targets')" />
 </Project>
