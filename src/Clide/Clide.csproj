@@ -113,7 +113,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Diagnostics.Tracer, Version=2.0.0.0, Culture=neutral, PublicKeyToken=173d89ffae9ce988, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.Tracer.2.0.1\lib\net45\System.Diagnostics.Tracer.dll</HintPath>
+      <HintPath>..\packages\System.Diagnostics.Tracer.2.0.4\lib\net45\System.Diagnostics.Tracer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -160,7 +160,6 @@
     </Compile>
     <Compile Include="App_Packages\TaskHelpers.Sources.0.3\TaskHelpers.cs" />
     <Compile Include="App_Packages\TaskHelpers.Sources.0.3\TaskHelpersExtensions.cs" />
-    <Compile Include="ClideSettings.cs" />
     <Compile Include="Commands\CommandInterceptorAttribute.cs" />
     <Compile Include="Commands\ICommandInterceptor.cs" />
     <Compile Include="Composition\FallbackServiceLocator.cs" />

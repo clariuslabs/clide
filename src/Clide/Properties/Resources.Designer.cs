@@ -115,7 +115,7 @@ namespace Clide.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Registered command {commandText} ({commandType}). .
+        ///   Looks up a localized string similar to Registered command {0}..
         /// </summary>
         internal static string CommandManager_CommandRegistered {
             get {

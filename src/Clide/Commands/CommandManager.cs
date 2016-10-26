@@ -45,6 +45,7 @@ namespace Clide.Commands
         private IServiceProvider serviceProvider;
         private IVsShell vsShell;
         private CommandEvents commandEvents;
+		private IMenuCommandService menuService;
 
 		private Guid packageId = Guid.Empty;
 
@@ -69,8 +70,9 @@ namespace Clide.Commands
             this.commands = allCommands;
             this.filters = allFilters;
             this.interceptors = allInterceptors.ToList();
+			this.menuService = serviceProvider.GetService<IMenuCommandService>();
 
-            this.commandEvents.BeforeExecute += OnBeforeExecute;
+			this.commandEvents.BeforeExecute += OnBeforeExecute;
             this.commandEvents.AfterExecute += OnAfterExecute;
 
 			if (serviceProvider.IsPackage())
@@ -91,15 +93,9 @@ namespace Clide.Commands
             Guard.NotNull(() => command, command);
             Guard.NotNull(() => metadata, metadata);
 
-            var menuService = serviceProvider.GetService<IMenuCommandService>();
             var commandId = new CommandID(new Guid(metadata.GroupId), metadata.CommandId);
-            var existing = menuService.FindCommand(commandId);
 
-            if (existing != null)
-                throw new ArgumentException(Strings.CommandManager.DuplicateCommand(metadata.CommandId, metadata.GroupId));
-
-            menuService.AddCommand(new VsCommandExtensionAdapter(commandId, command));
-            tracer.Info(Strings.CommandManager.CommandRegistered(command.Text, command.GetType()));
+			menuService.AddCommand(new VsCommandExtensionAdapter(commandId, command));
         }
 
         /// <summary>
@@ -107,7 +103,6 @@ namespace Clide.Commands
         /// </summary>
         public void AddCommands()
         {
-            var menuService = serviceProvider.GetService<IMenuCommandService>();
 			var candidates = commands;
 			if (packageId != Guid.Empty) {
 				candidates = from candidate in candidates
@@ -116,22 +111,22 @@ namespace Clide.Commands
 							 select candidate;
 			}
 
-            foreach (var command in candidates)
-            {
-                AddCommand(command.Value, command.Metadata);
-            }
-        }
+			foreach (var command in candidates)
+			{
+				AddCommand(command.Value, command.Metadata);
+			}
+		}
 
-        /// <summary>
-        /// Adds the specified command filter implementation to the manager,
-        /// with the specified explicit metadata.
-        /// </summary>
-        /// <param name="filter">The command filter instance, which does not need to
-        /// be annotated with the <see cref="CommandFilterAttribute"/> attribute since
-        /// it's provided explicitly.</param>
-        /// <param name="metadata">Explicit metadata to use for the command filter,
-        /// instead of reflecting the <see cref="CommandFilterAttribute"/>.</param>
-        public void AddFilter(ICommandFilter filter, CommandFilterAttribute metadata)
+		/// <summary>
+		/// Adds the specified command filter implementation to the manager,
+		/// with the specified explicit metadata.
+		/// </summary>
+		/// <param name="filter">The command filter instance, which does not need to
+		/// be annotated with the <see cref="CommandFilterAttribute"/> attribute since
+		/// it's provided explicitly.</param>
+		/// <param name="metadata">Explicit metadata to use for the command filter,
+		/// instead of reflecting the <see cref="CommandFilterAttribute"/>.</param>
+		public void AddFilter(ICommandFilter filter, CommandFilterAttribute metadata)
         {
             Guard.NotNull(() => filter, filter);
             Guard.NotNull(() => metadata, metadata);
