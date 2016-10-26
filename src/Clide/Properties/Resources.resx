@@ -271,7 +271,7 @@
     <value>Loaded package with identifier '{packageId}' that owns the command to filter is not a service provider.</value>
   </data>
   <data name="CommandManager_CommandRegistered" xml:space="preserve">
-    <value>Registered command {commandText} ({commandType}). </value>
+    <value>Registered command {0}.</value>
   </data>
   <data name="CommandManager_FilterFailed" xml:space="preserve">
     <value>Command filter {filter} caused an unexpected exception: {exception}.</value>

@@ -47,7 +47,6 @@ namespace Clide
         private Lazy<IOutputWindowManager> outputWindow;
 
         public DevEnvImpl(
-            ClideSettings settings,
             IServiceLocator serviceLocator,
             IEnumerable<Lazy<IToolWindow>> toolWindows,
             Lazy<IDialogWindowFactory> dialogFactory,
@@ -70,14 +69,6 @@ namespace Clide
             this.outputWindow = outputWindow;
 
             TracingExtensions.ErrorsManager = this.errorsManager;
-
-            if (settings.Debug)
-            {
-                Tracer.Configuration.AddListener(Strings.Trace.RootSource,
-                    new TextTraceListener(outputWindow.Value.GetPane(new Guid(Strings.Trace.OutputPaneId), Strings.Trace.OutputPaneTitle)));
-            }
-
-            Tracer.Configuration.SetTracingLevel(Strings.Trace.RootSource, settings.TracingLevel);
 
             this.isElevated = new Lazy<bool>(() =>
             {

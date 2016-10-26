@@ -44,7 +44,12 @@ namespace Clide
         /// </summary>
         /// <param name="hostingPackage">The package owning this deploy 
         /// of Clide.</param>
-        public static IDevEnv Initialize(IServiceProvider hostingPackage)
+        public static IDevEnv Initialize(
+			IServiceProvider hostingPackage,
+			bool registerCommands = true,
+			bool registerCommandFilters = true,
+			bool registerCommandInterceptors = true,
+			bool registerOptionPages = true)
         {
             try
             {
@@ -61,7 +66,7 @@ namespace Clide
 
                     // Initialize the host package components.
                     var host = devEnv.ServiceLocator.GetInstance<HostImpl>();
-                    host.Initialize();
+                    host.Initialize(registerCommands, registerCommandFilters, registerCommandInterceptors, registerOptionPages);
 
 					// This call causes the static initialization on Adapters to run, which 
 					// is then overriden on the next line.
@@ -111,16 +116,35 @@ namespace Clide
             this.options = options;
         }
 
-        internal void Initialize()
-        {
-            tracer.Info("Registering package commands");
-            this.commands.AddCommands();
-            tracer.Info("Registering package command filters");
-            this.commands.AddFilters();
-            tracer.Info("Registering package command interceptors");
-            this.commands.AddInterceptors();
-            tracer.Info("Registering package options pages");
-            this.options.AddPages();
+        internal void Initialize(
+			bool registerCommands = true,
+			bool registerCommandFilters = true,
+			bool registerCommandInterceptors = true,
+			bool registerOptionPages = true)
+		{
+			if (registerCommands)
+			{
+				using (tracer.StartActivity("Registering package commands"))
+					this.commands.AddCommands();
+			}
+
+			if (registerCommandFilters)
+			{
+				using (tracer.StartActivity("Registering package command filters"))
+					this.commands.AddFilters();
+			}
+
+			if (registerCommandInterceptors)
+			{
+				using (tracer.StartActivity("Registering package command interceptors"))
+					this.commands.AddInterceptors();
+			}
+
+			if (registerOptionPages)
+			{
+				using (tracer.StartActivity("Registering package options pages"))
+					this.options.AddPages();
+			}
         }
     }
 }
