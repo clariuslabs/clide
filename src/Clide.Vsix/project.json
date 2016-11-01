@@ -7,7 +7,7 @@
     "Microsoft.VisualStudio.SDK.VsixSuppression": "14.1.25",
     "netfx-System.StringResources": "3.0.13",
     "Rx-Main": "2.2.5",
-    "System.Diagnostics.Tracer": "2.0.1",
+    "System.Diagnostics.Tracer": "2.0.6",
     "VSSDK.ComponentModelHost.11": "11.0.4",
     "VSSDK.DTE.10": "10.0.4",
     "VSSDK.IDE.11": "11.0.4",
