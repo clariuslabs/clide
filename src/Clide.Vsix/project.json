@@ -1,5 +1,6 @@
 ﻿{
   "dependencies": {
+    "Clarius.VisualStudio": "2.0.2",
     "GitInfo": "1.1.32",
     "IFluentInterface": "2.0.3",
     "Merq": "1.0.30-pre",
@@ -8,6 +9,7 @@
     "netfx-System.StringResources": "3.0.13",
     "Rx-Main": "2.2.5",
     "System.Diagnostics.Tracer": "2.0.6",
+    "Microsoft.VSSDK.BuildTools": "15.0.25929-RC2",
     "VSSDK.ComponentModelHost.11": "11.0.4",
     "VSSDK.DTE.10": "10.0.4",
     "VSSDK.IDE.11": "11.0.4",

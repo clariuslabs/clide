@@ -4,10 +4,8 @@
   <Import Project="..\..\packages\MSBuilder.IsXBuild.0.1.0\build\MSBuilder.IsXBuild.props" Condition="Exists('..\..\packages\MSBuilder.IsXBuild.0.1.0\build\MSBuilder.IsXBuild.props')" />
   <Import Project="..\..\packages\MSBuilder.CodeTaskAssembly.0.2.3\build\MSBuilder.CodeTaskAssembly.props" Condition="Exists('..\..\packages\MSBuilder.CodeTaskAssembly.0.2.3\build\MSBuilder.CodeTaskAssembly.props')" />
   <PropertyGroup>
-    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
