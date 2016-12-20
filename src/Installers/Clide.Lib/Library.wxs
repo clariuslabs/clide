@@ -2,9 +2,73 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:vs="http://schemas.microsoft.com/wix/VSExtension">
 	<Fragment>
-		<Component Id="Clide" Directory="ClideVsixInstallDir">
-			<File Id="Clide.vsix" Source="$(var.Clide.Vsix.TargetDir)Clide.vsix">
-				<vs:VsixPackage	PackageId="Clide" Permanent="no" />
+		<PropertyRef Id="VS2012_ROOT_FOLDER" />
+		<PropertyRef Id="VS2013_ROOT_FOLDER" />
+		<PropertyRef Id="VS2015_ROOT_FOLDER" />
+		<PropertyRef Id="VS15_ROOT_FOLDER" />
+		<Property Id="VS2017_ROOT_FOLDER" Secure="yes">
+			<RegistrySearch Id="SearchForVS2017RootPath" Root="HKLM" Key="Software\Microsoft\VisualStudio\SxS\VS7" Name="15.0" Type="raw" />
+		</Property>
+		<!-- VS2017 is the latest VSIX at this point in time, so search for that by default. -->
+		<Property Id="VS2017_VSIX_INSTALLER_PATH" Secure="yes">
+			<RegistrySearch Id="SearchForVS2017VsixRootPath" Root="HKLM" Key="Software\Microsoft\VisualStudio\SxS\VS7" Name="15.0" Type="raw">
+				<DirectorySearch Id="SearchForVS2017VsixCommon7Path" Path="Common7" Depth="1">
+					<DirectorySearch Id="SearchForVS2017VsixIDEPath" Path="IDE" Depth="1">
+						<FileSearch Id="SearchForVS2017VsixInstallerFile" Name="VSIXInstaller.exe" />
+					</DirectorySearch>
+				</DirectorySearch>
+			</RegistrySearch>
+		</Property>
+
+		<SetProperty Action="SetVS2017Vsix" Id="VS_VSIX_INSTALLER_PATH" Value="[VS2017_VSIX_INSTALLER_PATH]" Sequence="both" After="AppSearch">NOT VS_VSIX_INSTALLER_PATH AND VS2017_VSIX_INSTALLER_PATH</SetProperty>
+
+		<ComponentGroup Id="Clide">
+			<ComponentRef Id="Clide11"/>
+			<ComponentRef Id="Clide12"/>
+			<ComponentRef Id="Clide14"/>
+			<ComponentRef Id="Clide15"/>
+		</ComponentGroup>
+		<!-- We make the package non-vital since the underlying VSIXInstaller.exe 
+				installer will fail (?!) if the VSIX being installed is already 
+				installed, instead of being a no-op. The other cases where it can 
+				fail is if the existing Merq VSIX has a higher version (in this case 
+				we also don't want to fail). So this is as designed (given the weird 
+				constraints we have to deal with).
+		-->
+		<Component Id="Clide11" Directory="ClideVsixInstallDir" Guid="{A3BCE6AD-F89B-4D9D-A3B9-8352A8063337}">
+			<Condition>VS2012_ROOT_FOLDER</Condition>
+			<File Id="Clide11.vsix" Source="$(var.Clide.Vsix.TargetDir)Clide.vsix">
+				<vs:VsixPackage	PackageId="Clide" Target="Enterprise" TargetVersion="11.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" Target="Ultimate" TargetVersion="11.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" Target="Premium" TargetVersion="11.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" Target="Pro" TargetVersion="11.0" Vital="no" Permanent="no" />
+			</File>
+		</Component>
+		<Component Id="Clide12" Directory="ClideVsixInstallDir" Guid="{589AFA95-7F3E-45F4-81C1-8381CDFC702B}">
+			<Condition>VS2013_ROOT_FOLDER</Condition>
+			<File Id="Clide12.vsix" Source="$(var.Clide.Vsix.TargetDir)Clide.vsix">
+				<vs:VsixPackage	PackageId="Clide" Target="Enterprise" TargetVersion="12.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" Target="Ultimate" TargetVersion="12.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" Target="Premium" TargetVersion="12.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" Target="Pro" TargetVersion="12.0" Vital="no" Permanent="no" />
+			</File>
+		</Component>
+		<Component Id="Clide14" Directory="ClideVsixInstallDir" Guid="{9E53C544-BBD2-4001-835C-6086D7282CE2}">
+			<Condition>VS2015_ROOT_FOLDER</Condition>
+			<File Id="Clide14.vsix" Source="$(var.Clide.Vsix.TargetDir)Clide.vsix">
+				<vs:VsixPackage	PackageId="Clide" Target="Enterprise" TargetVersion="14.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" Target="Ultimate" TargetVersion="14.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" Target="Premium" TargetVersion="14.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" Target="Pro" TargetVersion="14.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" Target="Community" TargetVersion="14.0" Vital="no" Permanent="no" />
+			</File>
+		</Component>
+		<Component Id="Clide15" Directory="ClideVsixInstallDir" Guid="{64E73F93-33E3-467F-B291-A884F4DC13BC}">
+			<Condition>VS15_ROOT_FOLDER OR VS2017_ROOT_FOLDER</Condition>
+			<File Id="Clide15.vsix" Source="$(var.Clide.Vsix.TargetDir)Clide.vsix">
+				<vs:VsixPackage	PackageId="Clide" Target="Enterprise" TargetVersion="15.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" Target="Prof" TargetVersion="15.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" Target="Community" TargetVersion="15.0" Vital="no" Permanent="no" />
 			</File>
 		</Component>
 	</Fragment>

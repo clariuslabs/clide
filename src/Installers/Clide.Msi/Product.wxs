@@ -7,11 +7,15 @@
 		<Media Cabinet="Clide.cab" EmbedCab="yes" Id="1" />
 
 		<Feature Id="ProductFeature" Title="Clide" Level="1">
-			<ComponentRef Id="Clide" />
+			<ComponentGroupRef Id="Clide" />
 		</Feature>
 
 		<Icon Id="Clide.ico" SourceFile="$(var.ProductIcon)" />
 		<Property Id="ARPPRODUCTICON" Value="Clide.ico" />
+
+		<!-- Explicit value passed in by the VS15 installer should prevail, for SxS reasons -->
+		<SetProperty Id="VS15_ROOT_FOLDER" Value="[VS_15_DIR]" Before="CostInitialize"><![CDATA[VS_15_DIR]]></SetProperty>
+		<SetProperty Id="VS_VSIX_INSTALLER_PATH" Value="[VS15_ROOT_FOLDER]Common7\IDE\VSIXInstaller.exe" After="SetVS15_ROOT_FOLDER"><![CDATA[VS_15_DIR]]></SetProperty>
 	</Product>
 
 	<Fragment>
