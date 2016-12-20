@@ -12,6 +12,7 @@
     <RootNamespace>Clide</RootNamespace>
     <AssemblyName>Clide.Vsix</AssemblyName>
     <TargetVsixContainerName>Clide.vsix</TargetVsixContainerName>
+	<DeployExtension Condition="'$(DeployExtension)' == '' And '$(Configuration)' == 'Release'">false</DeployExtension>
   </PropertyGroup>
   <Import Project="Clide.Vsix.props" />
   <ItemGroup>

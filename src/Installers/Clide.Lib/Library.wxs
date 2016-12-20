@@ -3,9 +3,14 @@
      xmlns:vs="http://schemas.microsoft.com/wix/VSExtension">
 	<Fragment>
 		<PropertyRef Id="VS2012_ROOT_FOLDER" />
+		<PropertyRef Id="VS2012_VSIX_INSTALLER_PATH" />
+		
 		<PropertyRef Id="VS2013_ROOT_FOLDER" />
+		<PropertyRef Id="VS2013_VSIX_INSTALLER_PATH" />
+
 		<PropertyRef Id="VS2015_ROOT_FOLDER" />
-		<PropertyRef Id="VS15_ROOT_FOLDER" />
+		<PropertyRef Id="VS2015_VSIX_INSTALLER_PATH" />
+
 		<Property Id="VS2017_ROOT_FOLDER" Secure="yes">
 			<RegistrySearch Id="SearchForVS2017RootPath" Root="HKLM" Key="Software\Microsoft\VisualStudio\SxS\VS7" Name="15.0" Type="raw" />
 		</Property>
@@ -20,7 +25,24 @@
 			</RegistrySearch>
 		</Property>
 
-		<SetProperty Action="SetVS2017Vsix" Id="VS_VSIX_INSTALLER_PATH" Value="[VS2017_VSIX_INSTALLER_PATH]" Sequence="both" After="AppSearch">NOT VS_VSIX_INSTALLER_PATH AND VS2017_VSIX_INSTALLER_PATH</SetProperty>
+		<Feature Id="Clide" Title="Clide" Level="1">
+			<Feature Id="Clide11" Title="Clide for Visual Studio 2012">
+				<Condition Level="2">NOT VS2012_ROOT_FOLDER</Condition>
+				<ComponentRef Id="Clide11" />
+			</Feature>
+			<Feature Id="Clide12" Title="Clide for Visual Studio 2013">
+				<Condition Level="2">NOT VS2013_ROOT_FOLDER</Condition>
+				<ComponentRef Id="Clide12" />
+			</Feature>
+			<Feature Id="Clide14" Title="Clide for Visual Studio 2015">
+				<Condition Level="2">NOT VS2015_ROOT_FOLDER</Condition>
+				<ComponentRef Id="Clide14" />
+			</Feature>
+			<Feature Id="Clide15" Title="Clide for Visual Studio 2017">
+				<Condition Level="2">NOT VS2017_ROOT_FOLDER</Condition>
+				<ComponentRef Id="Clide15" />
+			</Feature>
+		</Feature>
 
 		<ComponentGroup Id="Clide">
 			<ComponentRef Id="Clide11"/>
@@ -28,6 +50,7 @@
 			<ComponentRef Id="Clide14"/>
 			<ComponentRef Id="Clide15"/>
 		</ComponentGroup>
+		
 		<!-- We make the package non-vital since the underlying VSIXInstaller.exe 
 				installer will fail (?!) if the VSIX being installed is already 
 				installed, instead of being a no-op. The other cases where it can 
@@ -38,37 +61,33 @@
 		<Component Id="Clide11" Directory="ClideVsixInstallDir" Guid="{A3BCE6AD-F89B-4D9D-A3B9-8352A8063337}">
 			<Condition>VS2012_ROOT_FOLDER</Condition>
 			<File Id="Clide11.vsix" Source="$(var.Clide.Vsix.TargetDir)Clide.vsix">
-				<vs:VsixPackage	PackageId="Clide" Target="Enterprise" TargetVersion="11.0" Vital="no" Permanent="no" />
-				<vs:VsixPackage	PackageId="Clide" Target="Ultimate" TargetVersion="11.0" Vital="no" Permanent="no" />
-				<vs:VsixPackage	PackageId="Clide" Target="Premium" TargetVersion="11.0" Vital="no" Permanent="no" />
-				<vs:VsixPackage	PackageId="Clide" Target="Pro" TargetVersion="11.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" VsixInstallerPathProperty="VS2012_VSIX_INSTALLER_PATH" Target="Ultimate" TargetVersion="11.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" VsixInstallerPathProperty="VS2012_VSIX_INSTALLER_PATH" Target="Premium" TargetVersion="11.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" VsixInstallerPathProperty="VS2012_VSIX_INSTALLER_PATH" Target="Pro" TargetVersion="11.0" Vital="no" Permanent="no" />
 			</File>
 		</Component>
 		<Component Id="Clide12" Directory="ClideVsixInstallDir" Guid="{589AFA95-7F3E-45F4-81C1-8381CDFC702B}">
 			<Condition>VS2013_ROOT_FOLDER</Condition>
 			<File Id="Clide12.vsix" Source="$(var.Clide.Vsix.TargetDir)Clide.vsix">
-				<vs:VsixPackage	PackageId="Clide" Target="Enterprise" TargetVersion="12.0" Vital="no" Permanent="no" />
-				<vs:VsixPackage	PackageId="Clide" Target="Ultimate" TargetVersion="12.0" Vital="no" Permanent="no" />
-				<vs:VsixPackage	PackageId="Clide" Target="Premium" TargetVersion="12.0" Vital="no" Permanent="no" />
-				<vs:VsixPackage	PackageId="Clide" Target="Pro" TargetVersion="12.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" VsixInstallerPathProperty="VS2013_VSIX_INSTALLER_PATH" Target="Ultimate" TargetVersion="12.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" VsixInstallerPathProperty="VS2013_VSIX_INSTALLER_PATH" Target="Premium" TargetVersion="12.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" VsixInstallerPathProperty="VS2013_VSIX_INSTALLER_PATH" Target="Pro" TargetVersion="12.0" Vital="no" Permanent="no" />
 			</File>
 		</Component>
 		<Component Id="Clide14" Directory="ClideVsixInstallDir" Guid="{9E53C544-BBD2-4001-835C-6086D7282CE2}">
 			<Condition>VS2015_ROOT_FOLDER</Condition>
 			<File Id="Clide14.vsix" Source="$(var.Clide.Vsix.TargetDir)Clide.vsix">
-				<vs:VsixPackage	PackageId="Clide" Target="Enterprise" TargetVersion="14.0" Vital="no" Permanent="no" />
-				<vs:VsixPackage	PackageId="Clide" Target="Ultimate" TargetVersion="14.0" Vital="no" Permanent="no" />
-				<vs:VsixPackage	PackageId="Clide" Target="Premium" TargetVersion="14.0" Vital="no" Permanent="no" />
-				<vs:VsixPackage	PackageId="Clide" Target="Pro" TargetVersion="14.0" Vital="no" Permanent="no" />
-				<vs:VsixPackage	PackageId="Clide" Target="Community" TargetVersion="14.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" VsixInstallerPathProperty="VS2015_VSIX_INSTALLER_PATH" Target="Enterprise" TargetVersion="14.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" VsixInstallerPathProperty="VS2015_VSIX_INSTALLER_PATH" Target="Pro" TargetVersion="14.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" VsixInstallerPathProperty="VS2015_VSIX_INSTALLER_PATH" Target="Community" TargetVersion="14.0" Vital="no" Permanent="no" />
 			</File>
 		</Component>
 		<Component Id="Clide15" Directory="ClideVsixInstallDir" Guid="{64E73F93-33E3-467F-B291-A884F4DC13BC}">
-			<Condition>VS15_ROOT_FOLDER OR VS2017_ROOT_FOLDER</Condition>
+			<Condition>VS2017_ROOT_FOLDER</Condition>
 			<File Id="Clide15.vsix" Source="$(var.Clide.Vsix.TargetDir)Clide.vsix">
-				<vs:VsixPackage	PackageId="Clide" Target="Enterprise" TargetVersion="15.0" Vital="no" Permanent="no" />
-				<vs:VsixPackage	PackageId="Clide" Target="Prof" TargetVersion="15.0" Vital="no" Permanent="no" />
-				<vs:VsixPackage	PackageId="Clide" Target="Community" TargetVersion="15.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" VsixInstallerPathProperty="VS2017_VSIX_INSTALLER_PATH" Target="Enterprise" TargetVersion="15.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" VsixInstallerPathProperty="VS2017_VSIX_INSTALLER_PATH" Target="Pro" TargetVersion="15.0" Vital="no" Permanent="no" />
+				<vs:VsixPackage	PackageId="Clide" VsixInstallerPathProperty="VS2017_VSIX_INSTALLER_PATH" Target="Community" TargetVersion="15.0" Vital="no" Permanent="no" />
 			</File>
 		</Component>
 	</Fragment>
