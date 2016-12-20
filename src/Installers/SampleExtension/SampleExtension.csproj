@@ -46,6 +46,12 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Merq.Async, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d1595740b67248ed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Merq.Async.1.0.1-alpha\lib\portable45-net45+win8+wpa81\Merq.Async.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="..\Clide.Installer\bin\$(Configuration)\build\Clide.Installer.targets" Condition="Exists('..\Clide.Installer\bin\$(Configuration)\build\Clide.Installer.targets')" />
@@ -58,9 +64,7 @@
     <Error Condition="!Exists('..\..\packages\MSBuilder.0.1.0\build\MSBuilder.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\MSBuilder.0.1.0\build\MSBuilder.props'))" />
     <Error Condition="!Exists('..\..\packages\MSBuilder.VsixInstaller.0.2.4\build\MSBuilder.VsixInstaller.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\MSBuilder.VsixInstaller.0.2.4\build\MSBuilder.VsixInstaller.targets'))" />
     <Error Condition="!Exists('..\..\packages\MSBuilder.VsixDependency.0.1.0\build\MSBuilder.VsixDependency.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\MSBuilder.VsixDependency.0.1.0\build\MSBuilder.VsixDependency.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Merq.Installer.1.0.30-pre\build\Merq.Installer.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Merq.Installer.1.0.30-pre\build\Merq.Installer.targets'))" />
   </Target>
   <Import Project="..\..\packages\MSBuilder.VsixInstaller.0.2.4\build\MSBuilder.VsixInstaller.targets" Condition="Exists('..\..\packages\MSBuilder.VsixInstaller.0.2.4\build\MSBuilder.VsixInstaller.targets')" />
   <Import Project="..\..\packages\MSBuilder.VsixDependency.0.1.0\build\MSBuilder.VsixDependency.targets" Condition="Exists('..\..\packages\MSBuilder.VsixDependency.0.1.0\build\MSBuilder.VsixDependency.targets')" />
-  <Import Project="..\..\packages\Merq.Installer.1.0.30-pre\build\Merq.Installer.targets" Condition="Exists('..\..\packages\Merq.Installer.1.0.30-pre\build\Merq.Installer.targets')" />
 </Project>

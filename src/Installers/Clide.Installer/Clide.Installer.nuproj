@@ -12,10 +12,10 @@
   </ItemGroup>
   <ItemGroup>
     <Dependency Include="MSBuilder.VsixDependency">
-      <Version>0.2.0</Version>
+      <Version>0.2.2</Version>
     </Dependency>
-    <Dependency Include="Merq.Installer">
-      <Version>1.0.30-pre</Version>
+    <Dependency Include="Merq">
+      <Version>1.0.1-alpha</Version>
     </Dependency>
   </ItemGroup>
   <ItemGroup>
