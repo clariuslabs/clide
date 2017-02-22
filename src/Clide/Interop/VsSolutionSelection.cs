@@ -36,6 +36,9 @@ namespace Clide.Interop
 				if (ErrorHandler.Failed (hierarchyWindow.FindCommonSelectedHierarchy ((uint)__VSCOMHIEROPTIONS.COMHIEROPT_RootHierarchyOnly, out uiHier)))
 					return null;
 
+				if (uiHier == null)
+					return null;
+
 				return hierarchyManager.GetHierarchyItem (uiHier, VSConstants.VSITEMID_ROOT);
 			});
 		}
