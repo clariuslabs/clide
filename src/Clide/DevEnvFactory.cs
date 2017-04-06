@@ -68,16 +68,22 @@ namespace Clide
                     .GetCustomAttributes<ProvideComponentsAttribute>(true)
                     .Select(attr => Path.Combine(installPath, attr.AssemblyFile)))
                 {
-                    if (!File.Exists(providedAssemblyFile))
-                        throw new InvalidOperationException(Strings.DevEnvFactory.ClideProvidedComponentsNotFound(
-                            services.GetType().FullName, Path.GetFileName(providedAssemblyFile), providedAssemblyFile));
+					var providedAssembly = GetLoadedAssembly(Path.GetFileName(providedAssemblyFile));
 
-                    var providedAssembly = Assembly.LoadFrom(providedAssemblyFile);
-                    if (!addedAssemblies.ContainsKey(providedAssembly.Location.ToLowerInvariant()))
-                        addedAssemblies.Add(providedAssembly.Location.ToLowerInvariant(), providedAssembly);
-                }
+					if (providedAssembly == null)
+					{
+						if (!File.Exists(providedAssemblyFile))
+							throw new InvalidOperationException(Strings.DevEnvFactory.ClideProvidedComponentsNotFound(
+								services.GetType().FullName, Path.GetFileName(providedAssemblyFile), providedAssemblyFile));
 
-                var packageManifestFile = Path.Combine(installPath, "extension.vsixmanifest");
+						providedAssembly = Assembly.LoadFrom(providedAssemblyFile);
+					}
+
+					if (!addedAssemblies.ContainsKey(providedAssembly.Location.ToLowerInvariant()))
+						addedAssemblies.Add(providedAssembly.Location.ToLowerInvariant(), providedAssembly);
+				}
+
+				var packageManifestFile = Path.Combine(installPath, "extension.vsixmanifest");
                 if (File.Exists(packageManifestFile))
                 {
                     tracer.Info(Strings.DevEnvFactory.ExtensionManifestFound(packageManifestFile));
@@ -93,20 +99,26 @@ namespace Clide
 
                     foreach (string clideComponent in GetClideComponents(manifestDoc))
                     {
-                        var assemblyFile = Path.Combine(installPath, clideComponent);
-                        tracer.Info(Strings.DevEnvFactory.ClideComponentDeclared(clideComponent, assemblyFile));
+						var componentAssembly = GetLoadedAssembly(clideComponent);
 
-                        if (clideComponent == ClideAssembly)
-                        {
-                            tracer.Warn(Strings.DevEnvFactory.ClideNotNecessaryAsComponent(clideComponent));
-                            continue;
-                        }
+						if (componentAssembly == null)
+						{
+							var assemblyFile = Path.Combine(installPath, clideComponent);
+							tracer.Info(Strings.DevEnvFactory.ClideComponentDeclared(clideComponent, assemblyFile));
 
-                        if (!File.Exists(assemblyFile))
-                            throw new InvalidOperationException(Strings.DevEnvFactory.ClideComponentNotFound(packageManifestFile, clideComponent, assemblyFile));
+							if (clideComponent == ClideAssembly)
+							{
+								tracer.Warn(Strings.DevEnvFactory.ClideNotNecessaryAsComponent(clideComponent));
+								continue;
+							}
 
-                        var componentAssembly = Assembly.LoadFrom(assemblyFile);
-                        if (!addedAssemblies.ContainsKey(componentAssembly.Location.ToLowerInvariant()))
+							if (!File.Exists(assemblyFile))
+								throw new InvalidOperationException(Strings.DevEnvFactory.ClideComponentNotFound(packageManifestFile, clideComponent, assemblyFile));
+
+							componentAssembly = Assembly.LoadFrom(assemblyFile);
+						}
+
+						if (!addedAssemblies.ContainsKey(componentAssembly.Location.ToLowerInvariant()))
                             addedAssemblies.Add(componentAssembly.Location.ToLowerInvariant(), componentAssembly);
                     }
                 }
@@ -129,6 +141,24 @@ namespace Clide
                 return new FallbackServiceLocator(new ExportsServiceLocator(container), new ServiceProviderLocator(services));
             }
         }
+
+		Assembly GetLoadedAssembly(string assemblyFile)
+		{
+			foreach (var loadedAssembly in AppDomain.CurrentDomain.GetAssemblies())
+			{
+				try
+				{
+					if (string.Equals(assemblyFile, Path.GetFileName(loadedAssembly.Location), StringComparison.OrdinalIgnoreCase))
+						return loadedAssembly;
+				}
+				catch
+				{
+					continue;
+				}
+			}
+
+			return null;
+		}
 
         private void ThrowIfClideIsMefComponent(XDocument doc)
         {
