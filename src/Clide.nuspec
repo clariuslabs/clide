@@ -101,6 +101,7 @@ v1.0
     <file src="Clide\bin\$configuration$\Clide.dll" target="lib\net45" />
     <file src="Clide\bin\$configuration$\Clide.pdb" target="lib\net45" />
     <file src="Clide\bin\$configuration$\Clide.xml" target="lib\net45" />
+    <file src="Clide\bin\$configuration$\Microsoft.ComponentModel.Composition.Diagnostics.dll" target="lib\net45" />
     <file src="Clide\bin\$configuration$\GitInfo.txt" target="src\" />
     <file src="Clide.Standalone.sln" target="src\Clide.sln" />
     <file src="Clide.props" target="src\" />
