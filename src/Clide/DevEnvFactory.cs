@@ -30,8 +30,10 @@ namespace Clide
 	using System.Reflection;
 	using System.Xml.Linq;
 	using System.Diagnostics;
+  using Microsoft.ComponentModel.Composition.Diagnostics;
+  using EnvDTE;
 
-	internal class DevEnvFactory
+    internal class DevEnvFactory
     {
         private static readonly string ClideAssembly = Path.GetFileName(typeof(IDevEnv).Assembly.ManifestModule.FullyQualifiedName);
         private static readonly ITracer tracer = Tracer.Get<DevEnvFactory>();
@@ -134,6 +136,38 @@ namespace Clide
 
                 var container = new CompositionContainer(catalog, providers);
 
+                // If /log was provided, dump the container composition log.
+                var args = Environment.GetCommandLineArgs();
+                if (args != null && args.Any(x => "/log".Equals(x, StringComparison.OrdinalIgnoreCase)))
+                {
+                    var dte = services.GetService<DTE>();
+                    var hive = dte.RegistryRoot.Substring(dte.RegistryRoot.LastIndexOf('\\') + 1);
+                    // Append package GUID if available.
+                    var idSuffix = "";
+                    try
+                    {
+                        idSuffix = "." + services.GetPackageGuidOrThrow();
+                    }
+                    catch { }
+
+                    try
+                    {
+                        var file = Path.Combine(
+                            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                            "Microsoft\\VisualStudio",
+                            hive,
+                            "ComponentModelCache",
+                            "Clide" + idSuffix + ".log");
+
+                        using (var writer = new StreamWriter(file, false))
+                            CompositionInfoTextFormatter.Write(new CompositionInfo(container.Catalog, container), writer);
+                    }
+                    catch (Exception ex)
+                    {
+                        tracer.Warn("Failed to dump composition information: " + ex.ToString());
+                    }
+                }
+
                 // Make the service locator itself available as an export.
                 var serviceLocator = new ServicesAccessor(services, new Lazy<IServiceLocator>(() => serviceLocators[services]));
                 container.ComposeParts(serviceLocator);
@@ -144,7 +178,7 @@ namespace Clide
 
 		Assembly GetLoadedAssembly(string assemblyFile)
 		{
-			foreach (var loadedAssembly in AppDomain.CurrentDomain.GetAssemblies())
+			foreach (var loadedAssembly in AppDomain.CurrentDomain.GetAssemblies().Where(asm => !asm.IsDynamic))
 			{
 				try
 				{
