@@ -1,0 +1,26 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup>
+		<CI Condition="'$(CI)' == '' and '$(TF_BUILD)' == 'true'">true</CI>
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>full</DebugType>
+		<RootNamespace>Clide</RootNamespace>
+
+		<!-- Triggers generation of a [VSIXID].json file alongside the VSIX, used by Willow installer -->
+		<IsProductComponent>true</IsProductComponent>
+		<ExtensionInstallationRoot>Extensions</ExtensionInstallationRoot>
+
+		<GitCommitsRelativeTo>$([MSBuild]::GetDirectoryNameOfFileAbove ('$(MSBuildThisFileDirectory)', 'build.proj'))</GitCommitsRelativeTo>
+		<GitVersionFile Condition="'$(GitVersionFile)' == ''">GitInfo.txt</GitVersionFile>
+		<GitIgnoreBranchVersion>true</GitIgnoreBranchVersion>
+		<GitIgnoreTagVersion>true</GitIgnoreTagVersion>
+
+		<IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
+		<IncludeDebugSymbolsInLocalVSIXDeployment>true</IncludeDebugSymbolsInLocalVSIXDeployment>
+		<DefaultIncludeOutputGroupsInVSIX>BuiltProjectOutputGroup;DebugSymbolsProjectOutputGroup;GetCopyToOutputDirectoryItems;SatelliteDllsProjectOutputGroup</DefaultIncludeOutputGroupsInVSIX>
+
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)ClariusLabs.snk</AssemblyOriginatorKeyFile>
+	</PropertyGroup>
+
+</Project>

@@ -1,0 +1,175 @@
+<Project InitialTargets="FixupVsixDependencies" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Target Name="FixupVsixDependencies">
+		<ItemGroup>
+			<VsixDependency Remove="@(VsixDependency)" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="IncludeSymbolsFromProjectReferences" BeforeTargets="GetVsixSourceItems">
+		<!-- For any project references that are set to copy local ('Private' property != false), add the output groups for project references that are not set -->
+		<ItemGroup>
+			<ProjectReferenceWithConfiguration Condition="'%(ProjectReferenceWithConfiguration.Private)' != 'false' AND
+														  '%(ProjectReferenceWithConfiguration.IncludeOutputGroupsInVSIX)' == ''">
+				<IncludeOutputGroupsInVSIX>$(DefaultIncludeOutputGroupsInVSIX)</IncludeOutputGroupsInVSIX>
+			</ProjectReferenceWithConfiguration>
+		</ItemGroup>
+	</Target>
+
+	<!-- Common Packages -->
+	<ItemGroup>
+		<PackageReference Include="GitInfo" Version="*" />
+		<PackageReference Include="Merq.Async" Version="1.1.17-rc" />
+		<PackageReference Include="System.Reactive.Interfaces" Version="3.0.0" />
+		<PackageReference Include="IFluentInterface" Version="2.0.3" />
+		<PackageReference Include="netfx-System.StringResources" Version="*" />
+		<PackageReference Include="System.Diagnostics.Tracer" Version="*" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(IncludeVSSDK)' == 'true'">
+		<PackageReference Include="Xamarin.VSSDK" Version="0.2.1-alpha-build0012" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(IncludeVSSDKTools)' == 'true'">
+		<PackageReference Include="Xamarin.VSSDK.BuildTools" Version="0.2.1-alpha-build0012" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(IncludeRx)' == 'true'">
+		<PackageReference Include="System.Reactive.Linq" Version="3.0.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(IncludeTests)' == 'true' or '$(IncludeIntegrationTests)' == 'true'">
+		<PackageReference Include="System.Reactive.Linq" Version="3.0.0" />
+		<PackageReference Include="xunit" Version="2.1.0" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.1.0" />
+		<PackageReference Include="Moq" Version="4.5.13" />
+		<PackageReference Include="Merq" Version="1.0.0-rc" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(IncludeIntegrationTests)' == 'true'">
+		<PackageReference Include="xunit.vsix" Version="0.2.70" />
+	</ItemGroup>
+
+	<Target Name="GetProductVersions" DependsOnTargets="GitInfo">
+		<PropertyGroup>
+			<ClideMajor>$(GitSemVerMajor)</ClideMajor>
+			<ClideMinor>$(GitSemVerMinor)</ClideMinor>
+			<ClideBuild>$(GitBaseVersion.Substring($(GitBaseVersion.LastIndexOf('.'))).TrimStart('.'))</ClideBuild>
+			<ClideRevision>$(GitCommits)</ClideRevision>
+			<ClideSimpleVersion>$(ClideMajor).$(ClideMinor).$(ClideBuild.Replace('-pre', ''))</ClideSimpleVersion>
+			<ClideInformationsVersion>$(ClideSimpleVersion)-$(GitBranch)+$(GitCommit)</ClideInformationsVersion>
+			<ClideVersion>$(ClideSimpleVersion).$(ClideRevision)</ClideVersion>
+		</PropertyGroup>
+	</Target>
+
+	<Target Name="GetVsixVersion" Returns="$(VsixVersion)" DependsOnTargets="GetProductVersions">
+		<PropertyGroup>
+			<VsixVersion Condition="'$(Configuration)' == 'Debug'">42.42.42</VsixVersion>
+			<VsixVersion Condition="'$(VsixVersion)' == ''" >$(ClideSimpleVersion)</VsixVersion>
+		</PropertyGroup>
+	</Target>
+
+	<Target Name="AppendVsixVersionToTargetVsixContainer" BeforeTargets="CreateVsixContainer" DependsOnTargets="GetVsixVersion">
+		<PropertyGroup>
+			<TargetVsixContainer>$([System.IO.Path]::ChangeExtension('$(TargetVsixContainer)', '$(VsixVersion).vsix'))</TargetVsixContainer>
+		</PropertyGroup>
+	</Target>
+
+	<Target Name="SetAssemblyVersion" BeforeTargets="GetAssemblyVersion" DependsOnTargets="GetProductVersions"
+			Condition="'$(MSBuildProjectExtension)' == '.csproj' or '$(MSBuildProjectExtension)' == '.vbproj'">
+		<PropertyGroup>
+			<AssemblyVersion Condition="'$(AssemblyVersion)' == '' and '$(Configuration)' == 'Debug'">42.42.42.42</AssemblyVersion>
+			<AssemblyVersion Condition="'$(AssemblyVersion)' == ''">$(ClideMajor).$(ClideMinor).0.0</AssemblyVersion>
+			<FileVersion Condition="'$(FileVersion)' == ''">$(ClideVersion)</FileVersion>
+			<InformationalVersion Condition="'$(InformationalVersion)' == ''">$(ClideInformationsVersion)</InformationalVersion>
+		</PropertyGroup>
+	</Target>
+
+	<PropertyGroup>
+		<BindingRedirects>BindingRedirects.pkgdef</BindingRedirects>
+		<BindingRedirectsDependsOn>
+			CollectBindingRedirected;
+			CleanBindingRedirectsPackage;
+			GenerateBindingRedirectsPackage
+		</BindingRedirectsDependsOn>
+		<GetCopyToOutputDirectoryItemsDependsOn>
+			BindingRedirects;
+			$(GetCopyToOutputDirectoryItemsDependsOn)
+		</GetCopyToOutputDirectoryItemsDependsOn>
+		<ResolveReferencesDependsOn>
+			$(ResolveReferencesDependsOn);
+			BindingRedirects
+		</ResolveReferencesDependsOn>
+		<BuildDependsOn>
+			$(BuildDependsOn);
+			ReportBindingRedirects
+		</BuildDependsOn>
+	</PropertyGroup>
+
+	<ItemGroup Condition="'$(GenerateBindingRedirects)' == 'true'">
+		<VSIXSourceItem Include="$(IntermediateOutputPath)$(BindingRedirects)" />
+	</ItemGroup>
+
+	<ItemDefinitionGroup>
+		<!-- Facade assemblies don't have this metadata attribute, so default it to something. -->
+		<ReferencePath>
+			<FusionName></FusionName>
+		</ReferencePath>
+		<BindingRedirected>
+			<OldVersion>0.0.0.0</OldVersion>
+		</BindingRedirected>
+	</ItemDefinitionGroup>
+
+	<Target Name="BindingRedirects" Condition="'$(GenerateBindingRedirects)' == 'true' and '$(_GeneratingStringResources)' != 'true'" DependsOnTargets="$(BindingRedirectsDependsOn)" />
+
+	<Target Name="ReportBindingRedirects">
+		<Message Text="Binding redirection applied for @(BindingRedirected -> Count()) assemblies" Importance="high" />
+		<Message Text="    - %(BindingRedirected.Filename)%(BindingRedirected.Extension)" Importance="normal" />
+	</Target>
+
+	<Target Name="CollectBindingRedirected" DependsOnTargets="ResolveAssemblyReferences">
+		<ItemGroup>
+			<BindingRedirected Include="@(ReferencePath)" Condition="$([System.String]::new('%(FusionName)').StartsWith('Clide'))" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="CleanBindingRedirectsPackage"
+			Inputs="@(ReferencePath);$(MSBuildThisFileFullPath)$(MSBuildProjectFullPath)"
+			Outputs="$(IntermediateOutputPath)$(BindingRedirects)">
+		<!-- If we're in this target, it's because the file is out of date, or it doesn't exist -->
+		<Delete Files="$(IntermediateOutputPath)$(BindingRedirects)" Condition="Exists('$(IntermediateOutputPath)$(BindingRedirects)')" />
+	</Target>
+
+	<Target Name="GenerateBindingRedirectsPackage" Inputs="@(BindingRedirected)" Outputs="%(Identity)-BATCH">
+		<PropertyGroup>
+			<_FusionName>%(BindingRedirected.FusionName)</_FusionName>
+			<_Name>$(_FusionName.Substring(0, $(_FusionName.IndexOf(','))))</_Name>
+			<_IndexOfToken>$(_FusionName.IndexOf('PublicKeyToken='))</_IndexOfToken>
+			<_IndexOfToken>$([MSBuild]::Add($(_IndexOfToken), 15))</_IndexOfToken>
+			<_Token>$(_FusionName.Substring($(_IndexOfToken)))</_Token>
+		</PropertyGroup>
+
+		<ItemGroup>
+			<BindingRedirected>
+				<Guid>$([System.Guid]::NewGuid().ToString().ToUpper())</Guid>
+				<AssemblyName>$(_Name)</AssemblyName>
+				<PublicKeyToken>$(_Token)</PublicKeyToken>
+			</BindingRedirected>
+		</ItemGroup>
+
+		<WriteLinesToFile File="$(IntermediateOutputPath)$(BindingRedirects)" Overwrite="false"
+						  Condition=" '%(BindingRedirected.PublicKeyToken)' != 'null' "
+						  Lines='[$RootKey$\RuntimeConfiguration\dependentAssembly\bindingRedirection\{%(BindingRedirected.Guid)}]
+"name"="%(BindingRedirected.AssemblyName)"
+"publicKeyToken"="%(BindingRedirected.PublicKeyToken)"
+"culture"="neutral"
+"oldVersion"="%(OldVersion)-99.9.9.9"
+"newVersion"="%(BindingRedirected.Version)"
+"codeBase"="$PackageFolder$\%(BindingRedirected.Filename)%(BindingRedirected.Extension)"
+'/>
+
+		<ItemGroup>
+			<FileWrites Include="$(IntermediateOutputPath)$(BindingRedirects)" />
+		</ItemGroup>
+	</Target>
+
+</Project>

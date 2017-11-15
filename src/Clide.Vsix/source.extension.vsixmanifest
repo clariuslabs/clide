@@ -3,7 +3,7 @@
                  xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011"
                  xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="Clide" Version="|Clide.Vsix;GetVersion|" Language="en-US" Publisher="ClariusLabs" />
+    <Identity Id="Clide" Version="|Clide.Vsix;GetVsixVersion|" Language="en-US" Publisher="ClariusLabs" />
     <DisplayName>Clide</DisplayName>
     <Description xml:space="preserve">Clide</Description>
   </Metadata>
@@ -15,7 +15,8 @@
 	  <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,16.0)" DisplayName="Visual Studio core editor" />
   </Prerequisites>
   <Assets>
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Clide" Path="|Clide|" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Clide" Path="Clide.Core.dll" />
     <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+    <Asset Type="Microsoft.VisualStudio.VsPackage" Path="BindingRedirects.pkgdef" />
   </Assets>
 </PackageManifest>

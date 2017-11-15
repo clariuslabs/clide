@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using Clide;
-using Clide.Properties.Interfaces;
+using Clide.Properties;
 
 /// <summary>
 /// Defines extension methods related to <see cref="IServiceProvider"/>.

@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Clide
 {
-	internal class ServiceProviderExtensionsSpec
+	public class ServiceProviderExtensionsSpec
 	{
 		[Fact]
 		public void WhenTryGetNonExistentService_ThenReturnsNull ()

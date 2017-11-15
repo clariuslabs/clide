@@ -118,25 +118,25 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CommandBus_DuplicateHandler" xml:space="preserve">
-    <value>The command handler '{handler}' cannot be used because an existing one is already registered for the command type '{command}'.</value>
+    <value>The command handler '{0}' cannot be used because an existing one is already registered for the command type '{1}'.</value>
   </data>
   <data name="CommandBus_InvalidHandler" xml:space="preserve">
     <value>Command handler '{0}' does not implement ICommandHandler or IAsyncCommandHandler generic interfaces.</value>
   </data>
   <data name="CommandBus_MissingReturnHandler" xml:space="preserve">
-    <value>The command handler '{handler}' does not implement the required interface ICommandHandler&lt;{command}, {returns}&gt; or IAsyncCommandHandler&lt;{command}, {returns}&gt; to return the value expected by the command execution.</value>
+    <value>The command handler '{0}' does not implement the required interface ICommandHandler&lt;{1}, {2}&gt; or IAsyncCommandHandler&lt;{1}, {2}&gt; to return the value expected by the command execution.</value>
   </data>
   <data name="ConfigProjectProperties_NonMsBuildProject" xml:space="preserve">
-    <value>Project '{project}' is not based on MSBuild. Configuration-specific properties cannot be retrieved or set using the standard dynamic properties.</value>
+    <value>Project '{0}' is not based on MSBuild. Configuration-specific properties cannot be retrieved or set using the standard dynamic properties.</value>
   </data>
   <data name="ConfigProjectProperties_SetNonMsBuildProject" xml:space="preserve">
-    <value>Attempted to set property '{property}' for configuration '{configuration}' on project '{project}' which is not based on MSBuild. Configuration-specific user properties cannot be retrieved or set using the standard dynamic properties.</value>
+    <value>Attempted to set property '{0}' for configuration '{1}' on project '{2}' which is not based on MSBuild. Configuration-specific user properties cannot be retrieved or set using the standard dynamic properties.</value>
   </data>
   <data name="ConfigUserProjectProperties_NonMsBuildProject" xml:space="preserve">
-    <value>Project '{project}' is not based on MSBuild. Configuration-specific properties for '{configuration}' cannot be retrieved or set using the standard dynamic properties.</value>
+    <value>Project '{0}' is not based on MSBuild. Configuration-specific properties for '{1}' cannot be retrieved or set using the standard dynamic properties.</value>
   </data>
   <data name="ConfigUserProjectProperties_SetNonMsBuildProject" xml:space="preserve">
-    <value>Attempted to set property '{property}' for configuration '{configuration}' on project '{project}' which is not based on MSBuild. Configuration-specific user properties cannot be retrieved or set using the standard dynamic properties.</value>
+    <value>Attempted to set property '{0}' for configuration '{1}' on project '{2}' which is not based on MSBuild. Configuration-specific user properties cannot be retrieved or set using the standard dynamic properties.</value>
   </data>
   <data name="ItemProperties_InvalidNullValue" xml:space="preserve">
     <value>Cannot set null value for item property {0}.</value>
@@ -166,16 +166,16 @@
     <value>Required dependency '{0}' was not found.</value>
   </data>
   <data name="SolutionExplorerNode_SelectionUnsupported" xml:space="preserve">
-    <value>Selecting element '{item}' is not supported by the underlying project type.</value>
+    <value>Selecting element '{0}' is not supported by the underlying project type.</value>
   </data>
   <data name="SolutionNode_InvalidSolutionFile" xml:space="preserve">
     <value>The solution file '{0}' is invalid.</value>
   </data>
   <data name="UserProjectProperties_NonMsBuildProject" xml:space="preserve">
-    <value>Project '{project}' is not based on MSBuild. User properties cannot be retrieved or set using the standard dynamic properties.</value>
+    <value>Project '{0}' is not based on MSBuild. User properties cannot be retrieved or set using the standard dynamic properties.</value>
   </data>
   <data name="UserProjectProperties_SetNonMsBuildProject" xml:space="preserve">
-    <value>Attempted to set property '{property}' on project '{project}' which is not based on MSBuild. User properties cannot be retrieved or set using the standard dynamic properties.</value>
+    <value>Attempted to set property '{0}' on project '{1}' which is not based on MSBuild. User properties cannot be retrieved or set using the standard dynamic properties.</value>
   </data>
   <data name="VsServiceLocator_NoInstanceForContract" xml:space="preserve">
     <value>Could not locate any instances of contract {0}.</value>

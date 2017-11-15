@@ -19,7 +19,7 @@ namespace Clide.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -61,7 +61,7 @@ namespace Clide.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The command handler &apos;{handler}&apos; cannot be used because an existing one is already registered for the command type &apos;{command}&apos;..
+        ///   Looks up a localized string similar to The command handler &apos;{0}&apos; cannot be used because an existing one is already registered for the command type &apos;{1}&apos;..
         /// </summary>
         internal static string CommandBus_DuplicateHandler {
             get {
@@ -79,7 +79,7 @@ namespace Clide.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The command handler &apos;{handler}&apos; does not implement the required interface ICommandHandler&lt;{command}, {returns}&gt; or IAsyncCommandHandler&lt;{command}, {returns}&gt; to return the value expected by the command execution..
+        ///   Looks up a localized string similar to The command handler &apos;{0}&apos; does not implement the required interface ICommandHandler&lt;{1}, {2}&gt; or IAsyncCommandHandler&lt;{1}, {2}&gt; to return the value expected by the command execution..
         /// </summary>
         internal static string CommandBus_MissingReturnHandler {
             get {
@@ -88,7 +88,7 @@ namespace Clide.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Project &apos;{project}&apos; is not based on MSBuild. Configuration-specific properties cannot be retrieved or set using the standard dynamic properties..
+        ///   Looks up a localized string similar to Project &apos;{0}&apos; is not based on MSBuild. Configuration-specific properties cannot be retrieved or set using the standard dynamic properties..
         /// </summary>
         internal static string ConfigProjectProperties_NonMsBuildProject {
             get {
@@ -97,7 +97,7 @@ namespace Clide.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Attempted to set property &apos;{property}&apos; for configuration &apos;{configuration}&apos; on project &apos;{project}&apos; which is not based on MSBuild. Configuration-specific user properties cannot be retrieved or set using the standard dynamic properties..
+        ///   Looks up a localized string similar to Attempted to set property &apos;{0}&apos; for configuration &apos;{1}&apos; on project &apos;{2}&apos; which is not based on MSBuild. Configuration-specific user properties cannot be retrieved or set using the standard dynamic properties..
         /// </summary>
         internal static string ConfigProjectProperties_SetNonMsBuildProject {
             get {
@@ -106,7 +106,7 @@ namespace Clide.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Project &apos;{project}&apos; is not based on MSBuild. Configuration-specific properties for &apos;{configuration}&apos; cannot be retrieved or set using the standard dynamic properties..
+        ///   Looks up a localized string similar to Project &apos;{0}&apos; is not based on MSBuild. Configuration-specific properties for &apos;{1}&apos; cannot be retrieved or set using the standard dynamic properties..
         /// </summary>
         internal static string ConfigUserProjectProperties_NonMsBuildProject {
             get {
@@ -115,7 +115,7 @@ namespace Clide.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Attempted to set property &apos;{property}&apos; for configuration &apos;{configuration}&apos; on project &apos;{project}&apos; which is not based on MSBuild. Configuration-specific user properties cannot be retrieved or set using the standard dynamic properties..
+        ///   Looks up a localized string similar to Attempted to set property &apos;{0}&apos; for configuration &apos;{1}&apos; on project &apos;{2}&apos; which is not based on MSBuild. Configuration-specific user properties cannot be retrieved or set using the standard dynamic properties..
         /// </summary>
         internal static string ConfigUserProjectProperties_SetNonMsBuildProject {
             get {
@@ -205,7 +205,7 @@ namespace Clide.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Selecting element &apos;{item}&apos; is not supported by the underlying project type..
+        ///   Looks up a localized string similar to Selecting element &apos;{0}&apos; is not supported by the underlying project type..
         /// </summary>
         internal static string SolutionExplorerNode_SelectionUnsupported {
             get {
@@ -223,7 +223,7 @@ namespace Clide.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Project &apos;{project}&apos; is not based on MSBuild. User properties cannot be retrieved or set using the standard dynamic properties..
+        ///   Looks up a localized string similar to Project &apos;{0}&apos; is not based on MSBuild. User properties cannot be retrieved or set using the standard dynamic properties..
         /// </summary>
         internal static string UserProjectProperties_NonMsBuildProject {
             get {
@@ -232,7 +232,7 @@ namespace Clide.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Attempted to set property &apos;{property}&apos; on project &apos;{project}&apos; which is not based on MSBuild. User properties cannot be retrieved or set using the standard dynamic properties..
+        ///   Looks up a localized string similar to Attempted to set property &apos;{0}&apos; on project &apos;{1}&apos; which is not based on MSBuild. User properties cannot be retrieved or set using the standard dynamic properties..
         /// </summary>
         internal static string UserProjectProperties_SetNonMsBuildProject {
             get {

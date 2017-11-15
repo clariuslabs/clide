@@ -1,102 +1,26 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectGuid>{099BEBD8-6B04-416D-BA44-E0201951542B}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Clide</RootNamespace>
-    <AssemblyName>Clide.Interfaces</AssemblyName>
+    <TargetFramework>net461</TargetFramework>
   </PropertyGroup>
-  <Import Project="..\Clide.props" />
   <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Design" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="UIAutomationTypes" />
     <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Adapters\BehaviorAdapterFacade.cs" />
-    <Compile Include="Adapters\SolutionAdapterFacade.cs" />
-    <Compile Include="Adapters\VsLangAdapterFacade.cs" />
-    <Compile Include="Adapters\DteAdapterFacade.cs" />
-    <Compile Include="Events\ShellInitialized.cs" />
-    <Compile Include="Solution\Behavior\IProjectIContainerNode.cs" />
-    <Compile Include="Solution\Behavior\IRemovableNode.cs" />
-    <Compile Include="Solution\Extensions\IItemNodeExtensions.cs" />
-    <Compile Include="Solution\Extensions\ISolutionNodeExtensions.cs" />
-    <Compile Include="Solution\Extensions\IReferencesNodeExtensions.cs" />
-    <Compile Include="Solution\Extensions\IProjectNodeExtensions.cs" />
-    <Compile Include="Solution\Extensions\IFolderNodeExtensions.cs" />
-    <Compile Include="Extensions\MissingDependencyException.cs" />
-    <Compile Include="Extensions\ServiceLocatorFacades.cs" />
-    <Compile Include="FallbackServiceProvider.cs" />
-    <Compile Include="IDevEnv.cs" />
-    <Compile Include="Interop\NativeMethods.cs" />
-    <Compile Include="Interop\RunningObjects.cs" />
-    <Compile Include="ServiceProvider.cs" />
-    <Compile Include="ServiceLocator.cs" />
-    <Compile Include="Solution\Behavior\IDeletableNode.cs" />
-    <Compile Include="Solution\Behavior\IProjectItemContainerNode.cs" />
-    <Compile Include="Solution\Behavior\IReferenceContainerNode.cs" />
-    <Compile Include="Solution\ISolutionExplorerNodeExtensions.cs" />
-    <Compile Include="Solution\ISolutionNodeExtensions.cs" />
-    <Compile Include="IAdaptable.cs" />
-    <Compile Include="IAdapterService.cs" />
-    <Compile Include="IToolWindow.cs" />
-    <Compile Include="Guard.cs" />
-    <Compile Include="IServiceLocator.cs" />
-    <Compile Include="IServiceLocatorProvider.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
+    <PackageReference Include="Xamarin.VSSDK" Version="0.2.1-alpha-build0012" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Extensions\ServiceProviderExtensions.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Extensions\ServiceLocatorExtensions.cs" />
-    <Compile Include="Solution\IGenericNode.cs" />
-    <Compile Include="Solution\IFolderNode.cs" />
-    <Compile Include="Solution\IItemNode.cs" />
-    <Compile Include="Solution\IProjectItemNode.cs" />
-    <Compile Include="Solution\IProjectNode.cs" />
-    <Compile Include="Solution\IReferenceNode.cs" />
-    <Compile Include="Solution\IReferencesNode.cs" />
-    <Compile Include="Solution\ISolutionExplorer.cs" />
-    <Compile Include="Solution\ISolutionExplorerNode.cs" />
-    <Compile Include="Solution\ISolutionFolderNode.cs" />
-    <Compile Include="Solution\ISolutionItemNode.cs" />
-    <Compile Include="Solution\ISolutionNode.cs" />
-    <Compile Include="Solution\ISolutionVisitor.cs" />
-    <Compile Include="Solution\KnownCapabilities.cs" />
-    <Compile Include="Solution\SolutionNodeKind.cs" />
-    <Compile Include="Solution\SolutionVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
+    <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <CustomToolNamespace>Clide.Properties.Interfaces</CustomToolNamespace>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="project.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Commands\" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\Clide.targets" />
 </Project>

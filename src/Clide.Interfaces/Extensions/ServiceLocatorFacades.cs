@@ -2,11 +2,10 @@
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using Clide;
-using Clide.Properties.Interfaces;
+using Clide.Properties;
 using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Ole = Microsoft.VisualStudio.OLE.Interop;
 
