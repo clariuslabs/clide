@@ -17,6 +17,7 @@
 
 	<!-- Common Packages -->
 	<ItemGroup>
+		<PackageReference Include="MSBuilder.CI" Version="*" />
 		<PackageReference Include="GitInfo" Version="*" />
 		<PackageReference Include="Merq.Async" Version="1.1.17-rc" />
 		<PackageReference Include="System.Reactive.Interfaces" Version="3.0.0" />
@@ -39,14 +40,14 @@
 
 	<ItemGroup Condition="'$(IncludeTests)' == 'true' or '$(IncludeIntegrationTests)' == 'true'">
 		<PackageReference Include="System.Reactive.Linq" Version="3.0.0" />
-		<PackageReference Include="xunit" Version="2.1.0" />
-		<PackageReference Include="xunit.runner.visualstudio" Version="2.1.0" />
+		<PackageReference Include="xunit" Version="2.3.1" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" Condition="'$(CI)' == 'true'" />
 		<PackageReference Include="Moq" Version="4.5.13" />
 		<PackageReference Include="Merq" Version="1.0.0-rc" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(IncludeIntegrationTests)' == 'true'">
-		<PackageReference Include="xunit.vsix" Version="0.2.70" />
+		<PackageReference Include="xunit.vsix" Version="0.3.4-beta" />
 	</ItemGroup>
 
 	<Target Name="GetProductVersions" DependsOnTargets="GitInfo">
@@ -128,7 +129,7 @@
 
 	<Target Name="CollectBindingRedirected" DependsOnTargets="ResolveAssemblyReferences">
 		<ItemGroup>
-			<BindingRedirected Include="@(ReferencePath)" Condition="$([System.String]::new('%(FusionName)').StartsWith('Clide'))" />
+			<BindingRedirected Include="@(ReferencePath)" Condition="$([MSBuild]::ValueOrDefault('%(FusionName)', '').StartsWith('Clide')) and $([MSBuild]::ValueOrDefault('%(FusionName)', '').IndexOf(',')) != '-1'" />
 		</ItemGroup>
 	</Target>
 
