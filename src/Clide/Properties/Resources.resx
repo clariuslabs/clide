@@ -213,19 +213,4 @@
   <data name="SettingsManager_InvalidValue" xml:space="preserve">
     <value>Cannot assign value of type '{0}' to property '{1}.{2}' of type '{4}'. An appropriate type converter is required.</value>
   </data>
-  <data name="Settings_AlreadyInitialized" xml:space="preserve">
-    <value>Object has already been initialized.</value>
-  </data>
-  <data name="Settings_EndEditWithoutBeginEdit" xml:space="preserve">
-    <value>EndEdit invoked without corresponding BeginEdit.</value>
-  </data>
-  <data name="Settings_EndInitWithoutBeginInit" xml:space="preserve">
-    <value>EndInit invoked without corresponding BeginInit.</value>
-  </data>
-  <data name="Settings_FailedToRestore" xml:space="preserve">
-    <value>Failed to restore original state when editing was cancelled.</value>
-  </data>
-  <data name="Settings_TraceSaved" xml:space="preserve">
-    <value>Settings successfully saved.</value>
-  </data>
 </root>

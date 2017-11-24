@@ -18,7 +18,7 @@
         private static Action<Exception, string, string[]> DefaultShowExceptionAction = (ex, format, args) =>
         {
             System.Windows.MessageBox.Show(
-				GlobalServiceProvider.Instance.GetService<SVsUIShell, IVsUIShell>().GetMainWindow(),
+				ServiceProvider.Global.GetService<SVsUIShell, IVsUIShell>().GetMainWindow(),
                 string.Format(format, args),
                 "Visual Studio",
                 MessageBoxButton.OK,

@@ -95,5 +95,50 @@ namespace Clide.Properties {
                 return ResourceManager.GetString("ServiceLocator_MissingDependency", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Object has already been initialized..
+        /// </summary>
+        internal static string Settings_AlreadyInitialized {
+            get {
+                return ResourceManager.GetString("Settings_AlreadyInitialized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EndEdit invoked without corresponding BeginEdit..
+        /// </summary>
+        internal static string Settings_EndEditWithoutBeginEdit {
+            get {
+                return ResourceManager.GetString("Settings_EndEditWithoutBeginEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EndInit invoked without corresponding BeginInit..
+        /// </summary>
+        internal static string Settings_EndInitWithoutBeginInit {
+            get {
+                return ResourceManager.GetString("Settings_EndInitWithoutBeginInit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to restore original state when editing was cancelled..
+        /// </summary>
+        internal static string Settings_FailedToRestore {
+            get {
+                return ResourceManager.GetString("Settings_FailedToRestore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings successfully saved..
+        /// </summary>
+        internal static string Settings_TraceSaved {
+            get {
+                return ResourceManager.GetString("Settings_TraceSaved", resourceCulture);
+            }
+        }
     }
 }

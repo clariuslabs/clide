@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 
-namespace Clide.Commands
+namespace Clide
 {
 	[MetadataAttribute]
 	public class CommandAttribute : ExportAttribute

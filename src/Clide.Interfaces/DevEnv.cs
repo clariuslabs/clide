@@ -15,6 +15,6 @@
 
 		/// package Clide components.</param>
 		public static IDevEnv Get(Guid packageId) =>
-			Get(GlobalServiceProvider.Instance.GetLoadedPackage(packageId));
+			Get(ServiceProvider.Global.GetLoadedPackage(packageId));
 	}
 }
