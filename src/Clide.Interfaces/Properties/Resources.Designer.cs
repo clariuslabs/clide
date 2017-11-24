@@ -61,6 +61,24 @@ namespace Clide.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hosting package &apos;{0}&apos; does not have the required [Guid] attribute..
+        /// </summary>
+        internal static string General_MissingGuidAttribute {
+            get {
+                return ResourceManager.GetString("General_MissingGuidAttribute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specified package type &apos;{0}&apos; does not have the required [Guid] attribute..
+        /// </summary>
+        internal static string IServiceProviderExtensions_MissingGuidAttribute {
+            get {
+                return ResourceManager.GetString("IServiceProviderExtensions_MissingGuidAttribute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Node &apos;{0}&apos; is not an ancestor of &apos;{1}&apos;..
         /// </summary>
         internal static string ISolutionExplorerNodeExtensions_NotAncestor {

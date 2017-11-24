@@ -228,10 +228,4 @@
   <data name="Settings_TraceSaved" xml:space="preserve">
     <value>Settings successfully saved.</value>
   </data>
-  <data name="IServiceProviderExtensions_MissingGuidAttribute" xml:space="preserve">
-    <value>Specified package type '{0}' does not have the required [Guid] attribute.</value>
-  </data>
-  <data name="General_MissingGuidAttribute" xml:space="preserve">
-    <value>Hosting package '{0}' does not have the required [Guid] attribute.</value>
-  </data>
 </root>

@@ -123,4 +123,10 @@
   <data name="ServiceLocator_MissingDependency" xml:space="preserve">
     <value>Required dependency '{0}' was not found.</value>
   </data>
+  <data name="General_MissingGuidAttribute" xml:space="preserve">
+    <value>Hosting package '{0}' does not have the required [Guid] attribute.</value>
+  </data>
+  <data name="IServiceProviderExtensions_MissingGuidAttribute" xml:space="preserve">
+    <value>Specified package type '{0}' does not have the required [Guid] attribute.</value>
+  </data>
 </root>
