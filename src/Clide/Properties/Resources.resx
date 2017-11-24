@@ -180,4 +180,16 @@
   <data name="VsServiceLocator_NoInstanceForContract" xml:space="preserve">
     <value>Could not locate any instances of contract {0}.</value>
   </data>
+  <data name="VsCommandExtensionAdapter_CannotExecute" xml:space="preserve">
+    <value>Attempted to execute command '{0}' ({1}) but current command status does not allow it.</value>
+  </data>
+  <data name="VsCommandExtensionAdapter_ExecuteShieldMessage" xml:space="preserve">
+    <value>Command did not execute successfully due to an unexpected exception. Please check the output window for additional information.</value>
+  </data>
+  <data name="VsCommandExtensionAdapter_ExecutingCommand" xml:space="preserve">
+    <value>Executing command '{0}' ({1}).</value>
+  </data>
+  <data name="VsCommandExtensionAdapter_QueryStatusShieldMessage" xml:space="preserve">
+    <value>Command could not determine its current status due to an unexpected exception. Please check the output window for additional information.</value>
+  </data>
 </root>

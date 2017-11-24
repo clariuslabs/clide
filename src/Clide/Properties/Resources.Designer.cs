@@ -241,6 +241,42 @@ namespace Clide.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attempted to execute command &apos;{0}&apos; ({1}) but current command status does not allow it..
+        /// </summary>
+        internal static string VsCommandExtensionAdapter_CannotExecute {
+            get {
+                return ResourceManager.GetString("VsCommandExtensionAdapter_CannotExecute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Command did not execute successfully due to an unexpected exception. Please check the output window for additional information..
+        /// </summary>
+        internal static string VsCommandExtensionAdapter_ExecuteShieldMessage {
+            get {
+                return ResourceManager.GetString("VsCommandExtensionAdapter_ExecuteShieldMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Executing command &apos;{0}&apos; ({1})..
+        /// </summary>
+        internal static string VsCommandExtensionAdapter_ExecutingCommand {
+            get {
+                return ResourceManager.GetString("VsCommandExtensionAdapter_ExecutingCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Command could not determine its current status due to an unexpected exception. Please check the output window for additional information..
+        /// </summary>
+        internal static string VsCommandExtensionAdapter_QueryStatusShieldMessage {
+            get {
+                return ResourceManager.GetString("VsCommandExtensionAdapter_QueryStatusShieldMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not locate any instances of contract {0}..
         /// </summary>
         internal static string VsServiceLocator_NoInstanceForContract {
