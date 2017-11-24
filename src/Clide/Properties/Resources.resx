@@ -192,4 +192,16 @@
   <data name="VsCommandExtensionAdapter_QueryStatusShieldMessage" xml:space="preserve">
     <value>Command could not determine its current status due to an unexpected exception. Please check the output window for additional information.</value>
   </data>
+  <data name="OutputWindowManager_FailedToCreatePane" xml:space="preserve">
+    <value>Failed to create output window pane '{0}'.</value>
+  </data>
+  <data name="OutputWindowManager_CreatingPane" xml:space="preserve">
+    <value>Creating output pane '{0}' since it doesn't exist already.</value>
+  </data>
+  <data name="OutputWindowManager_RetrievingPane" xml:space="preserve">
+    <value>Retrieving potentially existing output pane '{0}'.</value>
+  </data>
+  <data name="OutputWindowManager_TraceInitializing" xml:space="preserve">
+    <value>Initializing trace output pane '{0}'.</value>
+  </data>
 </root>

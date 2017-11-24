@@ -12,6 +12,7 @@ namespace Clide.Commands
 		readonly Lazy<IMenuCommandService> menuCommandService;
 		readonly Lazy<IServiceLocator> serviceLocator;
 
+		[ImportingConstructor]
 		public CommandManager(
 			[Import(ContractNames.Interop.IMenuCommandService)] Lazy<IMenuCommandService> menuCommandService,
 			Lazy<IServiceLocator> serviceLocator)

@@ -10,19 +10,19 @@ namespace Clide.Components.Interop
 	[PartCreationPolicy(CreationPolicy.Shared)]
 	internal class MenuCommandServiceProvider
 	{
-		Lazy<IMenuCommandService> vsShell;
+		Lazy<IMenuCommandService> menuCommandService;
 
 		[ImportingConstructor]
 		public MenuCommandServiceProvider([Import(typeof(SVsServiceProvider))] IServiceProvider services, IAsyncManager async)
 		{
-			vsShell = new Lazy<IMenuCommandService>(() => async.Run(async () =>
+			menuCommandService = new Lazy<IMenuCommandService>(() => async.Run(async () =>
 			{
 				await async.SwitchToMainThread();
 				return services.GetService<IMenuCommandService>();
 			}));
 		}
 
-		[Export(ContractNames.Interop.IVsShell)]
-		public IMenuCommandService HierarchyManager => vsShell.Value;
+		[Export(ContractNames.Interop.IMenuCommandService)]
+		public IMenuCommandService MenuCommandService => menuCommandService.Value;
 	}
 }

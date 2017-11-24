@@ -133,6 +133,42 @@ namespace Clide.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Creating output pane &apos;{0}&apos; since it doesn&apos;t exist already..
+        /// </summary>
+        internal static string OutputWindowManager_CreatingPane {
+            get {
+                return ResourceManager.GetString("OutputWindowManager_CreatingPane", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to create output window pane &apos;{0}&apos;..
+        /// </summary>
+        internal static string OutputWindowManager_FailedToCreatePane {
+            get {
+                return ResourceManager.GetString("OutputWindowManager_FailedToCreatePane", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retrieving potentially existing output pane &apos;{0}&apos;..
+        /// </summary>
+        internal static string OutputWindowManager_RetrievingPane {
+            get {
+                return ResourceManager.GetString("OutputWindowManager_RetrievingPane", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Initializing trace output pane &apos;{0}&apos;..
+        /// </summary>
+        internal static string OutputWindowManager_TraceInitializing {
+            get {
+                return ResourceManager.GetString("OutputWindowManager_TraceInitializing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The template {0} ({1}) could not be found.
         /// </summary>
         internal static string ProjectContainerNode_TemplateNotFound {

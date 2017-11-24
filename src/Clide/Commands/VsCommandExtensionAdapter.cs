@@ -41,19 +41,20 @@
 			using (command.tracer.StartActivity(Strings.VsCommandExtensionAdapter.ExecutingCommand(
 				command.Text, command.Implementation.GetType().Name)))
 			{
-				// TODO: Do we want to shield UI?
-
-				command.Implementation.QueryStatus(menu);
-
-				if (menu.Enabled)
+				command.tracer.ShieldUI(() =>
 				{
-					command.Implementation.Execute(menu);
-				}
-				else
-				{
-					command.tracer.Warn(Strings.VsCommandExtensionAdapter.CannotExecute(
-						menu.Text, command.Implementation.GetType().Name));
-				}
+					command.Implementation.QueryStatus(menu);
+
+					if (menu.Enabled)
+					{
+						command.Implementation.Execute(menu);
+					}
+					else
+					{
+						command.tracer.Warn(Strings.VsCommandExtensionAdapter.CannotExecute(
+							menu.Text, command.Implementation.GetType().Name));
+					}
+				}, Strings.VsCommandExtensionAdapter.ExecuteShieldMessage);
 			}
 		}
 
