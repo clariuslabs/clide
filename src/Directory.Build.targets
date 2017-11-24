@@ -27,11 +27,11 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(IncludeVSSDK)' == 'true'">
-		<PackageReference Include="Xamarin.VSSDK" Version="0.2.1-alpha-build0012" />
+		<PackageReference Include="Xamarin.VSSDK" Version="0.2.1-alpha-build0013" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(IncludeVSSDKTools)' == 'true'">
-		<PackageReference Include="Xamarin.VSSDK.BuildTools" Version="0.2.1-alpha-build0012" />
+		<PackageReference Include="Xamarin.VSSDK.BuildTools" Version="0.2.1-alpha-build0013" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(IncludeRx)' == 'true'">
