@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Clide.Commands
+namespace Clide
 {
 	public interface ICommandManager
 	{

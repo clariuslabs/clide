@@ -1,4 +1,4 @@
-﻿namespace Clide.Commands
+﻿namespace Clide
 {
     /// <summary>
     /// Provides current status information for an <see cref="ICommandExtension"/> 

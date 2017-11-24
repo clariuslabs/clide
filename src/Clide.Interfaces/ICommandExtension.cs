@@ -1,4 +1,4 @@
-﻿namespace Clide.Commands
+﻿namespace Clide
 {
 	/// <summary>
 	/// Represents a command that extends the environment.
