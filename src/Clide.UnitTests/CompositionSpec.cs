@@ -31,7 +31,7 @@ namespace Clide
 			services = container.GetExportedValue<Mock<IServiceProvider>>();
 		}
 
-		[MemberData("GetExportedComponents", DisableDiscoveryEnumeration = true)]
+		[MemberData(nameof(GetExportedComponents), DisableDiscoveryEnumeration = true)]
 		[Theory]
 		public void when_retrieving_exported_component_then_succeeds(Type contractType, string contractName)
 		{
