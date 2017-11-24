@@ -13,6 +13,7 @@
 			public const string IVsUIShell = Prefix + nameof(IVsUIShell);
 			public const string IMenuCommandService = Prefix + nameof(IMenuCommandService);
 			public const string VsOutputWindow = Prefix + nameof(VsOutputWindow);
+			public const string VsStatusBar = Prefix + nameof(VsStatusBar);
 			public const string IVsBooleanSymbolExpressionEvaluator = Prefix + nameof(IVsBooleanSymbolExpressionEvaluator);
 		}
 	}
