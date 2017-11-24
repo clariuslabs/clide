@@ -13,7 +13,7 @@ namespace Clide
 		// We cache this since it's sometimes changed by VS or a running test
 		static string baseDirectory = Directory.GetCurrentDirectory();
 
-		ISolutionNode solution;
+		Lazy<ISolutionNode> solution;
 
 		public SolutionFixture (string solutionFile)
 		{
@@ -34,31 +34,38 @@ namespace Clide
 			if (!File.Exists (solutionFile))
 				throw new FileNotFoundException ("Could not find solution file " + solutionFile, solutionFile);
 
-			try {
-				var dte = GlobalServices.GetService<DTE>();
-				if (!dte.Solution.IsOpen || !dte.Solution.FullName.Equals (solutionFile, StringComparison.OrdinalIgnoreCase)) {
-					// Ensure no .suo is loaded, since that would dirty the state across runs.
-					var suoFile = Path.ChangeExtension(solutionFile, ".suo");
-					if (File.Exists (suoFile))
-						Try (() => File.Delete (suoFile));
+			solution = new Lazy<ISolutionNode>(() =>
+			{
+				try
+				{
+					var dte = GlobalServices.GetService<DTE>();
+					if (!dte.Solution.IsOpen || !dte.Solution.FullName.Equals(solutionFile, StringComparison.OrdinalIgnoreCase))
+					{
+						// Ensure no .suo is loaded, since that would dirty the state across runs.
+						var suoFile = Path.ChangeExtension(solutionFile, ".suo");
+						if (File.Exists(suoFile))
+							Try(() => File.Delete(suoFile));
 
-					var sdfFile = Path.ChangeExtension(solutionFile, ".sdf");
-					if (File.Exists (sdfFile))
-						Try (() => File.Delete (sdfFile));
+						var sdfFile = Path.ChangeExtension(solutionFile, ".sdf");
+						if (File.Exists(sdfFile))
+							Try(() => File.Delete(sdfFile));
 
-					var vsDir = Path.Combine(Path.GetDirectoryName(solutionFile), ".vs");
-					if (Directory.Exists (vsDir))
-						Try (() => Directory.Delete (vsDir, true));
+						var vsDir = Path.Combine(Path.GetDirectoryName(solutionFile), ".vs");
+						if (Directory.Exists(vsDir))
+							Try(() => Directory.Delete(vsDir, true));
 
-					dte.Solution.Open (solutionFile);
-					GlobalServices.GetService<SVsSolution, IVsSolution4> ()
-						.EnsureSolutionIsLoaded ((uint)(__VSBSLFLAGS.VSBSLFLAGS_LoadAllPendingProjects | __VSBSLFLAGS.VSBSLFLAGS_LoadBuildDependencies));
+						dte.Solution.Open(solutionFile);
+						GlobalServices.GetService<SVsSolution, IVsSolution4>()
+							.EnsureSolutionIsLoaded((uint)(__VSBSLFLAGS.VSBSLFLAGS_LoadAllPendingProjects | __VSBSLFLAGS.VSBSLFLAGS_LoadBuildDependencies));
+					}
+
+					return GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<ISolutionExplorer>().Solution;
 				}
-			} catch (Exception ex) {
-				throw new ArgumentException ("Failed to open and access solution: " + solutionFile, ex);
-			}
-
-			solution = GlobalServices.GetService<SComponentModel, IComponentModel> ().GetService<ISolutionExplorer> ().Solution;
+				catch (Exception ex)
+				{
+					throw new ArgumentException("Failed to open and access solution: " + solutionFile, ex);
+				}
+			});
 		}
 
 		void Try (Action action)
@@ -68,7 +75,7 @@ namespace Clide
 			} catch { }
 		}
 
-		public ISolutionNode Solution => solution;
+		public ISolutionNode Solution => solution.Value;
 
 		public void Dispose ()
 		{
