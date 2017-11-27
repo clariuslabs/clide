@@ -180,24 +180,11 @@ public static partial class Adapters
 	#endregion
 
 
-	/*
+	
 	/// <summary>
 	/// Adapts a <see cref="IProjectNode"/> to a <see cref="Microsoft.Build.Evaluation.Project"/>.
 	/// </summary>
 	/// <returns>The <see cref="Microsoft.Build.Evaluation.Project"/> or <see langword="null"/> if conversion is not possible.</returns>
-	public static Microsoft.Build.Evaluation.Project AsMsBuildProject (this IAdaptable<IProjectNode> adaptable)
-	{
-		return adaptable.As<Microsoft.Build.Evaluation.Project> ();
-	}
-
-
-	/// <summary>
-	/// Adapts a <see cref="IItemNode"/> to a <see cref="Microsoft.Build.Evaluation.ProjectItem"/>.
-	/// </summary>
-	/// <returns>The <see cref="Microsoft.Build.Evaluation.ProjectItem"/> or <see langword="null"/> if conversion is not possible.</returns>
-	public static Microsoft.Build.Evaluation.ProjectItem AsMsBuildItem (this IAdaptable<IItemNode> adaptable)
-	{
-		return adaptable.As<Microsoft.Build.Evaluation.ProjectItem> ();
-	}
-	*/
+	public static Microsoft.Build.Evaluation.Project AsMsBuildProject (this IProjectNode project) =>
+		project.As<Microsoft.Build.Evaluation.Project> ();
 }

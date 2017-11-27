@@ -14,6 +14,7 @@
 			public const string IMenuCommandService = Prefix + nameof(IMenuCommandService);
 			public const string VsOutputWindow = Prefix + nameof(VsOutputWindow);
 			public const string VsStatusBar = Prefix + nameof(VsStatusBar);
+			public const string VsSolution = Prefix + nameof(VsSolution);
 			public const string IVsBooleanSymbolExpressionEvaluator = Prefix + nameof(IVsBooleanSymbolExpressionEvaluator);
 		}
 	}
