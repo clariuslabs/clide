@@ -2,7 +2,7 @@
 
 namespace Clide
 {
-	public interface ICommandManager
+	public interface ICommandRegistrar
 	{
 		void RegisterCommands(IServiceProvider package);
 	}

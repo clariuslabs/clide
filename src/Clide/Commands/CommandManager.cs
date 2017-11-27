@@ -6,8 +6,8 @@ using System.Linq;
 
 namespace Clide.Commands
 {
-	[Export(typeof(ICommandManager))]
-	class CommandManager : ICommandManager
+	[Export(typeof(ICommandRegistrar))]
+	class CommandManager : ICommandRegistrar
 	{
 		readonly Lazy<IMenuCommandService> menuCommandService;
 		readonly Lazy<IServiceLocator> serviceLocator;
