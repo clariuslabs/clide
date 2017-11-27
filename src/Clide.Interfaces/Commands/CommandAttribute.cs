@@ -7,8 +7,10 @@ namespace Clide
 	[MetadataAttribute]
 	public class CommandAttribute : ExportAttribute
 	{
+		internal const string CommandContractName = "Clide.Command";
+
 		public CommandAttribute(string packageGuid, string groupGuid, int commandId)
-			: base(typeof(ICommandExtension))
+			: base(CommandContractName, typeof(ICommandExtension))
 		{
 			PackageId = packageGuid;
 			GroupId = groupGuid;

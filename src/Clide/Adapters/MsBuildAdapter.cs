@@ -11,8 +11,9 @@
 
     [Adapter]
     internal class MsBuildAdapter :
-        IAdapter<ProjectNode, Project>,
-        IAdapter<Project, IProjectNode> 
+		IAdapter<EnvDTE.Project, Project>,
+		IAdapter<ProjectNode, Project>,
+		IAdapter<Project, IProjectNode> 
     {
         readonly Lazy<IVsSolution> vsSolution;
 		readonly Lazy<ISolutionExplorerNodeFactory> nodeFactory;
@@ -32,7 +33,13 @@
 			this.hierarchyItemManager = hierarchyItemManager;
 		}
 
-        public Project Adapt(ProjectNode from) =>
+		public Project Adapt(EnvDTE.Project from) =>
+			from == null || from.FullName == null ? null :
+				ProjectCollection.GlobalProjectCollection
+					.GetLoadedProjects(from.FullName)
+					.FirstOrDefault();
+
+		public Project Adapt(ProjectNode from) =>
             from == null || from.PhysicalPath == null ? null :
                 ProjectCollection.GlobalProjectCollection
                     .GetLoadedProjects(from.PhysicalPath)

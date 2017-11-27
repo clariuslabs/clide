@@ -12,20 +12,20 @@ namespace Clide.Events
 	[PartCreationPolicy(CreationPolicy.Shared)]
 	internal partial class ShellInitializedObservable : IObservable<ShellInitialized>, IVsShellPropertyEvents
 	{
-		IVsShell shell;
+		Lazy<IVsShell> shell;
 		uint cookie;
 		ShellInitialized data = new ShellInitialized();
 		AsyncManualResetEvent initialized;
 		IObservable<ShellInitialized> observable;
 
 		[ImportingConstructor]
-		public ShellInitializedObservable([Import(ContractNames.Interop.IVsShell)] IVsShell shell)
+		public ShellInitializedObservable([Import(ContractNames.Interop.IVsShell)] Lazy<IVsShell> shell)
 		{
 			this.shell = shell;
 			initialized = new AsyncManualResetEvent();
 
 			object zombie;
-			ErrorHandler.ThrowOnFailure(shell.GetProperty((int)__VSSPROPID.VSSPROPID_Zombie, out zombie));
+			ErrorHandler.ThrowOnFailure(shell.Value.GetProperty((int)__VSSPROPID.VSSPROPID_Zombie, out zombie));
 
 			var isZombie = (bool)zombie;
 			observable = Observable.Create<ShellInitialized>(async o =>
@@ -40,7 +40,7 @@ namespace Clide.Events
 			});
 
 			if (isZombie)
-				ErrorHandler.ThrowOnFailure(shell.AdviseShellPropertyChanges(this, out cookie));
+				ErrorHandler.ThrowOnFailure(shell.Value.AdviseShellPropertyChanges(this, out cookie));
 		}
 
 		public IDisposable Subscribe(IObserver<ShellInitialized> observer)
@@ -54,7 +54,7 @@ namespace Clide.Events
 			{
 				if ((bool)var == false)
 				{
-					ErrorHandler.ThrowOnFailure(shell.UnadviseShellPropertyChanges(cookie));
+					ErrorHandler.ThrowOnFailure(shell.Value.UnadviseShellPropertyChanges(cookie));
 					cookie = 0;
 					initialized.SetAsync();
 				}

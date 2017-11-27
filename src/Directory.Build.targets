@@ -24,7 +24,7 @@
 		<PackageReference Include="System.Reactive.Interfaces" Version="3.0.0" />
 		<PackageReference Include="IFluentInterface" Version="2.0.3" />
 		<PackageReference Include="netfx-System.StringResources" Version="*" />
-		<PackageReference Include="System.Diagnostics.Tracer" Version="*" />
+		<PackageReference Include="System.Diagnostics.Tracer" Version="*" />	
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(IncludeVSSDK)' == 'true'">
@@ -172,5 +172,4 @@
 			<FileWrites Include="$(IntermediateOutputPath)$(BindingRedirects)" />
 		</ItemGroup>
 	</Target>
-
 </Project>

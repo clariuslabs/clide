@@ -1,4 +1,6 @@
-﻿namespace Clide.Commands
+﻿using System;
+
+namespace Clide.Commands
 {
 	/// <summary>
 	/// Represents the metadata of an exported command

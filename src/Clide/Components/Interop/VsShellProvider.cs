@@ -18,7 +18,7 @@ namespace Clide.Components.Interop
 			vsShell = new Lazy<IVsShell>(() => async.Run(async () =>
 			{
 				await async.SwitchToMainThread();
-				return services.GetService<SVsShell, IVsShell>();
+				return services.GetService<SVsShell, IVsShell>(); 
 			}));
 		}
 
