@@ -5,12 +5,11 @@ using System.ComponentModel.Composition;
 namespace Clide
 {
 	[MetadataAttribute]
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 	public class CommandAttribute : ExportAttribute
 	{
-		internal const string CommandContractName = "Clide.Command";
-
 		public CommandAttribute(string packageGuid, string groupGuid, int commandId)
-			: base(CommandContractName, typeof(ICommandExtension))
+			: base(typeof(ICommandExtension))
 		{
 			PackageId = packageGuid;
 			GroupId = groupGuid;

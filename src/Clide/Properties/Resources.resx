@@ -213,4 +213,7 @@
   <data name="SettingsManager_InvalidValue" xml:space="preserve">
     <value>Cannot assign value of type '{0}' to property '{1}.{2}' of type '{4}'. An appropriate type converter is required.</value>
   </data>
+  <data name="CommandRegistrar_ErrorImportingCommandForPackage" xml:space="preserve">
+    <value>An error occured trying to import the commands for the VS Package '{0}'</value>
+  </data>
 </root>

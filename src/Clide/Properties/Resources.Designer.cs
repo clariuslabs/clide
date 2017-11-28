@@ -88,6 +88,15 @@ namespace Clide.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occured trying to import the commands for the VS Package &apos;{0}&apos;.
+        /// </summary>
+        internal static string CommandRegistrar_ErrorImportingCommandForPackage {
+            get {
+                return ResourceManager.GetString("CommandRegistrar_ErrorImportingCommandForPackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Project &apos;{0}&apos; is not based on MSBuild. Configuration-specific properties cannot be retrieved or set using the standard dynamic properties..
         /// </summary>
         internal static string ConfigProjectProperties_NonMsBuildProject {

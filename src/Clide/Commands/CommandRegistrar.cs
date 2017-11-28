@@ -3,7 +3,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Design;
+using System.Diagnostics;
 using System.Linq;
+using Clide.Properties;
 
 namespace Clide.Commands
 {
@@ -11,31 +13,53 @@ namespace Clide.Commands
 	[PartCreationPolicy(CreationPolicy.Shared)]
 	class CommandRegistrar : ICommandRegistrar
 	{
-		readonly Lazy<IMenuCommandService> menuCommandService;
-		readonly ConcurrentDictionary<Guid, List<Lazy<ICommandExtension, ICommandMetadata>>> commandsByPackage =
-			new ConcurrentDictionary<Guid, List<Lazy<ICommandExtension, ICommandMetadata>>>();
+		static readonly ITracer tracer = Tracer.Get<CommandRegistrar>();
+
+		readonly Lazy<ConcurrentDictionary<Guid, List<Lazy<ICommandExtension, ICommandMetadata>>>> commandsByPackage;
 
 		[ImportingConstructor]
-		public CommandRegistrar(
-			[Import(ContractNames.Interop.IMenuCommandService)] Lazy<IMenuCommandService> menuCommandService,
-			[ImportMany(CommandAttribute.CommandContractName)] IEnumerable<Lazy<ICommandExtension, ICommandMetadata>> commands)
+		public CommandRegistrar([ImportMany] IEnumerable<Lazy<ICommandExtension, ICommandMetadata>> commands)
 		{
-			this.menuCommandService = menuCommandService;
+			commandsByPackage = new Lazy<ConcurrentDictionary<Guid, List<Lazy<ICommandExtension, ICommandMetadata>>>>(
+				() =>
+				{
+					var result = new ConcurrentDictionary<Guid, List<Lazy<ICommandExtension, ICommandMetadata>>>();
 
-			foreach (var groupedCommands in commands.GroupBy(x => x.Metadata.PackageId))
-				commandsByPackage.GetOrAdd(
-					new Guid(groupedCommands.Key), x => groupedCommands.ToList());
+					foreach (var groupedCommands in commands.GroupBy(x => x.Metadata.PackageId))
+					{
+						try
+						{
+							result
+								.AddOrUpdate(
+									new Guid(groupedCommands.Key),
+									key => new List<Lazy<ICommandExtension, ICommandMetadata>>(groupedCommands),
+									(key, value) =>
+									{
+										value.AddRange(groupedCommands);
+										return value;
+									});
+						}
+						catch (Exception ex)
+						{
+							tracer.Error(ex, Strings.CommandRegistrar.ErrorImportingCommandForPackage(groupedCommands.Key));
+						}
+					}
+
+					return result;
+				});
 		}
 
-		public void RegisterCommands(IServiceProvider package) =>
-			RegisterCommands(package.GetType().GUID);
-
-		public void RegisterCommands(Guid packageGuid)
+		public void RegisterCommands(IServiceProvider package)
 		{
+			var packageGuid = package.GetType().GUID;
+
+			// Using dynamic to avoid referencing Shell.11
+			var menuCommandService = package.GetService<IMenuCommandService>() as dynamic;
+
 			List<Lazy<ICommandExtension, ICommandMetadata>> commands;
-			if (commandsByPackage.TryGetValue(packageGuid, out commands))
+			if (commandsByPackage.Value.TryGetValue(packageGuid, out commands))
 				foreach (var command in commands)
-					menuCommandService.Value.AddCommand(
+					menuCommandService.AddCommand(
 						new VsCommandExtensionAdapter(
 							new CommandID(new Guid(command.Metadata.GroupId), command.Metadata.CommandId),
 							command.Value));

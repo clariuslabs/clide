@@ -5,7 +5,7 @@ namespace Clide.Commands
 	/// <summary>
 	/// Represents the metadata of an exported command
 	/// </summary>
-	interface ICommandMetadata
+	public interface ICommandMetadata
 	{
 		/// <summary>
 		/// Gets the package guid the command belongs to
