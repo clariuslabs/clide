@@ -22,9 +22,9 @@ namespace Clide
 		public UserProjectProperties(ProjectNode project)
 		{
 			this.project = project;
-			msBuildProject = project.As<Project>();
+			msBuildProject = project.AsMsBuildProject();
 			dteProject = project.As<EnvDTE.Project>();
-			vsBuild = project.HierarchyNode.HierarchyIdentity.Hierarchy as IVsBuildPropertyStorage;
+			vsBuild = project.AsVsHierarchy() as IVsBuildPropertyStorage;
 
 			if (msBuildProject == null || vsBuild == null)
 				tracer.Warn(Strings.UserProjectProperties.NonMsBuildProject(project.Text));

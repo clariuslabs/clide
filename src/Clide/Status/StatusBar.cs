@@ -5,6 +5,7 @@
 	using System.ComponentModel.Composition;
 
 	[Export(typeof(IStatusBar))]
+	[PartCreationPolicy(CreationPolicy.Shared)]
 	class StatusBar : IStatusBar
 	{
 		readonly Lazy<IVsStatusbar> vsStatusBar;
