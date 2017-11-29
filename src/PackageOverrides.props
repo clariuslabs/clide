@@ -1,0 +1,41 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<!-- Allows replacing XVSSDK packages with the sources for easier iteration. -->
+	<!-- Just create a Xamarin.VSSDK.user file declaring the XVSSDK property pointing to the root of the repository. -->
+	<Import Project="PackageOverrides.user" Condition="Exists('PackageOverrides.user')" />
+
+	<Choose>
+		<When Condition="'$(XVSSDK)' != ''">
+			<PropertyGroup>
+				<!-- This is a crude approach, but it works by evaluating early enough, just like the nuget targets would after restore 
+					 As long as we define the property as <TargetFrameworks>...</TargetFrameworks>, this will work consistently and 
+					 automatically -->
+				<IsMultiTargeting>$([System.Text.RegularExpressions.Regex]::IsMatch($([System.IO.File]::ReadAllText($(MSBuildProjectFullPath))), '&lt;TargetFrameworks&gt;.+&lt;/TargetFrameworks&gt;'))</IsMultiTargeting>
+			</PropertyGroup>
+
+			<ItemGroup Condition="'$(IncludeVSSDK)' == 'true' or '$(IncludeVSSDKTools)' == 'true'">
+				<PackageReference Include="VSSDK_Reference_Assemblies" Version="15.*" />
+			</ItemGroup>
+
+			<ItemGroup Condition="'$(IncludeVSSDKTools)' == 'true'">
+				<PackageReference Include="Microsoft.VisualStudio.SDK.VsixSuppression" Version="14.*" />
+			</ItemGroup>
+		</When>
+	</Choose>
+
+	<ImportGroup Condition="('$(IncludeVSSDK)' == 'true' or '$(IncludeVSSDKTools)' == 'true') and '$(XVSSDK)' != ''">
+		<Import Project="$(XVSSDK)\src\VSSDK\bin\Debug\buildMultiTargeting\Xamarin.VSSDK.props" Condition="'$(IsMultiTargeting)' == 'true'"/>
+		<Import Project="$(XVSSDK)\src\VSSDK\bin\Debug\build\Xamarin.VSSDK.props" Condition="'$(IsMultiTargeting)' == 'false' "/>
+	</ImportGroup>
+
+	<ImportGroup Condition="'$(IncludeVSSDKTools)' == 'true' and '$(XVSSDK)' != ''">
+		<Import Project="$(XVSSDK)\src\VSSDK.BuildTools\bin\Debug\build\Xamarin.VSSDK.BuildTools.props" Condition="'$(IsMultiTargeting)' == 'false' "/>
+	</ImportGroup>
+
+	<Import Condition="'$(IncludeIntegrationTests)' == 'true' and '$(XunitVsix)' != ''"
+			Project="$(XunitVsix)\src\Package\build\xunit.vsix.props" />
+
+	<PropertyGroup>
+		<MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+	</PropertyGroup>
+</Project>

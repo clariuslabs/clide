@@ -76,4 +76,11 @@ public static partial class AdapterFacade
 	/// <returns>The <see cref="IVsHierarchyItem"/> or <see langword="null"/> if conversion is not possible.</returns>
 	public static IVsHierarchyItem AsVsHierarchyItem (this ProjectItem item) =>
 		item.ContainingProject.GetServiceLocator ().GetExport<IAdapterService> ().Adapt (item).As<IVsHierarchyItem> ();
+
+	/// <summary>
+	/// Adapts a <see cref="Project"/> to a <see cref="VSProject"/>.
+	/// </summary>
+	/// <returns>The <see cref="VSProject"/> or <see langword="null"/> if conversion is not possible.</returns>
+	public static Microsoft.Build.Evaluation.Project AsMsBuildProject(this Project project) =>
+		project.GetServiceLocator().GetExport<IAdapterService>().Adapt(project).As<Microsoft.Build.Evaluation.Project>();
 }

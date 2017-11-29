@@ -7,7 +7,7 @@ namespace Clide.Solution
 	[Trait ("LongRunning", "true")]
 	[Trait ("Feature", "Solution Traversal")]
 	[Collection ("OpenSolution11")]
-	internal class SolutionExplorerNodeSpec
+	public class SolutionExplorerNodeSpec
 	{
 		ISolutionFixture fixture;
 

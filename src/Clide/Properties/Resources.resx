@@ -180,4 +180,40 @@
   <data name="VsServiceLocator_NoInstanceForContract" xml:space="preserve">
     <value>Could not locate any instances of contract {0}.</value>
   </data>
+  <data name="VsCommandExtensionAdapter_CannotExecute" xml:space="preserve">
+    <value>Attempted to execute command '{0}' ({1}) but current command status does not allow it.</value>
+  </data>
+  <data name="VsCommandExtensionAdapter_ExecuteShieldMessage" xml:space="preserve">
+    <value>Command did not execute successfully due to an unexpected exception. Please check the output window for additional information.</value>
+  </data>
+  <data name="VsCommandExtensionAdapter_ExecutingCommand" xml:space="preserve">
+    <value>Executing command '{0}' ({1}).</value>
+  </data>
+  <data name="VsCommandExtensionAdapter_QueryStatusShieldMessage" xml:space="preserve">
+    <value>Command could not determine its current status due to an unexpected exception. Please check the output window for additional information.</value>
+  </data>
+  <data name="OutputWindowManager_FailedToCreatePane" xml:space="preserve">
+    <value>Failed to create output window pane '{0}'.</value>
+  </data>
+  <data name="OutputWindowManager_CreatingPane" xml:space="preserve">
+    <value>Creating output pane '{0}' since it doesn't exist already.</value>
+  </data>
+  <data name="OutputWindowManager_RetrievingPane" xml:space="preserve">
+    <value>Retrieving potentially existing output pane '{0}'.</value>
+  </data>
+  <data name="OutputWindowManager_TraceInitializing" xml:space="preserve">
+    <value>Initializing trace output pane '{0}'.</value>
+  </data>
+  <data name="SettingsManager_CannotSaveAsString" xml:space="preserve">
+    <value>Cannot persist setting value of type '{0}' from property '{1}.{2}'. An appropriate type converter that can convert the value to a string is required.</value>
+  </data>
+  <data name="SettingsManager_FailedToRead" xml:space="preserve">
+    <value>Failed to read settings class '{0}' from the settings store.</value>
+  </data>
+  <data name="SettingsManager_InvalidValue" xml:space="preserve">
+    <value>Cannot assign value of type '{0}' to property '{1}.{2}' of type '{4}'. An appropriate type converter is required.</value>
+  </data>
+  <data name="CommandRegistrar_ErrorImportingCommandForPackage" xml:space="preserve">
+    <value>An error occured trying to import the commands for the VS Package '{0}'</value>
+  </data>
 </root>

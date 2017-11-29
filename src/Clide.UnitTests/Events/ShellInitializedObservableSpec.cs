@@ -17,7 +17,7 @@ namespace Clide.Events
 		public void when_subscribing_to_initialized_shell_then_receives_event_and_completes()
 		{
 			object zombie = false;
-			var observable = new ShellInitializedObservable(Mock.Of<IVsShell>(shell => shell.GetProperty(ZombieProperty, out zombie) == VSConstants.S_OK));
+			var observable = new ShellInitializedObservable(new Lazy<IVsShell>(() => Mock.Of<IVsShell>(shell => shell.GetProperty(ZombieProperty, out zombie) == VSConstants.S_OK)));
 
 			var completed = false;
 			ShellInitialized data = null;
@@ -42,7 +42,7 @@ namespace Clide.Events
 			shell.Setup(x => x.AdviseShellPropertyChanges(Capture.With(capture), out cookie))
 				.Returns(VSConstants.S_OK);
 
-			var observable = new ShellInitializedObservable(shell.Object);
+			var observable = new ShellInitializedObservable(new Lazy<IVsShell>(() => shell.Object));
 
 			// Callback should have been provided at this point.
 			Assert.NotNull(callback);

@@ -30,6 +30,10 @@ namespace Clide
 		public object GetService (Type serviceType)
 		{
 			var service = services.GetService (serviceType);
+
+			if (service == null)
+				service = GetExport(serviceType);
+
 			if (service == null)
 				throw new MissingDependencyException (Strings.ServiceLocator.MissingDependency (serviceType));
 

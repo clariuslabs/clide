@@ -175,6 +175,8 @@
 
 		public virtual dynamic UserProperties { get { return userProperties; } }
 
+		public IProjectConfiguration Configuration => throw new NotImplementedException();
+
 		public virtual dynamic UserPropertiesFor (string configurationName)
 		{
 			return userPropertiesFor.GetOrAdd (configurationName, _ => new ExpandoObject ());

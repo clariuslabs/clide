@@ -68,6 +68,17 @@ public static class ServiceLocatorExtensions
 	}
 
 	/// <summary>
+	/// Get an instance of the given <typeparamref name="T"/>.
+	/// </summary>
+	/// <typeparam name="T">Type of object requested.</typeparam>
+	/// <param name="locator">The service locator to retrieve the instance from.</param>
+	/// <exception cref="MissingDependencyException">if there is are errors resolving
+	/// the service instance.</exception>
+	/// <returns>The requested service instance.</returns>
+	public static T GetInstance<T>(this IServiceLocator locator) =>
+		(T)locator.GetService(typeof(T));
+
+	/// <summary>
 	/// Get all instances of the given <typeparamref name="T"/> currently
 	/// registered in the container.
 	/// </summary>

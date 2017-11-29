@@ -124,7 +124,7 @@ namespace Clide
 
 			var instances = locator.GetExports (typeof (Foo)).ToList ();
 
-			Assert.Equal (0, instances.Count);
+			Assert.Empty(instances);
 		}
 
 		[Fact]

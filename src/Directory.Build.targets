@@ -1,4 +1,5 @@
 <Project InitialTargets="FixupVsixDependencies" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
 	<Target Name="FixupVsixDependencies">
 		<ItemGroup>
 			<VsixDependency Remove="@(VsixDependency)" />
@@ -19,18 +20,19 @@
 	<ItemGroup>
 		<PackageReference Include="MSBuilder.CI" Version="*" />
 		<PackageReference Include="GitInfo" Version="*" />
+		<PackageReference Include="Merq" Version="1.0.0-rc" />
 		<PackageReference Include="Merq.Async" Version="1.1.17-rc" />
 		<PackageReference Include="System.Reactive.Interfaces" Version="3.0.0" />
 		<PackageReference Include="IFluentInterface" Version="2.0.3" />
 		<PackageReference Include="netfx-System.StringResources" Version="*" />
-		<PackageReference Include="System.Diagnostics.Tracer" Version="*" />
+		<PackageReference Include="System.Diagnostics.Tracer" Version="*" />	
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(IncludeVSSDK)' == 'true'">
+	<ItemGroup Condition="'$(IncludeVSSDK)' == 'true' and '$(XVSSDK)' == ''">
 		<PackageReference Include="Xamarin.VSSDK" Version="0.2.1-alpha-build0013" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(IncludeVSSDKTools)' == 'true'">
+	<ItemGroup Condition="'$(IncludeVSSDKTools)' == 'true' and '$(XVSSDK)' == ''">
 		<PackageReference Include="Xamarin.VSSDK.BuildTools" Version="0.2.1-alpha-build0013" />
 	</ItemGroup>
 
@@ -46,11 +48,11 @@
 		<PackageReference Include="Merq" Version="1.0.0-rc" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(IncludeIntegrationTests)' == 'true'">
-		<PackageReference Include="xunit.vsix" Version="0.3.4-beta" />
+	<ItemGroup Condition="'$(IncludeIntegrationTests)' == 'true' and '$(XunitVsix)' == ''">
+		<PackageReference Include="xunit.vsix" Version="0.3.12-beta" />
 	</ItemGroup>
 
-	<Target Name="GetProductVersions" DependsOnTargets="GitInfo">
+	<Target Name="GetProductVersions" DependsOnTargets="GitVersion">
 		<PropertyGroup>
 			<ClideMajor>$(GitSemVerMajor)</ClideMajor>
 			<ClideMinor>$(GitSemVerMinor)</ClideMinor>
@@ -173,4 +175,5 @@
 		</ItemGroup>
 	</Target>
 
+	<Import Project="PackageOverrides.targets" Condition="'$(IncludeVSSDK)' == 'true' or '$(IncludeVSSDKTools)' == 'true'" />
 </Project>
