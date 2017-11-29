@@ -16,7 +16,7 @@ namespace Clide
 	public class ReactiveSpec
 	{
 		[Fact]
-		public async Task when_subscribing_observable_then_can_async_wait_on_value()
+		public void when_subscribing_observable_then_can_async_wait_on_value()
 		{
 			var e = new object();
 			var initializedEvent = new AsyncManualResetEvent();
@@ -37,7 +37,7 @@ namespace Clide
 
 			Assert.False(completed1);
 
-			await initializedEvent.SetAsync();
+			initializedEvent.Set();
 
 			SpinWait.SpinUntil(() => completed1, 5000);
 

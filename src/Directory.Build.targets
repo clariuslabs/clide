@@ -1,4 +1,5 @@
 <Project InitialTargets="FixupVsixDependencies" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
 	<Target Name="FixupVsixDependencies">
 		<ItemGroup>
 			<VsixDependency Remove="@(VsixDependency)" />
@@ -27,11 +28,11 @@
 		<PackageReference Include="System.Diagnostics.Tracer" Version="*" />	
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(IncludeVSSDK)' == 'true'">
+	<ItemGroup Condition="'$(IncludeVSSDK)' == 'true' and '$(XVSSDK)' == ''">
 		<PackageReference Include="Xamarin.VSSDK" Version="0.2.1-alpha-build0013" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(IncludeVSSDKTools)' == 'true'">
+	<ItemGroup Condition="'$(IncludeVSSDKTools)' == 'true' and '$(XVSSDK)' == ''">
 		<PackageReference Include="Xamarin.VSSDK.BuildTools" Version="0.2.1-alpha-build0013" />
 	</ItemGroup>
 
@@ -42,14 +43,16 @@
 	<ItemGroup Condition="'$(IncludeTests)' == 'true' or '$(IncludeIntegrationTests)' == 'true'">
 		<PackageReference Include="System.Reactive.Linq" Version="3.0.0" />
 		<PackageReference Include="xunit" Version="2.3.1" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" Condition="'$(CI)' == 'true'" />
 		<PackageReference Include="Moq" Version="4.5.13" />
+		<PackageReference Include="Merq" Version="1.0.0-rc" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(IncludeIntegrationTests)' == 'true'">
+	<ItemGroup Condition="'$(IncludeIntegrationTests)' == 'true' and '$(XunitVsix)' == ''">
 		<PackageReference Include="xunit.vsix" Version="0.3.12-beta" />
 	</ItemGroup>
 
-	<Target Name="GetProductVersions" DependsOnTargets="GitInfo">
+	<Target Name="GetProductVersions" DependsOnTargets="GitVersion">
 		<PropertyGroup>
 			<ClideMajor>$(GitSemVerMajor)</ClideMajor>
 			<ClideMinor>$(GitSemVerMinor)</ClideMinor>
@@ -171,4 +174,6 @@
 			<FileWrites Include="$(IntermediateOutputPath)$(BindingRedirects)" />
 		</ItemGroup>
 	</Target>
+
+	<Import Project="PackageOverrides.targets" Condition="'$(IncludeVSSDK)' == 'true' or '$(IncludeVSSDKTools)' == 'true'" />
 </Project>

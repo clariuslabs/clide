@@ -2,6 +2,7 @@
 
 	<PropertyGroup>
 		<CI Condition="'$(CI)' == '' and '$(TF_BUILD)' == 'true'">true</CI>
+		
 		<DebugSymbols>true</DebugSymbols>
 		<DebugType>full</DebugType>
 		<RootNamespace>Clide</RootNamespace>
@@ -21,6 +22,11 @@
 
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)ClariusLabs.snk</AssemblyOriginatorKeyFile>
+		
+		<!-- Early "evaluation" for Xamarin.VSSDK sources overriding -->
+		<IncludeVSSDK>$([System.Text.RegularExpressions.Regex]::IsMatch($([System.IO.File]::ReadAllText($(MSBuildProjectFullPath))), '&lt;IncludeVSSDK&gt;true&lt;/IncludeVSSDK&gt;'))</IncludeVSSDK>
+		<IncludeVSSDKTools>$([System.Text.RegularExpressions.Regex]::IsMatch($([System.IO.File]::ReadAllText($(MSBuildProjectFullPath))), '&lt;IncludeVSSDKTools&gt;true&lt;/IncludeVSSDKTools&gt;'))</IncludeVSSDKTools>
 	</PropertyGroup>
 
+	<Import Project="PackageOverrides.props" Condition="'$(IncludeVSSDK)' == 'true' or '$(IncludeVSSDKTools)' == 'true'" />
 </Project>

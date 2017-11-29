@@ -9,6 +9,7 @@ namespace Clide.Components.Interop
 	[PartCreationPolicy(CreationPolicy.Shared)]
 	internal class VsBooleanSymbolExpressionEvaluatorProvider
 	{
+		static Guid BooleanSymbolExpressionEvaluatorClsid = new Guid("5DADF1EE-BCBE-46CE-BADF-271992C112A3");
 		Lazy<IVsBooleanSymbolExpressionEvaluator> expressionEvaluator;
 
 		[ImportingConstructor]
@@ -20,8 +21,8 @@ namespace Clide.Components.Interop
 
 				var registry = services.GetService<SLocalRegistry, ILocalRegistry>();
 
-				// dev14+ should provide the evaluator using the BooleanSymbolExpressionEvaluator interface
-				var value = registry.CreateInstance(typeof(BooleanSymbolExpressionEvaluator).GUID) as IVsBooleanSymbolExpressionEvaluator;
+				// dev14+ should provide the evaluator using the BooleanSymbolExpressionEvaluator clsid
+				var value = registry.CreateInstance(BooleanSymbolExpressionEvaluatorClsid) as IVsBooleanSymbolExpressionEvaluator;
 				if (value == null)
 				{
 					// Previous versions of VS provides the service using the VsProjectCapabilityExpressionMatcher interface
