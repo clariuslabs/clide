@@ -79,18 +79,6 @@ namespace Clide
 			new[] { "foo" }.ToObservable().Subscribe(observer);
 	}
 
-	[Component(CreationPolicy.NonShared)]
-	public partial class MockCommandHandler : ICommandHandler<MockCommand>
-	{
-		public bool CanExecute(MockCommand command) => true;
-
-		public void Execute(MockCommand command)
-		{
-		}
-	}
-
-	public class MockCommand : ICommand { }
-
 	[PartCreationPolicy(CreationPolicy.Shared)]
 	public class MockServiceProvider
 	{
