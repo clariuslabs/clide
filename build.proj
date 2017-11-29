@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build;Package" InitialTargets="Configure" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Rebuild" InitialTargets="Configure" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 	<PropertyGroup>
-		<Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
-		<IntermediateOutputPath>.nuget\</IntermediateOutputPath>
-		<PackagesPath>$(IntermediateOutputPath)packages</PackagesPath>
+		<CI Condition="'$(CI)' == '' and '$(TF_BUILD)' == 'true'">true</CI>
+		<CI Condition="'$(CI)' == '' ">false</CI>
+		<Configuration Condition="'$(Configuration)' == '' and '$(CI)' == 'true'">Release</Configuration>
+		<Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+		
 		<Out Condition=" '$(Out)' == '' ">$(MSBuildThisFileDirectory)out</Out>
 		<!-- Whether to run integration tests against the MSI-installed Clide in the normal hive or not -->
 		<TestInstalled Condition=" '$(TestInstalled)' == '' And '$(Configuration)' == 'Release' ">true</TestInstalled>
-		<CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration);CI=$(CI)</CommonBuildProperties>
 		<Installer>$(MSBuildThisFileDirectory)src\Clide.Vsix\bin\$(Configuration)\Clide.vsix</Installer>
 		<VsixInstaller>$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\$(VisualStudioVersion)', 'InstallDir', null, RegistryView.Registry32))VSIXInstaller.exe</VsixInstaller>
 		<GitInfoReportImportance>high</GitInfoReportImportance>
 		<GitIgnoreTagVersion>true</GitIgnoreTagVersion>
 		<GitIgnoreBranchVersion>true</GitIgnoreBranchVersion>
+
+		<CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration);CI=$(CI)</CommonBuildProperties>
+		<Dev Condition="'$(Dev)' == ''">$(VisualStudioVersion)</Dev>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(TestInstalled)' == 'true' ">
@@ -22,8 +26,6 @@
 		<CommonBuildProperties>$(CommonBuildProperties);DeployExtension=false;RootSuffix=.</CommonBuildProperties>
 		<!-- When running a CI build, either use the explicit VisualStudioVersion or fallback to All -->
 		<CommonBuildProperties Condition=" '$(CI)' == 'true' ">$(CommonBuildProperties);VisualStudioVersions=$([MSBuild]::ValueOrDefault('$(VisualStudioVersions)', 'All'))</CommonBuildProperties>
-		<!-- AppVeyor doesn't have VS2012 VSSDK installed: see https://www.appveyor.com/docs/installed-software#visual-studio-2012 -->
-		<CommonBuildProperties Condition=" '$(APPVEYOR)' == 'true' ">$(CommonBuildProperties);MinimumVisualStudioVersion=12.0</CommonBuildProperties>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(TestInstalled)' != 'true' ">
 		<!-- If we're not going to test the installed version, then we'll use the default (current) VS version and the experimental hive. -->
@@ -31,9 +33,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Solution Include="src\Clide.Tasks.sln"/>
 		<Solution Include="src\Clide.sln"/>
 		<NuSpec Include="src\Package\Clide.nuspec" />
+		<Dev Include="$(Dev)" />
 	</ItemGroup>
 
 	<Target Name="Clean">
@@ -44,11 +46,19 @@
 		<Exec Command='for /d /r . %%d in (bin,obj) do @if exist "%%d" rd /s/q "%%d"' WorkingDirectory='$(MSBuildThisFileDirectory)src' ContinueOnError='true' />
 	</Target>
 
-	<Target Name="Rebuild" DependsOnTargets="Clean;Build" />
+	<Target Name="Rebuild" DependsOnTargets="Clean;Restore;Build;Package" />
+
+	<Target Name="Restore">
+		<ItemGroup>
+			<RestoreSolution Include="@(Solution)" />
+		</ItemGroup>
+
+		<MSBuild Projects="%(RestoreSolution.Identity)" Targets="Restore" Properties="$(CommonBuildProperties);RestoreOnly=true" />
+	</Target>
 
 	<Target Name="Build" Condition=" '@(Solution)' != '' ">
 		<Message Text="Build properties: $(CommonBuildProperties)" Importance="high" />
-		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties)" />
+		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties);Dev=%(Dev.Identity)" />
 	</Target>
 
 	<Target Name="Test" DependsOnTargets="UnitTest;IntegrationTest" />
@@ -139,8 +149,6 @@
 		<Exec Command='"$(NuGet)" Pack "%(NuSpec.Identity)" $(Args) -Version $(Version) -Properties Id=%(NuSpec.Filename);Configuration=$(Configuration) -OutputDirectory $(Out)' />
 	</Target>
 
-	<!-- Configure and restore initial targets and packages -->
-	<Import Project="src\NuGet.Restore.targets" />
 	<PropertyGroup>
 		<GitInfoTargets>$(PackagesPath)\GitInfo\build\GitInfo.targets</GitInfoTargets>
 		<XunitBuildDir>$(PackagesPath)\xunit.runner.msbuild\build</XunitBuildDir>
@@ -159,21 +167,13 @@
 	<Import Project="$(GitInfoTargets)" Condition=" Exists('$(GitInfoTargets)') " />
 	<Import Project="$(XunitProps)" Condition="Exists('$(XunitProps)')"/>
 
-	<Target Name="Configure" DependsOnTargets="DownloadNuGet;GitInfoReport">
-		<!-- We always run NuGet Install since it already checks for already-installed packages and skips them -->
-		<Exec Command='"$(NuGet)" Install "$(MSBuildThisFileDirectory)packages.config" -OutputDirectory "$(PackagesPath)" -ExcludeVersion' />
-
-		<!-- Errors if nuget packages were restored during the build -->
-		<Error Text="Required build-time NuGet packages were missing and were just restored. Please run the build again."
-			   Condition=" '$(PendingRestore)' == 'true' And '$(target)' != 'configure' "/>
-
+	<Target Name="Configure" DependsOnTargets="GitInfoReport">
 		<PropertyGroup>
 			<Version>$(GitSemVerMajor).$(GitSemVerMinor).$(GitSemVerPatch)$(GitSemVerDashLabel)</Version>
 		</PropertyGroup>
 
 		<!-- Update AppVeyor build # to match the actual one being used -->
 		<Exec Command="appveyor UpdateBuild -Version $(Version)" Condition=" '$(APPVEYOR)' == 'true' " ContinueOnError="WarnAndContinue" />
-
 	</Target>
 
 	<Import Project="$(PackagesPath)\MSBuilder.CodeTaskAssembly\build\MSBuilder.CodeTaskAssembly.props"
