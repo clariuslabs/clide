@@ -56,7 +56,7 @@ namespace Clide.Events
 				{
 					ErrorHandler.ThrowOnFailure(shell.Value.UnadviseShellPropertyChanges(cookie));
 					cookie = 0;
-					initialized.SetAsync();
+					initialized.Set();
 				}
 			}
 

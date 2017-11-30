@@ -52,6 +52,12 @@
 		<PackageReference Include="xunit.vsix" Version="0.4.0-alpha.*" />
 	</ItemGroup>
 
+	<PropertyGroup Condition="'$(IncludeTests)' == 'true' or '$(IncludeIntegrationTests)' == 'true'">
+		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+		<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+		<NoWarn>$(NoWarn);0649</NoWarn>
+	</PropertyGroup>
+
 	<Target Name="GetProductVersions" DependsOnTargets="GitVersion">
 		<PropertyGroup>
 			<ClideMajor>$(GitSemVerMajor)</ClideMajor>
@@ -80,7 +86,7 @@
 	<Target Name="SetAssemblyVersion" BeforeTargets="GetAssemblyVersion" DependsOnTargets="GetProductVersions"
 			Condition="'$(MSBuildProjectExtension)' == '.csproj' or '$(MSBuildProjectExtension)' == '.vbproj'">
 		<PropertyGroup>
-			<AssemblyVersion Condition="'$(AssemblyVersion)' == '' and '$(Configuration)' == 'Debug'">42.42.42.42</AssemblyVersion>
+			<AssemblyVersion Condition="'$(AssemblyVersion)' == '' and '$(Configuration)' == 'Debug'">42.42.42</AssemblyVersion>
 			<AssemblyVersion Condition="'$(AssemblyVersion)' == ''">$(ClideMajor).$(ClideMinor).0.0</AssemblyVersion>
 			<FileVersion Condition="'$(FileVersion)' == ''">$(ClideVersion)</FileVersion>
 			<InformationalVersion Condition="'$(InformationalVersion)' == ''">$(ClideInformationsVersion)</InformationalVersion>
@@ -175,5 +181,4 @@
 		</ItemGroup>
 	</Target>
 
-	<Import Project="PackageOverrides.targets" Condition="'$(IncludeVSSDK)' == 'true' or '$(IncludeVSSDKTools)' == 'true'" />
 </Project>
