@@ -19,7 +19,7 @@
 	<!-- Common Packages -->
 	<ItemGroup>
 		<PackageReference Include="MSBuilder.CI" Version="*" />
-		<PackageReference Include="GitInfo" Version="*" />
+		<PackageReference Include="GitInfo" Version="2.0.7" />
 		<PackageReference Include="Merq" Version="1.0.0-rc" />
 		<PackageReference Include="Merq.Async" Version="1.1.17-rc" />
 		<PackageReference Include="System.Reactive.Interfaces" Version="3.0.0" />
