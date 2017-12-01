@@ -31,7 +31,7 @@ namespace Clide
 		{
 			var sp = new Mock<IServiceProvider>();
 
-			Assert.Throws<InvalidOperationException> (() => sp.Object.GetService<IFoo> ());
+			Assert.Throws<MissingDependencyException> (() => sp.Object.GetService<IFoo> ());
 		}
 
 		[Fact]
@@ -39,7 +39,7 @@ namespace Clide
 		{
 			var sp = new Mock<IServiceProvider>();
 
-			Assert.Throws<InvalidOperationException> (() => sp.Object.GetService<IFooReg, IFoo> ());
+			Assert.Throws<MissingDependencyException> (() => sp.Object.GetService<IFooReg, IFoo> ());
 		}
 
 		public interface IFoo : IFooReg { }
