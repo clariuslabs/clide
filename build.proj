@@ -20,8 +20,8 @@
 	<!-- Azure-based static NuGet feed -->
 	<PropertyGroup>
 		<!-- Azure creds -->
-		<StorageAccount>kzu</StorageAccount>
-		<StorageContainer>nuget</StorageContainer>
+		<StorageAccount>nugets</StorageAccount>
+		<StorageContainer>clide</StorageContainer>
 
 		<SleetInit Condition="'$(SleetInit)' == ''">false</SleetInit>
 	</PropertyGroup>
