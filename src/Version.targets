@@ -31,6 +31,10 @@ AssemblyVersion=$(AssemblyVersion)" />
 			<GitSemVerDashLabel Condition="'$(TF_BUILD)' == 'true' and '$(BUILD_REASON)' == 'PullRequest'">$(GitSemVerDashLabel)-pr$(BUILD_SOURCEBRANCH.Substring(10).TrimEnd('/merge'))</GitSemVerDashLabel>
 			<GitSemVerDashLabel Condition="'$(APPVEYOR_PULL_REQUEST_NUMBER)' != ''">$(GitSemVerDashLabel)-pr$(APPVEYOR_PULL_REQUEST_NUMBER)</GitSemVerDashLabel>
 
+			<!-- Adjust branch name to CI provided value if available -->
+			<GitBranch Condition="'$(BUILD_SOURCEBRANCHNAME)' != ''">$(BUILD_SOURCEBRANCHNAME)</GitBranch>
+			<GitBranch Condition="'$(APPVEYOR_REPO_BRANCH)' != ''">$(APPVEYOR_REPO_BRANCH)</GitBranch>
+
 			<!-- NOTE: build metadata does not affect version matching, so even if you work from a different branch+commit that gets 
            rebased+merged later on, the version # might still be the same (provided there weren't additional commits in master 
            before the rebase+merge.
