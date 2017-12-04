@@ -18,21 +18,24 @@
 
 	<!-- Common Packages -->
 	<ItemGroup>
-		<PackageReference Include="MSBuilder.CI" Version="*" />
-		<PackageReference Include="GitInfo" Version="2.0.7" />
+		<PackageReference Include="GitLink" Version="3.1.0" />
 		<PackageReference Include="Merq" Version="1.0.0-rc" />
 		<PackageReference Include="Merq.Async" Version="1.1.17-rc" />
 		<PackageReference Include="System.Reactive.Interfaces" Version="3.0.0" />
 		<PackageReference Include="IFluentInterface" Version="2.0.3" />
-		<PackageReference Include="netfx-System.StringResources" Version="*" />
-		<PackageReference Include="System.Diagnostics.Tracer" Version="*" />
+		<PackageReference Include="netfx-System.StringResources" Version="3.1.9" />
+		<PackageReference Include="System.Diagnostics.Tracer" Version="2.0.8" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(IncludeVSSDK)' == 'true' and '$(XVSSDK)' == ''">
+	<ItemGroup Condition="'$(IncludePack)' == 'true'">
+		<PackageReference Include="NuGet.Build.Packaging" Version="*" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(IncludeVSSDK)' == 'true'">
 		<PackageReference Include="Xamarin.VSSDK" Version="0.3.0-alpha.*" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(IncludeVSSDKTools)' == 'true' and '$(XVSSDK)' == ''">
+	<ItemGroup Condition="'$(IncludeVSSDKTools)' == 'true'">
 		<PackageReference Include="Xamarin.VSSDK.BuildTools" Version="0.3.0-alpha.*" />
 	</ItemGroup>
 
@@ -58,22 +61,12 @@
 		<NoWarn>$(NoWarn);0649</NoWarn>
 	</PropertyGroup>
 
-	<Target Name="GetProductVersions" DependsOnTargets="GitVersion">
-		<PropertyGroup>
-			<ClideMajor>$(GitSemVerMajor)</ClideMajor>
-			<ClideMinor>$(GitSemVerMinor)</ClideMinor>
-			<ClideBuild>$(GitBaseVersion.Substring($(GitBaseVersion.LastIndexOf('.'))).TrimStart('.'))</ClideBuild>
-			<ClideRevision>$(GitCommits)</ClideRevision>
-			<ClideSimpleVersion>$(ClideMajor).$(ClideMinor).$(ClideBuild.Replace('-pre', ''))</ClideSimpleVersion>
-			<ClideInformationsVersion>$(ClideSimpleVersion)-$(GitBranch)+$(GitCommit)</ClideInformationsVersion>
-			<ClideVersion>$(ClideSimpleVersion).$(ClideRevision)</ClideVersion>
-		</PropertyGroup>
-	</Target>
+	<Import Project="Version.targets" />
 
-	<Target Name="GetVsixVersion" Returns="$(VsixVersion)" DependsOnTargets="GetProductVersions">
+	<Target Name="GetVsixVersion" Returns="$(VsixVersion)" DependsOnTargets="SetVersion">
 		<PropertyGroup>
 			<VsixVersion Condition="'$(Configuration)' == 'Debug'">42.42.42</VsixVersion>
-			<VsixVersion Condition="'$(VsixVersion)' == ''" >$(ClideSimpleVersion)</VsixVersion>
+			<VsixVersion Condition="'$(VsixVersion)' == ''" >$(AssemblyVersion)</VsixVersion>
 		</PropertyGroup>
 	</Target>
 
@@ -83,17 +76,12 @@
 		</PropertyGroup>
 	</Target>
 
-	<Target Name="SetAssemblyVersion" BeforeTargets="GetAssemblyVersion" DependsOnTargets="GetProductVersions"
-			Condition="'$(MSBuildProjectExtension)' == '.csproj' or '$(MSBuildProjectExtension)' == '.vbproj'">
-		<PropertyGroup>
-			<AssemblyVersion Condition="'$(AssemblyVersion)' == '' and '$(Configuration)' == 'Debug'">42.42.42</AssemblyVersion>
-			<AssemblyVersion Condition="'$(AssemblyVersion)' == ''">$(ClideMajor).$(ClideMinor).0.0</AssemblyVersion>
-			<FileVersion Condition="'$(FileVersion)' == ''">$(ClideVersion)</FileVersion>
-			<InformationalVersion Condition="'$(InformationalVersion)' == ''">$(ClideInformationsVersion)</InformationalVersion>
-		</PropertyGroup>
+	<Target Name="CopyVsixToPackageOutputPath" AfterTargets="CreateVsixContainer" Condition="'$(PackageOutputPath)' != ''">
+		<Copy SourceFiles="$(TargetVsixContainer)" DestinationFolder="$(PackageOutputPath)" />
+		<Message Importance="high" Text="Copied extension to $(PackageOutputPath)\$([System.IO.Path]::GetFilename('$(TargetVsixContainer)'))" />
 	</Target>
 
-	<PropertyGroup>
+	<PropertyGroup Condition="'$(GenerateBindingRedirects)' == 'true'">
 		<BindingRedirects>BindingRedirects.pkgdef</BindingRedirects>
 		<BindingRedirectsDependsOn>
 			CollectBindingRedirected;

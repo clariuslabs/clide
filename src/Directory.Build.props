@@ -1,8 +1,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 	<PropertyGroup>
-		<CI Condition="'$(CI)' == '' and '$(TF_BUILD)' == 'true'">true</CI>
-
 		<DebugSymbols>true</DebugSymbols>
 		<DebugType>full</DebugType>
 		<RootNamespace>Clide</RootNamespace>

@@ -2,6 +2,15 @@
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
     <IncludeVSSDK>true</IncludeVSSDK>
+    <IncludePack>true</IncludePack>
+
+		<PackageId>Clide</PackageId>
+		<Authors>kzu, Daniel Cazzulino</Authors>
+		<Owners>clariuslabs, kzu</Owners>
+		<Description>Clide</Description>
+		<Copyright>Copyright 2012 Clarius Labs</Copyright>
+		<InferPackageContents>false</InferPackageContents>
+    <PackOnBuild Condition="'$(Configuration)' == 'Release'">true</PackOnBuild>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.ComponentModel.Composition" />
@@ -27,4 +36,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+	<Target Name="AddPackageContents" BeforeTargets="GetPackageContents">
+		<ItemGroup>
+			<PackageFile Include="$(OutputPath)\Clide.Interfaces.*" Kind="Lib" />
+		</ItemGroup>
+	</Target>
 </Project>
