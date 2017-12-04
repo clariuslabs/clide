@@ -1,36 +1,38 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Rebuild" InitialTargets="Configure" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" TreatAsLocalProperty="Configuration" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Project="build\corebuild.props" />
 
 	<PropertyGroup>
-		<CI Condition="'$(CI)' == '' and '$(TF_BUILD)' == 'true'">true</CI>
-		<CI Condition="'$(CI)' == '' ">false</CI>
 		<Configuration Condition="'$(Configuration)' == '' and '$(CI)' == 'true'">Release</Configuration>
 		<Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
-		
+
 		<Out Condition=" '$(Out)' == '' ">$(MSBuildThisFileDirectory)out</Out>
-		<!-- Whether to run integration tests against the MSI-installed Clide in the normal hive or not -->
-		<TestInstalled Condition=" '$(TestInstalled)' == '' And '$(Configuration)' == 'Release' ">true</TestInstalled>
-		<Installer>$(MSBuildThisFileDirectory)src\Clide.Vsix\bin\$(Configuration)\Clide.vsix</Installer>
-		<VsixInstaller>$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\$(VisualStudioVersion)', 'InstallDir', null, RegistryView.Registry32))VSIXInstaller.exe</VsixInstaller>
+
 		<GitInfoReportImportance>high</GitInfoReportImportance>
 		<GitIgnoreTagVersion>true</GitIgnoreTagVersion>
 		<GitIgnoreBranchVersion>true</GitIgnoreBranchVersion>
 
-		<CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration);CI=$(CI)</CommonBuildProperties>
+		<CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration)</CommonBuildProperties>
+		<CommonBuildProperties Condition="'$(Configuration)' == 'Release'">$(CommonBuildProperties);DeployExtension=false</CommonBuildProperties>
+
 		<Dev Condition="'$(Dev)' == ''">$(VisualStudioVersion)</Dev>
 	</PropertyGroup>
 
-	<PropertyGroup Condition=" '$(TestInstalled)' == 'true' ">
-		<!-- When testing the installed version of Clide, it's unnecessary to deploy the built VSIX extension, 
-			 since integration tests will run against the normal hive -->
-		<CommonBuildProperties>$(CommonBuildProperties);DeployExtension=false;RootSuffix=.</CommonBuildProperties>
-		<!-- When running a CI build, either use the explicit VisualStudioVersion or fallback to All -->
-		<CommonBuildProperties Condition=" '$(CI)' == 'true' ">$(CommonBuildProperties);VisualStudioVersions=$([MSBuild]::ValueOrDefault('$(VisualStudioVersions)', 'All'))</CommonBuildProperties>
+	<!-- Azure-based static NuGet feed -->
+	<PropertyGroup>
+		<!-- Azure creds -->
+		<StorageAccount>kzu</StorageAccount>
+		<StorageContainer>nuget</StorageContainer>
+
+		<SleetInit Condition="'$(SleetInit)' == ''">false</SleetInit>
 	</PropertyGroup>
-	<PropertyGroup Condition=" '$(TestInstalled)' != 'true' ">
-		<!-- If we're not going to test the installed version, then we'll use the default (current) VS version and the experimental hive. -->
-		<CommonBuildProperties>$(CommonBuildProperties);RootSuffix=Exp</CommonBuildProperties>
-	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="GitInfo" Version="1.1.32" />
+		<PackageReference Include="MSBuilder.CI" Version="0.1.2" />
+		<PackageReference Include="xunit.runner.msbuild" Version="2.3.1" />
+		<PackageReference Include="xunit.runner.console" Version="2.3.1" />
+		<PackageReference Include="Sleet.Azure" Version="0.2.5" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<Solution Include="src\Clide.sln"/>
@@ -40,160 +42,39 @@
 
 	<Target Name="Clean">
 		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties)" Targets="Clean" />
-		<Exec Command="rmdir $(Out) /S /Q" ContinueOnError="true" />
-		<Exec Command="rmdir src\packages /S /Q" ContinueOnError="true" />
+		<Exec Command="rmdir $(Out) /S /Q" Condition="Exists('$(Out)')" ContinueOnError="true" />
 		<!-- Remove all bin/obj recursively under /src -->
 		<Exec Command='for /d /r . %%d in (bin,obj) do @if exist "%%d" rd /s/q "%%d"' WorkingDirectory='$(MSBuildThisFileDirectory)src' ContinueOnError='true' />
 	</Target>
 
-	<Target Name="Rebuild" DependsOnTargets="Clean;Restore;Build;Package" />
+	<!-- Configures the project in preparation for Build. Includes running Restore. -->
+	<Target Name="Configure" DependsOnTargets="Restore" />
 
-	<Target Name="Restore">
-		<ItemGroup>
-			<RestoreSolution Include="@(Solution)" />
-		</ItemGroup>
-
-		<MSBuild Projects="%(RestoreSolution.Identity)" Targets="Restore" Properties="$(CommonBuildProperties);RestoreOnly=true" />
-	</Target>
-
-	<Target Name="Build" Condition=" '@(Solution)' != '' ">
-		<Message Text="Build properties: $(CommonBuildProperties)" Importance="high" />
+	<!-- Targets can be documented, and /t:Help will render the help -->
+	<Target Name="Build">
 		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties);Dev=%(Dev.Identity)" />
 	</Target>
 
-	<Target Name="Test" DependsOnTargets="UnitTest;IntegrationTest" />
-
-	<Target Name="UnitTest" DependsOnTargets="Build">
-		<MSBuild Projects="src\Clide.UnitTests\Clide.UnitTests.csproj" BuildInParallel="false" Targets="GetTargetPath" Properties="$(CommonBuildProperties)">
-			<Output TaskParameter="TargetOutputs" ItemName="UnitTestAssembly" />
-		</MSBuild>
-
+	<Target Name="Package">
 		<MakeDir Directories="$(Out)" Condition="!Exists('$(Out)')" />
-		<xunit Assemblies="@(UnitTestAssembly)"
-			   Html="$(Out)\unit-test.html"
-			   Xml="$(Out)\unit-test.xml"
-			   ParallelizeAssemblies="true"
-			   ParallelizeTestCollections="true"
-			   IncludeTraits="$(IncludeTraits)"
-			   ExcludeTraits="$(ExcludeTraits)"
-               ShadowCopy="false"
-               WorkingFolder="$(MSBuildThisFileDirectory)src\Clide.UnitTests"
-			   ContinueOnError="ErrorAndContinue" />
+		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties);IsSystemComponent=true;PackageOutputPath=$(Out)" />
 	</Target>
 
-	<Target Name="IntegrationTest" DependsOnTargets="Build">
-		<Error Condition=" '$(TestInstalled)' == 'true' And '$(Configuration)' != 'Release' "
-			   Text="Cannot run integration tests with the installed version because the MSI is only built for the Release configuration, and specified configuration is '$(Configuration)'." />
-		<CallTarget Targets="Install" Condition=" '$(TestInstalled)' == 'true'" />
+	<Target Name="Clean" />
 
-		<MSBuild Projects="src\Clide.IntegrationTests\Clide.IntegrationTests.csproj" BuildInParallel="false" Targets="GetTargetPath" Properties="$(CommonBuildProperties)">
-			<Output TaskParameter="TargetOutputs" ItemName="IntegrationTestAssembly" />
-		</MSBuild>
+	<Target Name="Rebuild" DependsOnTargets="Clean;Restore;Build" />
 
-		<MakeDir Directories="$(Out)" Condition="!Exists('$(Out)')" />
-		<xunit Assemblies="@(IntegrationTestAssembly)"
-			   Html="$(Out)\integration-test.html"
-			   Xml="$(Out)\integration-test.xml"
-			   ParallelizeAssemblies="true"
-			   ParallelizeTestCollections="true"
-			   IncludeTraits="$(IncludeTraits)"
-			   ExcludeTraits="$(ExcludeTraits)"
-               ShadowCopy="false"
-               WorkingFolder="$(MSBuildThisFileDirectory)src\Clide.IntegrationTests"
-			   ContinueOnError="ErrorAndContinue" />
-
-		<CallTarget Targets="Uninstall" Condition=" '$(TestInstalled)' == 'true'" />
+	<Target Name="AfterRestore" AfterTargets="Restore">
+		<MSBuild Projects="%(Solution.FullPath)" Targets="Restore" Properties="$(CommonBuildProperties);RestoreOnly=true" />
 	</Target>
 
-	<Target Name="ReportAppVeyor" AfterTargets="IntegrationTest" Condition=" '$(APPVEYOR)' == 'true' ">
-		<XmlEval XmlInputPath="$(Out)\integration-test.xml" Query="sum(/assemblies/assembly/collection/@passed)">
-			<Output TaskParameter="Result" PropertyName="Passed" />
-		</XmlEval>
-		<XmlEval XmlInputPath="$(Out)\integration-test.xml" Query="sum(/assemblies/assembly/collection/@failed)">
-			<Output TaskParameter="Result" PropertyName="Failed" />
-		</XmlEval>
-		<XmlEval XmlInputPath="$(Out)\integration-test.xml" Query="sum(/assemblies/assembly/collection/@errors)">
-			<Output TaskParameter="Result" PropertyName="Errors" />
-		</XmlEval>
-
-		<Exec Command='appveyor AddCompilationMessage "Integration Tests: Passed: $(Passed), Errors: $(Errors), Failed: $(Failed)" -Category Information' />
-		<Exec Command='appveyor AddCompilationMessage "Integration Tests Failed: $(Failed)" -Category Error'
-			  Condition=" '$(Failed)' != '0' " />
+	<Target Name="Test">
+		<xunit Assemblies="@(TestAssembly)" />
 	</Target>
 
-	<Target Name="Install" Condition=" Exists('$(Installer)') ">
-		<Error Condition=" !Exists('$(VsixInstaller)') " Text="No VSIX installer found at expected path $(VsixInstaller). Cannot run installed Clide tests." />
-		<Message Importance="high" Text="Installing $(Installer)..." />
-		<Exec Command='"$(VsixInstaller)" /q "$(Installer)"' />
+	<Target Name="Run">
+		<!-- TODO: build + deploy to exp, run VS -->
 	</Target>
 
-	<Target Name="Uninstall" Condition=" Exists('$(Installer)') ">
-		<Error Condition=" !Exists('$(VsixInstaller)') " Text="No VSIX installer found at expected path $(VsixInstaller). Cannot run installed Clide tests." />
-		<Message Importance="high" Text="Uninstalling $(Installer)..." />
-		<Exec Command='"$(VsixInstaller)" /q /u:Clide' />
-	</Target>
-
-	<Target Name="Package" DependsOnTargets="GitInfo;Build">
-
-		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties);IsSystemComponent=true" />
-		<Exec Command="$(PackagesPath)\gitlink\lib\net45\GitLink.exe . -f &quot;%(Solution.Identity)&quot; -u https://github.com/clariuslabs/clide -b &quot;$(GitBranch)&quot; -c &quot;$(Configuration)&quot;" StandardOutputImportance="low" />
-		<MakeDir Directories="$(Out)" Condition=" !Exists('$(Out)') " />
-		
-		<MSBuild Projects="src\Installers\Clide.Installer\Clide.Installer.nuproj"
-				 Properties="$(CommonBuildProperties)"
-				 Targets="Build;GetTargetPath">
-			<Output ItemName='InstallerPackage' TaskParameter='TargetOutputs' />
-		</MSBuild>
-
-		<Copy SourceFiles='%(InstallerPackage.Identity)' DestinationFiles='$(Out)\%(InstallerPackage.Filename)%(InstallerPackage.Extension)' />
-		<Exec Command='"$(NuGet)" Pack "%(NuSpec.Identity)" $(Args) -Version $(Version) -Properties Id=%(NuSpec.Filename);Configuration=$(Configuration) -OutputDirectory $(Out)' />
-	</Target>
-
-	<PropertyGroup>
-		<GitInfoTargets>$(PackagesPath)\GitInfo\build\GitInfo.targets</GitInfoTargets>
-		<XunitBuildDir>$(PackagesPath)\xunit.runner.msbuild\build</XunitBuildDir>
-		<XunitPlatformDir Condition=" Exists('$(XunitBuildDir)') ">$([System.IO.Directory]::GetDirectories($(XunitBuildDir))[0])</XunitPlatformDir>
-		<!-- This file is used to detect whether the restore has been performed or not -->
-		<XunitProps>$([System.IO.Path]::Combine($(XunitPlatformDir), 'xunit.runner.msbuild.props'))</XunitProps>
-		<PendingRestore Condition=" !Exists('$(GitInfoTargets)') ">true</PendingRestore>
-	</PropertyGroup>
-
-	<!-- Overriden by the GitInfo.targets imports after nuget restore. These are here to satisfy DependsOn -->
-	<Target Name="GitInfoReport" />
-	<Target Name="GitInfo" />
-	<Target Name="GitVersion" />
-
-	<!-- Gets overriden by the $(GitInfoTargets) if it exists -->
-	<Import Project="$(GitInfoTargets)" Condition=" Exists('$(GitInfoTargets)') " />
-	<Import Project="$(XunitProps)" Condition="Exists('$(XunitProps)')"/>
-
-	<Target Name="Configure" DependsOnTargets="GitInfoReport">
-		<PropertyGroup>
-			<Version>$(GitSemVerMajor).$(GitSemVerMinor).$(GitSemVerPatch)$(GitSemVerDashLabel)</Version>
-		</PropertyGroup>
-
-		<!-- Update AppVeyor build # to match the actual one being used -->
-		<Exec Command="appveyor UpdateBuild -Version $(Version)" Condition=" '$(APPVEYOR)' == 'true' " ContinueOnError="WarnAndContinue" />
-	</Target>
-
-	<Import Project="$(PackagesPath)\MSBuilder.CodeTaskAssembly\build\MSBuilder.CodeTaskAssembly.props"
-			Condition="Exists('$(PackagesPath)\MSBuilder.CodeTaskAssembly\build\MSBuilder.CodeTaskAssembly.props')" />
-
-	<UsingTask TaskName="XmlEval" TaskFactory="CodeTaskFactory" AssemblyFile="$(CodeTaskAssembly)" Condition=" '$(CodeTaskAssembly)' != '' ">
-		<ParameterGroup>
-			<XmlInputPath Required="true" />
-			<Query Required="true" />
-			<Result Output="true" />
-		</ParameterGroup>
-		<Task>
-			<Reference Include="System.Xml" />
-			<Reference Include="System.Xml.Linq" />
-			<Using Namespace="System.Xml" />
-			<Using Namespace="System.Xml.Linq" />
-			<Using Namespace="System.Xml.XPath" />
-			<Code Type="Fragment" Language="cs">
-				Result = XDocument.Load(XmlInputPath).CreateNavigator().Evaluate(Query).ToString();
-			</Code>
-		</Task>
-	</UsingTask>
+	<Import Project="build\corebuild.targets" />
 </Project>
