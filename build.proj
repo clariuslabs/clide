@@ -55,7 +55,11 @@
 	</Target>
 
 	<!-- Targets can be documented, and /t:Help will render the help -->
-	<Target Name="Build">
+	<Target Name="Build" DependsOnTargets="SetVersion">
+		<Message Text="Building AssemblyVersion=$(AssemblyVersion), PackageVersion=$(PackageVersion)" Importance="high" />
+		<Message Text="##vso[build.updatebuildnumber]$(PackageVersion)" Importance="high" Condition="'$(TF_BUILD)' == 'true'" />
+		<Exec Command="appveyor UpdateBuild -Version $(PackageVersion)" Condition="'$(APPVEYOR)' == 'true'" ContinueOnError="WarnAndContinue" />
+
 		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties);Dev=%(Dev.Identity)" />
 	</Target>
 
