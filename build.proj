@@ -87,5 +87,6 @@
 		<!-- TODO: build + deploy to exp, run VS -->
 	</Target>
 
+	<Import Project="src\Version.targets"/>
 	<Import Project="build\corebuild.targets" />
 </Project>
