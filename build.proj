@@ -50,6 +50,10 @@
 	<!-- Configures the project in preparation for Build. Includes running Restore. -->
 	<Target Name="Configure" DependsOnTargets="Restore" />
 
+	<Target Name="EnsureLocalPackageSource" BeforeTargets="Restore">
+		<MakeDir Directories="$(TEMP)\packages" Condition="!Exists('$(TEMP)\packages')" />
+	</Target>
+
 	<!-- Targets can be documented, and /t:Help will render the help -->
 	<Target Name="Build">
 		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties);Dev=%(Dev.Identity)" />
