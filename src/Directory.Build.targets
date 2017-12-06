@@ -35,10 +35,6 @@
 		<PackageReference Include="Xamarin.VSSDK" Version="0.3.0-alpha.*" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(IncludeVSSDKTools)' == 'true'">
-		<PackageReference Include="Xamarin.VSSDK.BuildTools" Version="0.3.0-alpha.*" />
-	</ItemGroup>
-
 	<ItemGroup Condition="'$(IncludeRx)' == 'true'">
 		<PackageReference Include="System.Reactive.Linq" Version="3.0.0" />
 	</ItemGroup>

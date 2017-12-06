@@ -1,11 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net461;net462</TargetFrameworks>
-    <IncludeVSSDKTools>true</IncludeVSSDKTools>
     <GenerateBindingRedirects>true</GenerateBindingRedirects>
+    <CI Condition="'$(CI)' == '' and '$(TF_BUILD)' == 'true'">true</CI>
+    <CI Condition="'$(CI)' == '' and '$(APPVEYOR)' != ''">true</CI>
   </PropertyGroup>
   <ItemGroup>
     <None Include="source.extension.vsixmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+	<PackageReference Include="Xamarin.VSSDK.BuildTools" Version="0.3.0-alpha.*" />
+	 
+	<!-- Always build with latest VSSDK in CI -->
+	<PackageReference Include="Microsoft.VSSDK.BuildTools" Version="15.1.192" Condition="'$(CI)' == 'true'" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Clide\Clide.csproj" />
