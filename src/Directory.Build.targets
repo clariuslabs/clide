@@ -77,6 +77,18 @@
 		<Message Importance="high" Text="Copied extension to $(PackageOutputPath)\$([System.IO.Path]::GetFilename('$(TargetVsixContainer)'))" />
 	</Target>
 
+	<Target Name="LocalPublish" Condition="'$(CI)' != 'true'" AfterTargets="Pack">
+		<Exec Command='rd "$(NuGetPackageRoot)$(PackageId.ToLowerInvariant())" /q /s' Condition="Exists('$(NuGetPackageRoot)$(PackageId.ToLowerInvariant())')" />
+
+		<ItemGroup>
+			<ToDelete Include="$(TEMP)\packages\$(PackageId)*.nupkg" />
+		</ItemGroup>
+		<Delete Files="@(ToDelete)" />
+
+		<MakeDir Directories="$(TEMP)\packages" Condition="!Exists('$(TEMP)\packages')" />
+		<Copy SourceFiles="$(PackageTargetPath)" DestinationFolder="$(TEMP)\packages" />
+	</Target>
+
 	<PropertyGroup Condition="'$(GenerateBindingRedirects)' == 'true'">
 		<BindingRedirects>BindingRedirects.pkgdef</BindingRedirects>
 		<BindingRedirectsDependsOn>
