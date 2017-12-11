@@ -5,7 +5,6 @@
 		<DebugType>full</DebugType>
 		<RootNamespace>Clide</RootNamespace>
 
-		<!-- Triggers generation of a [VSIXID].json file alongside the VSIX, used by Willow installer -->
 		<IsProductComponent>false</IsProductComponent>
 		<ExtensionInstallationRoot>Extensions</ExtensionInstallationRoot>
 		<ExtensionInstallationFolder>Clide</ExtensionInstallationFolder>

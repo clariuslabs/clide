@@ -4,6 +4,7 @@
     <IncludePack>true</IncludePack>
     <GenerateBindingRedirects>true</GenerateBindingRedirects>
     <TargetVsixContainerName>Clide.vsix</TargetVsixContainerName>
+
     <CI Condition="'$(CI)' == '' and '$(TF_BUILD)' == 'true'">true</CI>
     <CI Condition="'$(CI)' == '' and '$(APPVEYOR)' != ''">true</CI>
 
@@ -42,5 +43,8 @@
       <PackageFile Include="$(TargetVsixContainer)" Kind="Tools" />
     </ItemGroup>
   </Target>
+
+  <!-- We always build as SystemComponent on CI -->
+  <Target Name="IsSystemComponent" Returns="$(CI)" />
 
 </Project>
