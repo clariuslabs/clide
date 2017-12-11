@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <None Include="source.extension.vsixmanifest" />
-    <PackageFile Include="build\Clide.props" Kind="Build" />
+    <PackageFile Include="build\*.*" Kind="Build" />
   </ItemGroup>
 
   <ItemGroup>
