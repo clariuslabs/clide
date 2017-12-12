@@ -1,8 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk" InitialTargets="FixupVsixDependencies">
   <PropertyGroup>
     <TargetFrameworks>net461;net462</TargetFrameworks>
     <IncludePack>true</IncludePack>
-    <GenerateBindingRedirects>true</GenerateBindingRedirects>
     <TargetVsixContainerName>Clide.vsix</TargetVsixContainerName>
 
     <CI Condition="'$(CI)' == '' and '$(TF_BUILD)' == 'true'">true</CI>
@@ -20,6 +19,7 @@
   <ItemGroup>
     <None Include="source.extension.vsixmanifest" />
     <PackageFile Include="build\*.*" Kind="Build" />
+    <BindingRedirected Include="Clide" From="3.0.0.0" To="99.9.9.9" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,12 +30,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Clide.Interfaces\Clide.Interfaces.csproj" />
-    <ProjectReference Include="..\Clide\Clide.csproj">
-      <Pack>false</Pack>
-    </ProjectReference>
-    <ProjectReference Include="..\Clide.Extensibility\Clide.Extensibility.csproj">
-      <Pack>false</Pack>
-    </ProjectReference>
+    <ProjectReference Include="..\Clide\Clide.csproj" Pack="false" />
+    <ProjectReference Include="..\Clide.Extensibility\Clide.Extensibility.csproj" Pack="false" />
   </ItemGroup>
 
   <Target Name="AddPackageContents" BeforeTargets="GetPackageContents">
@@ -44,7 +40,41 @@
     </ItemGroup>
   </Target>
 
+  <Target Name="IncludeSymbolsFromProjectReferences" BeforeTargets="GetVsixSourceItems">
+    <!-- For any project references that are set to copy local ('Private' property != false), add the output groups for project references that are not set -->
+    <ItemGroup>
+      <ProjectReferenceWithConfiguration Condition="'%(ProjectReferenceWithConfiguration.Private)' != 'false' and '%(ProjectReferenceWithConfiguration.IncludeOutputGroupsInVSIX)' == ''">
+        <IncludeOutputGroupsInVSIX>$(DefaultIncludeOutputGroupsInVSIX)</IncludeOutputGroupsInVSIX>
+      </ProjectReferenceWithConfiguration>
+    </ItemGroup>
+  </Target>
+
   <!-- We always build as SystemComponent on CI -->
   <Target Name="IsSystemComponent" Returns="$(CI)" />
+
+  <Target Name="FixupVsixDependencies">
+    <ItemGroup>
+      <VsixDependency Remove="@(VsixDependency)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="GetVsixVersion" Returns="$(VsixVersion)" DependsOnTargets="SetVersion">
+    <PropertyGroup>
+      <VsixVersion Condition="'$(Configuration)' == 'Debug'">42.42.42</VsixVersion>
+      <VsixVersion Condition="'$(VsixVersion)' == ''">$(AssemblyVersion)</VsixVersion>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="AppendVsixVersionToTargetVsixContainer" BeforeTargets="CreateVsixContainer" DependsOnTargets="GetVsixVersion">
+    <PropertyGroup>
+      <TargetVsixContainer>$([System.IO.Path]::ChangeExtension('$(TargetVsixContainer)', '$(VsixVersion).vsix'))</TargetVsixContainer>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="CopyVsixToPackageOutputPath" AfterTargets="CreateVsixContainer" Condition="'$(PackageOutputPath)' != '' and '$(CreateVsixContainer)' == 'true'">
+    <Copy SourceFiles="$(TargetVsixContainer)" DestinationFolder="$(PackageOutputPath)" />
+    <Message Importance="high" Text="Copied extension to $(PackageOutputPath)\$([System.IO.Path]::GetFilename('$(TargetVsixContainer)'))" />
+  </Target>
+
 
 </Project>
