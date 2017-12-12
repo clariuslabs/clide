@@ -22,6 +22,7 @@
 		<ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
 		<ResolveAssemblyReferencesSilent>true</ResolveAssemblyReferencesSilent>
 		<NoWarn>$(NoWarn);0436</NoWarn>
+    <WarningsAsErrors>NU1603</WarningsAsErrors>
 	</PropertyGroup>
 
 </Project>
