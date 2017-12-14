@@ -3,6 +3,7 @@
     <TargetFrameworks>net461;net462</TargetFrameworks>
     <IncludePack>true</IncludePack>
     <TargetVsixContainerName>Clide.vsix</TargetVsixContainerName>
+    <IsProductComponent>true</IsProductComponent>
 
     <CI Condition="'$(CI)' == '' and '$(TF_BUILD)' == 'true'">true</CI>
     <CI Condition="'$(CI)' == '' and '$(APPVEYOR)' != ''">true</CI>
