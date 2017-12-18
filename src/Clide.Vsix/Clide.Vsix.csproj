@@ -20,7 +20,7 @@
   <ItemGroup>
     <None Include="source.extension.vsixmanifest" />
     <PackageFile Include="build\*.*" Kind="Build" />
-    <BindingRedirected Include="Clide" From="3.0.0.0" To="99.9.9.9" />
+    <BindingRedirect Include="Clide" From="3.0.0.0" To="99.9.9.9" />
   </ItemGroup>
 
   <ItemGroup>
