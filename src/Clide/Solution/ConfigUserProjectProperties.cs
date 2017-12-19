@@ -22,7 +22,7 @@ namespace Clide
         {
             this.project = project;
             this.configName = configName;
-            vsBuild = project.HierarchyNode.HierarchyIdentity.Hierarchy as IVsBuildPropertyStorage;
+            vsBuild = project.AsVsHierarchy() as IVsBuildPropertyStorage;
             if (vsBuild == null)
 				tracer.Warn(Strings.ConfigUserProjectProperties.NonMsBuildProject(project.Text, configName));
 
