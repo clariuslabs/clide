@@ -1,28 +1,49 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-	<PropertyGroup>
-		<DebugSymbols>true</DebugSymbols>
-		<DebugType>full</DebugType>
-		<RootNamespace>Clide</RootNamespace>
+  <PropertyGroup>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <RootNamespace>Clide</RootNamespace>
 
-		<IsProductComponent>false</IsProductComponent>
-		<ExtensionInstallationRoot>Extensions</ExtensionInstallationRoot>
-		<ExtensionInstallationFolder>Clide</ExtensionInstallationFolder>
+    <IsProductComponent>false</IsProductComponent>
+    <ExtensionInstallationRoot>Extensions</ExtensionInstallationRoot>
+    <ExtensionInstallationFolder>Clide</ExtensionInstallationFolder>
 
-		<GitIgnoreBranchVersion>true</GitIgnoreBranchVersion>
-		<GitIgnoreTagVersion>true</GitIgnoreTagVersion>
+    <GitIgnoreBranchVersion>true</GitIgnoreBranchVersion>
+    <GitIgnoreTagVersion>true</GitIgnoreTagVersion>
 
-		<IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
-		<IncludeDebugSymbolsInLocalVSIXDeployment>true</IncludeDebugSymbolsInLocalVSIXDeployment>
-		<DefaultIncludeOutputGroupsInVSIX>BuiltProjectOutputGroup;DebugSymbolsProjectOutputGroup;GetCopyToOutputDirectoryItems;SatelliteDllsProjectOutputGroup</DefaultIncludeOutputGroupsInVSIX>
+    <IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
+    <IncludeDebugSymbolsInLocalVSIXDeployment>true</IncludeDebugSymbolsInLocalVSIXDeployment>
+    <DefaultIncludeOutputGroupsInVSIX>BuiltProjectOutputGroup;DebugSymbolsProjectOutputGroup;GetCopyToOutputDirectoryItems;SatelliteDllsProjectOutputGroup</DefaultIncludeOutputGroupsInVSIX>
 
-		<SignAssembly>true</SignAssembly>
-		<AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)ClariusLabs.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)ClariusLabs.snk</AssemblyOriginatorKeyFile>
 
-		<ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
-		<ResolveAssemblyReferencesSilent>true</ResolveAssemblyReferencesSilent>
-		<NoWarn>$(NoWarn);0436</NoWarn>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+    <ResolveAssemblyReferencesSilent>true</ResolveAssemblyReferencesSilent>
+    <NoWarn>$(NoWarn);0436;NU1604</NoWarn>
     <WarningsAsErrors>NU1603</WarningsAsErrors>
-	</PropertyGroup>
+
+    <!-- We never want to import the SDK Pack targets, since they conflict with nugetizer -->
+    <NuGetBuildTasksPackTargets>NO-SDK-TARGETS</NuGetBuildTasksPackTargets>
+
+    <!-- We never emit runtime-specific assemblies, so opt-out of this. -->
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(CI)' == ''">
+    <CI Condition="'$(TEAMCITY_VERSION)' != '' or 
+                   '$(APPVEYOR)' != '' or 
+                   '$(BuildRunner)' == 'MyGet' or 
+                   '$(JENKINS_HOME)' != '' or 
+                   '$(TF_BUILD)' == 'true' or
+                   '$(IsVSTSBuild)' == 'true' or
+                   '$(TRAVIS)' == 'true'">true</CI>
+    <CI Condition="'$(CI)' == ''">false</CI>
+  </PropertyGroup>
+
+  <Target Name="GetCI" Returns="$(CI)">
+    <Message Importance="high" Text="CI=$(CI)" />
+  </Target>
 
 </Project>

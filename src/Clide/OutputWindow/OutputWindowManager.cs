@@ -174,7 +174,7 @@
 
 			public override void WriteLine(string value)
 			{
-				Write(value); ;
+				Write(value);
 				WriteLine();
 			}
 		}

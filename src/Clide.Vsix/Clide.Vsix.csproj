@@ -1,22 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" InitialTargets="FixupVsixDependencies">
   <PropertyGroup>
-    <TargetFrameworks>net461;net462</TargetFrameworks>
+    <TargetFramework Condition="'$(BuildingInsideVisualStudio)' == 'true' and '$(VisualStudioVersion)' == '15.0'">net462</TargetFramework>
+    <TargetFramework Condition="'$(BuildingInsideVisualStudio)' == 'true' and '$(VisualStudioVersion)' == '14.0'">net461</TargetFramework>
+    <TargetFramework Condition="'$(TargetFramework)' == '' and '$(CI)' == 'true'">net461</TargetFramework>
+    <TargetFrameworks Condition="'$(TargetFramework)' == '' and '$(CI)' == 'false'">net461;net462</TargetFrameworks>
+
     <IncludePack>true</IncludePack>
     <TargetVsixContainerName>Clide.vsix</TargetVsixContainerName>
     <IsProductComponent>true</IsProductComponent>
-
-    <CI Condition="'$(CI)' == '' and '$(TF_BUILD)' == 'true'">true</CI>
-    <CI Condition="'$(CI)' == '' and '$(APPVEYOR)' != ''">true</CI>
 
     <PackageId>Clide</PackageId>
     <Authors>kzu, Daniel Cazzulino</Authors>
     <Owners>clariuslabs, kzu</Owners>
     <Description>Clide</Description>
     <Copyright>Copyright 2012 Clarius Labs</Copyright>
+
     <InferPackageContents>false</InferPackageContents>
     <PackOnBuild Condition="'$(Configuration)' == 'Release'">true</PackOnBuild>
   </PropertyGroup>
 
+  <!-- Dynamic manifest info -->
+  <ItemGroup>
+    <VsixInstallation Include="Clide" IsSystemComponent="$(CI)" Condition="'$(VsSDKVersion)' != '' and '$(VsSDKVersion)' &gt; '14.0' " />
+  </ItemGroup>
+  
   <ItemGroup>
     <None Include="source.extension.vsixmanifest" />
     <PackageFile Include="build\*.*" Kind="Build" />
