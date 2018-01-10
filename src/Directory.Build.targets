@@ -20,6 +20,7 @@
 
   <ItemGroup Condition="'$(IncludeVSSDK)' == 'true'">
     <PackageReference Include="Xamarin.VSSDK" Version="0.3.0-alpha.*" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="15.1.192" Condition="'$(CI)' == 'true'" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(IncludeRx)' == 'true'">

@@ -21,6 +21,7 @@
 
   <!-- Dynamic manifest info -->
   <ItemGroup>
+    <!-- We need this since IsSystemComponent can't be specified if the VSIX is built by the 14.0 VSSDK -->
     <VsixInstallation Include="Clide" IsSystemComponent="$(CI)" Condition="'$(VsSDKVersion)' != '' and '$(VsSDKVersion)' &gt; '14.0' " />
   </ItemGroup>
   
