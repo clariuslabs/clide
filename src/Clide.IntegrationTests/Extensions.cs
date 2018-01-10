@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -12,7 +13,35 @@ namespace Clide
 {
 	public static class Extensions
 	{
-		public static IVsHierarchyItem NavigateToItem (this IVsHierarchyItem item, string relativePath)
+        public const string ProjectType_SolutionFolder = "{66A26720-8FB5-11D2-AA7E-00C04F688DDE}";
+        public const string ProjectItemType_SolutionFolder = "{66A26722-8FB5-11D2-AA7E-00C04F688DDE}";
+
+        public static EnvDTE.Project[] AllProjects(this EnvDTE.Solution solution)
+        {
+            var results = new List<EnvDTE.Project>();
+            var queue = new Queue<EnvDTE.Project>(solution.Projects.OfType<EnvDTE.Project>());
+
+            while (queue.Count > 0)
+            {
+                var project = queue.Dequeue();
+                results.Add(project);
+                if (project.ProjectItems != null)
+                {
+                    foreach (EnvDTE.ProjectItem item in project.ProjectItems)
+                    {
+                        if (item.Kind == ProjectType_SolutionFolder || item.Kind == ProjectItemType_SolutionFolder)
+                        {
+                            if (item.SubProject != null)
+                                queue.Enqueue(item.SubProject);
+                        }
+                    }
+                }
+            }
+
+            return results.ToArray();
+        }
+
+        public static IVsHierarchyItem NavigateToItem (this IVsHierarchyItem item, string relativePath)
 		{
 			IVsHierarchyItem child = null;
 			var paths = relativePath.Split(new [] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);

@@ -3,7 +3,16 @@
 
 namespace Clide
 {
-	[CollectionDefinition ("OpenSolution")]
+    [CollectionDefinition("OpenCopySolution")]
+    public class OpenCopySolutionCollection : ICollectionFixture<OpenCopySolutionFixture> { }
+
+    public class OpenCopySolutionFixture : SolutionFixture
+    {
+        public OpenCopySolutionFixture() : base(Constants.LibrarySolution, true) { }
+    }
+
+
+    [CollectionDefinition ("OpenSolution")]
 	public class OpenSolutionCollection : ICollectionFixture<OpenSolutionFixture> { }
 
 	public class OpenSolutionFixture : SolutionFixture
