@@ -17,6 +17,14 @@ steps:
     solution: build.proj
     msbuildArguments: /t:Build /p:Dev=14.0 /p:PackageOutputPath="$(Build.ArtifactStagingDirectory)" /bl:"$(Build.ArtifactStagingDirectory)\build.binlog"
 
+- task: VSTest@2
+  displayName: Test
+  inputs:
+    testAssemblyVer2: src\Clide.UnitTests\bin\*\net461\Clide.UnitTests.dll
+    runInParallel: 'true'
+    codeCoverageEnabled: 'true'
+    publishRunAttachments: 'true'
+
 - task: MSBuild@1
   displayName: Push
   inputs:
