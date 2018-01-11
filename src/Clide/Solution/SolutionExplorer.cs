@@ -11,6 +11,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 namespace Clide
 {
 	[Export (typeof (ISolutionExplorer))]
+	[PartCreationPolicy(CreationPolicy.Shared)]
 	internal class SolutionExplorer : ISolutionExplorer
 	{
 		Lazy<VsToolWindow> toolWindow;

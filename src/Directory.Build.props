@@ -1,0 +1,68 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <RootNamespace>Clide</RootNamespace>
+
+    <IsProductComponent>false</IsProductComponent>
+    <ExtensionInstallationRoot>Extensions</ExtensionInstallationRoot>
+    <ExtensionInstallationFolder>Clide</ExtensionInstallationFolder>
+
+    <GitIgnoreBranchVersion>true</GitIgnoreBranchVersion>
+    <GitIgnoreTagVersion>true</GitIgnoreTagVersion>
+
+    <IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
+    <IncludeDebugSymbolsInLocalVSIXDeployment>true</IncludeDebugSymbolsInLocalVSIXDeployment>
+    <DefaultIncludeOutputGroupsInVSIX>BuiltProjectOutputGroup;DebugSymbolsProjectOutputGroup;GetCopyToOutputDirectoryItems;SatelliteDllsProjectOutputGroup</DefaultIncludeOutputGroupsInVSIX>
+
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)ClariusLabs.snk</AssemblyOriginatorKeyFile>
+
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+    <ResolveAssemblyReferencesSilent>true</ResolveAssemblyReferencesSilent>
+    <NoWarn>$(NoWarn);0436;NU1604</NoWarn>
+    <WarningsAsErrors>NU1603</WarningsAsErrors>
+
+    <!-- We never want to import the SDK Pack targets, since they conflict with nugetizer -->
+    <NuGetBuildTasksPackTargets>NO-SDK-TARGETS</NuGetBuildTasksPackTargets>
+
+    <!-- We never emit runtime-specific assemblies, so opt-out of this. -->
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package Versions">
+    <MerqVersion>1.0.0-rc</MerqVersion>
+    <MerqAsyncVersion>1.1.17-rc</MerqAsyncVersion>
+    <MerqVisualStudioVersion>$(MerqAsyncVersion)</MerqVisualStudioVersion>
+    <RxVersion>3.0.0</RxVersion>
+    <FluentInterfaceVersion>2.0.3</FluentInterfaceVersion>
+    <StringResourcesVersion>3.1.10</StringResourcesVersion>
+    <TracerVersion>2.0.8</TracerVersion>
+    <NuGetizerVersion>0.2.2</NuGetizerVersion>
+    <XunitVersion>2.3.1</XunitVersion>
+    
+    <XunitVsixVersion>0.4.0-alpha.*</XunitVsixVersion>
+    <XVSSDKVersion>0.3.0-alpha.*</XVSSDKVersion>
+    <XVSSDKBuildToolsVersion Condition="'$(CI)' != 'true'">0.3.0-alpha.*</XVSSDKBuildToolsVersion>
+    <XVSSDKBuildToolsVersion Condition="'$(CI)' == 'true'">0.3.0-alpha.17</XVSSDKBuildToolsVersion>
+
+    <VSSDKBuildToolsVersion>15.1.192</VSSDKBuildToolsVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(CI)' == ''">
+    <CI Condition="'$(TEAMCITY_VERSION)' != '' or 
+                   '$(APPVEYOR)' != '' or 
+                   '$(BuildRunner)' == 'MyGet' or 
+                   '$(JENKINS_HOME)' != '' or 
+                   '$(TF_BUILD)' == 'true' or
+                   '$(IsVSTSBuild)' == 'true' or
+                   '$(TRAVIS)' == 'true'">true</CI>
+    <CI Condition="'$(CI)' == ''">false</CI>
+  </PropertyGroup>
+
+  <Target Name="GetCI" Returns="$(CI)">
+    <Message Importance="high" Text="CI=$(CI)" />
+  </Target>
+
+</Project>

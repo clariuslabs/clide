@@ -30,9 +30,12 @@ namespace Clide
 		{
 			properties = new Lazy<GlobalProjectProperties>(() => new GlobalProjectProperties(this));
 			ExpressionEvaluator = expressionEvaluator;
+			Configuration = new ProjectConfiguration(new Lazy<EnvDTE.Project>(() => As<EnvDTE.Project>()));
 		}
 
 		Lazy<IVsBooleanSymbolExpressionEvaluator> ExpressionEvaluator { get; }
+
+		public IProjectConfiguration Configuration { get; }
 
 		/// <summary>
 		/// Saves pending changes to the project file.

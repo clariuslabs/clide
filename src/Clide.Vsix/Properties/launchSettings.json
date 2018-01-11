@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Clide.Vsix": {
+      "commandName": "Executable",
+      "executablePath": "$(VsInstallRoot)\\Common7\\IDE\\devenv.exe",
+      "commandLineArgs": "/rootSuffix $(VSSDKTargetPlatformRegRootSuffix)",
+      "environmentVariables": {
+        "xunit.vsix.debug": "false"
+      }
+    }
+  }
+}

@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using Xunit;
 
-[assembly: AssemblyTitle ("Clide.IntegrationTests")]
 [assembly: AssemblyDescription ("Clide.IntegrationTests")]
 
 #if DEBUG

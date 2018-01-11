@@ -1,3 +1,4 @@
+.vs
 .nuget
 out
 bin
@@ -6,9 +7,10 @@ packages
 *.nuget.targets
 *.nuget.props
 *.lock.json
+*.nupkg
 *.suo
 *.user
 *.cache
-.vs
+*.binlog
+*.rsp
 .*
-log.txt

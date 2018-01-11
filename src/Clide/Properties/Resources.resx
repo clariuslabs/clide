@@ -118,25 +118,25 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CommandBus_DuplicateHandler" xml:space="preserve">
-    <value>The command handler '{handler}' cannot be used because an existing one is already registered for the command type '{command}'.</value>
+    <value>The command handler '{0}' cannot be used because an existing one is already registered for the command type '{1}'.</value>
   </data>
   <data name="CommandBus_InvalidHandler" xml:space="preserve">
     <value>Command handler '{0}' does not implement ICommandHandler or IAsyncCommandHandler generic interfaces.</value>
   </data>
   <data name="CommandBus_MissingReturnHandler" xml:space="preserve">
-    <value>The command handler '{handler}' does not implement the required interface ICommandHandler&lt;{command}, {returns}&gt; or IAsyncCommandHandler&lt;{command}, {returns}&gt; to return the value expected by the command execution.</value>
+    <value>The command handler '{0}' does not implement the required interface ICommandHandler&lt;{1}, {2}&gt; or IAsyncCommandHandler&lt;{1}, {2}&gt; to return the value expected by the command execution.</value>
   </data>
   <data name="ConfigProjectProperties_NonMsBuildProject" xml:space="preserve">
-    <value>Project '{project}' is not based on MSBuild. Configuration-specific properties cannot be retrieved or set using the standard dynamic properties.</value>
+    <value>Project '{0}' is not based on MSBuild. Configuration-specific properties cannot be retrieved or set using the standard dynamic properties.</value>
   </data>
   <data name="ConfigProjectProperties_SetNonMsBuildProject" xml:space="preserve">
-    <value>Attempted to set property '{property}' for configuration '{configuration}' on project '{project}' which is not based on MSBuild. Configuration-specific user properties cannot be retrieved or set using the standard dynamic properties.</value>
+    <value>Attempted to set property '{0}' for configuration '{1}' on project '{2}' which is not based on MSBuild. Configuration-specific user properties cannot be retrieved or set using the standard dynamic properties.</value>
   </data>
   <data name="ConfigUserProjectProperties_NonMsBuildProject" xml:space="preserve">
-    <value>Project '{project}' is not based on MSBuild. Configuration-specific properties for '{configuration}' cannot be retrieved or set using the standard dynamic properties.</value>
+    <value>Project '{0}' is not based on MSBuild. Configuration-specific properties for '{1}' cannot be retrieved or set using the standard dynamic properties.</value>
   </data>
   <data name="ConfigUserProjectProperties_SetNonMsBuildProject" xml:space="preserve">
-    <value>Attempted to set property '{property}' for configuration '{configuration}' on project '{project}' which is not based on MSBuild. Configuration-specific user properties cannot be retrieved or set using the standard dynamic properties.</value>
+    <value>Attempted to set property '{0}' for configuration '{1}' on project '{2}' which is not based on MSBuild. Configuration-specific user properties cannot be retrieved or set using the standard dynamic properties.</value>
   </data>
   <data name="ItemProperties_InvalidNullValue" xml:space="preserve">
     <value>Cannot set null value for item property {0}.</value>
@@ -166,18 +166,54 @@
     <value>Required dependency '{0}' was not found.</value>
   </data>
   <data name="SolutionExplorerNode_SelectionUnsupported" xml:space="preserve">
-    <value>Selecting element '{item}' is not supported by the underlying project type.</value>
+    <value>Selecting element '{0}' is not supported by the underlying project type.</value>
   </data>
   <data name="SolutionNode_InvalidSolutionFile" xml:space="preserve">
     <value>The solution file '{0}' is invalid.</value>
   </data>
   <data name="UserProjectProperties_NonMsBuildProject" xml:space="preserve">
-    <value>Project '{project}' is not based on MSBuild. User properties cannot be retrieved or set using the standard dynamic properties.</value>
+    <value>Project '{0}' is not based on MSBuild. User properties cannot be retrieved or set using the standard dynamic properties.</value>
   </data>
   <data name="UserProjectProperties_SetNonMsBuildProject" xml:space="preserve">
-    <value>Attempted to set property '{property}' on project '{project}' which is not based on MSBuild. User properties cannot be retrieved or set using the standard dynamic properties.</value>
+    <value>Attempted to set property '{0}' on project '{1}' which is not based on MSBuild. User properties cannot be retrieved or set using the standard dynamic properties.</value>
   </data>
   <data name="VsServiceLocator_NoInstanceForContract" xml:space="preserve">
     <value>Could not locate any instances of contract {0}.</value>
+  </data>
+  <data name="VsCommandExtensionAdapter_CannotExecute" xml:space="preserve">
+    <value>Attempted to execute command '{0}' ({1}) but current command status does not allow it.</value>
+  </data>
+  <data name="VsCommandExtensionAdapter_ExecuteShieldMessage" xml:space="preserve">
+    <value>Command did not execute successfully due to an unexpected exception. Please check the output window for additional information.</value>
+  </data>
+  <data name="VsCommandExtensionAdapter_ExecutingCommand" xml:space="preserve">
+    <value>Executing command '{0}' ({1}).</value>
+  </data>
+  <data name="VsCommandExtensionAdapter_QueryStatusShieldMessage" xml:space="preserve">
+    <value>Command could not determine its current status due to an unexpected exception. Please check the output window for additional information.</value>
+  </data>
+  <data name="OutputWindowManager_FailedToCreatePane" xml:space="preserve">
+    <value>Failed to create output window pane '{0}'.</value>
+  </data>
+  <data name="OutputWindowManager_CreatingPane" xml:space="preserve">
+    <value>Creating output pane '{0}' since it doesn't exist already.</value>
+  </data>
+  <data name="OutputWindowManager_RetrievingPane" xml:space="preserve">
+    <value>Retrieving potentially existing output pane '{0}'.</value>
+  </data>
+  <data name="OutputWindowManager_TraceInitializing" xml:space="preserve">
+    <value>Initializing trace output pane '{0}'.</value>
+  </data>
+  <data name="SettingsManager_CannotSaveAsString" xml:space="preserve">
+    <value>Cannot persist setting value of type '{0}' from property '{1}.{2}'. An appropriate type converter that can convert the value to a string is required.</value>
+  </data>
+  <data name="SettingsManager_FailedToRead" xml:space="preserve">
+    <value>Failed to read settings class '{0}' from the settings store.</value>
+  </data>
+  <data name="SettingsManager_InvalidValue" xml:space="preserve">
+    <value>Cannot assign value of type '{0}' to property '{1}.{2}' of type '{4}'. An appropriate type converter is required.</value>
+  </data>
+  <data name="CommandRegistrar_ErrorImportingCommandForPackage" xml:space="preserve">
+    <value>An error occured trying to import the commands for the VS Package '{0}'</value>
   </data>
 </root>

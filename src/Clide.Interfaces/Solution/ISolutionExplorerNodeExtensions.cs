@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using Clide;
-using Clide.Properties.Interfaces;
+using Clide.Properties;
 
 /// <summary>
 /// Provides usability extensions to the <see cref="ISolutionNode"/> interface.

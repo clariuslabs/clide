@@ -1,43 +1,46 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-
+﻿
 namespace Clide
 {
+	using EnvDTE;
+	using System;
+	using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
     internal class ProjectConfiguration : IProjectConfiguration
     {
-        private ProjectNode project;
+        private Lazy<Project> project;
 
-        public ProjectConfiguration(ProjectNode project)
+        public ProjectConfiguration(Lazy<Project> project)
         {
             this.project = project;
         }
 
         public string ActiveConfigurationName
         {
-            get { return ActiveConfiguration + "|" + ActivePlatform; }
+            get { return this.ActiveConfiguration + "|" + this.ActivePlatform; }
         }
 
         public string ActiveConfiguration
         {
-            get { return project.Project.Value.ConfigurationManager.ActiveConfiguration.ConfigurationName; }
+            get { return project.Value.ConfigurationManager.ActiveConfiguration.ConfigurationName; }
         }
 
         public string ActivePlatform
         {
-            get { return project.Project.Value.ConfigurationManager.ActiveConfiguration.PlatformName.Replace(" ", "").Trim(); }
+            get { return project.Value.ConfigurationManager.ActiveConfiguration.PlatformName.Replace(" ", "").Trim(); }
         }
 
         public IEnumerable<string> Configurations
         {
-            get { return ((IEnumerable)project.Project.Value.ConfigurationManager.ConfigurationRowNames).OfType<string>(); }
+            get { return ((IEnumerable)project.Value.ConfigurationManager.ConfigurationRowNames).OfType<string>(); }
         }
 
         public IEnumerable<string> Platforms
         {
             get
             {
-                return ((IEnumerable)this.project.Project.Value.ConfigurationManager.PlatformNames)
+                return ((IEnumerable)this.project.Value.ConfigurationManager.PlatformNames)
                     .OfType<string>()
                     // The configuration API does not use whitespaces.
                     .Select(s => s.Replace(" ", "").Trim());

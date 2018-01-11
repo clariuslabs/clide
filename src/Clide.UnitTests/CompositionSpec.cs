@@ -31,7 +31,7 @@ namespace Clide
 			services = container.GetExportedValue<Mock<IServiceProvider>>();
 		}
 
-		[MemberData("GetExportedComponents", DisableDiscoveryEnumeration = true)]
+		[MemberData(nameof(GetExportedComponents), DisableDiscoveryEnumeration = true)]
 		[Theory]
 		public void when_retrieving_exported_component_then_succeeds(Type contractType, string contractName)
 		{
@@ -78,18 +78,6 @@ namespace Clide
 		public IDisposable Subscribe(IObserver<string> observer) =>
 			new[] { "foo" }.ToObservable().Subscribe(observer);
 	}
-
-	[Component(CreationPolicy.NonShared)]
-	public partial class MockCommandHandler : ICommandHandler<MockCommand>
-	{
-		public bool CanExecute(MockCommand command) => true;
-
-		public void Execute(MockCommand command)
-		{
-		}
-	}
-
-	public class MockCommand : ICommand { }
 
 	[PartCreationPolicy(CreationPolicy.Shared)]
 	public class MockServiceProvider

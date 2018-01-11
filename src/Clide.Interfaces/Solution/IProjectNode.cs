@@ -71,5 +71,10 @@
 		/// <param name="capabilities">The known capabilities to evaluate</param>
 		/// <returns><see langword="true"/> if the project supports the specified capabilities</returns>
 		bool Supports(KnownCapabilities capabilities);
+
+		/// <summary>
+		/// Gets the project configuration
+		/// </summary>
+		IProjectConfiguration Configuration { get; }
 	}
 }

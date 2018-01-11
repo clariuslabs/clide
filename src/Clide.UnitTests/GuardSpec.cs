@@ -85,7 +85,7 @@ namespace Clide
 			var ex = Assert.Throws<ArgumentException>(() => Guard.IsValid("value", value, s => false, "Invalid {0}", "bar"));
 
 			Assert.Equal ("value", ex.ParamName);
-			Assert.True (ex.Message.StartsWith ("Invalid bar"));
+			Assert.StartsWith("Invalid bar", ex.Message);
 		}
 
 		[Fact]

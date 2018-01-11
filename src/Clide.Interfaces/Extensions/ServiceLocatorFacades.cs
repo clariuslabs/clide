@@ -2,11 +2,10 @@
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using Clide;
-using Clide.Properties.Interfaces;
+using Clide.Properties;
 using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Ole = Microsoft.VisualStudio.OLE.Interop;
 
@@ -44,7 +43,7 @@ public static class ServiceLocatorFacades
 	{
 		Guard.NotNull (nameof (dte), dte);
 
-		var components = new Microsoft.VisualStudio.Shell.ServiceProvider((Ole.IServiceProvider)dte).GetService<SComponentModel, IComponentModel>();
+		var components = new OleServiceProvider(dte).GetService<SComponentModel, IComponentModel>();
 
 		try {
 			return components.GetService<IServiceLocatorProvider> ().GetServiceLocator (dte);
@@ -75,7 +74,7 @@ public static class ServiceLocatorFacades
 	{
 		Guard.NotNull (nameof (project), project);
 
-		var components = new Microsoft.VisualStudio.Shell.ServiceProvider((Ole.IServiceProvider)project.DTE).GetService<SComponentModel, IComponentModel>();
+		var components = new OleServiceProvider(project.DTE).GetService<SComponentModel, IComponentModel>();
 		try {
 			return components.GetService<IServiceLocatorProvider> ().GetServiceLocator (project);
 		} catch (ImportCardinalityMismatchException ex) {
@@ -97,7 +96,7 @@ public static class ServiceLocatorFacades
 		if (ErrorHandler.Failed (hierarchy.GetSite (out site)))
 			services = Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider;
 		else
-			services = new Microsoft.VisualStudio.Shell.ServiceProvider (site);
+			services = new OleServiceProvider (site);
 
 		var components = services.GetService<SComponentModel, IComponentModel>();
 		try {
@@ -121,7 +120,7 @@ public static class ServiceLocatorFacades
 		if (ErrorHandler.Failed (((IVsHierarchy)project).GetSite (out site)))
 			serviceProvider = Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider;
 		else
-			serviceProvider = new Microsoft.VisualStudio.Shell.ServiceProvider (site);
+			serviceProvider = new OleServiceProvider (site);
 
 		var components = serviceProvider.GetService<SComponentModel, IComponentModel>();
 
