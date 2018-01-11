@@ -49,7 +49,8 @@ AssemblyVersion=$(AssemblyVersion)" />
       <_GitBranch Condition="'$(_IndexOfBranchSlash)' == '0'">$(GitBranch)</_GitBranch>
 
       <!-- We'll use GitFlow and ship publicly from master, meaning we don't need branch metadata from there -->
-      <SemVerMetadata Condition="'$(_GitBranch)' != 'master'">$(_GitBranch).</SemVerMetadata>
+      <GitSemVerDashLabel Condition="'$(GitSemVerDashLabel)' == '' and '$(_GitBranch)' != 'master'">-$(_GitBranch)</GitSemVerDashLabel>
+      <SemVerMetadata Condition="'$(GitSemVerDashLabel)' != '-$(_GitBranch)' and '$(_GitBranch)' != 'master'">$(_GitBranch).</SemVerMetadata>
       <SemVerMetadata>$(SemVerMetadata)sha.$(GitCommit)</SemVerMetadata>
 
       <!-- If there is a pre-release label, fix the major.minor.build and increment the release label digit instead. -->
