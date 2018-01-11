@@ -36,7 +36,7 @@ namespace Clide
 		{
 			Guard.NotNull (nameof (dte), dte);
 
-			return new ServiceLocatorImpl(new Microsoft.VisualStudio.Shell.ServiceProvider ((Ole.IServiceProvider)dte));
+			return new ServiceLocatorImpl(new OleServiceProvider(dte));
 		}
 
 		public IServiceLocator GetServiceLocator (Project project)
@@ -62,7 +62,7 @@ namespace Clide
 			if (ErrorHandler.Failed (hierarchy.GetSite (out site)))
 				services = Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider;
 			else
-				services = new Microsoft.VisualStudio.Shell.ServiceProvider (site);
+				services = new OleServiceProvider (site);
 
 			return new ServiceLocatorImpl (services);
 		}

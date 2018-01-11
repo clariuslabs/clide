@@ -38,12 +38,14 @@ namespace Clide
 			var dte = GlobalServices.GetService<DTE>();
 			var solutionEmpty = GlobalServices.GetService<SVsSolution, IVsSolution>();
 
-			dte.Solution.Open(new FileInfo(Constants.SingleProjectSolution).FullName);
+            var baseDir = Path.GetDirectoryName(GetType().Assembly.ManifestModule.FullyQualifiedName);
+
+            dte.Solution.Open(Path.Combine(baseDir, Constants.SingleProjectSolution));
 
 			var solution1 = GlobalServices.GetService<SVsSolution, IVsSolution>();
 
 			dte.Solution.Close();
-			dte.Solution.Open(new FileInfo(Constants.BlankSolution).FullName);
+			dte.Solution.Open(Path.Combine(baseDir, Constants.BlankSolution));
 
 			var solution2 = GlobalServices.GetService<SVsSolution, IVsSolution>();
 
@@ -109,7 +111,7 @@ namespace Clide
 
 			ErrorHandler.ThrowOnFailure(vsproj.GetProperty((uint)VSConstants.VSITEMID.Root, (int)__VSHPROPID5.VSHPROPID_ProjectCapabilities, out capabilities));
 
-			output.WriteLine(capabilities.ToString());
+			//output.WriteLine(capabilities.ToString());
 
 			var async = GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<IAsyncManager>();
 			Assert.NotNull(async);

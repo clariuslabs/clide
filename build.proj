@@ -41,7 +41,6 @@
 	</ItemGroup>
 
 	<Target Name="Clean">
-		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties)" Targets="Clean" />
 		<Exec Command="rmdir $(Out) /S /Q" Condition="Exists('$(Out)')" ContinueOnError="true" />
 		<!-- Remove all bin/obj recursively under /src -->
 		<Exec Command='for /d /r . %%d in (bin,obj) do @if exist "%%d" rd /s/q "%%d"' WorkingDirectory='$(MSBuildThisFileDirectory)src' ContinueOnError='true' />

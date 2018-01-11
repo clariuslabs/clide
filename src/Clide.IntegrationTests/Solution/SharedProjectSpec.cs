@@ -6,13 +6,13 @@ namespace Clide.Solution
 {
 	[Trait ("LongRunning", "true")]
 	[Vsix (MinimumVisualStudioVersion = VisualStudioVersion.VS2013)]
-	[Collection ("OpenSolution")]
+	[Collection ("OpenCopySolution")]
 	public class SharedProjectSpec
 	{
 		ISolutionFixture fixture;
 		ITestOutputHelper output;
 
-		public SharedProjectSpec (OpenSolutionFixture fixture, ITestOutputHelper output)
+		public SharedProjectSpec (OpenCopySolutionFixture fixture, ITestOutputHelper output)
 		{
 			this.fixture = fixture;
 			this.output = output;
@@ -38,8 +38,8 @@ namespace Clide.Solution
 			Assert.Equal (first, second);
 		}
 
-		[VsixFact]
-		public void when_getting_logical_path_of_item_then_succeeds_for_shared_project ()
+        [VsixFact]
+        public void when_getting_logical_path_of_item_then_succeeds_for_shared_project ()
 		{
 			var node = fixture.Solution.FindProject(x => x.Name == "CsShared")
 				.Nodes.Traverse(TraverseKind.DepthFirst, x => x.Nodes)

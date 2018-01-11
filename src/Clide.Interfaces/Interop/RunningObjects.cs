@@ -1,86 +1,112 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio;
 
 namespace Clide.Interop
 {
-	static class RunningObjects
-	{
-		static readonly Regex versionExpr = new Regex (@"Microsoft Visual Studio (?<version>\d\d\.\d)", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+    static class RunningObjects
+    {
+        static readonly Regex versionExpr = new Regex(@"Microsoft Visual Studio (?<version>\d\d\.\d)", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+        static readonly Regex semVerExpr = new Regex(@"SemanticVersion=(?<version>\d\d)\.\d", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
-		public static EnvDTE.DTE GetDTE(TimeSpan retryTimeout)
-		{
-			var processId = Process.GetCurrentProcess ().Id;
-			var devEnv = Process.GetCurrentProcess ().MainModule.FileName;
+        public static EnvDTE.DTE GetDTE(TimeSpan retryTimeout)
+        {
+            var processId = Process.GetCurrentProcess().Id;
+            var devEnv = Process.GetCurrentProcess().MainModule.FileName;
 
-			if (Path.GetFileName (devEnv) != "devenv.exe")
-				throw new NotSupportedException ("Can only retrieve the current DTE from a running devenv.exe instance.");
+            if (Path.GetFileName(devEnv) != "devenv.exe")
+                throw new NotSupportedException("Can only retrieve the current DTE from a running devenv.exe instance.");
 
-			// C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe
-			var version = versionExpr.Match (devEnv).Groups["version"];
-			if (!version.Success)
-				throw new NotSupportedException ("Could not determine Visual Studio version from running process from " + devEnv);
+            // C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe
+            var version = versionExpr.Match(devEnv).Groups["version"];
+            if (!version.Success)
+            {
+                var ini = Path.ChangeExtension(devEnv, "isolation.ini");
+                if (!File.Exists(ini))
+                    throw new NotSupportedException("Could not determine Visual Studio version from running process from " + devEnv);
 
-			return GetComObject<EnvDTE.DTE> (string.Format ("!{0}.{1}:{2}",
-				"VisualStudio.DTE", version.Value, processId), retryTimeout);
-		}
+                var semver = File.ReadAllLines(ini)
+                    .Where(line => line.StartsWith("SemanticVersion=", StringComparison.Ordinal))
+                    .Select(line => semVerExpr.Match(line).Groups["version"])
+                    .FirstOrDefault();
 
-		public static EnvDTE.DTE GetDTE(string visualStudioVersion, int processId, TimeSpan retryTimeout)
-		{
-			return GetComObject<EnvDTE.DTE> (string.Format ("!{0}.{1}:{2}",
-				"VisualStudio.DTE", visualStudioVersion, processId), retryTimeout);
-		}
+                if (!semver.Success)
+                    throw new NotSupportedException("Could not determine the SemanticVersion for Visual Studio from devenv.isolation.ini at " + ini);
 
-		public static T GetComObject<T> (string monikerName, TimeSpan retryTimeout)
-		{
-			object comObject;
-			var stopwatch = Stopwatch.StartNew ();
-			do {
-				comObject = GetComObject (monikerName);
-				if (comObject != null)
-					break;
+                return GetComObject<EnvDTE.DTE>(string.Format("!{0}.{1}.0:{2}",
+                    "VisualStudio.DTE", semver.Value, processId), retryTimeout);
+            }
+            else
+            {
+                return GetComObject<EnvDTE.DTE>(string.Format("!{0}.{1}:{2}",
+                    "VisualStudio.DTE", version.Value, processId), retryTimeout);
+            }
+        }
 
-				System.Threading.Thread.Sleep (100);
-			}
+        public static EnvDTE.DTE GetDTE(string visualStudioVersion, int processId, TimeSpan retryTimeout)
+        {
+            return GetComObject<EnvDTE.DTE>(string.Format("!{0}.{1}:{2}",
+                "VisualStudio.DTE", visualStudioVersion, processId), retryTimeout);
+        }
 
-			while (stopwatch.Elapsed < retryTimeout);
+        public static T GetComObject<T>(string monikerName, TimeSpan retryTimeout)
+        {
+            object comObject;
+            var stopwatch = Stopwatch.StartNew();
+            do
+            {
+                comObject = GetComObject(monikerName);
+                if (comObject != null)
+                    break;
 
-			return (T)comObject;
-		}
+                System.Threading.Thread.Sleep(100);
+            }
 
-		private static object GetComObject (string monikerName)
-		{
-			object comObject = null;
-			try {
-				IRunningObjectTable table;
-				IEnumMoniker moniker;
-				if (ErrorHandler.Failed (NativeMethods.GetRunningObjectTable (0, out table)))
-					return null;
+            while (stopwatch.Elapsed < retryTimeout);
 
-				table.EnumRunning (out moniker);
-				moniker.Reset ();
-				var pceltFetched = IntPtr.Zero;
-				var rgelt = new IMoniker[1];
+            return (T)comObject;
+        }
 
-				while (moniker.Next (1, rgelt, pceltFetched) == 0) {
-					IBindCtx ctx;
-					if (!ErrorHandler.Failed (NativeMethods.CreateBindCtx (0, out ctx))) {
-						string displayName;
-						rgelt[0].GetDisplayName (ctx, null, out displayName);
-						if (displayName == monikerName) {
-							table.GetObject (rgelt[0], out comObject);
-							return comObject;
-						}
-					}
-				}
-			} catch {
-				return null;
-			}
+        private static object GetComObject(string monikerName)
+        {
+            object comObject = null;
+            try
+            {
+                IRunningObjectTable table;
+                IEnumMoniker moniker;
+                if (ErrorHandler.Failed(NativeMethods.GetRunningObjectTable(0, out table)))
+                    return null;
 
-			return comObject;
-		}
-	}
+                table.EnumRunning(out moniker);
+                moniker.Reset();
+                var pceltFetched = IntPtr.Zero;
+                var rgelt = new IMoniker[1];
+
+                while (moniker.Next(1, rgelt, pceltFetched) == 0)
+                {
+                    IBindCtx ctx;
+                    if (!ErrorHandler.Failed(NativeMethods.CreateBindCtx(0, out ctx)))
+                    {
+                        string displayName;
+                        rgelt[0].GetDisplayName(ctx, null, out displayName);
+                        if (displayName == monikerName)
+                        {
+                            table.GetObject(rgelt[0], out comObject);
+                            return comObject;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                return null;
+            }
+
+            return comObject;
+        }
+    }
 }

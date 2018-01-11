@@ -1,58 +1,61 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-	<!-- Common Packages -->
-	<ItemGroup>
-		<PackageReference Include="GitLink" Version="3.1.0" />
-		<PackageReference Include="Merq" Version="1.0.0-rc" />
-		<PackageReference Include="Merq.Async" Version="1.1.17-rc" />
-		<PackageReference Include="System.Reactive.Interfaces" Version="3.0.0" />
-		<PackageReference Include="IFluentInterface" Version="2.0.3" />
-		<PackageReference Include="netfx-System.StringResources" Version="3.1.9" />
-		<PackageReference Include="System.Diagnostics.Tracer" Version="2.0.8" />
-	</ItemGroup>
+  <!-- Common Packages -->
+  <ItemGroup>
+    <PackageReference Include="Merq" Version="1.0.0-rc" />
+    <PackageReference Include="Merq.Async" Version="1.1.17-rc" />
+    <PackageReference Include="System.Reactive.Interfaces" Version="3.0.0" />
+    <PackageReference Include="IFluentInterface" Version="2.0.3" />
+    <PackageReference Include="netfx-System.StringResources" Version="3.1.10" />
+    <PackageReference Include="System.Diagnostics.Tracer" Version="2.0.8" />
+  </ItemGroup>
 
-	<ItemGroup Condition="'$(IncludePack)' == 'true'">
-		<PackageReference Include="NuGet.Build.Packaging" Version="*" />
-	</ItemGroup>
+  <ItemGroup>
+    <None Remove="*.binlog" />
+  </ItemGroup>
 
-	<ItemGroup Condition="'$(IncludeVSSDK)' == 'true'">
-		<PackageReference Include="Xamarin.VSSDK" Version="0.3.0-alpha.*" />
-	</ItemGroup>
+  <ItemGroup Condition="'$(IncludePack)' == 'true'">
+    <PackageReference Include="NuGet.Build.Packaging" Version="0.2.2" />
+  </ItemGroup>
 
-	<ItemGroup Condition="'$(IncludeRx)' == 'true'">
-		<PackageReference Include="System.Reactive.Linq" Version="3.0.0" />
-	</ItemGroup>
+  <ItemGroup Condition="'$(IncludeVSSDK)' == 'true'">
+    <PackageReference Include="Xamarin.VSSDK" Version="0.3.0-alpha.*" />
+  </ItemGroup>
 
-	<ItemGroup Condition="'$(IncludeTests)' == 'true' or '$(IncludeIntegrationTests)' == 'true'">
-		<PackageReference Include="System.Reactive.Linq" Version="3.0.0" />
-		<PackageReference Include="xunit" Version="2.3.1" />
-		<PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" Condition="'$(CI)' == 'true'" />
-		<PackageReference Include="Moq" Version="4.5.13" />
-		<PackageReference Include="Merq" Version="1.0.0-rc" />
-	</ItemGroup>
+  <ItemGroup Condition="'$(IncludeRx)' == 'true'">
+    <PackageReference Include="System.Reactive.Linq" Version="3.0.0" />
+  </ItemGroup>
 
-	<ItemGroup Condition="'$(IncludeIntegrationTests)' == 'true' and '$(XunitVsix)' == ''">
-		<PackageReference Include="xunit.vsix" Version="0.4.0-alpha.*" />
-	</ItemGroup>
+  <ItemGroup Condition="'$(IncludeTests)' == 'true' or '$(IncludeIntegrationTests)' == 'true'">
+    <PackageReference Include="System.Reactive.Linq" Version="3.0.0" />
+    <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+    <PackageReference Include="Moq" Version="4.5.13" />
+    <PackageReference Include="Merq" Version="1.0.0-rc" />
+  </ItemGroup>
 
-	<PropertyGroup Condition="'$(IncludeTests)' == 'true' or '$(IncludeIntegrationTests)' == 'true'">
-		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-		<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
-		<NoWarn>$(NoWarn);0649</NoWarn>
-	</PropertyGroup>
+  <ItemGroup Condition="'$(IncludeIntegrationTests)' == 'true' and '$(XunitVsix)' == ''">
+    <PackageReference Include="xunit.vsix" Version="0.4.0-alpha.*" />
+  </ItemGroup>
 
-	<Import Project="Version.targets" />
+  <PropertyGroup Condition="'$(IncludeTests)' == 'true' or '$(IncludeIntegrationTests)' == 'true'">
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    <NoWarn>$(NoWarn);0649</NoWarn>
+  </PropertyGroup>
 
-	<Target Name="LocalPublish" Condition="'$(CI)' != 'true'" AfterTargets="Pack">
-		<Exec Command='rd "$(NuGetPackageRoot)$(PackageId.ToLowerInvariant())" /q /s' Condition="Exists('$(NuGetPackageRoot)$(PackageId.ToLowerInvariant())')" />
+  <Import Project="Version.targets" />
 
-		<ItemGroup>
-			<ToDelete Include="$(TEMP)\packages\$(PackageId)*.nupkg" />
-		</ItemGroup>
-		<Delete Files="@(ToDelete)" />
+  <Target Name="LocalPublish" Condition="'$(CI)' != 'true'" AfterTargets="Pack">
+    <Exec Command='rd "$(NuGetPackageRoot)$(PackageId.ToLowerInvariant())" /q /s' Condition="Exists('$(NuGetPackageRoot)$(PackageId.ToLowerInvariant())')" />
 
-		<MakeDir Directories="$(TEMP)\packages" Condition="!Exists('$(TEMP)\packages')" />
-		<Copy SourceFiles="$(PackageTargetPath)" DestinationFolder="$(TEMP)\packages" />
-	</Target>
+    <ItemGroup>
+      <ToDelete Include="$(TEMP)\packages\$(PackageId)*.nupkg" />
+    </ItemGroup>
+    <Delete Files="@(ToDelete)" />
+
+    <MakeDir Directories="$(TEMP)\packages" Condition="!Exists('$(TEMP)\packages')" />
+    <Copy SourceFiles="$(PackageTargetPath)" DestinationFolder="$(TEMP)\packages" />
+  </Target>
 
 </Project>

@@ -3,8 +3,13 @@
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
     <IncludeVSSDK>true</IncludeVSSDK>
+
+    <PackageId>Clide.Interfaces</PackageId>
+    <IsPackable>false</IsPackable>
     <IncludePack>true</IncludePack>
     <InferPackageContents>false</InferPackageContents>
+
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,7 +41,7 @@
 
   <Target Name="AddPackageContents" BeforeTargets="GetPackageContents">
     <ItemGroup>
-      <PackageFile Include="$(OutputPath)\Clide.Interfaces.*" Kind="Lib" />
+      <PackageFile Include="$(MSBuildProjectDirectory)\$(OutputPath)\Clide.Interfaces.*" Kind="Lib" />
     </ItemGroup>
   </Target>
 

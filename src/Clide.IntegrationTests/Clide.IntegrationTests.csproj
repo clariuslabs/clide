@@ -5,6 +5,8 @@
     <IncludeIntegrationTests>true</IncludeIntegrationTests>
     <EnableDefaultItems>false</EnableDefaultItems>
     <AddSyntheticProjectReferencesForSolutionDependencies>false</AddSyntheticProjectReferencesForSolutionDependencies>
+    <TimeoutSeconds>120</TimeoutSeconds>
+    <RecycleOnFailure>true</RecycleOnFailure>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <CodeAnalysisRuleSet>Clide.IntegrationTests.ruleset</CodeAnalysisRuleSet>

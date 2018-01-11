@@ -1,22 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" InitialTargets="FixupVsixDependencies">
   <PropertyGroup>
-    <TargetFrameworks>net461;net462</TargetFrameworks>
+    <TargetFramework Condition="'$(BuildingInsideVisualStudio)' == 'true' and '$(VisualStudioVersion)' == '15.0'">net462</TargetFramework>
+    <TargetFramework Condition="'$(BuildingInsideVisualStudio)' == 'true' and '$(VisualStudioVersion)' == '14.0'">net461</TargetFramework>
+    <TargetFramework Condition="'$(TargetFramework)' == '' and '$(CI)' == 'true'">net461</TargetFramework>
+    <TargetFrameworks Condition="'$(TargetFramework)' == '' and '$(CI)' == 'false'">net461;net462</TargetFrameworks>
+
     <IncludePack>true</IncludePack>
     <TargetVsixContainerName>Clide.vsix</TargetVsixContainerName>
     <IsProductComponent>true</IsProductComponent>
-
-    <CI Condition="'$(CI)' == '' and '$(TF_BUILD)' == 'true'">true</CI>
-    <CI Condition="'$(CI)' == '' and '$(APPVEYOR)' != ''">true</CI>
+    <BypassVsixValidation Condition="'$(CI)' == 'true'">true</BypassVsixValidation>
 
     <PackageId>Clide</PackageId>
     <Authors>kzu, Daniel Cazzulino</Authors>
     <Owners>clariuslabs, kzu</Owners>
     <Description>Clide</Description>
     <Copyright>Copyright 2012 Clarius Labs</Copyright>
+
     <InferPackageContents>false</InferPackageContents>
     <PackOnBuild Condition="'$(Configuration)' == 'Release'">true</PackOnBuild>
   </PropertyGroup>
 
+  <!-- Dynamic manifest info -->
+  <ItemGroup>
+    <!-- We need this since IsSystemComponent can't be specified if the VSIX is built by the 14.0 VSSDK -->
+    <VsixInstallation Include="Clide" IsSystemComponent="$(CI)" Condition="'$(VsSDKVersion)' != '' and '$(VsSDKVersion)' &gt; '14.0' " />
+  </ItemGroup>
+  
   <ItemGroup>
     <None Include="source.extension.vsixmanifest" />
     <PackageFile Include="build\*.*" Kind="Build" />
@@ -25,7 +34,7 @@
 
   <ItemGroup>
     <PackageReference Include="Xamarin.VSSDK.BuildTools" Version="0.3.0-alpha.*" Condition="'$(CI)' != 'true'" />
-    <PackageReference Include="Xamarin.VSSDK.BuildTools" Version="0.3.0-alpha.14" Condition="'$(CI)' == 'true'" />
+    <PackageReference Include="Xamarin.VSSDK.BuildTools" Version="0.3.0-alpha.17" Condition="'$(CI)' == 'true'" />
     <!-- Always build with latest VSSDK in CI -->
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="15.1.192" Condition="'$(CI)' == 'true'" />
   </ItemGroup>
