@@ -28,7 +28,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="GitInfo" Version="1.1.32" />
 		<PackageReference Include="MSBuilder.CI" Version="0.1.2" />
 		<PackageReference Include="xunit.runner.msbuild" Version="$(XunitVersion)" />
 		<PackageReference Include="xunit.runner.console" Version="$(XunitVersion)" />

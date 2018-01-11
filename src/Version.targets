@@ -4,6 +4,7 @@
   <PropertyGroup>
     <GitSkipCache>true</GitSkipCache>
     <GitIgnoreTagVersion>true</GitIgnoreTagVersion>
+    <GitCommitsRelativeTo>$(MSBuildThisFileDirectory.TrimEnd('\'))</GitCommitsRelativeTo>
   </PropertyGroup>
 
   <ItemGroup>
