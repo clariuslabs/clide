@@ -33,10 +33,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Xamarin.VSSDK.BuildTools" Version="0.3.0-alpha.*" Condition="'$(CI)' != 'true'" />
-    <PackageReference Include="Xamarin.VSSDK.BuildTools" Version="0.3.0-alpha.17" Condition="'$(CI)' == 'true'" />
+    <PackageReference Include="Xamarin.VSSDK.BuildTools" Version="$(XVSSDKBuildToolsVersion)" />
     <!-- Always build with latest VSSDK in CI -->
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="15.1.192" Condition="'$(CI)' == 'true'" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="$(VSSDKBuildToolsVersion)" Condition="'$(CI)' == 'true'" />
   </ItemGroup>
 
   <ItemGroup>

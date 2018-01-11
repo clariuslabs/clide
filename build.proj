@@ -1,7 +1,8 @@
 <Project DefaultTargets="Build" TreatAsLocalProperty="Configuration" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<Import Project="build\corebuild.props" />
+  <Import Project="src\Directory.Build.props" />
 
-	<PropertyGroup>
+  <PropertyGroup>
 		<Configuration Condition="'$(Configuration)' == '' and '$(CI)' == 'true'">Release</Configuration>
 		<Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
 
@@ -29,10 +30,11 @@
 	<ItemGroup>
 		<PackageReference Include="GitInfo" Version="1.1.32" />
 		<PackageReference Include="MSBuilder.CI" Version="0.1.2" />
-		<PackageReference Include="xunit.runner.msbuild" Version="2.3.1" />
-		<PackageReference Include="xunit.runner.console" Version="2.3.1" />
+		<PackageReference Include="xunit.runner.msbuild" Version="$(XunitVersion)" />
+		<PackageReference Include="xunit.runner.console" Version="$(XunitVersion)" />
 		<PackageReference Include="Sleet.Azure" Version="0.2.5" />
-	</ItemGroup>
+    <PackageReference Include="Merq.VisualStudio" Version="$(MerqVisualStudioVersion)" />
+  </ItemGroup>
 
 	<ItemGroup>
 		<Solution Include="src\Clide.sln"/>

@@ -2,12 +2,12 @@
 
   <!-- Common Packages -->
   <ItemGroup>
-    <PackageReference Include="Merq" Version="1.0.0-rc" />
-    <PackageReference Include="Merq.Async" Version="1.1.17-rc" />
-    <PackageReference Include="System.Reactive.Interfaces" Version="3.0.0" />
-    <PackageReference Include="IFluentInterface" Version="2.0.3" />
-    <PackageReference Include="netfx-System.StringResources" Version="3.1.10" />
-    <PackageReference Include="System.Diagnostics.Tracer" Version="2.0.8" />
+    <PackageReference Include="Merq" Version="$(MerqVersion)" />
+    <PackageReference Include="Merq.Async" Version="$(MerqAsyncVersion)" />
+    <PackageReference Include="System.Reactive.Interfaces" Version="$(RxVersion)" />
+    <PackageReference Include="IFluentInterface" Version="$(FluentInterfaceVersion)" />
+    <PackageReference Include="netfx-System.StringResources" Version="$(StringResourcesVersion)" />
+    <PackageReference Include="System.Diagnostics.Tracer" Version="$(TracerVersion)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,27 +15,27 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(IncludePack)' == 'true'">
-    <PackageReference Include="NuGet.Build.Packaging" Version="0.2.2" />
+    <PackageReference Include="NuGet.Build.Packaging" Version="$(NuGetizerVersion)" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(IncludeVSSDK)' == 'true'">
-    <PackageReference Include="Xamarin.VSSDK" Version="0.3.0-alpha.*" />
+    <PackageReference Include="Xamarin.VSSDK" Version="$(XVSSDKVersion)" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(IncludeRx)' == 'true'">
-    <PackageReference Include="System.Reactive.Linq" Version="3.0.0" />
+    <PackageReference Include="System.Reactive.Linq" Version="$(RxVersion)" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(IncludeTests)' == 'true' or '$(IncludeIntegrationTests)' == 'true'">
-    <PackageReference Include="System.Reactive.Linq" Version="3.0.0" />
-    <PackageReference Include="xunit" Version="2.3.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+    <PackageReference Include="System.Reactive.Linq" Version="$(RxVersion)" />
+    <PackageReference Include="xunit" Version="$(XunitVersion)" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitVersion)" />
+    <PackageReference Include="Merq" Version="$(MerqVersion)" />
     <PackageReference Include="Moq" Version="4.5.13" />
-    <PackageReference Include="Merq" Version="1.0.0-rc" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(IncludeIntegrationTests)' == 'true' and '$(XunitVsix)' == ''">
-    <PackageReference Include="xunit.vsix" Version="0.4.0-alpha.*" />
+    <PackageReference Include="xunit.vsix" Version="$(XunitVsixVersion)" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(IncludeTests)' == 'true' or '$(IncludeIntegrationTests)' == 'true'">
