@@ -8,6 +8,7 @@
     <IncludePack>true</IncludePack>
     <TargetVsixContainerName>Clide.vsix</TargetVsixContainerName>
     <IsProductComponent>true</IsProductComponent>
+    <BypassVsixValidation Condition="'$(CI)' == 'true'">true</BypassVsixValidation>
 
     <PackageId>Clide</PackageId>
     <Authors>kzu, Daniel Cazzulino</Authors>
