@@ -1,10 +1,6 @@
-﻿<Project InitialTargets="SetClideVsixPath" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project InitialTargets="_SetClideVsixPath" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-	<ItemGroup>
-		<ClideVsix Include="$(MSBuildThisFileDirectory)..\tools\*.vsix" />
-	</ItemGroup>
-
-	<Target Name="SetClideVsixPath">
+	<Target Name="_SetClideVsixPath">
 		<PropertyGroup>
 			<ClideVsixPath>@(ClideVsix -> '%(FullPath)')</ClideVsixPath>
 		</PropertyGroup>
