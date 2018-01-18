@@ -7,10 +7,15 @@
 
     <IncludePack>true</IncludePack>
     <TargetVsixContainerName>Clide.vsix</TargetVsixContainerName>
+
+    <!-- TODO: Should we set this to false on local builds? Would that confuse Willow? -->
     <IsProductComponent>true</IsProductComponent>
     <BypassVsixValidation Condition="'$(CI)' == 'true'">true</BypassVsixValidation>
+
+    <Experimental>true</Experimental>
     <Experimental Condition="'$(CI)' == 'true'">false</Experimental>
-    <Experimental Condition="'$(CI)' != 'true'">true</Experimental>
+    <SystemComponent>false</SystemComponent>
+    <SystemComponent Condition="'$(CI)' == 'true'">true</SystemComponent>
 
     <PackageId>Clide</PackageId>
     <Authors>kzu, Daniel Cazzulino</Authors>
@@ -24,7 +29,7 @@
 
   <!-- Dynamic manifest info -->
   <ItemGroup>
-    <VsixInstallation Include="Clide" SystemComponent="$(CI)" Experimental="$(Experimental)" />
+    <VsixInstallation Include="Clide" SystemComponent="$(SystemComponent)" Experimental="$(Experimental)" />
   </ItemGroup>
   
   <ItemGroup>
