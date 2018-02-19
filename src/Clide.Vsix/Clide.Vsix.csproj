@@ -7,8 +7,15 @@
 
     <IncludePack>true</IncludePack>
     <TargetVsixContainerName>Clide.vsix</TargetVsixContainerName>
+
+    <!-- TODO: Should we set this to false on local builds? Would that confuse Willow? -->
     <IsProductComponent>true</IsProductComponent>
     <BypassVsixValidation Condition="'$(CI)' == 'true'">true</BypassVsixValidation>
+
+    <Experimental>true</Experimental>
+    <Experimental Condition="'$(CI)' == 'true'">false</Experimental>
+    <SystemComponent>false</SystemComponent>
+    <SystemComponent Condition="'$(CI)' == 'true'">true</SystemComponent>
 
     <PackageId>Clide</PackageId>
     <Authors>kzu, Daniel Cazzulino</Authors>
@@ -22,17 +29,18 @@
 
   <!-- Dynamic manifest info -->
   <ItemGroup>
-    <!-- We need this since IsSystemComponent can't be specified if the VSIX is built by the 14.0 VSSDK -->
-    <VsixInstallation Include="Clide" IsSystemComponent="$(CI)" Condition="'$(VsSDKVersion)' != '' and '$(VsSDKVersion)' &gt; '14.0' " />
+    <VsixInstallation Include="Clide" SystemComponent="$(SystemComponent)" Experimental="$(Experimental)" />
   </ItemGroup>
   
   <ItemGroup>
     <None Include="source.extension.vsixmanifest" />
     <PackageFile Include="build\*.*" Kind="Build" />
+    <PackageFile Include="MSBuilder.VsixInstaller" Version="1.0.4" Kind="Dependency" />
     <BindingRedirect Include="Clide" From="3.0.0.0" To="99.9.9.9" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MSBuilder.VsixInstaller" Version="1.0.4" />
     <PackageReference Include="Xamarin.VSSDK.BuildTools" Version="$(XVSSDKBuildToolsVersion)" />
     <!-- Always build with latest VSSDK in CI -->
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="$(VSSDKBuildToolsVersion)" Condition="'$(CI)' == 'true'" />
