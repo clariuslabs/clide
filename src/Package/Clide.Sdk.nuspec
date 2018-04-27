@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+	<metadata>
+		<id>Clide.Sdk</id>
+		<version>1.0.0</version>
+		<authors>Daniel Cazzulino</authors>
+		<owners>clariuslabs, kzu</owners>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>Clide</description>
+		<copyright>Copyright 2012 Clarius Labs</copyright>
+	</metadata>
+	<files>
+		<file src="..\Clide.Extensibility\bin\$Configuration$\Clide.Extensibility.dll" target="lib\net45" />
+		<file src="..\Clide.Extensibility\bin\$Configuration$\Clide.Extensibility.xml" target="lib\net45" />
+	</files>
+</package>
