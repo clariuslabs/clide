@@ -85,55 +85,25 @@ public static class ISolutionNodeExtensions
 
 		public bool VisitLeave (IProjectNode project) => true;
 
-		public bool VisitEnter (IFolderNode folder)
-		{
-			throw new NotSupportedException ();
-		}
+		public bool VisitEnter (IFolderNode folder) => false;
 
-		public bool VisitLeave (IFolderNode folder)
-		{
-			throw new NotSupportedException ();
-		}
+		public bool VisitLeave (IFolderNode folder) => false;
 
-		public bool VisitEnter (IItemNode item)
-		{
-			throw new NotSupportedException ();
-		}
+		public bool VisitEnter (IItemNode item) => false;
 
-		public bool VisitLeave (IItemNode item)
-		{
-			throw new NotSupportedException ();
-		}
+		public bool VisitLeave (IItemNode item) => false;
 
-		public bool VisitEnter (IReferencesNode references)
-		{
-			throw new NotSupportedException ();
-		}
+		public bool VisitEnter (IReferencesNode references) => false;
 
-		public bool VisitLeave (IReferencesNode references)
-		{
-			throw new NotSupportedException ();
-		}
+		public bool VisitLeave (IReferencesNode references) => false;
 
-		public bool VisitEnter (IReferenceNode reference)
-		{
-			throw new NotSupportedException ();
-		}
+		public bool VisitEnter (IReferenceNode reference) => false;
 
-		public bool VisitLeave (IReferenceNode reference)
-		{
-			throw new NotSupportedException ();
-		}
+		public bool VisitLeave (IReferenceNode reference) => false;
 
-		public bool VisitEnter (IGenericNode node)
-		{
-			throw new NotImplementedException ();
-		}
+		public bool VisitEnter (IGenericNode node) => false;
 
-		public bool VisitLeave (IGenericNode node)
-		{
-			throw new NotImplementedException ();
-		}
+		public bool VisitLeave (IGenericNode node) => false;
 	}
 
 	class FilteringProjectsVisitor : ISolutionVisitor
