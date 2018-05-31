@@ -110,6 +110,6 @@ public static class ISolutionNodeExtensions
 
 		public bool VisitEnter (IGenericNode node) => false;
 
-		public bool VisitLeave (IGenericNode node) => false;
+		public bool VisitLeave (IGenericNode node) => true;
 	}
 }
