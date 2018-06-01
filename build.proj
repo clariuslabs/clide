@@ -66,11 +66,14 @@
 	<Target Name="Package">
 		<MakeDir Directories="$(Out)" Condition="!Exists('$(Out)')" />
 		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties);IsSystemComponent=true;PackageOutputPath=$(Out)" />
-		<ItemGroup>
-			<Package Include="$(Out)\*.nupkg" />
-		</ItemGroup>
 	</Target>
 
+  <Target Name="BeforePush" BeforeTargets="Push">
+		<ItemGroup>
+			<Package Include="$(Out)\*.nupkg" />
+		</ItemGroup>    
+  </Target>
+  
 	<Target Name="Clean" />
 
 	<Target Name="Rebuild" DependsOnTargets="Clean;Restore;Build" />
