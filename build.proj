@@ -16,14 +16,8 @@
 		<CommonBuildProperties Condition="'$(Configuration)' == 'Release'">$(CommonBuildProperties);DeployExtension=false</CommonBuildProperties>
 
 		<Dev Condition="'$(Dev)' == ''">$(VisualStudioVersion)</Dev>
-	</PropertyGroup>
 
-	<!-- Azure-based static NuGet feed -->
-	<PropertyGroup>
-		<!-- Azure creds -->
-		<StorageAccount>nugets</StorageAccount>
-		<StorageContainer>clide</StorageContainer>
-
+  	<!-- Azure-based static NuGet feed -->
 		<SleetInit Condition="'$(SleetInit)' == ''">false</SleetInit>
 	</PropertyGroup>
 
