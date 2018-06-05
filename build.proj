@@ -16,18 +16,18 @@
 		<CommonBuildProperties Condition="'$(Configuration)' == 'Release'">$(CommonBuildProperties);DeployExtension=false</CommonBuildProperties>
 
 		<Dev Condition="'$(Dev)' == ''">$(VisualStudioVersion)</Dev>
+		<CI Condition="'$(CI)' == '' And '' != 'true'">$(TF_BUILD)</CI>
 
-  	<!-- Azure-based static NuGet feed -->
+	  	<!-- Azure-based static NuGet feed -->
 		<SleetInit Condition="'$(SleetInit)' == ''">false</SleetInit>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="MSBuilder.CI" Version="0.1.2" />
 		<PackageReference Include="xunit.runner.msbuild" Version="$(XunitVersion)" />
 		<PackageReference Include="xunit.runner.console" Version="$(XunitVersion)" />
 		<PackageReference Include="Sleet.Azure" Version="0.2.5" />
-    <PackageReference Include="Merq.VisualStudio" Version="$(MerqVisualStudioVersion)" />
-  </ItemGroup>
+		<PackageReference Include="Merq.VisualStudio" Version="$(MerqVisualStudioVersion)" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<Solution Include="src\Clide.sln"/>
@@ -62,11 +62,11 @@
 		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties);IsSystemComponent=true;PackageOutputPath=$(Out)" />
 	</Target>
 
-  <Target Name="BeforePush" BeforeTargets="Push">
+	<Target Name="BeforePush" BeforeTargets="Push">
 		<ItemGroup>
 			<Package Include="$(Out)\*.nupkg" />
 		</ItemGroup>    
-  </Target>
+	</Target>
   
 	<Target Name="Clean" />
 
