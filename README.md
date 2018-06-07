@@ -1,7 +1,7 @@
 <img align="center" src="https://raw.github.com/clariuslabs/clide/master/icon/64.png" /> Clide
 ==============
 
-[![Build status](https://img.shields.io/appveyor/ci/MobileEssentials/clide.svg)](https://ci.appveyor.com/project/MobileEssentials/clide "CI builds at AppVeyor") 
+[![Build status](https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/9319/badge)](http://build.devdiv.io/9319 "CI builds at AppVeyor") 
 [![Latest version](https://img.shields.io/nuget/v/clide.svg)](https://www.nuget.org/packages/clide "Latest  package at NuGet.org")
 [![Join the chat at https://gitter.im/MobileEssentials](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/MobileEssentials?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge "MobileEssentials chatroom with the team")
 [![License](http://img.shields.io/:license-mit-blue.svg)](opensource.org/licenses/mit-license.php)
