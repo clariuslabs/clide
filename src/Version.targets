@@ -3,8 +3,10 @@
 
   <PropertyGroup>
     <GitSkipCache>true</GitSkipCache>
+    <GitSkipReadCache>true</GitSkipReadCache>
+    <GitSkipWriteCache>true</GitSkipWriteCache>
     <GitIgnoreTagVersion>true</GitIgnoreTagVersion>
-    <GitCommitsRelativeTo>$(MSBuildThisFileDirectory.TrimEnd('\'))</GitCommitsRelativeTo>
+    <GitVersionFile>src\GitInfo.txt</GitVersionFile>
   </PropertyGroup>
 
   <ItemGroup>
