@@ -28,7 +28,7 @@
 
   <!-- Dynamic manifest info -->
   <ItemGroup>
-    <VsixInstallation Include="Clide" SystemComponent="$(SystemComponent)" Experimental="$(Experimental)" />
+    <VsixInstallation Include="Clide" AllUsers="$(SystemComponent)" SystemComponent="$(SystemComponent)" Experimental="$(Experimental)" />
   </ItemGroup>
   
   <ItemGroup>
@@ -65,9 +65,6 @@
       </ProjectReferenceWithConfiguration>
     </ItemGroup>
   </Target>
-
-  <!-- We always build as SystemComponent on CI -->
-  <Target Name="IsSystemComponent" Returns="$(CI)" />
 
   <Target Name="FixupVsixDependencies">
     <ItemGroup>
