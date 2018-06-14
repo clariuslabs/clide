@@ -3,19 +3,20 @@
 
   <PropertyGroup>
     <GitSkipCache>true</GitSkipCache>
-    <GitSkipReadCache>true</GitSkipReadCache>
-    <GitSkipWriteCache>true</GitSkipWriteCache>
+    <SkipReadGitCache>true</SkipReadGitCache>
+    <SkipWriteGitCache>true</SkipWriteGitCache>
     <GitIgnoreTagVersion>true</GitIgnoreTagVersion>
-    <GitVersionFile>src\GitInfo.txt</GitVersionFile>
+    <GitIgnoreBranchVersion>true</GitIgnoreBranchVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GitInfo" Version="2.0.7" PrivateAssets="all" />
+    <PackageReference Include="GitInfo" Version="2.0.11" PrivateAssets="all" />
   </ItemGroup>
 
-  <Target Name="Version" DependsOnTargets="SetVersion">
-    <Message Importance="high" Text="PackageVersion=$(PackageVersion)
-AssemblyVersion=$(AssemblyVersion)" />
+  <Target Name="Version" DependsOnTargets="SetVersion;GitInfoReport">
+    <Message Text="##vso[build.updatebuildnumber]$(PackageVersion)" Importance="high" Condition="'$(TF_BUILD)' == 'true'" />
+    <Message Importance="high" Text="  PackageVersion=$(PackageVersion)
+  AssemblyVersion=$(AssemblyVersion)" />
   </Target>
 
   <Target Name="_SetLocalCommits" BeforeTargets="_GitPopulateVersionInfo" Condition="'$(CI)' != 'true'">
