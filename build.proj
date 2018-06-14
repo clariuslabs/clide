@@ -47,12 +47,12 @@
 	<!-- Targets can be documented, and /t:Help will render the help -->
 	<Target Name="Build">
 		<MSBuild Projects="src\Clide.Vsix\Clide.Vsix.csproj" Targets="Version" Properties="$(CommonBuildProperties);GitInfoReportImportance=high" />
-		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties);CreateVsixContainer=true;Dev=%(Dev.Identity)" />
+		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties);Dev=%(Dev.Identity)" />
 	</Target>
 
 	<Target Name="Package">
 		<MakeDir Directories="$(Out)" Condition="!Exists('$(Out)')" />
-		<MSBuild Projects="src\Clide.Vsix\Clide.Vsix.csproj" Targets="Pack" Properties="$(CommonBuildProperties);CreateVsixContainer=false" />
+		<MSBuild Projects="src\Clide.Vsix\Clide.Vsix.csproj" Targets="Pack" Properties="$(CommonBuildProperties)" />
 	</Target>
 
   <Target Name="BeforePush" BeforeTargets="Push">
