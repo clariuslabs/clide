@@ -13,16 +13,9 @@ namespace Clide
 	/// Package providing Clide registration.
 	/// </summary>
 	[Guid ("fde81948-30cf-4611-a9ff-c30ca1e399aa")]
-	[PackageRegistration (RegisterUsing = RegistrationMethod.CodeBase, UseManagedResourcesOnly = true)]
+	[PackageRegistration (RegisterUsing = RegistrationMethod.CodeBase, UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
 	[ProvideBindingPath]
-	public class ClidePackage : Package
+	public class ClidePackage : AsyncPackage
 	{
-		/// <summary>
-		/// Initializes the package.
-		/// </summary>
-		protected override void Initialize ()
-		{
-			base.Initialize ();
-		}
 	}
 }

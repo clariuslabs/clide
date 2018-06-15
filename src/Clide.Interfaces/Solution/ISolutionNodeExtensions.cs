@@ -10,19 +10,13 @@ using Clide;
 [EditorBrowsable (EditorBrowsableState.Never)]
 public static class ISolutionNodeExtensions
 {
-	/// <summary>
-	/// Finds all the project nodes in the solution.
-	/// </summary>
-	/// <param name="solution">The solution to traverse.</param>
-	/// <returns>All project nodes that were found.</returns>
-	public static IEnumerable<IProjectNode> FindProjects (this ISolutionNode solution)
-	{
-		var visitor = new ProjectsVisitor();
-
-		solution.Accept (visitor);
-
-		return visitor.Projects;
-	}
+    /// <summary>
+    /// Finds all the project nodes in the solution.
+    /// </summary>
+    /// <param name="solution">The solution to traverse.</param>
+    /// <returns>All project nodes that were found.</returns>
+    public static IEnumerable<IProjectNode> FindProjects(this ISolutionNode solution) =>
+        solution.FindProjects(x => true);
 
 	/// <summary>
 	/// Finds all projects in the solution matching the given predicate.
@@ -52,88 +46,6 @@ public static class ISolutionNodeExtensions
 		solution.Accept (visitor);
 
 		return visitor.Projects.FirstOrDefault ();
-	}
-
-	private class ProjectsVisitor : ISolutionVisitor
-	{
-		public ProjectsVisitor ()
-		{
-			Projects = new List<IProjectNode> ();
-		}
-
-		public List<IProjectNode> Projects { get; private set; }
-
-		public bool VisitEnter (ISolutionNode solution) => true;
-
-		public bool VisitLeave (ISolutionNode solution) => true;
-
-		public bool VisitEnter (ISolutionItemNode solutionItem) => false;
-
-		public bool VisitLeave (ISolutionItemNode solutionItem) => true;
-
-		public bool VisitEnter (ISolutionFolderNode solutionFolder) => true;
-
-		public bool VisitLeave (ISolutionFolderNode solutionFolder) => true;
-
-		public bool VisitEnter (IProjectNode project)
-		{
-			Projects.Add (project);
-			// Don't visit child nodes of a project since a 
-			// project can't contain further projects.
-			return false;
-		}
-
-		public bool VisitLeave (IProjectNode project) => true;
-
-		public bool VisitEnter (IFolderNode folder)
-		{
-			throw new NotSupportedException ();
-		}
-
-		public bool VisitLeave (IFolderNode folder)
-		{
-			throw new NotSupportedException ();
-		}
-
-		public bool VisitEnter (IItemNode item)
-		{
-			throw new NotSupportedException ();
-		}
-
-		public bool VisitLeave (IItemNode item)
-		{
-			throw new NotSupportedException ();
-		}
-
-		public bool VisitEnter (IReferencesNode references)
-		{
-			throw new NotSupportedException ();
-		}
-
-		public bool VisitLeave (IReferencesNode references)
-		{
-			throw new NotSupportedException ();
-		}
-
-		public bool VisitEnter (IReferenceNode reference)
-		{
-			throw new NotSupportedException ();
-		}
-
-		public bool VisitLeave (IReferenceNode reference)
-		{
-			throw new NotSupportedException ();
-		}
-
-		public bool VisitEnter (IGenericNode node)
-		{
-			throw new NotImplementedException ();
-		}
-
-		public bool VisitLeave (IGenericNode node)
-		{
-			throw new NotImplementedException ();
-		}
 	}
 
 	class FilteringProjectsVisitor : ISolutionVisitor
@@ -180,54 +92,24 @@ public static class ISolutionNodeExtensions
 
 		public bool VisitLeave (ISolutionNode solution) => true;
 
-		public bool VisitEnter (IFolderNode folder)
-		{
-			throw new NotSupportedException ();
-		}
+		public bool VisitEnter (IFolderNode folder) => false;
 
-		public bool VisitLeave (IFolderNode folder)
-		{
-			throw new NotSupportedException ();
-		}
+		public bool VisitLeave (IFolderNode folder) => false;
 
-		public bool VisitEnter (IItemNode item)
-		{
-			throw new NotSupportedException ();
-		}
+		public bool VisitEnter (IItemNode item) => false;
 
-		public bool VisitLeave (IItemNode item)
-		{
-			throw new NotSupportedException ();
-		}
+		public bool VisitLeave (IItemNode item) => false;
 
-		public bool VisitEnter (IReferencesNode references)
-		{
-			throw new NotSupportedException ();
-		}
+		public bool VisitEnter (IReferencesNode references) => false;
 
-		public bool VisitLeave (IReferencesNode references)
-		{
-			throw new NotSupportedException ();
-		}
+		public bool VisitLeave (IReferencesNode references) => false;
 
-		public bool VisitEnter (IReferenceNode reference)
-		{
-			throw new NotSupportedException ();
-		}
+		public bool VisitEnter (IReferenceNode reference) => false;
 
-		public bool VisitLeave (IReferenceNode reference)
-		{
-			throw new NotSupportedException ();
-		}
+		public bool VisitLeave (IReferenceNode reference) => false;
 
-		public bool VisitEnter (IGenericNode node)
-		{
-			throw new NotImplementedException ();
-		}
+		public bool VisitEnter (IGenericNode node) => false;
 
-		public bool VisitLeave (IGenericNode node)
-		{
-			throw new NotImplementedException ();
-		}
+		public bool VisitLeave (IGenericNode node) => true;
 	}
 }

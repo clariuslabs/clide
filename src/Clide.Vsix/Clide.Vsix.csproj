@@ -24,12 +24,11 @@
     <Copyright>Copyright 2012 Clarius Labs</Copyright>
 
     <InferPackageContents>false</InferPackageContents>
-    <PackOnBuild Condition="'$(Configuration)' == 'Release'">true</PackOnBuild>
   </PropertyGroup>
 
   <!-- Dynamic manifest info -->
   <ItemGroup>
-    <VsixInstallation Include="Clide" SystemComponent="$(SystemComponent)" Experimental="$(Experimental)" />
+    <VsixInstallation Include="Clide" AllUsers="$(SystemComponent)" SystemComponent="$(SystemComponent)" Experimental="$(Experimental)" />
   </ItemGroup>
   
   <ItemGroup>
@@ -52,7 +51,7 @@
     <ProjectReference Include="..\Clide.Extensibility\Clide.Extensibility.csproj" Pack="false" />
   </ItemGroup>
 
-  <Target Name="AddPackageContents" BeforeTargets="GetPackageContents">
+  <Target Name="AddPackageContents" BeforeTargets="GetPackageContents" DependsOnTargets="AppendVsixVersionToTargetVsixContainer">
     <ItemGroup>
       <PackageFile Include="$(TargetVsixContainer)" Kind="Tools" />
     </ItemGroup>
@@ -66,9 +65,6 @@
       </ProjectReferenceWithConfiguration>
     </ItemGroup>
   </Target>
-
-  <!-- We always build as SystemComponent on CI -->
-  <Target Name="IsSystemComponent" Returns="$(CI)" />
 
   <Target Name="FixupVsixDependencies">
     <ItemGroup>
@@ -85,14 +81,10 @@
 
   <Target Name="AppendVsixVersionToTargetVsixContainer" BeforeTargets="CreateVsixContainer" DependsOnTargets="GetVsixVersion">
     <PropertyGroup>
-      <TargetVsixContainer>$([System.IO.Path]::ChangeExtension('$(TargetVsixContainer)', '$(VsixVersion).vsix'))</TargetVsixContainer>
+      <TargetVsixContainerName>$([System.IO.Path]::ChangeExtension('$(TargetVsixContainerName)', '$(VsixVersion).vsix'))</TargetVsixContainerName>
+      <TargetVsixContainer Condition="'$(PackageOutputPath)' != ''">$([System.IO.Path]::Combine('$(PackageOutputPath)', '$(TargetVsixContainerName)'))</TargetVsixContainer>      
+      <TargetVsixContainer Condition="'$(PackageOutputPath)' == ''">$([System.IO.Path]::Combine('$(OutDir)', '$(TargetVsixContainerName)'))</TargetVsixContainer>
     </PropertyGroup>
   </Target>
-
-  <Target Name="CopyVsixToPackageOutputPath" AfterTargets="CreateVsixContainer" Condition="'$(PackageOutputPath)' != '' and '$(CreateVsixContainer)' == 'true'">
-    <Copy SourceFiles="$(TargetVsixContainer)" DestinationFolder="$(PackageOutputPath)" />
-    <Message Importance="high" Text="Copied extension to $(PackageOutputPath)\$([System.IO.Path]::GetFilename('$(TargetVsixContainer)'))" />
-  </Target>
-
 
 </Project>
