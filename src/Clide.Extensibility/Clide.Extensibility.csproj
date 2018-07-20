@@ -6,6 +6,7 @@
 
     <PackageId>Clide.Extensibility</PackageId>
     <IsPackable>false</IsPackable>
+    <IncludeAnalyzers>true</IncludeAnalyzers>
   </PropertyGroup>
 
   <ItemGroup>

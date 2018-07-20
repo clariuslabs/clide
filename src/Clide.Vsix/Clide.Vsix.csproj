@@ -5,6 +5,7 @@
     <TargetFramework Condition="'$(TargetFramework)' == '' and '$(CI)' == 'true'">net461</TargetFramework>
     <TargetFrameworks Condition="'$(TargetFramework)' == '' and '$(CI)' == 'false'">net461;net462</TargetFrameworks>
 
+    <IncludeAnalyzers>true</IncludeAnalyzers>
     <IncludePack>true</IncludePack>
     <TargetVsixContainerName>Clide.vsix</TargetVsixContainerName>
 
