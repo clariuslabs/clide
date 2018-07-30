@@ -70,6 +70,10 @@
 	</Target>
 
 	<Target Name="Test">
+		<MSBuild Projects="src\Clide.UnitTests\Clide.UnitTests.csproj" BuildInParallel="false" Targets="GetTargetPath" Properties="$(CommonBuildProperties)">
+			<Output TaskParameter="TargetOutputs" ItemName="TestAssembly" />
+		</MSBuild>
+
 		<xunit Assemblies="@(TestAssembly)" />
 	</Target>
 
