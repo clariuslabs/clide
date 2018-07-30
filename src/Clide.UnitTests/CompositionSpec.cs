@@ -4,18 +4,20 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Merq;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Threading;
 using Moq;
 using Xunit;
-using System.Runtime.CompilerServices;
+using IAsyncServiceProvider = Microsoft.VisualStudio.Shell.IAsyncServiceProvider;
 
 namespace Clide
 {
-	public class CompositionSpec
+    public class CompositionSpec
 	{
 		Mock<IServiceProvider> services;
 		CompositionContainer container;
@@ -72,7 +74,19 @@ namespace Clide
 		}
 	}
 
-	[Export(typeof(IObservable<string>))]
+    [PartCreationPolicy(CreationPolicy.Shared)]
+    public class TestJoinableTaskContext
+    {
+        public TestJoinableTaskContext()
+        {
+            Instance = new JoinableTaskContext();
+        }
+
+        [Export]
+        public JoinableTaskContext Instance { get; }
+    }
+
+    [Export(typeof(IObservable<string>))]
 	public class MockObservable : IObservable<string>
 	{
 		public IDisposable Subscribe(IObserver<string> observer) =>
@@ -117,7 +131,28 @@ namespace Clide
 		public Mock<IServiceProvider> InstanceMock { get { return Mock.Get(Instance); } }
 	}
 
-	[PartCreationPolicy(CreationPolicy.Shared)]
+    [PartCreationPolicy(CreationPolicy.Shared)]
+    public class MockAsyncServiceProvider
+    {
+        [ImportingConstructor]
+        public MockAsyncServiceProvider(ExportProvider exports)
+        {
+            var mock = new Mock<IAsyncServiceProvider>();
+
+            mock
+                .Setup(x => x.GetServiceAsync(typeof(SComponentModel)))
+                .ReturnsAsync(Mock.Of<IComponentModel>(c =>
+                    c.GetService<IVsHierarchyItemManager>() == Mock.Of<IVsHierarchyItemManager>() &&
+                    c.DefaultExportProvider == exports));
+
+            Instance = mock.Object;
+        }
+
+        [Export(typeof(SAsyncServiceProvider))]
+        public IAsyncServiceProvider Instance { get; }
+    }
+
+    [PartCreationPolicy(CreationPolicy.Shared)]
 	public class MockHierarchyItemManager
 	{
 		public MockHierarchyItemManager()
