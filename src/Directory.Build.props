@@ -31,6 +31,17 @@
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(CI)' == ''">
+    <CI Condition="'$(TEAMCITY_VERSION)' != '' or 
+                   '$(APPVEYOR)' != '' or 
+                   '$(BuildRunner)' == 'MyGet' or 
+                   '$(JENKINS_HOME)' != '' or 
+                   '$(TF_BUILD)' == 'true' or
+                   '$(IsVSTSBuild)' == 'true' or
+                   '$(TRAVIS)' == 'true'">true</CI>
+    <CI Condition="'$(CI)' == ''">false</CI>
+  </PropertyGroup>
+
   <PropertyGroup Label="Package Versions">
     <MerqVersion>1.0.0-rc</MerqVersion>
     <MerqAsyncVersion>1.1.17-rc</MerqAsyncVersion>
@@ -47,18 +58,7 @@
     <XVSSDKBuildToolsVersion Condition="'$(CI)' != 'true'">0.3.0-alpha.*</XVSSDKBuildToolsVersion>
     <XVSSDKBuildToolsVersion Condition="'$(CI)' == 'true'">0.3.0-alpha.17</XVSSDKBuildToolsVersion>
 
-    <VSSDKBuildToolsVersion>15.1.192</VSSDKBuildToolsVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(CI)' == ''">
-    <CI Condition="'$(TEAMCITY_VERSION)' != '' or 
-                   '$(APPVEYOR)' != '' or 
-                   '$(BuildRunner)' == 'MyGet' or 
-                   '$(JENKINS_HOME)' != '' or 
-                   '$(TF_BUILD)' == 'true' or
-                   '$(IsVSTSBuild)' == 'true' or
-                   '$(TRAVIS)' == 'true'">true</CI>
-    <CI Condition="'$(CI)' == ''">false</CI>
+    <VSSDKBuildToolsVersion>15.7.107</VSSDKBuildToolsVersion>
   </PropertyGroup>
 
   <Target Name="GetCI" Returns="$(CI)">

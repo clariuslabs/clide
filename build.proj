@@ -6,18 +6,15 @@
 		<Configuration Condition="'$(Configuration)' == '' and '$(CI)' == 'true'">Release</Configuration>
 		<Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
 
+		<Out Condition=" '$(Out)' == '' ">$(PackageOutputPath)</Out>
 		<Out Condition=" '$(Out)' == '' ">$(MSBuildThisFileDirectory)out</Out>
 
-		<GitInfoReportImportance>high</GitInfoReportImportance>
-		<GitIgnoreTagVersion>true</GitIgnoreTagVersion>
-		<GitIgnoreBranchVersion>true</GitIgnoreBranchVersion>
-
-		<CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration)</CommonBuildProperties>
-		<CommonBuildProperties Condition="'$(Configuration)' == 'Release'">$(CommonBuildProperties);DeployExtension=false</CommonBuildProperties>
+		<CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration);PackageOutputPath=$(Out)</CommonBuildProperties>
+		<CommonBuildProperties Condition="'$(Configuration)' == 'Release' and '$(DeployExtension)' == ''">$(CommonBuildProperties);DeployExtension=false</CommonBuildProperties>
 
 		<Dev Condition="'$(Dev)' == ''">$(VisualStudioVersion)</Dev>
 
-  	<!-- Azure-based static NuGet feed -->
+		<!-- Azure-based static NuGet feed -->
 		<SleetInit Condition="'$(SleetInit)' == ''">false</SleetInit>
 	</PropertyGroup>
 
@@ -26,12 +23,11 @@
 		<PackageReference Include="xunit.runner.msbuild" Version="$(XunitVersion)" />
 		<PackageReference Include="xunit.runner.console" Version="$(XunitVersion)" />
 		<PackageReference Include="Sleet.Azure" Version="0.2.5" />
-    <PackageReference Include="Merq.VisualStudio" Version="$(MerqVisualStudioVersion)" />
+		<PackageReference Include="Merq.VisualStudio" Version="$(MerqVisualStudioVersion)" />
   </ItemGroup>
 
 	<ItemGroup>
 		<Solution Include="src\Clide.sln"/>
-		<NuSpec Include="src\Package\Clide.nuspec" />
 		<Dev Include="$(Dev)" />
 	</ItemGroup>
 
@@ -49,17 +45,14 @@
 	</Target>
 
 	<!-- Targets can be documented, and /t:Help will render the help -->
-	<Target Name="Build" DependsOnTargets="SetVersion">
-		<Message Text="Building AssemblyVersion=$(AssemblyVersion), PackageVersion=$(PackageVersion)" Importance="high" />
-		<Message Text="##vso[build.updatebuildnumber]$(PackageVersion)" Importance="high" Condition="'$(TF_BUILD)' == 'true'" />
-		<Exec Command="appveyor UpdateBuild -Version $(PackageVersion)" Condition="'$(APPVEYOR)' == 'true'" ContinueOnError="WarnAndContinue" />
-
+	<Target Name="Build">
+		<MSBuild Projects="src\Clide.Vsix\Clide.Vsix.csproj" Targets="Version" Properties="$(CommonBuildProperties);GitInfoReportImportance=high" />
 		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties);Dev=%(Dev.Identity)" />
 	</Target>
 
 	<Target Name="Package">
 		<MakeDir Directories="$(Out)" Condition="!Exists('$(Out)')" />
-		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties);IsSystemComponent=true;PackageOutputPath=$(Out)" />
+		<MSBuild Projects="src\Clide.Vsix\Clide.Vsix.csproj" Targets="Pack" Properties="$(CommonBuildProperties)" />
 	</Target>
 
   <Target Name="BeforePush" BeforeTargets="Push">
@@ -77,6 +70,10 @@
 	</Target>
 
 	<Target Name="Test">
+		<MSBuild Projects="src\Clide.UnitTests\Clide.UnitTests.csproj" BuildInParallel="false" Targets="GetTargetPath" Properties="$(CommonBuildProperties)">
+			<Output TaskParameter="TargetOutputs" ItemName="TestAssembly" />
+		</MSBuild>
+
 		<xunit Assemblies="@(TestAssembly)" />
 	</Target>
 
@@ -84,6 +81,5 @@
 		<!-- TODO: build + deploy to exp, run VS -->
 	</Target>
 
-	<Import Project="src\Version.targets"/>
 	<Import Project="build\corebuild.targets" />
 </Project>
