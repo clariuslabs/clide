@@ -23,7 +23,7 @@ namespace Clide.Components.Interop
 
                 // Previous versions of VS provides the service using the VsProjectCapabilityExpressionMatcher interface
                 return value ?? registry?.CreateInstance(typeof(VsProjectCapabilityExpressionMatcher).GUID) as IVsBooleanSymbolExpressionEvaluator;
-			}, context.Factory, executeOnMainThread: true);
+			}, context?.Factory, executeOnMainThread: true);
 		}
 
         [Export(ContractNames.Interop.IVsBooleanSymbolExpressionEvaluator)]

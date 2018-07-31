@@ -19,7 +19,7 @@ namespace Clide.Components.Interop
                 var componentModel = await services.GetServiceAsync(typeof(SComponentModel)) as IComponentModel;
 
                 return componentModel?.GetService<IVsHierarchyItemManager>();
-            }, context.Factory, executeOnMainThread: true);
+            }, context?.Factory, executeOnMainThread: true);
         }
 
         [Export(ContractNames.Interop.IVsHierarchyItemManager)]
