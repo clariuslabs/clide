@@ -1,40 +1,40 @@
-﻿namespace Clide
+﻿using Clide.Properties;
+using System;
+using System.ComponentModel;
+using System.Linq;
+using System.Diagnostics;
+namespace Clide
 {
-	using Clide.Properties;
-	using System;
-	using System.ComponentModel;
-	using System.Linq;
-	using System.Diagnostics;
 
-	/// <summary>
-	/// Helper base class that can be used to provide transparent loading and saving of settings. 
-	/// </summary>
-	/// <remarks>
-	/// Derived classes typically expose an interface that is exported to the composition container, 
-	/// and declares an importing constructor that receives the settings manager, which is already 
-	/// exported in the environment by the runtime.
-	/// </remarks>
-	/// <example>
-	/// The following is an example of a settings class:
-	/// <code>
-	/// [Settings]
-	/// public class ServerSettings : Settings, IServerSettings
-	/// {
-	///     public ServerSettings(ISettingsManager manager)
-	///         : base(manager)
-	///     {
-	///     }
-	///     
-	///     public string Name { get; set; }
-	///     public int Port { get; set; }
-	/// }
-	/// </code>
-	/// Note how the class specifies what is the exported settings interface 
-	/// for other consuming code. Also, the imported settings manager is passed 
-	/// to the base class which takes care of reading and saving the state as 
-	/// necessary.
-	/// </example>
-	public abstract class Settings : ISettings, INotifyPropertyChanged, ISupportInitialize, ISupportInitializeNotification
+    /// <summary>
+    /// Helper base class that can be used to provide transparent loading and saving of settings. 
+    /// </summary>
+    /// <remarks>
+    /// Derived classes typically expose an interface that is exported to the composition container, 
+    /// and declares an importing constructor that receives the settings manager, which is already 
+    /// exported in the environment by the runtime.
+    /// </remarks>
+    /// <example>
+    /// The following is an example of a settings class:
+    /// <code>
+    /// [Settings]
+    /// public class ServerSettings : Settings, IServerSettings
+    /// {
+    ///     public ServerSettings(ISettingsManager manager)
+    ///         : base(manager)
+    ///     {
+    ///     }
+    ///     
+    ///     public string Name { get; set; }
+    ///     public int Port { get; set; }
+    /// }
+    /// </code>
+    /// Note how the class specifies what is the exported settings interface 
+    /// for other consuming code. Also, the imported settings manager is passed 
+    /// to the base class which takes care of reading and saving the state as 
+    /// necessary.
+    /// </example>
+    public abstract class Settings : ISettings, INotifyPropertyChanged, ISupportInitialize, ISupportInitializeNotification
     {
         private ITracer tracer;
 
@@ -58,7 +58,7 @@
         /// <param name="manager">The settings manager that will read and save data for this instance.</param>
         public Settings(ISettingsManager manager)
         {
-            this.tracer = Tracer.Get(this.GetType());
+            tracer = Tracer.Get(this.GetType());
             this.manager = manager;
             this.manager.Read(this);
             this.IsInitialized = false;
@@ -76,7 +76,7 @@
         public virtual void BeginEdit()
         {
             tracer.Verbose("BeginEdit");
-            this.editing = true;
+            editing = true;
         }
 
         /// <summary>
@@ -86,20 +86,20 @@
         {
             tracer.Verbose("CancelEdit");
 
-            if (this.editing)
+            if (editing)
             {
-                this.editing = false;
+                editing = false;
                 // Restore a clean copy of the object, as if it was brand-new created.
                 try
                 {
-                    var clean = Activator.CreateInstance(this.GetType(), this.manager);
+                    var clean = Activator.CreateInstance(this.GetType(), manager);
                     foreach (var property in TypeDescriptor.GetProperties(this).Cast<PropertyDescriptor>())
                     {
                         property.SetValue(this, property.GetValue(clean));
                     }
 
                     this.IsInitialized = false;
-                    this.manager.Read(this);
+                    manager.Read(this);
                 }
                 catch (Exception ex)
                 {
@@ -117,13 +117,13 @@
         {
             tracer.Verbose("EndEdit");
 
-            if (!this.editing)
+            if (!editing)
                 throw new InvalidOperationException(Strings.Settings.EndEditWithoutBeginEdit);
 
-            if (!this.initializing)
+            if (!initializing)
                 this.Save();
 
-            this.editing = false;
+            editing = false;
         }
 
         /// <summary>
@@ -135,7 +135,7 @@
             if (this.IsInitialized)
                 throw new InvalidOperationException(Strings.Settings.AlreadyInitialized);
 
-            this.initializing = true;
+            initializing = true;
         }
 
         /// <summary>
@@ -144,11 +144,11 @@
         /// <exception cref="System.InvalidOperationException"></exception>
         public virtual void EndInit()
         {
-            if (!this.initializing)
+            if (!initializing)
                 throw new InvalidOperationException(Strings.Settings.EndInitWithoutBeginInit);
 
             this.IsInitialized = true;
-            this.initializing = false;
+            initializing = false;
 
             this.Initialized(this, EventArgs.Empty);
         }
@@ -160,7 +160,7 @@
         public virtual void Save(bool saveDefaults = false)
         {
             OnSaving();
-            this.manager.Save(this, saveDefaults);
+            manager.Save(this, saveDefaults);
             OnSaved();
 
             tracer.Info(Strings.Settings.TraceSaved);

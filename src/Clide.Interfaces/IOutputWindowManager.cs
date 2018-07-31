@@ -1,7 +1,7 @@
-﻿namespace Clide
+﻿using System;
+using System.IO;
+namespace Clide
 {
-    using System;
-    using System.IO;
 
     /// <summary>
     /// Provides access to writing messages to the output window.

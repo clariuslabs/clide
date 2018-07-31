@@ -8,63 +8,63 @@ using Ole = Microsoft.VisualStudio.OLE.Interop;
 
 namespace Clide
 {
-	/// <summary>
-	/// Implements service locator retrieval as well as provides the 
-	/// global service locator export.
-	/// </summary>
-	[PartCreationPolicy(CreationPolicy.Shared)]
-	[Export (typeof (IServiceLocatorProvider))]
-	internal class ServiceLocatorProvider : IServiceLocatorProvider
-	{
-		[ImportingConstructor]
-		public ServiceLocatorProvider([Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider)
-		{
-			ServiceLocator = new ServiceLocatorImpl(serviceProvider);
-		}
+    /// <summary>
+    /// Implements service locator retrieval as well as provides the 
+    /// global service locator export.
+    /// </summary>
+    [PartCreationPolicy(CreationPolicy.Shared)]
+    [Export(typeof(IServiceLocatorProvider))]
+    internal class ServiceLocatorProvider : IServiceLocatorProvider
+    {
+        [ImportingConstructor]
+        public ServiceLocatorProvider([Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider)
+        {
+            ServiceLocator = new ServiceLocatorImpl(serviceProvider);
+        }
 
-		[Export]
-		public IServiceLocator ServiceLocator { get; }
+        [Export]
+        public IServiceLocator ServiceLocator { get; }
 
-		public IServiceLocator GetServiceLocator (IServiceProvider services)
-		{
-			Guard.NotNull (nameof (services), services);
+        public IServiceLocator GetServiceLocator(IServiceProvider services)
+        {
+            Guard.NotNull(nameof(services), services);
 
-			return new ServiceLocatorImpl (services);
-		}
+            return new ServiceLocatorImpl(services);
+        }
 
-		public IServiceLocator GetServiceLocator (DTE dte)
-		{
-			Guard.NotNull (nameof (dte), dte);
+        public IServiceLocator GetServiceLocator(DTE dte)
+        {
+            Guard.NotNull(nameof(dte), dte);
 
-			return new ServiceLocatorImpl(new OleServiceProvider(dte));
-		}
+            return new ServiceLocatorImpl(new OleServiceProvider(dte));
+        }
 
-		public IServiceLocator GetServiceLocator (Project project)
-		{
-			Guard.NotNull (nameof (project), project);
+        public IServiceLocator GetServiceLocator(Project project)
+        {
+            Guard.NotNull(nameof(project), project);
 
-			return GetServiceLocator (project.DTE);
-		}
+            return GetServiceLocator(project.DTE);
+        }
 
-		public IServiceLocator GetServiceLocator (IVsProject project)
-		{
-			Guard.NotNull (nameof (project), project);
+        public IServiceLocator GetServiceLocator(IVsProject project)
+        {
+            Guard.NotNull(nameof(project), project);
 
-			return GetServiceLocator ((IVsHierarchy)project);
-		}
+            return GetServiceLocator((IVsHierarchy)project);
+        }
 
-		public IServiceLocator GetServiceLocator (IVsHierarchy hierarchy)
-		{
-			Guard.NotNull (nameof (hierarchy), hierarchy);
+        public IServiceLocator GetServiceLocator(IVsHierarchy hierarchy)
+        {
+            Guard.NotNull(nameof(hierarchy), hierarchy);
 
-			IServiceProvider services;
-			Ole.IServiceProvider site;
-			if (ErrorHandler.Failed (hierarchy.GetSite (out site)))
-				services = Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider;
-			else
-				services = new OleServiceProvider (site);
+            IServiceProvider services;
+            Ole.IServiceProvider site;
+            if (ErrorHandler.Failed(hierarchy.GetSite(out site)))
+                services = Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider;
+            else
+                services = new OleServiceProvider(site);
 
-			return new ServiceLocatorImpl (services);
-		}
-	}
+            return new ServiceLocatorImpl(services);
+        }
+    }
 }

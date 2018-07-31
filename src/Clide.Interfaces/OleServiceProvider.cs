@@ -11,7 +11,7 @@ namespace Clide
         public OleServiceProvider(Microsoft.VisualStudio.OLE.Interop.IServiceProvider serviceProvider)
             => this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
-        public OleServiceProvider(EnvDTE.DTE dte) 
+        public OleServiceProvider(EnvDTE.DTE dte)
             : this((Microsoft.VisualStudio.OLE.Interop.IServiceProvider)dte) { }
 
         public object GetService(Type serviceType)
@@ -23,7 +23,7 @@ namespace Clide
                 return null;
 
             if (guid == NativeMethods.IID_IServiceProvider)
-                    return serviceProvider;
+                return serviceProvider;
 
             try
             {
@@ -41,11 +41,11 @@ namespace Clide
                 }
             }
             catch (Exception exception) when (
-                exception is OutOfMemoryException || 
-                exception is StackOverflowException || 
-                exception is AccessViolationException || 
-                exception is AppDomainUnloadedException || 
-                exception is BadImageFormatException || 
+                exception is OutOfMemoryException ||
+                exception is StackOverflowException ||
+                exception is AccessViolationException ||
+                exception is AppDomainUnloadedException ||
+                exception is BadImageFormatException ||
                 exception is DivideByZeroException)
             {
                 throw;

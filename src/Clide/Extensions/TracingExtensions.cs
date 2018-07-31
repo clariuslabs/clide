@@ -1,11 +1,11 @@
-﻿namespace Clide
+﻿using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell.Interop;
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Windows;
+namespace Clide
 {
-    using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using System;
-    using System.ComponentModel;
-    using System.Diagnostics;
-    using System.Windows;
 
     /// <summary>
     /// Provides tracing extensions on top of <see cref="ITracer"/>.
@@ -18,7 +18,7 @@
         private static Action<Exception, string, string[]> DefaultShowExceptionAction = (ex, format, args) =>
         {
             System.Windows.MessageBox.Show(
-				ServiceProvider.Global.GetService<SVsUIShell, IVsUIShell>().GetMainWindow(),
+                ServiceProvider.Global.GetService<SVsUIShell, IVsUIShell>().GetMainWindow(),
                 string.Format(format, args),
                 "Visual Studio",
                 MessageBoxButton.OK,

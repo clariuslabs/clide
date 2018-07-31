@@ -15,7 +15,8 @@ namespace Clide.Components.Interop
         [ImportingConstructor]
         public VsHierarchyItemManagerProvider([Import(typeof(SAsyncServiceProvider))] IAsyncServiceProvider services, JoinableTaskContext context)
         {
-            hierarchyManager = new JoinableLazy<IVsHierarchyItemManager>(async () => {
+            hierarchyManager = new JoinableLazy<IVsHierarchyItemManager>(async () =>
+            {
                 var componentModel = await services.GetServiceAsync(typeof(SComponentModel)) as IComponentModel;
 
                 return componentModel?.GetService<IVsHierarchyItemManager>();

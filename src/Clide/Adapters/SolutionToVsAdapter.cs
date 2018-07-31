@@ -3,19 +3,19 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Clide
 {
-	[Adapter]
-	class SolutionToVsAdapter :
-		IAdapter<SolutionExplorerNode, IVsHierarchyItem>,
-		IAdapter<SolutionExplorerNode, IVsHierarchy>,
-		IAdapter<SolutionNode, IVsSolution>,
-		IAdapter<ProjectNode, IVsProject>
-	{
-		IVsHierarchyItem IAdapter<SolutionExplorerNode, IVsHierarchyItem>.Adapt (SolutionExplorerNode from) => from?.HierarchyNode;
+    [Adapter]
+    class SolutionToVsAdapter :
+        IAdapter<SolutionExplorerNode, IVsHierarchyItem>,
+        IAdapter<SolutionExplorerNode, IVsHierarchy>,
+        IAdapter<SolutionNode, IVsSolution>,
+        IAdapter<ProjectNode, IVsProject>
+    {
+        IVsHierarchyItem IAdapter<SolutionExplorerNode, IVsHierarchyItem>.Adapt(SolutionExplorerNode from) => from?.HierarchyNode;
 
-		IVsHierarchy IAdapter<SolutionExplorerNode, IVsHierarchy>.Adapt (SolutionExplorerNode from) => from?.HierarchyNode.GetActualHierarchy ();
+        IVsHierarchy IAdapter<SolutionExplorerNode, IVsHierarchy>.Adapt(SolutionExplorerNode from) => from?.HierarchyNode.GetActualHierarchy();
 
-		IVsSolution IAdapter<SolutionNode, IVsSolution>.Adapt (SolutionNode from) => from.HierarchyNode.GetServiceProvider ().GetService<SVsSolution, IVsSolution> ();
+        IVsSolution IAdapter<SolutionNode, IVsSolution>.Adapt(SolutionNode from) => from.HierarchyNode.GetServiceProvider().GetService<SVsSolution, IVsSolution>();
 
-		IVsProject IAdapter<ProjectNode, IVsProject>.Adapt (ProjectNode from) => from.HierarchyNode.GetActualHierarchy () as IVsProject;
-	}
+        IVsProject IAdapter<ProjectNode, IVsProject>.Adapt(ProjectNode from) => from.HierarchyNode.GetActualHierarchy() as IVsProject;
+    }
 }

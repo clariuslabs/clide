@@ -2,9 +2,9 @@
 
 namespace Clide
 {
-	[Flags]
-	public enum KnownCapabilities
-	{
-		SharedAssetsProject = 1,
-	}
+    [Flags]
+    public enum KnownCapabilities
+    {
+        SharedAssetsProject = 1,
+    }
 }

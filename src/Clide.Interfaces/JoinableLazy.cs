@@ -23,7 +23,7 @@ namespace Clide
             {
                 defaultTaskFactory = ThreadHelper.JoinableTaskFactory;
             }
-            catch {}
+            catch { }
         }
 
         /// <summary>
@@ -52,7 +52,8 @@ namespace Clide
         public JoinableLazy(Func<Task<T>> asyncValueFactory, JoinableTaskFactory taskFactory, bool executeOnMainThread = false)
         {
             this.taskFactory = taskFactory ?? throw new ArgumentNullException(nameof(taskFactory));
-            asyncLazy = new AsyncLazy<T>(async () => {
+            asyncLazy = new AsyncLazy<T>(async () =>
+            {
                 if (executeOnMainThread)
                     await taskFactory.SwitchToMainThreadAsync();
 
@@ -85,7 +86,8 @@ namespace Clide
         public JoinableLazy(Func<T> valueFactory, JoinableTaskFactory taskFactory, bool executeOnMainThread = false)
         {
             this.taskFactory = taskFactory ?? throw new ArgumentNullException(nameof(taskFactory));
-            asyncLazy = new AsyncLazy<T>(async () => {
+            asyncLazy = new AsyncLazy<T>(async () =>
+            {
                 if (executeOnMainThread)
                     await taskFactory.SwitchToMainThreadAsync();
 
@@ -98,7 +100,7 @@ namespace Clide
         /// or <see cref="JoinableLazy{T}.GetValueAsync"/> to avoid deadlocks when the main thread is required.
         /// </summary>
         /// <param name="taskFactory">The TaskFactory to set as the default value to use.</param>
-        public static void SetTaskFactory (JoinableTaskFactory taskFactory) 
+        public static void SetTaskFactory(JoinableTaskFactory taskFactory)
             => defaultTaskFactory = taskFactory ?? throw new ArgumentNullException(nameof(taskFactory));
 
         /// <summary>

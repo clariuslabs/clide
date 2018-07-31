@@ -1,10 +1,10 @@
 ﻿namespace Clide
 {
-	/// <summary>
-	/// Implements the hierarchical visitor traversal for the solution in a uniform way that 
-	/// can be leveraged by custom nodes without having to reimplement the behavior.
-	/// </summary>
-	public static class SolutionVisitable
+    /// <summary>
+    /// Implements the hierarchical visitor traversal for the solution in a uniform way that 
+    /// can be leveraged by custom nodes without having to reimplement the behavior.
+    /// </summary>
+    public static class SolutionVisitable
     {
         /// <summary>
         /// Visists the given visitor with the specified solution.

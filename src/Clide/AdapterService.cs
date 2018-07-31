@@ -9,20 +9,20 @@ using FromTo = System.Tuple<System.Type, System.Type>;
 
 namespace Clide
 {
-	/// <summary>
-	/// Default implementation of the <see cref="IAdapterService"/>.
-	/// </summary>
-	[Export(typeof(IAdapterService))]
-	[PartCreationPolicy(CreationPolicy.Shared)]
-	internal class AdapterService : IAdapterService
-	{
-		static readonly MethodInfo AdaptExpressionGenerator = typeof(AdapterService).GetMethod("GetAdaptExpression", BindingFlags.NonPublic | BindingFlags.Static);
+    /// <summary>
+    /// Default implementation of the <see cref="IAdapterService"/>.
+    /// </summary>
+    [Export(typeof(IAdapterService))]
+    [PartCreationPolicy(CreationPolicy.Shared)]
+    internal class AdapterService : IAdapterService
+    {
+        static readonly MethodInfo AdaptExpressionGenerator = typeof(AdapterService).GetMethod("GetAdaptExpression", BindingFlags.NonPublic | BindingFlags.Static);
 
-		ConcurrentDictionary<Type, IEnumerable<TypeInheritance>> cachedOrderedTypeHierarchies = new ConcurrentDictionary<Type, IEnumerable<TypeInheritance>>();
-		ConcurrentDictionary<FromTo, Func<IAdapter, object, object>> cachedAdaptMethods = new ConcurrentDictionary<FromTo, Func<IAdapter, object, object>>();
+        ConcurrentDictionary<Type, IEnumerable<TypeInheritance>> cachedOrderedTypeHierarchies = new ConcurrentDictionary<Type, IEnumerable<TypeInheritance>>();
+        ConcurrentDictionary<FromTo, Func<IAdapter, object, object>> cachedAdaptMethods = new ConcurrentDictionary<FromTo, Func<IAdapter, object, object>>();
         ConcurrentDictionary<FromTo, IAdapter> cachedFromToAdapters = new ConcurrentDictionary<FromTo, IAdapter>();
 
-		List<AdapterInfo> allAdapters;
+        List<AdapterInfo> allAdapters;
 
         /// <summary>
         /// Initializes the adapter service with the given set of adapters.
@@ -32,14 +32,14 @@ namespace Clide
         {
         }
 
-		/// <summary>
-		/// Initializes the adapter service with the given set of adapters.
-		/// </summary>
-		[ImportingConstructor]
-		public AdapterService ([ImportMany] IEnumerable<IAdapter> adapters)
-		{
+        /// <summary>
+        /// Initializes the adapter service with the given set of adapters.
+        /// </summary>
+        [ImportingConstructor]
+        public AdapterService([ImportMany] IEnumerable<IAdapter> adapters)
+        {
             var genericAdapter = typeof(IAdapter<,>);
-			allAdapters = adapters
+            allAdapters = adapters
                 // Multiple implementations of IAdapter<TFrom, TTo> supported per adapter for convenience.
                 .SelectMany(adapter => adapter
                 .GetType()
@@ -54,7 +54,7 @@ namespace Clide
                 }))
                 .ToList();
 
-            var duplicates = this.allAdapters
+            var duplicates = allAdapters
                 .GroupBy(info => new FromTo(info.From, info.To))
                 .ToDictionary(group => group.Key, group => group.ToList())
                 .Where(group => group.Value.Count > 1)
@@ -65,35 +65,35 @@ namespace Clide
                 throw new ArgumentException("Duplicate adapters: " + string.Join(Environment.NewLine,
                     duplicates.Select(adapter =>
                         string.Format("{0}->{1}: {2}", adapter.From, adapter.To, adapter.Adapter))));
-		}
+        }
 
-		public IAdaptable<TSource> Adapt<TSource> (TSource source) where TSource : class => new Adaptable<TSource> (this, source);
+        public IAdaptable<TSource> Adapt<TSource>(TSource source) where TSource : class => new Adaptable<TSource>(this, source);
 
-		TTarget Adapt<TSource, TTarget>(TSource source)
+        TTarget Adapt<TSource, TTarget>(TSource source)
             where TSource : class
             where TTarget : class
-		{
+        {
             // Null always adapts to null.
-			if (source == null)
-				return default(TTarget);
+            if (source == null)
+                return default(TTarget);
 
             // We first try the most specific source type, the 
             // actual implementation.
-			var sourceType = source.GetType();
+            var sourceType = source.GetType();
             var targetType = typeof(TTarget);
 
-			if (sourceType.FullName == "System.__ComObject")
-				sourceType = typeof (TSource);
+            if (sourceType.FullName == "System.__ComObject")
+                sourceType = typeof(TSource);
 
-			// Avoid the more costly conversion if types are 
-			// directly assignable.
-			if (targetType.IsAssignableFrom(sourceType) || targetType.IsAssignableFrom(typeof(TSource)))
-				return source as TTarget;
+            // Avoid the more costly conversion if types are 
+            // directly assignable.
+            if (targetType.IsAssignableFrom(sourceType) || targetType.IsAssignableFrom(typeof(TSource)))
+                return source as TTarget;
 
             var fromTo = new FromTo(sourceType, targetType);
             var adapter = cachedFromToAdapters.GetOrAdd(fromTo, FindAdapter);
-			// Only retry if the TSource hasn't been looked up already, i.e. 
-			// if the instance type was a COM object.
+            // Only retry if the TSource hasn't been looked up already, i.e. 
+            // if the instance type was a COM object.
             if (adapter == null && sourceType != typeof(TSource))
             {
                 // Try again but with the explicit TSource we were passed-in.
@@ -102,15 +102,15 @@ namespace Clide
                 if (adapter == null)
                     return default(TTarget);
             }
-			else if (adapter == null) 
-			{
-				return default (TTarget);
-			}
-			 
+            else if (adapter == null)
+            {
+                return default(TTarget);
+            }
+
             var adaptMethod = GetAdaptMethod(fromTo, adapter);
 
             return adaptMethod.Invoke(adapter, source) as TTarget;
-		}
+        }
 
         IAdapter FindAdapter(FromTo fromTo)
         {
@@ -144,22 +144,22 @@ namespace Clide
             return adapter;
         }
 
-		Func<IAdapter, object, object> GetAdaptMethod(FromTo fromTo, IAdapter adapter)
-		{
-			return cachedAdaptMethods.GetOrAdd(
-				fromTo,
-				key => ((Expression<Func<IAdapter, object, object>>)
+        Func<IAdapter, object, object> GetAdaptMethod(FromTo fromTo, IAdapter adapter)
+        {
+            return cachedAdaptMethods.GetOrAdd(
+                fromTo,
+                key => ((Expression<Func<IAdapter, object, object>>)
                     AdaptExpressionGenerator.MakeGenericMethod(key.Item1, key.Item2).Invoke(null, null))
-					.Compile());
-		}
+                    .Compile());
+        }
 
-		static Expression<Func<IAdapter, object, object>> GetAdaptExpression<TFrom, TTo>()
-		{
-			return (adapter, source) => ((IAdapter<TFrom, TTo>)adapter).Adapt((TFrom)source);
-		}
+        static Expression<Func<IAdapter, object, object>> GetAdaptExpression<TFrom, TTo>()
+        {
+            return (adapter, source) => ((IAdapter<TFrom, TTo>)adapter).Adapt((TFrom)source);
+        }
 
-		IEnumerable<TypeInheritance> GetInheritance(Type sourceType)
-		{
+        IEnumerable<TypeInheritance> GetInheritance(Type sourceType)
+        {
             return cachedOrderedTypeHierarchies.GetOrAdd(
                 sourceType,
                 type => type.GetInheritanceTree()
@@ -174,7 +174,7 @@ namespace Clide
                     // Do a final order by distance.
                     .OrderBy(t => t.Distance)
                     .ToList());
-		}
+        }
 
         class AdapterInfo
         {
@@ -195,7 +195,7 @@ namespace Clide
                 this.source = source;
             }
 
-			public T As<T> () where T : class => service.Adapt<TSource, T> (source);
-		}
-	}
+            public T As<T>() where T : class => service.Adapt<TSource, T>(source);
+        }
+    }
 }

@@ -4,7 +4,7 @@
     /// Provides membes to interact with the status bar.
     /// </summary>
 	public interface IStatusBar : IFluentInterface
-	{
+    {
         /// <summary>
         /// Clears the message in the status bar.
         /// </summary>
@@ -23,5 +23,5 @@
         /// <param name="complete">The completed value so far.</param>
         /// <param name="total">The total value to be completed.</param>
 		void ShowProgress(string message, int complete, int total);
-	}
+    }
 }
