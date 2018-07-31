@@ -1,11 +1,11 @@
-﻿
+﻿using EnvDTE;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Clide
 {
-	using EnvDTE;
-	using System;
-	using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
 
     internal class ProjectConfiguration : IProjectConfiguration
     {
@@ -40,7 +40,7 @@ namespace Clide
         {
             get
             {
-                return ((IEnumerable)this.project.Value.ConfigurationManager.PlatformNames)
+                return ((IEnumerable)project.Value.ConfigurationManager.PlatformNames)
                     .OfType<string>()
                     // The configuration API does not use whitespaces.
                     .Select(s => s.Replace(" ", "").Trim());

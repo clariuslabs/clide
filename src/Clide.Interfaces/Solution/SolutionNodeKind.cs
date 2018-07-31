@@ -1,10 +1,10 @@
 ﻿namespace Clide
 {
-	/// <summary>
-	/// The kind of solution node.
-	/// </summary>
-	public enum SolutionNodeKind
-	{
+    /// <summary>
+    /// The kind of solution node.
+    /// </summary>
+    public enum SolutionNodeKind
+    {
         /// <summary>
         /// The node is the solution node.
         /// </summary>
@@ -50,5 +50,5 @@
         /// The node is of a generic or custom kind.
         /// </summary>
 		Generic = 50,
-	}
+    }
 }

@@ -1,94 +1,94 @@
 <Project DefaultTargets="Build" TreatAsLocalProperty="Configuration" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Import Project="build\corebuild.props" />
+  <Import Project="build\corebuild.props" />
   <Import Project="src\Directory.Build.props" />
 
   <PropertyGroup>
-		<Configuration Condition="'$(Configuration)' == '' and '$(CI)' == 'true'">Release</Configuration>
-		<Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+    <Configuration Condition="'$(Configuration)' == '' and '$(CI)' == 'true'">Release</Configuration>
+    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
 
-		<Out Condition=" '$(Out)' == '' ">$(PackageOutputPath)</Out>
-		<Out Condition=" '$(Out)' == '' ">$(MSBuildThisFileDirectory)out</Out>
+    <Out Condition=" '$(Out)' == '' ">$(PackageOutputPath)</Out>
+    <Out Condition=" '$(Out)' == '' ">$(MSBuildThisFileDirectory)out</Out>
 
-		<CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration);PackageOutputPath=$(Out)</CommonBuildProperties>
-		<CommonBuildProperties Condition="'$(Configuration)' == 'Release' and '$(DeployExtension)' == ''">$(CommonBuildProperties);DeployExtension=false</CommonBuildProperties>
+    <CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration);PackageOutputPath=$(Out)</CommonBuildProperties>
+    <CommonBuildProperties Condition="'$(Configuration)' == 'Release' and '$(DeployExtension)' == ''">$(CommonBuildProperties);DeployExtension=false</CommonBuildProperties>
 
-		<Dev Condition="'$(Dev)' == ''">$(VisualStudioVersion)</Dev>
+    <Dev Condition="'$(Dev)' == ''">$(VisualStudioVersion)</Dev>
 
-		<!-- Azure-based static NuGet feed -->
-		<SleetInit Condition="'$(SleetInit)' == ''">false</SleetInit>
-	</PropertyGroup>
+    <!-- Azure-based static NuGet feed -->
+    <SleetInit Condition="'$(SleetInit)' == ''">false</SleetInit>
+  </PropertyGroup>
 
   <PropertyGroup>
     <CodeFormatterToolArgs>/additionalFileItemNames:None;Content;VSCTCompile;Page;EmbeddedResource</CodeFormatterToolArgs>
   </PropertyGroup>
-  
-	<ItemGroup>
-		<PackageReference Include="MSBuilder.CI" Version="0.1.2" />
-		<PackageReference Include="xunit.runner.msbuild" Version="$(XunitVersion)" />
-		<PackageReference Include="xunit.runner.console" Version="$(XunitVersion)" />
-		<PackageReference Include="Sleet.Azure" Version="0.2.5" />
+
+  <ItemGroup>
+    <PackageReference Include="MSBuilder.CI" Version="0.1.2" />
+    <PackageReference Include="xunit.runner.msbuild" Version="$(XunitVersion)" />
+    <PackageReference Include="xunit.runner.console" Version="$(XunitVersion)" />
+    <PackageReference Include="Sleet.Azure" Version="0.2.5" />
     <PackageReference Include="Merq.VisualStudio" Version="$(MerqVisualStudioVersion)" />
     <PackageReference Include="Xamarin.CodeFormatter" Version="*" />
   </ItemGroup>
 
-	<ItemGroup>
-		<Solution Include="src\Clide.sln"/>
-		<Dev Include="$(Dev)" />
-	</ItemGroup>
+  <ItemGroup>
+    <Solution Include="src\Clide.sln"/>
+    <Dev Include="$(Dev)" />
+  </ItemGroup>
 
   <ItemGroup>
     <CodeFormatterSolution Include="@(Solution)" />
   </ItemGroup>
-  
-	<Target Name="Clean">
-		<Exec Command="rmdir $(Out) /S /Q" Condition="Exists('$(Out)')" ContinueOnError="true" />
-		<!-- Remove all bin/obj recursively under /src -->
-		<Exec Command='for /d /r . %%d in (bin,obj) do @if exist "%%d" rd /s/q "%%d"' WorkingDirectory='$(MSBuildThisFileDirectory)src' ContinueOnError='true' />
-	</Target>
 
-	<!-- Configures the project in preparation for Build. Includes running Restore. -->
-	<Target Name="Configure" DependsOnTargets="Restore" />
+  <Target Name="Clean">
+    <Exec Command="rmdir $(Out) /S /Q" Condition="Exists('$(Out)')" ContinueOnError="true" />
+    <!-- Remove all bin/obj recursively under /src -->
+    <Exec Command='for /d /r . %%d in (bin,obj) do @if exist "%%d" rd /s/q "%%d"' WorkingDirectory='$(MSBuildThisFileDirectory)src' ContinueOnError='true' />
+  </Target>
 
-	<Target Name="EnsureLocalPackageSource" BeforeTargets="Restore">
-		<MakeDir Directories="$(TEMP)\packages" Condition="!Exists('$(TEMP)\packages')" />
-	</Target>
+  <!-- Configures the project in preparation for Build. Includes running Restore. -->
+  <Target Name="Configure" DependsOnTargets="Restore" />
 
-	<!-- Targets can be documented, and /t:Help will render the help -->
-	<Target Name="Build">
-		<MSBuild Projects="src\Clide.Vsix\Clide.Vsix.csproj" Targets="Version" Properties="$(CommonBuildProperties);GitInfoReportImportance=high" />
-		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties);Dev=%(Dev.Identity)" />
-	</Target>
+  <Target Name="EnsureLocalPackageSource" BeforeTargets="Restore">
+    <MakeDir Directories="$(TEMP)\packages" Condition="!Exists('$(TEMP)\packages')" />
+  </Target>
 
-	<Target Name="Package">
-		<MakeDir Directories="$(Out)" Condition="!Exists('$(Out)')" />
-		<MSBuild Projects="src\Clide.Vsix\Clide.Vsix.csproj" Targets="Pack" Properties="$(CommonBuildProperties)" />
-	</Target>
+  <!-- Targets can be documented, and /t:Help will render the help -->
+  <Target Name="Build">
+    <MSBuild Projects="src\Clide.Vsix\Clide.Vsix.csproj" Targets="Version" Properties="$(CommonBuildProperties);GitInfoReportImportance=high" />
+    <MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties);Dev=%(Dev.Identity)" />
+  </Target>
+
+  <Target Name="Package">
+    <MakeDir Directories="$(Out)" Condition="!Exists('$(Out)')" />
+    <MSBuild Projects="src\Clide.Vsix\Clide.Vsix.csproj" Targets="Pack" Properties="$(CommonBuildProperties)" />
+  </Target>
 
   <Target Name="BeforePush" BeforeTargets="Push">
-		<ItemGroup>
-			<Package Include="$(Out)\*.nupkg" />
-		</ItemGroup>    
+    <ItemGroup>
+      <Package Include="$(Out)\*.nupkg" />
+    </ItemGroup>
   </Target>
-  
-	<Target Name="Clean" />
 
-	<Target Name="Rebuild" DependsOnTargets="Clean;Restore;Build" />
+  <Target Name="Clean" />
 
-	<Target Name="AfterRestore" AfterTargets="Restore">
-		<MSBuild Projects="%(Solution.FullPath)" Targets="Restore" Properties="$(CommonBuildProperties);RestoreOnly=true" />
-	</Target>
+  <Target Name="Rebuild" DependsOnTargets="Clean;Restore;Build" />
 
-	<Target Name="Test">
-		<MSBuild Projects="src\Clide.UnitTests\Clide.UnitTests.csproj" BuildInParallel="false" Targets="GetTargetPath" Properties="$(CommonBuildProperties)">
-			<Output TaskParameter="TargetOutputs" ItemName="TestAssembly" />
-		</MSBuild>
+  <Target Name="AfterRestore" AfterTargets="Restore">
+    <MSBuild Projects="%(Solution.FullPath)" Targets="Restore" Properties="$(CommonBuildProperties);RestoreOnly=true" />
+  </Target>
 
-		<xunit Assemblies="@(TestAssembly)" />
-	</Target>
+  <Target Name="Test">
+    <MSBuild Projects="src\Clide.UnitTests\Clide.UnitTests.csproj" BuildInParallel="false" Targets="GetTargetPath" Properties="$(CommonBuildProperties)">
+      <Output TaskParameter="TargetOutputs" ItemName="TestAssembly" />
+    </MSBuild>
 
-	<Target Name="Run">
-		<!-- TODO: build + deploy to exp, run VS -->
-	</Target>
+    <xunit Assemblies="@(TestAssembly)" />
+  </Target>
 
-	<Import Project="build\corebuild.targets" />
+  <Target Name="Run">
+    <!-- TODO: build + deploy to exp, run VS -->
+  </Target>
+
+  <Import Project="build\corebuild.targets" />
 </Project>

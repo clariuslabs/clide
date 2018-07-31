@@ -1,3 +1,3 @@
 ﻿using System.Reflection;
 
-[assembly: AssemblyDescription ("Clide.Tests")]
+[assembly: AssemblyDescription("Clide.Tests")]

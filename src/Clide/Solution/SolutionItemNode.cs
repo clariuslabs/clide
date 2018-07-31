@@ -5,12 +5,12 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Clide
 {
-	/// <summary>
-	/// Default implementation of a solution item node in a managed project.
-	/// </summary>
-	public class SolutionItemNode : SolutionExplorerNode, ISolutionItemNode
+    /// <summary>
+    /// Default implementation of a solution item node in a managed project.
+    /// </summary>
+    public class SolutionItemNode : SolutionExplorerNode, ISolutionItemNode
     {
-		ISolutionExplorerNodeFactory nodeFactory;
+        ISolutionExplorerNodeFactory nodeFactory;
         Lazy<ISolutionFolderNode> owningFolder;
 
         /// <summary>
@@ -21,9 +21,9 @@ namespace Clide
         /// <param name="adapter">The adapter service that implements the smart cast <see cref="ITreeNode.As{T}"/>.</param>
         public SolutionItemNode(
             IVsHierarchyItem hierarchyNode,
-			ISolutionExplorerNodeFactory nodeFactory,
+            ISolutionExplorerNodeFactory nodeFactory,
             IAdapterService adapter,
-			Lazy<IVsUIHierarchyWindow> solutionExplorer)
+            Lazy<IVsUIHierarchyWindow> solutionExplorer)
             : base(SolutionNodeKind.SolutionItem, hierarchyNode, nodeFactory, adapter, solutionExplorer)
         {
             this.nodeFactory = nodeFactory;
@@ -33,40 +33,40 @@ namespace Clide
                 this.nodeFactory.CreateNode(hierarchyNode.GetRoot()) as ISolutionFolderNode);
         }
 
-		/// <summary>
-		/// Gets the logical path of the item, relative to the solution, 
-		/// considering any containing solution folders.
-		/// </summary>
-		public virtual string LogicalPath => this.RelativePathTo (OwningSolution);
+        /// <summary>
+        /// Gets the logical path of the item, relative to the solution, 
+        /// considering any containing solution folders.
+        /// </summary>
+        public virtual string LogicalPath => this.RelativePathTo(OwningSolution);
 
-		/// <summary>
-		/// Gets the physical path of the solution item.
-		/// </summary>
-		public virtual string PhysicalPath => Item.Value.get_FileNames (1);
+        /// <summary>
+        /// Gets the physical path of the solution item.
+        /// </summary>
+        public virtual string PhysicalPath => Item.Value.get_FileNames(1);
 
-		/// <summary>
-		/// Gets the owning solution folder.
-		/// </summary>
-		public virtual ISolutionFolderNode OwningSolutionFolder => owningFolder.Value;
+        /// <summary>
+        /// Gets the owning solution folder.
+        /// </summary>
+        public virtual ISolutionFolderNode OwningSolutionFolder => owningFolder.Value;
 
-		/// <summary>
-		/// Accepts the specified visitor for traversal.
-		/// </summary>
-		public override bool Accept (ISolutionVisitor visitor) => SolutionVisitable.Accept (this, visitor);
+        /// <summary>
+        /// Accepts the specified visitor for traversal.
+        /// </summary>
+        public override bool Accept(ISolutionVisitor visitor) => SolutionVisitable.Accept(this, visitor);
 
-		/// <summary>
-		/// Tries to smart-cast this node to the give type.
-		/// </summary>
-		/// <typeparam name="T">Type to smart-cast to.</typeparam>
-		/// <returns>
-		/// The casted value or null if it cannot be converted to that type.
-		/// </returns>
-		/// <exception cref="System.NotImplementedException"></exception>
-		public override T As<T> () => Adapter.Adapt (this).As<T> ();
+        /// <summary>
+        /// Tries to smart-cast this node to the give type.
+        /// </summary>
+        /// <typeparam name="T">Type to smart-cast to.</typeparam>
+        /// <returns>
+        /// The casted value or null if it cannot be converted to that type.
+        /// </returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public override T As<T>() => Adapter.Adapt(this).As<T>();
 
-		/// <summary>
-		/// Gets the item represented by this node.
-		/// </summary>
-		internal Lazy<ProjectItem> Item { get; }
-	}
+        /// <summary>
+        /// Gets the item represented by this node.
+        /// </summary>
+        internal Lazy<ProjectItem> Item { get; }
+    }
 }

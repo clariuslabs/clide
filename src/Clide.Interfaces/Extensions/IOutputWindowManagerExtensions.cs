@@ -1,12 +1,12 @@
-﻿namespace Clide
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Reflection;
+namespace Clide
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Reflection;
 
     /// <summary>
     /// Usability overloads for <see cref="IOutputWindowManager"/>.

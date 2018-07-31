@@ -1,9 +1,9 @@
 ﻿namespace Clide
 {
-	/// <summary>
-	/// Provides a hierarchical visitor pattern interface for the solution model.
-	/// </summary>
-	public interface ISolutionVisitor
+    /// <summary>
+    /// Provides a hierarchical visitor pattern interface for the solution model.
+    /// </summary>
+    public interface ISolutionVisitor
     {
         /// <summary>
         /// Begins visiting the solution.
@@ -117,18 +117,18 @@
         /// <returns><see langword="true"/> if the project reference siblings should be visited; <see langword="false"/> otherwise.</returns>
         bool VisitLeave(IReferenceNode reference);
 
-		/// <summary>
-		/// Begins visiting a generic or custom node.
-		/// </summary>
-		/// <param name="node">The generic or custom node being visited.</param>
-		/// <returns><see langword="true"/> if the node children should be visited; <see langword="false"/> otherwise.</returns>
-		bool VisitEnter (IGenericNode node);
+        /// <summary>
+        /// Begins visiting a generic or custom node.
+        /// </summary>
+        /// <param name="node">The generic or custom node being visited.</param>
+        /// <returns><see langword="true"/> if the node children should be visited; <see langword="false"/> otherwise.</returns>
+        bool VisitEnter(IGenericNode node);
 
-		/// <summary>
-		/// Ends visiting a generic or custom node.
-		/// </summary>
-		/// <param name="node">The generic or custom node being visited.</param>
-		/// <returns><see langword="true"/> if the node siblings should be visited; <see langword="false"/> otherwise.</returns>
-		bool VisitLeave (IGenericNode node);
+        /// <summary>
+        /// Ends visiting a generic or custom node.
+        /// </summary>
+        /// <param name="node">The generic or custom node being visited.</param>
+        /// <returns><see langword="true"/> if the node siblings should be visited; <see langword="false"/> otherwise.</returns>
+        bool VisitLeave(IGenericNode node);
     }
 }

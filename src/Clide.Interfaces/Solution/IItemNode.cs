@@ -1,10 +1,10 @@
 ﻿namespace Clide
 {
-	/// <summary>
-	/// Represents an item inside a project, a project folder or a solution folder.
-	/// </summary>
-	public interface IItemNode : IProjectItemNode
-	{
+    /// <summary>
+    /// Represents an item inside a project, a project folder or a solution folder.
+    /// </summary>
+    public interface IItemNode : IProjectItemNode
+    {
         /// <summary>
         /// Gets the logical path of the item, relative to its containing project.
         /// </summary>
@@ -24,5 +24,5 @@
         /// and allows getting and setting them.
         /// </remarks>
 		dynamic Properties { get; }
-	}
+    }
 }

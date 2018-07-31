@@ -52,7 +52,7 @@
     <TracerVersion>2.0.8</TracerVersion>
     <NuGetizerVersion>0.2.2</NuGetizerVersion>
     <XunitVersion>2.3.1</XunitVersion>
-    
+
     <XunitVsixVersion>0.4.0-alpha.*</XunitVsixVersion>
     <XVSSDKVersion>0.3.0-alpha.*</XVSSDKVersion>
     <XVSSDKBuildToolsVersion Condition="'$(CI)' != 'true'">0.3.0-alpha.*</XVSSDKBuildToolsVersion>

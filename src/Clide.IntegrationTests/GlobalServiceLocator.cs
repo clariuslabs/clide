@@ -2,13 +2,13 @@
 
 namespace Clide
 {
-	public static class GlobalServiceLocator
-	{
-		public static IServiceLocator Instance { get; }
+    public static class GlobalServiceLocator
+    {
+        public static IServiceLocator Instance { get; }
 
-		static GlobalServiceLocator()
-		{
-			Instance = new ServiceLocatorImpl (GlobalServices.Instance);
-		}
-	}
+        static GlobalServiceLocator()
+        {
+            Instance = new ServiceLocatorImpl(GlobalServices.Instance);
+        }
+    }
 }

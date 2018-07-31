@@ -2,11 +2,11 @@
 
 namespace Clide
 {
-	/// <summary>
-	/// Exposes the solution explorer toolwindow.
-	/// </summary>
-	public interface ISolutionExplorer : IToolWindow
-	{
+    /// <summary>
+    /// Exposes the solution explorer toolwindow.
+    /// </summary>
+    public interface ISolutionExplorer : IToolWindow
+    {
         /// <summary>
         /// Gets the current solution, which might be an 
         /// empty one if no solution is open.
@@ -19,5 +19,5 @@ namespace Clide
         /// <see cref="ISolutionNode.SelectedNodes"/>.
         /// </summary>
         IEnumerable<ISolutionExplorerNode> SelectedNodes { get; }
-	}
+    }
 }

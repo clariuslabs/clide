@@ -2,11 +2,11 @@
 
 namespace Clide
 {
-	/// <summary>
-	/// Represents the solution root node in the solution explorer tree.
-	/// </summary>
-	public interface ISolutionNode : ISolutionExplorerNode
-	{
+    /// <summary>
+    /// Represents the solution root node in the solution explorer tree.
+    /// </summary>
+    public interface ISolutionNode : ISolutionExplorerNode
+    {
         /// <summary>
         /// Gets a value indicating whether a solution is open.
         /// </summary>
@@ -22,15 +22,15 @@ namespace Clide
         /// </remarks>
         IProjectNode ActiveProject { get; }
 
-		/// <summary>
-		/// Gets the physical path of the solution, if it has been saved already.
-		/// </summary>
-		string PhysicalPath { get; }
+        /// <summary>
+        /// Gets the physical path of the solution, if it has been saved already.
+        /// </summary>
+        string PhysicalPath { get; }
 
-		/// <summary>
-		/// Gets the currently selected nodes in the solution.
-		/// </summary>
-		IEnumerable<ISolutionExplorerNode> SelectedNodes { get; }
+        /// <summary>
+        /// Gets the currently selected nodes in the solution.
+        /// </summary>
+        IEnumerable<ISolutionExplorerNode> SelectedNodes { get; }
 
         /// <summary>
         /// Closes the solution.

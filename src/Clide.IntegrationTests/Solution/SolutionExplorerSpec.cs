@@ -3,44 +3,44 @@ using Xunit;
 
 namespace Clide.Solution.Explorer
 {
-	[Trait ("LongRunning", "true")]
-	[Trait ("Feature", "Solution Traversal")]
-	public class SolutionExplorerSpec
-	{
-		[VsixFact]
-		public void when_getting_solution_explorer_then_succeeds ()
-		{
-			var solutionExplorer = GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<ISolutionExplorer>();
+    [Trait("LongRunning", "true")]
+    [Trait("Feature", "Solution Traversal")]
+    public class SolutionExplorerSpec
+    {
+        [VsixFact]
+        public void when_getting_solution_explorer_then_succeeds()
+        {
+            var solutionExplorer = GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<ISolutionExplorer>();
 
-			Assert.NotNull (solutionExplorer);
-		}
+            Assert.NotNull(solutionExplorer);
+        }
 
-		[VsixFact]
-		public void when_closing_solution_explorer_then_is_visible_returns_false ()
-		{
-			var solutionExplorer = GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<ISolutionExplorer>();
+        [VsixFact]
+        public void when_closing_solution_explorer_then_is_visible_returns_false()
+        {
+            var solutionExplorer = GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<ISolutionExplorer>();
 
-			solutionExplorer.Close ();
+            solutionExplorer.Close();
 
-			Assert.False (solutionExplorer.IsVisible);
-		}
+            Assert.False(solutionExplorer.IsVisible);
+        }
 
-		[VsixFact]
-		public void when_closing_solution_explorer_then_is_visible_returns_true ()
-		{
-			var solutionExplorer = GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<ISolutionExplorer>();
+        [VsixFact]
+        public void when_closing_solution_explorer_then_is_visible_returns_true()
+        {
+            var solutionExplorer = GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<ISolutionExplorer>();
 
-			solutionExplorer.Show ();
+            solutionExplorer.Show();
 
-			Assert.True (solutionExplorer.IsVisible);
-		}
+            Assert.True(solutionExplorer.IsVisible);
+        }
 
-		[VsixFact]
-		public void when_getting_solution_node_then_returns_non_null ()
-		{
-			var solutionExplorer = GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<ISolutionExplorer>();
+        [VsixFact]
+        public void when_getting_solution_node_then_returns_non_null()
+        {
+            var solutionExplorer = GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<ISolutionExplorer>();
 
-			Assert.NotNull (solutionExplorer.Solution);
-		}
-	}
+            Assert.NotNull(solutionExplorer.Solution);
+        }
+    }
 }

@@ -7,33 +7,33 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Clide
 {
-	[Export (ContractNames.FallbackNodeFactory, typeof (ICustomSolutionExplorerNodeFactory))]
-	public class SolutionNodeFactory : ICustomSolutionExplorerNodeFactory
-	{
-		IServiceProvider services;
-		Lazy<ISolutionExplorerNodeFactory> nodeFactory;
-		IAdapterService adapter;
-		IVsSolutionSelection selection;
-		Lazy<IVsUIHierarchyWindow> solutionExplorer;
+    [Export(ContractNames.FallbackNodeFactory, typeof(ICustomSolutionExplorerNodeFactory))]
+    public class SolutionNodeFactory : ICustomSolutionExplorerNodeFactory
+    {
+        IServiceProvider services;
+        Lazy<ISolutionExplorerNodeFactory> nodeFactory;
+        IAdapterService adapter;
+        IVsSolutionSelection selection;
+        Lazy<IVsUIHierarchyWindow> solutionExplorer;
 
-		[ImportingConstructor]
-		public SolutionNodeFactory(
-			[Import (typeof (SVsServiceProvider))] IServiceProvider services,
-			Lazy<ISolutionExplorerNodeFactory> nodeFactory,
+        [ImportingConstructor]
+        public SolutionNodeFactory(
+            [Import(typeof(SVsServiceProvider))] IServiceProvider services,
+            Lazy<ISolutionExplorerNodeFactory> nodeFactory,
             IAdapterService adapter,
-			IVsSolutionSelection selection,
-			[Import (ContractNames.Interop.SolutionExplorerWindow)] Lazy<IVsUIHierarchyWindow> solutionExplorer)
-		{
-			this.services = services;
-			this.nodeFactory = nodeFactory;
-			this.adapter = adapter;
-			this.selection = selection;
-			this.solutionExplorer = solutionExplorer;
-		}
+            IVsSolutionSelection selection,
+            [Import(ContractNames.Interop.SolutionExplorerWindow)] Lazy<IVsUIHierarchyWindow> solutionExplorer)
+        {
+            this.services = services;
+            this.nodeFactory = nodeFactory;
+            this.adapter = adapter;
+            this.selection = selection;
+            this.solutionExplorer = solutionExplorer;
+        }
 
-		public virtual bool Supports (IVsHierarchyItem item) => item.HierarchyIdentity.Hierarchy is IVsSolution;
+        public virtual bool Supports(IVsHierarchyItem item) => item.HierarchyIdentity.Hierarchy is IVsSolution;
 
-		public virtual ISolutionExplorerNode CreateNode (IVsHierarchyItem item) => Supports (item) ?
-			new SolutionNode (services, item, nodeFactory.Value, adapter, selection, solutionExplorer) : null;
-	}
+        public virtual ISolutionExplorerNode CreateNode(IVsHierarchyItem item) => Supports(item) ?
+            new SolutionNode(services, item, nodeFactory.Value, adapter, selection, solutionExplorer) : null;
+    }
 }

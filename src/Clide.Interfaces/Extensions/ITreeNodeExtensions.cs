@@ -1,7 +1,7 @@
-﻿namespace Clide
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+namespace Clide
 {
-    using System.Collections.Generic;
-    using System.ComponentModel;
 
     /// <summary>
     /// Provides node traversal extensions.

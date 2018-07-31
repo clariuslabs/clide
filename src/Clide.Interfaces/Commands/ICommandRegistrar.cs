@@ -2,8 +2,8 @@
 
 namespace Clide
 {
-	public interface ICommandRegistrar
-	{
-		void RegisterCommands(IServiceProvider package);
-	}
+    public interface ICommandRegistrar
+    {
+        void RegisterCommands(IServiceProvider package);
+    }
 }

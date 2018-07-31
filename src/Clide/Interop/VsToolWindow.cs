@@ -4,14 +4,14 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Clide.Interop
 {
-	internal class VsToolWindow
+    internal class VsToolWindow
     {
         private IVsUIShell uiShell;
         private Guid toolWindowId;
 
         public VsToolWindow(IServiceProvider serviceProvider, Guid toolWindowId)
         {
-            this.uiShell = serviceProvider.GetService<SVsUIShell, IVsUIShell>();
+            uiShell = serviceProvider.GetService<SVsUIShell, IVsUIShell>();
             this.toolWindowId = toolWindowId;
         }
 
@@ -20,7 +20,7 @@ namespace Clide.Interop
             get
             {
                 IVsWindowFrame frame;
-                ErrorHandler.ThrowOnFailure(this.uiShell.FindToolWindow((uint)__VSFINDTOOLWIN.FTW_fFindFirst, ref toolWindowId, out frame));
+                ErrorHandler.ThrowOnFailure(uiShell.FindToolWindow((uint)__VSFINDTOOLWIN.FTW_fFindFirst, ref toolWindowId, out frame));
                 return frame != null && frame.IsVisible() == 0;
             }
         }
@@ -28,7 +28,7 @@ namespace Clide.Interop
         public void Show()
         {
             IVsWindowFrame frame;
-            ErrorHandler.ThrowOnFailure(this.uiShell.FindToolWindow((uint)__VSFINDTOOLWIN.FTW_fForceCreate, ref toolWindowId, out frame));
+            ErrorHandler.ThrowOnFailure(uiShell.FindToolWindow((uint)__VSFINDTOOLWIN.FTW_fForceCreate, ref toolWindowId, out frame));
             if (frame != null)
             {
                 ErrorHandler.ThrowOnFailure(frame.Show());
@@ -38,7 +38,7 @@ namespace Clide.Interop
         public void Close()
         {
             IVsWindowFrame frame;
-            ErrorHandler.ThrowOnFailure(this.uiShell.FindToolWindow((uint)__VSFINDTOOLWIN.FTW_fFindFirst, ref toolWindowId, out frame));
+            ErrorHandler.ThrowOnFailure(uiShell.FindToolWindow((uint)__VSFINDTOOLWIN.FTW_fFindFirst, ref toolWindowId, out frame));
             if (frame != null)
             {
                 ErrorHandler.ThrowOnFailure(frame.Hide());

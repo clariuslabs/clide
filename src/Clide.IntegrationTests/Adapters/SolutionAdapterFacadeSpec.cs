@@ -4,269 +4,269 @@ using Xunit;
 
 namespace Clide.Adapters
 {
-	[Collection ("OpenSolution11")]
-	public class SolutionAdapterFacadeSpec
-	{
-		ISolutionFixture fixture;
+    [Collection("OpenSolution11")]
+    public class SolutionAdapterFacadeSpec
+    {
+        ISolutionFixture fixture;
 
-		public SolutionAdapterFacadeSpec (OpenSolution11Fixture fixture)
-		{
-			this.fixture = fixture;
-		}
+        public SolutionAdapterFacadeSpec(OpenSolution11Fixture fixture)
+        {
+            this.fixture = fixture;
+        }
 
-		#region IVsHierarchyItem
+        #region IVsHierarchyItem
 
-		[VsixFact]
-		public void when_adapting_solution_as_vs_hierarchy_item_then_succeeds ()
-		{
-			var from = fixture.Solution;
+        [VsixFact]
+        public void when_adapting_solution_as_vs_hierarchy_item_then_succeeds()
+        {
+            var from = fixture.Solution;
 
-			var to = from.AsVsHierarchyItem();
+            var to = from.AsVsHierarchyItem();
 
-			Assert.NotNull (to);
-		}
+            Assert.NotNull(to);
+        }
 
-		[VsixFact]
-		public void when_adapting_project__as_vs_hierarchy_item_then_succeeds ()
-		{
-			var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary");
+        [VsixFact]
+        public void when_adapting_project__as_vs_hierarchy_item_then_succeeds()
+        {
+            var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary");
 
-			var to = from.AsVsHierarchyItem();
+            var to = from.AsVsHierarchyItem();
 
-			Assert.NotNull (to);
-		}
+            Assert.NotNull(to);
+        }
 
-		[VsixFact]
-		public void when_adapting_item_as_vs_hierarchy_item_then_succeeds ()
-		{
-			var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
-				.Nodes.OfType<IItemNode>().First(x => x.Name == "Class1.cs");
+        [VsixFact]
+        public void when_adapting_item_as_vs_hierarchy_item_then_succeeds()
+        {
+            var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
+                .Nodes.OfType<IItemNode>().First(x => x.Name == "Class1.cs");
 
-			var to = from.AsVsHierarchyItem();
+            var to = from.AsVsHierarchyItem();
 
-			Assert.NotNull (to);
-		}
+            Assert.NotNull(to);
+        }
 
-		[VsixFact]
-		public void when_adapting_folder_as_vs_hierarchy_item_then_succeeds ()
-		{
-			var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
-				.OfType<IFolderNode>().First();
+        [VsixFact]
+        public void when_adapting_folder_as_vs_hierarchy_item_then_succeeds()
+        {
+            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+                .OfType<IFolderNode>().First();
 
-			var to = from.AsVsHierarchyItem();
+            var to = from.AsVsHierarchyItem();
 
-			Assert.NotNull (to);
-		}
+            Assert.NotNull(to);
+        }
 
-		[VsixFact]
-		public void when_adapting_solution_folder_as_vs_hierarchy_item_then_succeeds ()
-		{
-			var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
-				.OfType<ISolutionFolderNode>().First();
+        [VsixFact]
+        public void when_adapting_solution_folder_as_vs_hierarchy_item_then_succeeds()
+        {
+            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+                .OfType<ISolutionFolderNode>().First();
 
-			var to = from.AsVsHierarchyItem();
+            var to = from.AsVsHierarchyItem();
 
-			Assert.NotNull (to);
-		}
+            Assert.NotNull(to);
+        }
 
-		[VsixFact]
-		public void when_adapting_references_as_vs_hierarchy_item_then_succeeds ()
-		{
-			var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
-				.OfType<IReferencesNode>().First();
+        [VsixFact]
+        public void when_adapting_references_as_vs_hierarchy_item_then_succeeds()
+        {
+            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+                .OfType<IReferencesNode>().First();
 
-			var to = from.AsVsHierarchyItem();
+            var to = from.AsVsHierarchyItem();
 
-			Assert.NotNull (to);
-		}
+            Assert.NotNull(to);
+        }
 
-		[VsixFact]
-		public void when_adapting_reference_as_vs_hierarchy_item_then_succeeds ()
-		{
-			var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
-				.OfType<IReferenceNode>().First();
+        [VsixFact]
+        public void when_adapting_reference_as_vs_hierarchy_item_then_succeeds()
+        {
+            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+                .OfType<IReferenceNode>().First();
 
-			var to = from.AsVsHierarchyItem();
+            var to = from.AsVsHierarchyItem();
 
-			Assert.NotNull (to);
-		}
+            Assert.NotNull(to);
+        }
 
-		[VsixFact]
-		public void when_adapting_solution_item_as_vs_hierarchy_item_then_succeeds ()
-		{
-			var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
-				.OfType<ISolutionItemNode>().First();
+        [VsixFact]
+        public void when_adapting_solution_item_as_vs_hierarchy_item_then_succeeds()
+        {
+            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+                .OfType<ISolutionItemNode>().First();
 
-			var to = from.AsVsHierarchyItem();
+            var to = from.AsVsHierarchyItem();
 
-			Assert.NotNull (to);
-		}
+            Assert.NotNull(to);
+        }
 
-		#endregion
+        #endregion
 
-		#region IVsHierarchy
+        #region IVsHierarchy
 
-		[VsixFact]
-		public void when_adapting_solution_as_vs_hierarchy_then_succeeds ()
-		{
-			var from = fixture.Solution;
+        [VsixFact]
+        public void when_adapting_solution_as_vs_hierarchy_then_succeeds()
+        {
+            var from = fixture.Solution;
 
-			var to = from.AsVsHierarchy();
+            var to = from.AsVsHierarchy();
 
-			Assert.NotNull (to);
-		}
+            Assert.NotNull(to);
+        }
 
-		[VsixFact]
-		public void when_adapting_project__as_vs_hierarchy_then_succeeds ()
-		{
-			var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary");
+        [VsixFact]
+        public void when_adapting_project__as_vs_hierarchy_then_succeeds()
+        {
+            var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary");
 
-			var to = from.AsVsHierarchy();
+            var to = from.AsVsHierarchy();
 
-			Assert.NotNull (to);
-		}
+            Assert.NotNull(to);
+        }
 
-		[VsixFact]
-		public void when_adapting_item_as_vs_hierarchy_then_succeeds ()
-		{
-			var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
-				.Nodes.OfType<IItemNode>().First(x => x.Name == "Class1.cs");
+        [VsixFact]
+        public void when_adapting_item_as_vs_hierarchy_then_succeeds()
+        {
+            var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
+                .Nodes.OfType<IItemNode>().First(x => x.Name == "Class1.cs");
 
-			var to = from.AsVsHierarchy();
+            var to = from.AsVsHierarchy();
 
-			Assert.NotNull (to);
-		}
+            Assert.NotNull(to);
+        }
 
-		[VsixFact]
-		public void when_adapting_folder_as_vs_hierarchy_then_succeeds ()
-		{
-			var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
-				.OfType<IFolderNode>().First();
+        [VsixFact]
+        public void when_adapting_folder_as_vs_hierarchy_then_succeeds()
+        {
+            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+                .OfType<IFolderNode>().First();
 
-			var to = from.AsVsHierarchy();
+            var to = from.AsVsHierarchy();
 
-			Assert.NotNull (to);
-		}
+            Assert.NotNull(to);
+        }
 
-		[VsixFact]
-		public void when_adapting_solution_folder_as_vs_hierarchy_then_succeeds ()
-		{
-			var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
-				.OfType<ISolutionFolderNode>().First();
+        [VsixFact]
+        public void when_adapting_solution_folder_as_vs_hierarchy_then_succeeds()
+        {
+            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+                .OfType<ISolutionFolderNode>().First();
 
-			var to = from.AsVsHierarchy();
+            var to = from.AsVsHierarchy();
 
-			Assert.NotNull (to);
-		}
+            Assert.NotNull(to);
+        }
 
-		[VsixFact]
-		public void when_adapting_references_as_vs_hierarchy_then_succeeds ()
-		{
-			var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
-				.OfType<IReferencesNode>().First();
+        [VsixFact]
+        public void when_adapting_references_as_vs_hierarchy_then_succeeds()
+        {
+            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+                .OfType<IReferencesNode>().First();
 
-			var to = from.AsVsHierarchy();
+            var to = from.AsVsHierarchy();
 
-			Assert.NotNull (to);
-		}
+            Assert.NotNull(to);
+        }
 
-		[VsixFact]
-		public void when_adapting_reference_as_vs_hierarchy_then_succeeds ()
-		{
-			var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
-				.OfType<IReferenceNode>().First();
+        [VsixFact]
+        public void when_adapting_reference_as_vs_hierarchy_then_succeeds()
+        {
+            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+                .OfType<IReferenceNode>().First();
 
-			var to = from.AsVsHierarchy();
+            var to = from.AsVsHierarchy();
 
-			Assert.NotNull (to);
-		}
+            Assert.NotNull(to);
+        }
 
-		[VsixFact]
-		public void when_adapting_solution_item_as_vs_hierarchy_then_succeeds ()
-		{
-			var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
-				.OfType<ISolutionItemNode>().First();
+        [VsixFact]
+        public void when_adapting_solution_item_as_vs_hierarchy_then_succeeds()
+        {
+            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+                .OfType<ISolutionItemNode>().First();
 
-			var to = from.AsVsHierarchy();
+            var to = from.AsVsHierarchy();
 
-			Assert.NotNull (to);
-		}
+            Assert.NotNull(to);
+        }
 
-		#endregion
+        #endregion
 
-		#region IVs*
+        #region IVs*
 
-		[VsixFact]
-		public void when_adapting_solution_as_vs_solution_then_succeeds ()
-		{
-			var from = fixture.Solution;
+        [VsixFact]
+        public void when_adapting_solution_as_vs_solution_then_succeeds()
+        {
+            var from = fixture.Solution;
 
-			var to = from.AsVsSolution();
+            var to = from.AsVsSolution();
 
-			Assert.NotNull (to);
-		}
+            Assert.NotNull(to);
+        }
 
-		[VsixFact]
-		public void when_adapting_project__as_vs_project_then_succeeds ()
-		{
-			var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary");
+        [VsixFact]
+        public void when_adapting_project__as_vs_project_then_succeeds()
+        {
+            var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary");
 
-			var to = from.AsVsProject();
+            var to = from.AsVsProject();
 
-			Assert.NotNull (to);
-		}
+            Assert.NotNull(to);
+        }
 
 
-		#endregion
+        #endregion
 
-		#region VSLang
+        #region VSLang
 
-		[VsixFact]
-		public void when_adapting_project__as_vslang_then_succeeds ()
-		{
-			var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary");
+        [VsixFact]
+        public void when_adapting_project__as_vslang_then_succeeds()
+        {
+            var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary");
 
-			var to = from.AsVsLangProject();
+            var to = from.AsVsLangProject();
 
-			Assert.NotNull (to);
-		}
+            Assert.NotNull(to);
+        }
 
-		[VsixFact]
-		public void when_adapting_item_as_vslang_then_succeeds ()
-		{
-			var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
-				.Nodes.OfType<IItemNode>().First(x => x.Name == "Class1.cs");
+        [VsixFact]
+        public void when_adapting_item_as_vslang_then_succeeds()
+        {
+            var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
+                .Nodes.OfType<IItemNode>().First(x => x.Name == "Class1.cs");
 
-			var to = from.AsVsLangProjectItem();
+            var to = from.AsVsLangProjectItem();
 
-			Assert.NotNull (to);
-		}
+            Assert.NotNull(to);
+        }
 
-		[VsixFact]
-		public void when_adapting_reference_as_vslang_then_succeeds ()
-		{
-			var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
-				.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
-				.OfType<IReferenceNode>().First();
+        [VsixFact]
+        public void when_adapting_reference_as_vslang_then_succeeds()
+        {
+            var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
+                .Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+                .OfType<IReferenceNode>().First();
 
-			var to = from.AsReference();
+            var to = from.AsReference();
 
-			Assert.NotNull (to);
-		}
+            Assert.NotNull(to);
+        }
 
-		[VsixFact]
-		public void when_adapting_references_as_vslang_then_succeeds ()
-		{
-			var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
-				.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
-				.OfType<IReferenceNode>().First();
+        [VsixFact]
+        public void when_adapting_references_as_vslang_then_succeeds()
+        {
+            var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
+                .Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+                .OfType<IReferenceNode>().First();
 
-			var to = from.AsReference();
+            var to = from.AsReference();
 
-			Assert.NotNull (to);
-		}
+            Assert.NotNull(to);
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 
 }

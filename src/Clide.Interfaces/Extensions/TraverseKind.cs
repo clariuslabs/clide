@@ -6,6 +6,6 @@ using System.Text;
 /// <nuget id="netfx-System.Collections.Generic.IEnumerable.Traverse" />
 internal enum TraverseKind
 {
-	BreadthFirst,
-	DepthFirst,
+    BreadthFirst,
+    DepthFirst,
 }

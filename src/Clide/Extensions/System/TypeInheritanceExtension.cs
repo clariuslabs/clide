@@ -56,8 +56,8 @@ internal static class TypeInheritanceExtension
                 .Where(i =>
                     // Detect marker interfaces separately, and add them always as long as they don't show up in others upward.
                     (!i.Map.TargetMethods.Any() && !interfaces.SelectMany(n => n.Ancestors).Any(t => t == i.Interface)) ||
-                        // For interfaces with members, we can get the map and check if they are declared in the current type.
-                        // Note that this brings into this type the interfaces that have a completely overriden implementation (our intended design).
+                    // For interfaces with members, we can get the map and check if they are declared in the current type.
+                    // Note that this brings into this type the interfaces that have a completely overriden implementation (our intended design).
                     (i.Map.TargetMethods.Any() && i.Map.TargetMethods.All(m => m.DeclaringType == type)))
                 .Select(i => GetInheritanceTree(i.Interface, distance + 1)));
         }
