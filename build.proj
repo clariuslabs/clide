@@ -18,12 +18,17 @@
 		<SleetInit Condition="'$(SleetInit)' == ''">false</SleetInit>
 	</PropertyGroup>
 
+  <PropertyGroup>
+    <CodeFormatterToolArgs>/additionalFileItemNames:None;Content;VSCTCompile;Page;EmbeddedResource</CodeFormatterToolArgs>
+  </PropertyGroup>
+  
 	<ItemGroup>
 		<PackageReference Include="MSBuilder.CI" Version="0.1.2" />
 		<PackageReference Include="xunit.runner.msbuild" Version="$(XunitVersion)" />
 		<PackageReference Include="xunit.runner.console" Version="$(XunitVersion)" />
 		<PackageReference Include="Sleet.Azure" Version="0.2.5" />
-		<PackageReference Include="Merq.VisualStudio" Version="$(MerqVisualStudioVersion)" />
+    <PackageReference Include="Merq.VisualStudio" Version="$(MerqVisualStudioVersion)" />
+    <PackageReference Include="Xamarin.CodeFormatter" Version="*" />
   </ItemGroup>
 
 	<ItemGroup>
@@ -31,6 +36,10 @@
 		<Dev Include="$(Dev)" />
 	</ItemGroup>
 
+  <ItemGroup>
+    <CodeFormatterSolution Include="@(Solution)" />
+  </ItemGroup>
+  
 	<Target Name="Clean">
 		<Exec Command="rmdir $(Out) /S /Q" Condition="Exists('$(Out)')" ContinueOnError="true" />
 		<!-- Remove all bin/obj recursively under /src -->
