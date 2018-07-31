@@ -59,6 +59,9 @@
     <XVSSDKBuildToolsVersion Condition="'$(CI)' == 'true'">0.3.0-alpha.17</XVSSDKBuildToolsVersion>
 
     <VSSDKBuildToolsVersion>15.7.107</VSSDKBuildToolsVersion>
+
+    <VSSDKAnalyzersVersion>15.8.33</VSSDKAnalyzersVersion>
+    <VSThreadingAnalyzersVersion>15.8.132</VSThreadingAnalyzersVersion>
   </PropertyGroup>
 
   <Target Name="GetCI" Returns="$(CI)">

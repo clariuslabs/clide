@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
     <IncludeVSSDK>true</IncludeVSSDK>
+    <IncludeAnalyzers>true</IncludeAnalyzers>
 
     <PackageId>Clide.Interfaces</PackageId>
     <IsPackable>false</IsPackable>

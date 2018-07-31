@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Clide.Components.Interop;
 using Merq;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
@@ -79,7 +80,9 @@ namespace Clide
     {
         public TestJoinableTaskContext()
         {
+#pragma warning disable VSSDK005 // Avoid instantiating JoinableTaskContext
             Instance = new JoinableTaskContext();
+#pragma warning restore VSSDK005 // Avoid instantiating JoinableTaskContext
         }
 
         [Export]

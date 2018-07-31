@@ -5,6 +5,7 @@
     <AssemblyName>Clide.Core</AssemblyName>
     <IncludeVSSDK>true</IncludeVSSDK>
     <IncludeRx>true</IncludeRx>
+    <IncludeAnalyzers>true</IncludeAnalyzers>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 
     <PackageId>Clide.Core</PackageId>

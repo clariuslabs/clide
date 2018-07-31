@@ -34,7 +34,12 @@ namespace Clide
 				if (dte == null) {
                     try
                     {
-                        dte = ThreadHelper.Generic.Invoke(() => Package.GetGlobalService(typeof(EnvDTE.DTE)));
+                        dte = ThreadHelper.JoinableTaskFactory.Run(async () =>
+                        {
+                            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                            return Package.GetGlobalService(typeof(EnvDTE.DTE));
+                        });
                         if (dte == null)
                             dte = RunningObjects.GetDTE(TimeSpan.FromMilliseconds(500));
                     }
