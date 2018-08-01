@@ -58,10 +58,10 @@
         /// <param name="manager">The settings manager that will read and save data for this instance.</param>
         public Settings(ISettingsManager manager)
         {
-            this.tracer = Tracer.Get(this.GetType());
+            tracer = Tracer.Get(GetType());
             this.manager = manager;
             this.manager.Read(this);
-            this.IsInitialized = false;
+            IsInitialized = false;
         }
 
         /// <summary>
@@ -76,7 +76,7 @@
         public virtual void BeginEdit()
         {
             tracer.Verbose("BeginEdit");
-            this.editing = true;
+            editing = true;
         }
 
         /// <summary>
@@ -86,20 +86,20 @@
         {
             tracer.Verbose("CancelEdit");
 
-            if (this.editing)
+            if (editing)
             {
-                this.editing = false;
+                editing = false;
                 // Restore a clean copy of the object, as if it was brand-new created.
                 try
                 {
-                    var clean = Activator.CreateInstance(this.GetType(), this.manager);
+                    var clean = Activator.CreateInstance(GetType(), manager);
                     foreach (var property in TypeDescriptor.GetProperties(this).Cast<PropertyDescriptor>())
                     {
                         property.SetValue(this, property.GetValue(clean));
                     }
 
-                    this.IsInitialized = false;
-                    this.manager.Read(this);
+                    IsInitialized = false;
+                    manager.Read(this);
                 }
                 catch (Exception ex)
                 {
@@ -117,13 +117,13 @@
         {
             tracer.Verbose("EndEdit");
 
-            if (!this.editing)
+            if (!editing)
                 throw new InvalidOperationException(Strings.Settings.EndEditWithoutBeginEdit);
 
-            if (!this.initializing)
-                this.Save();
+            if (!initializing)
+                Save();
 
-            this.editing = false;
+            editing = false;
         }
 
         /// <summary>
@@ -132,10 +132,10 @@
         /// <exception cref="System.InvalidOperationException"></exception>
         public virtual void BeginInit()
         {
-            if (this.IsInitialized)
+            if (IsInitialized)
                 throw new InvalidOperationException(Strings.Settings.AlreadyInitialized);
 
-            this.initializing = true;
+            initializing = true;
         }
 
         /// <summary>
@@ -144,13 +144,13 @@
         /// <exception cref="System.InvalidOperationException"></exception>
         public virtual void EndInit()
         {
-            if (!this.initializing)
+            if (!initializing)
                 throw new InvalidOperationException(Strings.Settings.EndInitWithoutBeginInit);
 
-            this.IsInitialized = true;
-            this.initializing = false;
+            IsInitialized = true;
+            initializing = false;
 
-            this.Initialized(this, EventArgs.Empty);
+            Initialized(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -160,7 +160,7 @@
         public virtual void Save(bool saveDefaults = false)
         {
             OnSaving();
-            this.manager.Save(this, saveDefaults);
+            manager.Save(this, saveDefaults);
             OnSaved();
 
             tracer.Info(Strings.Settings.TraceSaved);
