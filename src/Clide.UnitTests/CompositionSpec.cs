@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Clide.Components.Interop;
 using Merq;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
@@ -189,106 +188,6 @@ namespace Clide
 
         [Export]
         public ExportProvider Exports { get { return exports; } }
-    }
-
-
-    [Export(typeof(IAsyncManager))]
-    public class MockAsyncManagerProvider : IAsyncManager
-    {
-        public void Run(Func<System.Threading.Tasks.Task> asyncMethod)
-        {
-            asyncMethod().Wait();
-        }
-
-        public TResult Run<TResult>(Func<Task<TResult>> asyncMethod)
-        {
-            return asyncMethod().Result;
-        }
-
-        public IAwaitable RunAsync(Func<System.Threading.Tasks.Task> asyncMethod)
-        {
-            return new TaskAwaitable(asyncMethod());
-        }
-
-        public IAwaitable<TResult> RunAsync<TResult>(Func<Task<TResult>> asyncMethod)
-        {
-            return new TaskAwaitable<TResult>(asyncMethod());
-        }
-
-        public IAwaitable SwitchToBackground()
-        {
-            return new TaskAwaitable(System.Threading.Tasks.Task.FromResult(0));
-        }
-
-        public IAwaitable SwitchToMainThread()
-        {
-            return new TaskAwaitable(System.Threading.Tasks.Task.FromResult(0));
-        }
-    }
-
-    class TaskAwaitable : IAwaitable
-    {
-        System.Threading.Tasks.Task task;
-
-        public TaskAwaitable(System.Threading.Tasks.Task task)
-        {
-            this.task = task;
-        }
-
-        public IAwaiter GetAwaiter() => new Awaiter(task.GetAwaiter());
-
-        class Awaiter : IAwaiter
-        {
-            TaskAwaiter awaiter;
-
-            public Awaiter(TaskAwaiter awaiter)
-            {
-                this.awaiter = awaiter;
-            }
-
-            public bool IsCompleted => awaiter.IsCompleted;
-
-            public void GetResult()
-            {
-                awaiter.GetResult();
-            }
-
-            public void OnCompleted(Action continuation)
-            {
-                awaiter.OnCompleted(continuation);
-            }
-        }
-    }
-
-    class TaskAwaitable<TResult> : IAwaitable<TResult>
-    {
-        Task<TResult> task;
-
-        public TaskAwaitable(Task<TResult> task)
-        {
-            this.task = task;
-        }
-
-        public IAwaiter<TResult> GetAwaiter() => new Awaiter(task.GetAwaiter());
-
-        class Awaiter : IAwaiter<TResult>
-        {
-            TaskAwaiter<TResult> awaiter;
-
-            public Awaiter(TaskAwaiter<TResult> awaiter)
-            {
-                this.awaiter = awaiter;
-            }
-
-            public bool IsCompleted => awaiter.IsCompleted;
-
-            public TResult GetResult() => awaiter.GetResult();
-
-            public void OnCompleted(Action continuation)
-            {
-                awaiter.OnCompleted(continuation);
-            }
-        }
     }
 
     public class MockCommandBusProvider

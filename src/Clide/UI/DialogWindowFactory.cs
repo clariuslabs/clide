@@ -5,6 +5,8 @@ using System.Windows;
 using System.Windows.Interop;
 using System.ComponentModel.Composition;
 using Merq;
+using Microsoft.VisualStudio.Threading;
+
 namespace Clide
 {
 
@@ -16,22 +18,22 @@ namespace Clide
     class DialogWindowFactory : IDialogWindowFactory
     {
         readonly Lazy<IVsUIShell> uiShell;
-        readonly Lazy<IAsyncManager> asyncManager;
+        readonly JoinableTaskFactory jtf;
 
         [ImportingConstructor]
         public DialogWindowFactory(
             [Import(ContractNames.Interop.IVsUIShell)] Lazy<IVsUIShell> uiShell,
-            Lazy<IAsyncManager> asyncManager)
+            JoinableTaskContext context)
         {
             this.uiShell = uiShell;
-            this.asyncManager = asyncManager;
+            jtf = context.Factory;
         }
 
         public TView CreateDialog<TView>() where TView : IDialogWindow, new()
         {
-            return asyncManager.Value.Run(async () =>
+            return jtf.Run(async () =>
             {
-                await asyncManager.Value.SwitchToMainThread();
+                await jtf.SwitchToMainThreadAsync();
 
                 return CreateDialogImpl<TView>();
             });
@@ -40,14 +42,16 @@ namespace Clide
         TView CreateDialogImpl<TView>() where TView : IDialogWindow, new()
         {
             var dialog = new TView();
-            var dialogWindow = dialog as Window;
-            if (dialogWindow != null)
+            if (dialog is Window dialogWindow)
             {
-                IntPtr owner;
-                ErrorHandler.ThrowOnFailure(uiShell.Value.GetDialogOwnerHwnd(out owner));
-                new WindowInteropHelper(dialogWindow).Owner = owner;
-                dialogWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                dialogWindow.ShowInTaskbar = false;
+                jtf.Run(async () =>
+                {
+                    await jtf.SwitchToMainThreadAsync();
+                    ErrorHandler.ThrowOnFailure(uiShell.Value.GetDialogOwnerHwnd(out var owner));
+                    new WindowInteropHelper(dialogWindow).Owner = owner;
+                    dialogWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                    dialogWindow.ShowInTaskbar = false;
+                });
             }
 
             return dialog;

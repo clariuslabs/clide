@@ -6,6 +6,12 @@ using Microsoft.VisualStudio.Threading;
 
 namespace Clide
 {
+    public static class JoinableLazy
+    {
+        public static JoinableLazy<T> Create<T>(Func<T> valueFactory, JoinableTaskFactory taskFactory, bool executeOnMainThread = false)
+            => new JoinableLazy<T>(valueFactory, taskFactory, executeOnMainThread);
+    }
+
     /// <summary>
     /// Provides thread-safe support for lazy initialization, with options for sync and async value factories
     /// </summary>

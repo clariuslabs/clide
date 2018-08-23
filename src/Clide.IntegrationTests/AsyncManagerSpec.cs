@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Merq;
 using Microsoft.VisualStudio.ComponentModelHost;
+using Microsoft.VisualStudio.Threading;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -19,23 +20,23 @@ namespace Clide
         [VsixFact]
         public void when_switching_contexts_then_succeeds()
         {
-            var manager = GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<IAsyncManager>();
+            var manager = GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<JoinableTaskContext>().Factory;
 
             manager.Run(async () =>
             {
-                await manager.SwitchToMainThread();
+                await manager.SwitchToMainThreadAsync();
                 var mainThreadId = Thread.CurrentThread.ManagedThreadId;
 
                 var backgroundId = 0;
                 var foregroundId = mainThreadId;
 
-                await manager.SwitchToBackground();
+                await TaskScheduler.Default;
 
                 backgroundId = Thread.CurrentThread.ManagedThreadId;
 
                 Assert.NotEqual(backgroundId, foregroundId);
 
-                await manager.SwitchToMainThread();
+                await manager.SwitchToMainThreadAsync();
 
                 foregroundId = Thread.CurrentThread.ManagedThreadId;
                 Assert.Equal(mainThreadId, foregroundId);
@@ -55,7 +56,7 @@ namespace Clide
 
                 output.WriteLine(message);
 
-                await manager.SwitchToBackground();
+                await TaskScheduler.Default;
 
                 Assert.NotEqual(foregroundId, Thread.CurrentThread.ManagedThreadId);
 

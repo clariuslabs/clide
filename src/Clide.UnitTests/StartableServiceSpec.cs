@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.ComponentModelHost;
 using Moq;
 using Xunit;
 
@@ -14,7 +9,7 @@ namespace Clide
     public class StartableServiceSpec
     {
         [Fact]
-        public void when_starting_components_with_matching_case_insensitive_context_string_then_components_are_started()
+        public async Task when_starting_components_with_matching_case_insensitive_context_string_then_components_are_started()
         {
             var foo = new Mock<IStartable>();
             var bar = new Mock<IStartable>();
@@ -34,14 +29,14 @@ namespace Clide
                     )
                 });
 
-            service.StartComponentsAsync("solutionLoaded").Wait();
+            await service.StartComponentsAsync("solutionLoaded");
 
             foo.Verify(x => x.StartAsync());
             bar.Verify(x => x.StartAsync());
         }
 
         [Fact]
-        public void when_starting_components_with_non_matching_context_string_then_components_are_not_started()
+        public async Task when_starting_components_with_non_matching_context_string_then_components_are_not_started()
         {
             var foo = new Mock<IStartable>();
 
@@ -55,13 +50,13 @@ namespace Clide
                     )
                 });
 
-            service.StartComponentsAsync("packageLoaded").Wait();
+            await service.StartComponentsAsync("packageLoaded");
 
             foo.Verify(x => x.StartAsync(), Times.Never);
         }
 
         [Fact]
-        public void when_starting_components_with_context_guid_then_components_are_started()
+        public async Task when_starting_components_with_context_guid_then_components_are_started()
         {
             var contextGuid = Guid.NewGuid();
 
@@ -83,14 +78,14 @@ namespace Clide
                         )
                 });
 
-            service.StartComponentsAsync(contextGuid.ToString().ToLowerInvariant()).Wait();
+            await service.StartComponentsAsync(contextGuid.ToString().ToLowerInvariant());
 
             foo.Verify(x => x.StartAsync());
             bar.Verify(x => x.StartAsync(), Times.Never());
         }
 
         [Fact]
-        public void when_first_component_cancels_task_then_second_component_is_not_started()
+        public async Task when_first_component_cancels_task_then_second_component_is_not_started()
         {
             var cts = new CancellationTokenSource();
 
@@ -112,7 +107,7 @@ namespace Clide
                     )
                 });
 
-            service.StartComponentsAsync("solutionLoaded", cts.Token).Wait();
+            await service.StartComponentsAsync("solutionLoaded", cts.Token);
 
             Assert.True(cts.IsCancellationRequested);
             secondComponent.Verify(x => x.StartAsync(), Times.Never);

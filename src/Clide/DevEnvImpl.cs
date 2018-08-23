@@ -1,10 +1,11 @@
 ﻿using EnvDTE;
-using Merq;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Threading;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Threading.Tasks;
+
 namespace Clide
 {
 
@@ -12,11 +13,13 @@ namespace Clide
     [PartCreationPolicy(CreationPolicy.Shared)]
     internal class DevEnvImpl : IDevEnv
     {
+        readonly JoinableTaskFactory jtf;
+
         readonly Lazy<IServiceLocator> serviceLocator;
         readonly Lazy<IStatusBar> status;
         readonly Lazy<IDialogWindowFactory> dialogFactory;
         readonly Lazy<IMessageBoxService> messageBox;
-        readonly Lazy<bool> isElevated;
+        readonly JoinableLazy<bool> isElevated;
         readonly Lazy<IErrorsManager> errorsManager;
         readonly Lazy<IOutputWindowManager> outputWindow;
 
@@ -24,12 +27,13 @@ namespace Clide
         public DevEnvImpl(
             Lazy<IServiceLocator> serviceLocator,
             Lazy<IDialogWindowFactory> dialogFactory,
-            Lazy<IAsyncManager> asyncManager,
             Lazy<IMessageBoxService> messageBox,
             Lazy<IErrorsManager> errorsManager,
             Lazy<IOutputWindowManager> outputWindow,
-            Lazy<IStatusBar> status)
+            Lazy<IStatusBar> status, 
+            JoinableTaskContext context)
         {
+            jtf = context.Factory;
             this.serviceLocator = serviceLocator;
             this.dialogFactory = dialogFactory;
             this.messageBox = messageBox;
@@ -39,19 +43,19 @@ namespace Clide
 
             TracingExtensions.ErrorsManager = this.errorsManager.Value;
 
-            isElevated = new Lazy<bool>(() =>
+            isElevated = JoinableLazy.Create(() =>
             {
-                var shell = this.ServiceLocator.TryGetService<SVsShell, IVsShell3>();
+                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                var shell = ServiceLocator.TryGetService<SVsShell, IVsShell3>();
                 if (shell == null)
                     return false;
 
-                bool elevated;
-                shell.IsRunningElevated(out elevated);
+                shell.IsRunningElevated(out var elevated);
                 return elevated;
-            });
+            }, jtf, true);
         }
 
-        public bool IsElevated => isElevated.Value;
+        public bool IsElevated => jtf.Run(async () => await isElevated.GetValueAsync());
 
         public IDialogWindowFactory DialogWindowFactory => dialogFactory.Value;
 
@@ -67,44 +71,52 @@ namespace Clide
 
         public void Exit(bool saveAll = true)
         {
-            var dte = ServiceLocator.GetService<DTE>();
-
-            if (saveAll)
-                dte.ExecuteCommand("File.SaveAll");
-
-            // Just to be clean on exit, wait for pending builds to cancel.
-            // VS will exit anyway if we don't, but this is safer.
-            while (dte.Solution.SolutionBuild.BuildState == vsBuildState.vsBuildStateInProgress)
+            jtf.Run(async () => 
             {
-                // Sometimes when in the middle of some long-running build, the cancel command 
-                // may not kick in immediately. We re-issue it after a bit.
-                dte.ExecuteCommand("Build.Cancel");
-                System.Threading.Thread.Sleep(100);
-            }
+                await jtf.SwitchToMainThreadAsync();
+                var dte = ServiceLocator.GetService<DTE>();
 
-            dte.Quit();
+                if (saveAll)
+                    dte.ExecuteCommand("File.SaveAll");
+
+                // Just to be clean on exit, wait for pending builds to cancel.
+                // VS will exit anyway if we don't, but this is safer.
+                while (dte.Solution.SolutionBuild.BuildState == vsBuildState.vsBuildStateInProgress)
+                {
+                    // Sometimes when in the middle of some long-running build, the cancel command 
+                    // may not kick in immediately. We re-issue it after a bit.
+                    dte.ExecuteCommand("Build.Cancel");
+                    await Task.Delay(100);
+                }
+
+                dte.Quit();
+            });
         }
 
         public bool Restart(bool saveAll = true)
         {
-            var dte = ServiceLocator.GetService<DTE>();
-
-            if (saveAll)
-                dte.ExecuteCommand("File.SaveAll");
-
-            // Just to be clean on exit, wait for pending builds to cancel.
-            while (dte.Solution.SolutionBuild.BuildState == vsBuildState.vsBuildStateInProgress)
+            return jtf.Run(async () => 
             {
-                // Sometimes when in the middle of some long-running build, the cancel command 
-                // may not kick in immediately. We re-issue it after a bit.
-                dte.ExecuteCommand("Build.Cancel");
-                System.Threading.Thread.Sleep(100);
-            }
+                await jtf.SwitchToMainThreadAsync();
+                var dte = ServiceLocator.GetService<DTE>();
 
-            var shell = ServiceLocator.GetService<SVsShell, IVsShell4>();
-            var result = shell.Restart((uint)__VSRESTARTTYPE.RESTART_Normal);
+                if (saveAll)
+                    dte.ExecuteCommand("File.SaveAll");
 
-            return ErrorHandler.Succeeded(result);
+                // Just to be clean on exit, wait for pending builds to cancel.
+                while (dte.Solution.SolutionBuild.BuildState == vsBuildState.vsBuildStateInProgress)
+                {
+                    // Sometimes when in the middle of some long-running build, the cancel command 
+                    // may not kick in immediately. We re-issue it after a bit.
+                    dte.ExecuteCommand("Build.Cancel");
+                    await Task.Delay(100);
+                }
+
+                var shell = ServiceLocator.GetService<SVsShell, IVsShell4>();
+                var result = shell.Restart((uint)__VSRESTARTTYPE.RESTART_Normal);
+
+                return ErrorHandler.Succeeded(result);
+            });
         }
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Threading;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -113,7 +114,7 @@ namespace Clide
 
             //output.WriteLine(capabilities.ToString());
 
-            var async = GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<IAsyncManager>();
+            var async = GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<JoinableTaskContext>();
             Assert.NotNull(async);
 
             GlobalServices.GetService<SComponentModel, IComponentModel>().DefaultCompositionService.SatisfyImportsOnce(this);

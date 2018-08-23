@@ -2,6 +2,7 @@
 using Merq;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Threading;
 
 namespace Clide
 {
@@ -35,11 +36,11 @@ namespace Clide
         /// </summary>
         public static IServiceLocator Get(Guid packageGuid)
         {
-            var async = Global.GetExport<IAsyncManager>();
+            var async = Global.GetExport<JoinableTaskContext>().Factory;
             return async.Run(async () =>
             {
                 var vsPackage = default(IVsPackage);
-                await async.SwitchToMainThread();
+                await async.SwitchToMainThreadAsync();
 
                 var vsShell = ServiceProvider.Global.GetService<SVsShell, IVsShell>();
                 vsShell.IsPackageLoaded(ref packageGuid, out vsPackage);

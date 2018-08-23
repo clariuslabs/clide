@@ -8,6 +8,7 @@ using Microsoft.Internal.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Threading;
 
 namespace Clide.Interop
 {
@@ -16,35 +17,33 @@ namespace Clide.Interop
     {
         IVsHierarchy solution;
         IVsMonitorSelection monitorSelection;
-        IAsyncManager asyncManager;
+        JoinableTaskFactory jtf;
 
         [ImportingConstructor]
         public VsHierarchySelection(
             [Import(typeof(SVsServiceProvider))] IServiceProvider services,
-            IAsyncManager asyncManager)
+            JoinableTaskContext context)
         {
             solution = services.GetService<SVsSolution, IVsHierarchy>();
             monitorSelection = services.GetService<SVsShellMonitorSelection, IVsMonitorSelection>();
-            this.asyncManager = asyncManager;
+            jtf = context.Factory;
         }
 
         public HierarchyItemPair GetActiveHierarchy()
         {
-            return asyncManager.Run(async () =>
+            return jtf.Run(async () =>
             {
                 // The VS selection operations must be performed on the UI thread.
-                await asyncManager.SwitchToMainThread();
+                await jtf.SwitchToMainThreadAsync();
 
                 var selHier = IntPtr.Zero;
                 var selContainer = IntPtr.Zero;
-                uint selId;
-                IVsMultiItemSelect selMulti;
 
                 try
                 {
                     // Get the current project hierarchy, project item, and selection container for the current selection
                     // If the selection spans multiple hierarchies, hierarchyPtr is Zero
-                    ErrorHandler.ThrowOnFailure(monitorSelection.GetCurrentSelection(out selHier, out selId, out selMulti, out selContainer));
+                    ErrorHandler.ThrowOnFailure(monitorSelection.GetCurrentSelection(out selHier, out var selId, out var selMulti, out selContainer));
 
                     // There may be no selection at all.
                     if (selMulti == null && selHier == IntPtr.Zero)
@@ -60,9 +59,7 @@ namespace Clide.Interop
                     // This is a multiple item selection.
                     // If this is a multiple item selection within the same hierarchy,
                     // we select the hierarchy too.
-                    uint selCount;
-                    int singleHier;
-                    ErrorHandler.ThrowOnFailure(selMulti.GetSelectionInfo(out selCount, out singleHier));
+                    ErrorHandler.ThrowOnFailure(selMulti.GetSelectionInfo(out var selCount, out var singleHier));
 
                     if (singleHier == 1)
                         return new HierarchyItemPair(
@@ -86,21 +83,19 @@ namespace Clide.Interop
 
         public IEnumerable<HierarchyItemPair> GetSelection()
         {
-            return asyncManager.Run(async () =>
+            return jtf.Run(async () =>
             {
                 // The VS selection operations must be performed on the UI thread.
-                await asyncManager.SwitchToMainThread();
+                await jtf.SwitchToMainThreadAsync();
 
                 var selHier = IntPtr.Zero;
                 var selContainer = IntPtr.Zero;
-                uint selId;
-                IVsMultiItemSelect selMulti;
 
                 try
                 {
                     // Get the current project hierarchy, project item, and selection container for the current selection
                     // If the selection spans multiple hierarchies, hierarchyPtr is Zero
-                    ErrorHandler.ThrowOnFailure(monitorSelection.GetCurrentSelection(out selHier, out selId, out selMulti, out selContainer));
+                    ErrorHandler.ThrowOnFailure(monitorSelection.GetCurrentSelection(out selHier, out var selId, out var selMulti, out selContainer));
 
                     // There may be no selection at all.
                     if (selMulti == null && selHier == IntPtr.Zero)
@@ -114,9 +109,7 @@ namespace Clide.Interop
                     }
 
                     // This is a multiple item selection.
-                    uint selCount;
-                    int singleHier;
-                    ErrorHandler.ThrowOnFailure(selMulti.GetSelectionInfo(out selCount, out singleHier));
+                    ErrorHandler.ThrowOnFailure(selMulti.GetSelectionInfo(out var selCount, out var singleHier));
 
                     var selection = new VSITEMSELECTION[selCount];
                     ErrorHandler.ThrowOnFailure(selMulti.GetSelectedItems(0, selCount, selection));
