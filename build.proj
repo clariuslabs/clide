@@ -12,8 +12,6 @@
 		<CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration);PackageOutputPath=$(Out)</CommonBuildProperties>
 		<CommonBuildProperties Condition="'$(Configuration)' == 'Release' and '$(DeployExtension)' == ''">$(CommonBuildProperties);DeployExtension=false</CommonBuildProperties>
 
-		<Dev Condition="'$(Dev)' == ''">$(VisualStudioVersion)</Dev>
-
 		<!-- Azure-based static NuGet feed -->
 		<SleetInit Condition="'$(SleetInit)' == ''">false</SleetInit>
 	</PropertyGroup>
@@ -28,7 +26,6 @@
 
 	<ItemGroup>
 		<Solution Include="src\Clide.sln"/>
-		<Dev Include="$(Dev)" />
 	</ItemGroup>
 
 	<Target Name="Clean">
@@ -47,7 +44,7 @@
 	<!-- Targets can be documented, and /t:Help will render the help -->
 	<Target Name="Build">
 		<MSBuild Projects="src\Clide.Vsix\Clide.Vsix.csproj" Targets="Version" Properties="$(CommonBuildProperties);GitInfoReportImportance=high" />
-		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties);Dev=%(Dev.Identity)" />
+		<MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties)" />
 	</Target>
 
 	<Target Name="Package">
