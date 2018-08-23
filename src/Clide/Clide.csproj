@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net46</TargetFramework>
     <AssemblyName>Clide.Core</AssemblyName>
     <IncludeVSSDK>true</IncludeVSSDK>
     <IncludeRx>true</IncludeRx>
@@ -11,10 +11,6 @@
     <PackageId>Clide.Core</PackageId>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.SDK.EmbedInteropTypes" Version="14.1.7" />
-  </ItemGroup>
 
   <ItemGroup>
     <Reference Include="System.ComponentModel.Composition" />
