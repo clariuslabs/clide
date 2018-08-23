@@ -43,9 +43,9 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Package Versions">
-    <MerqVersion>1.0.0-rc</MerqVersion>
-    <MerqAsyncVersion>1.1.17-rc</MerqAsyncVersion>
-    <MerqVisualStudioVersion>$(MerqAsyncVersion)</MerqVisualStudioVersion>
+    <MerqVersion>1.0.0</MerqVersion>
+    <MerqAsyncVersion>1.1.0</MerqAsyncVersion>
+    <MerqVisualStudioVersion>1.1.49</MerqVisualStudioVersion>
     <RxVersion>3.0.0</RxVersion>
     <FluentInterfaceVersion>2.0.3</FluentInterfaceVersion>
     <StringResourcesVersion>3.1.10</StringResourcesVersion>
@@ -54,9 +54,9 @@
     <XunitVersion>2.3.1</XunitVersion>
     
     <XunitVsixVersion>0.4.0-alpha.*</XunitVsixVersion>
-    <XVSSDKVersion>0.3.0-alpha.*</XVSSDKVersion>
-    <XVSSDKBuildToolsVersion Condition="'$(CI)' != 'true'">0.3.0-alpha.*</XVSSDKBuildToolsVersion>
-    <XVSSDKBuildToolsVersion Condition="'$(CI)' == 'true'">0.3.0-alpha.17</XVSSDKBuildToolsVersion>
+    <XVSSDKVersion>0.4.0-alpha.*</XVSSDKVersion>
+    <XVSSDKBuildToolsVersion Condition="'$(CI)' != 'true'">0.4.0-alpha.*</XVSSDKBuildToolsVersion>
+    <XVSSDKBuildToolsVersion Condition="'$(CI)' == 'true'">0.4.0-alpha.0</XVSSDKBuildToolsVersion>
 
     <VSSDKBuildToolsVersion>15.7.107</VSSDKBuildToolsVersion>
   </PropertyGroup>
