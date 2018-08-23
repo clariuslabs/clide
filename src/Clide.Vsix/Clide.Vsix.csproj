@@ -1,11 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" InitialTargets="FixupVsixDependencies">
   <PropertyGroup>
-    <TargetFramework Condition="'$(BuildingInsideVisualStudio)' == 'true' and '$(VisualStudioVersion)' == '15.0'">net462</TargetFramework>
-    <TargetFramework Condition="'$(BuildingInsideVisualStudio)' == 'true' and '$(VisualStudioVersion)' == '14.0'">net461</TargetFramework>
-    <TargetFramework Condition="'$(TargetFramework)' == '' and '$(CI)' == 'true'">net461</TargetFramework>
-    <TargetFrameworks Condition="'$(TargetFramework)' == '' and '$(CI)' == 'false'">net461;net462</TargetFrameworks>
+    <TargetFramework>net46</TargetFramework>
 
     <IncludePack>true</IncludePack>
+    <IncludeVSSDK>true</IncludeVSSDK>
     <TargetVsixContainerName>Clide.vsix</TargetVsixContainerName>
 
     <!-- TODO: Should we set this to false on local builds? Would that confuse Willow? -->
@@ -41,8 +39,11 @@
   <ItemGroup>
     <PackageReference Include="MSBuilder.VsixInstaller" Version="1.0.4" />
     <PackageReference Include="Xamarin.VSSDK.BuildTools" Version="$(XVSSDKBuildToolsVersion)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(CI)' == 'true'">
     <!-- Always build with latest VSSDK in CI -->
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="$(VSSDKBuildToolsVersion)" Condition="'$(CI)' == 'true'" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="$(VSSDKBuildToolsVersion)" />
   </ItemGroup>
 
   <ItemGroup>
