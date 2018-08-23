@@ -3,12 +3,12 @@ using System.ComponentModel;
 using Clide;
 using Clide.Properties;
 using System.Linq;
-using Merq;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Threading;
 
 /// <summary>
 /// Defines extension methods related to <see cref="IServiceProvider"/>.
@@ -127,11 +127,11 @@ public static partial class ServiceProviderExtensions
     /// <returns>The fully loaded and initialized package.</returns>
     public static TPackage GetLoadedPackage<TPackage>(this IServiceProvider serviceProvider)
     {
-        var asyncManager = GetAsyncManager(serviceProvider);
+        var jtf = GetJTF(serviceProvider);
 
-        return asyncManager.Run(async () =>
+        return jtf.Run(async () =>
         {
-            await asyncManager.SwitchToMainThread();
+            await jtf.SwitchToMainThreadAsync();
 
             var guidString = typeof(TPackage)
                 .GetCustomAttributes(true)
@@ -162,16 +162,14 @@ public static partial class ServiceProviderExtensions
     /// <returns>The fully loaded and initialized package.</returns>
     public static IServiceProvider GetLoadedPackage(this IServiceProvider serviceProvider, Guid packageId)
     {
-        var asyncManager = GetAsyncManager(serviceProvider);
+        var jtf = GetJTF(serviceProvider);
 
-        return asyncManager.Run(async () =>
+        return jtf.Run(async () =>
         {
-            await asyncManager.SwitchToMainThread();
-
-            var vsPackage = default(IVsPackage);
+            await jtf.SwitchToMainThreadAsync();
 
             var vsShell = serviceProvider.GetService<SVsShell, IVsShell>();
-            vsShell.IsPackageLoaded(ref packageId, out vsPackage);
+            vsShell.IsPackageLoaded(ref packageId, out var vsPackage);
 
             if (vsPackage == null)
                 ErrorHandler.ThrowOnFailure(vsShell.LoadPackage(ref packageId, out vsPackage));
@@ -180,8 +178,9 @@ public static partial class ServiceProviderExtensions
         });
     }
 
-    static IAsyncManager GetAsyncManager(IServiceProvider serviceProvider) =>
+    static JoinableTaskFactory GetJTF(IServiceProvider serviceProvider) =>
         serviceProvider
             .GetService<SComponentModel, IComponentModel>()
-            .GetService<IAsyncManager>();
+            .GetService<JoinableTaskContext>()
+            .Factory;
 }

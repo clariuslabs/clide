@@ -1,6 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
+    <LangVersion>latest</LangVersion>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <RootNamespace>Clide</RootNamespace>
@@ -43,9 +44,8 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Package Versions">
-    <MerqVersion>1.0.0</MerqVersion>
-    <MerqAsyncVersion>1.1.0</MerqAsyncVersion>
-    <MerqVisualStudioVersion>1.1.49</MerqVisualStudioVersion>
+    <MerqVersion>1.1.1</MerqVersion>
+    <MerqVisualStudioVersion>1.1.79</MerqVisualStudioVersion>
     <RxVersion>3.0.0</RxVersion>
     <FluentInterfaceVersion>2.0.3</FluentInterfaceVersion>
     <StringResourcesVersion>3.1.10</StringResourcesVersion>
@@ -58,7 +58,7 @@
     <XVSSDKBuildToolsVersion Condition="'$(CI)' != 'true'">0.4.0-alpha.*</XVSSDKBuildToolsVersion>
     <XVSSDKBuildToolsVersion Condition="'$(CI)' == 'true'">0.4.0-alpha.0</XVSSDKBuildToolsVersion>
 
-    <VSSDKBuildToolsVersion>15.7.107</VSSDKBuildToolsVersion>
+    <VSSDKBuildToolsVersion>15.7.109</VSSDKBuildToolsVersion>
 
     <VSSDKAnalyzersVersion>15.8.33</VSSDKAnalyzersVersion>
     <VSThreadingAnalyzersVersion>15.8.132</VSThreadingAnalyzersVersion>

@@ -7,6 +7,7 @@ using Merq;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Threading;
 
 namespace Clide.Interop
 {
@@ -15,30 +16,29 @@ namespace Clide.Interop
     {
         IVsUIHierarchyWindow hierarchyWindow;
         IVsHierarchyItemManager hierarchyManager;
-        IAsyncManager asyncManager;
+        JoinableTaskFactory jtf;
 
         [ImportingConstructor]
         public VsSolutionSelection(
             [Import(ContractNames.Interop.SolutionExplorerWindow)] IVsUIHierarchyWindow hierarchyWindow,
             IVsHierarchyItemManager hierarchyManager,
-            IAsyncManager asyncManager)
+            JoinableTaskContext context)
         {
             this.hierarchyWindow = hierarchyWindow;
             this.hierarchyManager = hierarchyManager;
-            this.asyncManager = asyncManager;
+            jtf = context.Factory;
         }
 
         public IVsHierarchyItem GetActiveHierarchy()
         {
-            return asyncManager.Run(async () =>
+            return jtf.Run(async () =>
             {
-                await asyncManager.SwitchToMainThread();
-                IVsUIHierarchy uiHier;
-                if (ErrorHandler.Failed(hierarchyWindow.FindCommonSelectedHierarchy((uint)__VSCOMHIEROPTIONS.COMHIEROPT_RootHierarchyOnly, out uiHier)))
+                await jtf.SwitchToMainThreadAsync();
+                if (ErrorHandler.Failed(hierarchyWindow.FindCommonSelectedHierarchy((uint)__VSCOMHIEROPTIONS.COMHIEROPT_RootHierarchyOnly, out var uiHier)) || 
+                    uiHier == null)
+                {
                     return null;
-
-                if (uiHier == null)
-                    return null;
+                }
 
                 return hierarchyManager.GetHierarchyItem(uiHier, VSConstants.VSITEMID_ROOT);
             });
@@ -46,17 +46,15 @@ namespace Clide.Interop
 
         public IEnumerable<IVsHierarchyItem> GetSelection()
         {
-            return asyncManager.Run(async () =>
+            return jtf.Run(async () =>
             {
-                await asyncManager.SwitchToMainThread();
+                await jtf.SwitchToMainThreadAsync();
 
                 var selHier = IntPtr.Zero;
-                uint selId;
-                IVsMultiItemSelect selMulti;
 
                 try
                 {
-                    ErrorHandler.ThrowOnFailure(hierarchyWindow.GetCurrentSelection(out selHier, out selId, out selMulti));
+                    ErrorHandler.ThrowOnFailure(hierarchyWindow.GetCurrentSelection(out selHier, out var selId, out var selMulti));
 
                     // There may be no selection at all.
                     if (selMulti == null && selHier == IntPtr.Zero)
@@ -71,9 +69,7 @@ namespace Clide.Interop
 
                     // This is a multiple item selection.
 
-                    uint selCount;
-                    int singleHier;
-                    ErrorHandler.ThrowOnFailure(selMulti.GetSelectionInfo(out selCount, out singleHier));
+                    ErrorHandler.ThrowOnFailure(selMulti.GetSelectionInfo(out var selCount, out var singleHier));
 
                     var selection = new VSITEMSELECTION[selCount];
                     ErrorHandler.ThrowOnFailure(selMulti.GetSelectedItems(0, selCount, selection));

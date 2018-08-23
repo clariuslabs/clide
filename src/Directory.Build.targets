@@ -3,7 +3,6 @@
   <!-- Common Packages -->
   <ItemGroup>
     <PackageReference Include="Merq" Version="$(MerqVersion)" />
-    <PackageReference Include="Merq.Async" Version="$(MerqAsyncVersion)" />
     <PackageReference Include="System.Reactive.Interfaces" Version="$(RxVersion)" />
     <PackageReference Include="IFluentInterface" Version="$(FluentInterfaceVersion)" />
     <PackageReference Include="netfx-System.StringResources" Version="$(StringResourcesVersion)" />
@@ -39,7 +38,7 @@
     <PackageReference Include="Moq" Version="4.5.13" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(IncludeIntegrationTests)' == 'true' and '$(XunitVsix)' == ''">
+  <ItemGroup Condition="'$(IncludeIntegrationTests)' == 'true'">
     <PackageReference Include="xunit.vsix" Version="$(XunitVsixVersion)" />
   </ItemGroup>
 

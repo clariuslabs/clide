@@ -5,6 +5,8 @@ using Microsoft.VisualStudio.Shell;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using Merq;
+using Microsoft.VisualStudio.Threading;
+
 namespace Clide
 {
 
@@ -18,7 +20,7 @@ namespace Clide
         static readonly ITracer tracer = Tracer.Get<MessageBoxService>();
 
         readonly Lazy<IVsUIShell> uiShell;
-        readonly Lazy<IAsyncManager> asyncManager;
+        readonly JoinableTaskFactory jtf;
 
 
         /// <summary>
@@ -27,10 +29,10 @@ namespace Clide
         [ImportingConstructor]
         public MessageBoxService(
             [Import(ContractNames.Interop.IVsUIShell)] Lazy<IVsUIShell> uiShell,
-            Lazy<IAsyncManager> asyncManager)
+            JoinableTaskContext context)
         {
             this.uiShell = uiShell;
-            this.asyncManager = asyncManager;
+            jtf = context.Factory;
         }
 
         public bool? Show(string message,
@@ -39,7 +41,11 @@ namespace Clide
             MessageBoxImage icon = MessageBoxServiceDefaults.DefaultIcon,
             MessageBoxResult defaultResult = MessageBoxServiceDefaults.DefaultResult)
         {
-            return uiShell.Value.ShowMessageBox(message, title, button, icon, defaultResult);
+            return jtf.Run(async () =>
+            {
+                await jtf.SwitchToMainThreadAsync();
+                return uiShell.Value.ShowMessageBox(message, title, button, icon, defaultResult);
+            });  
         }
 
         public MessageBoxResult Prompt(string message,
@@ -48,7 +54,11 @@ namespace Clide
             MessageBoxImage icon = MessageBoxImage.Question,
             MessageBoxResult defaultResult = MessageBoxServiceDefaults.DefaultResult)
         {
-            return uiShell.Value.Prompt(message, title, button, icon, defaultResult);
+            return jtf.Run(async () =>
+            {
+                await jtf.SwitchToMainThreadAsync();
+                return uiShell.Value.Prompt(message, title, button, icon, defaultResult);
+            });
         }
     }
 }

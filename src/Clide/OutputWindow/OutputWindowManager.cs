@@ -10,6 +10,8 @@ using System.Diagnostics;
 using System.ComponentModel.Composition;
 using Merq;
 using Clide.Events;
+using Microsoft.VisualStudio.Threading;
+
 namespace Clide
 {
 
@@ -23,7 +25,7 @@ namespace Clide
 
         readonly Lazy<IVsOutputWindow> vsOutputWindow;
         readonly Lazy<IEventStream> eventStream;
-        readonly Lazy<IAsyncManager> asyncManager;
+        readonly JoinableTaskFactory jtf;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OutputWindowManager" /> class.
@@ -35,11 +37,11 @@ namespace Clide
         public OutputWindowManager(
             [Import(ContractNames.Interop.VsOutputWindow)] Lazy<IVsOutputWindow> vsOutputWindow,
             Lazy<IEventStream> eventStream,
-            Lazy<IAsyncManager> asyncManager)
+            JoinableTaskContext context)
         {
             this.vsOutputWindow = vsOutputWindow;
             this.eventStream = eventStream;
-            this.asyncManager = asyncManager;
+            jtf = context.Factory;
         }
 
         /// <summary>
@@ -73,7 +75,7 @@ namespace Clide
                     IVsOutputWindowPane pane = GetVsPane(id, title);
                     if (pane != null)
                     {
-                        var outputWriter = new OutputWindowTextWriter(asyncManager, pane);
+                        var outputWriter = new OutputWindowTextWriter(jtf, pane);
 
                         // Dump over the cached text from the initial writer.
                         stringWriter.Flush();
@@ -95,14 +97,17 @@ namespace Clide
             tracer.ShieldUI(() =>
             {
                 tracer.Verbose(Strings.OutputWindowManager.RetrievingPane(title));
-
-                if (!ErrorHandler.Succeeded(vsOutputWindow.Value.GetPane(ref id, out pane)))
+                jtf.Run(async () =>
                 {
-                    tracer.Verbose(Strings.OutputWindowManager.CreatingPane(title));
+                    await jtf.SwitchToMainThreadAsync();
+                    if (!ErrorHandler.Succeeded(vsOutputWindow.Value.GetPane(ref id, out pane)))
+                    {
+                        tracer.Verbose(Strings.OutputWindowManager.CreatingPane(title));
 
-                    ErrorHandler.ThrowOnFailure(vsOutputWindow.Value.CreatePane(ref id, title, 1, 1));
-                    ErrorHandler.ThrowOnFailure(vsOutputWindow.Value.GetPane(ref id, out pane));
-                }
+                        ErrorHandler.ThrowOnFailure(vsOutputWindow.Value.CreatePane(ref id, title, 1, 1));
+                        ErrorHandler.ThrowOnFailure(vsOutputWindow.Value.GetPane(ref id, out pane));
+                    }
+                });
             }, Strings.OutputWindowManager.FailedToCreatePane(title));
 
             return pane;
@@ -140,12 +145,12 @@ namespace Clide
 
         private class OutputWindowTextWriter : TextWriter
         {
-            private Lazy<IAsyncManager> asyncManager;
+            private readonly JoinableTaskFactory jtf;
             private IVsOutputWindowPane outputPane;
 
-            public OutputWindowTextWriter(Lazy<IAsyncManager> asyncManager, IVsOutputWindowPane outputPane)
+            public OutputWindowTextWriter(JoinableTaskFactory jtf, IVsOutputWindowPane outputPane)
             {
-                this.asyncManager = asyncManager;
+                this.jtf = jtf;
                 this.outputPane = outputPane;
             }
 
@@ -156,18 +161,18 @@ namespace Clide
 
             public override void Write(string value)
             {
-                asyncManager.Value.RunAsync(async () =>
+                jtf.RunAsync(async () =>
                 {
-                    await asyncManager.Value.SwitchToMainThread();
+                    await jtf.SwitchToMainThreadAsync();
                     outputPane.OutputStringThreadSafe(value);
                 });
             }
 
             public override void WriteLine()
             {
-                asyncManager.Value.RunAsync(async () =>
+                jtf.RunAsync(async () =>
                 {
-                    await asyncManager.Value.SwitchToMainThread();
+                    await jtf.SwitchToMainThreadAsync();
                     outputPane.OutputStringThreadSafe(Environment.NewLine);
                 });
             }
