@@ -5,7 +5,6 @@ using Xunit.Abstractions;
 namespace Clide.Solution
 {
     [Trait("LongRunning", "true")]
-    [VsTestSettings(Version = "2013-")]
     [Collection("OpenCopySolution")]
     public class SharedProjectSpec
     {
