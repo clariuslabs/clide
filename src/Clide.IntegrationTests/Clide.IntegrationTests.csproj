@@ -3,35 +3,42 @@
     <TargetFramework>net461</TargetFramework>
     <IncludeVSSDK>true</IncludeVSSDK>
     <IncludeIntegrationTests>true</IncludeIntegrationTests>
-    <EnableDefaultItems>false</EnableDefaultItems>
     <AddSyntheticProjectReferencesForSolutionDependencies>false</AddSyntheticProjectReferencesForSolutionDependencies>
     <TimeoutSeconds>120</TimeoutSeconds>
     <RecycleOnFailure>true</RecycleOnFailure>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+
+  <PropertyGroup>
     <CodeAnalysisRuleSet>Clide.IntegrationTests.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <CodeAnalysisRuleSet>Clide.IntegrationTests.ruleset</CodeAnalysisRuleSet>
+
+  <PropertyGroup>
+    <DefaultItemExcludes>$(DefaultItemExcludes);Content\**\*</DefaultItemExcludes>
   </PropertyGroup>
+
   <ItemGroup>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="**\*.cs" Exclude="Content\**;bin\**;obj\**" />
-    <None Include="Clide.IntegrationTests.ruleset" />
-    <None Include="xunit.runner.json" />
-    <Content Include="Content\**\*.*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Clide.Extensibility\Clide.Extensibility.csproj" />
     <ProjectReference Include="..\Clide.Interfaces\Clide.Interfaces.csproj" />
     <ProjectReference Include="..\Clide\Clide.csproj" />
     <ProjectReference Include="..\Clide.Vsix\Clide.Vsix.csproj" ReferenceOutputAssembly="false" AdditionalProperties="CreateVsixContainer=true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Content\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
