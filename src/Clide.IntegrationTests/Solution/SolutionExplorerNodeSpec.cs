@@ -16,13 +16,13 @@ namespace Clide.Solution
             this.fixture = fixture;
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_node_is_solution_then_is_visible_returns_true()
         {
             Assert.True(fixture.Solution.IsVisible);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_parent_node_is_collapsed_then_child_node_is_visible_false()
         {
             var file = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
@@ -33,7 +33,7 @@ namespace Clide.Solution
             Assert.False(file.IsVisible);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_parent_node_is_expanded_then_child_node_is_visible_true()
         {
             var file = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
@@ -44,7 +44,7 @@ namespace Clide.Solution
             Assert.True(file.IsVisible);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_expanding_node_then_node_is_expanded()
         {
             var file = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
@@ -56,7 +56,7 @@ namespace Clide.Solution
             Assert.True(file.Parent.IsExpanded);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_collapsing_node_then_node_is_not_expanded()
         {
             var file = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
@@ -66,7 +66,7 @@ namespace Clide.Solution
             Assert.False(file.Parent.IsExpanded);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_selecting_node_then_node_is_selected()
         {
             var file = fixture.Solution.FindProject(x => x.Name == "CsLibrary")

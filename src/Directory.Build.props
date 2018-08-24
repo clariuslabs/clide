@@ -53,7 +53,7 @@
     <NuGetizerVersion>0.2.2</NuGetizerVersion>
     <XunitVersion>2.3.1</XunitVersion>
 
-    <XunitVsixVersion>0.4.0-alpha.*</XunitVsixVersion>
+    <VsixTestingXunitVersion>0.1.49-beta</VsixTestingXunitVersion>
     <XVSSDKVersion Condition="'$(CI)' != 'true'">0.4.0-alpha.*</XVSSDKVersion>
     <XVSSDKVersion Condition="'$(CI)' == 'true'">0.4.0-alpha.9</XVSSDKVersion>
     <XVSSDKBuildToolsVersion Condition="'$(CI)' != 'true'">0.4.0-alpha.*</XVSSDKBuildToolsVersion>

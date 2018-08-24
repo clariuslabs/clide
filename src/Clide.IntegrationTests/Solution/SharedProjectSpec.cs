@@ -5,7 +5,7 @@ using Xunit.Abstractions;
 namespace Clide.Solution
 {
     [Trait("LongRunning", "true")]
-    [Vsix(MinimumVisualStudioVersion = VisualStudioVersion.VS2013)]
+    [VsTestSettings(Version = "2013-")]
     [Collection("OpenCopySolution")]
     public class SharedProjectSpec
     {
@@ -18,7 +18,7 @@ namespace Clide.Solution
             this.output = output;
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_comparing_shared_projects_then_can_check_for_equality()
         {
             var first = fixture.Solution.FindProject(x => x.Name == "CsShared");
@@ -27,7 +27,7 @@ namespace Clide.Solution
             Assert.Equal(first, second);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_comparing_items_in_shared_projects_then_can_check_for_equality()
         {
             var first = fixture.Solution.FindProject(x => x.Name == "CsShared")
@@ -38,7 +38,7 @@ namespace Clide.Solution
             Assert.Equal(first, second);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_getting_logical_path_of_item_then_succeeds_for_shared_project()
         {
             var node = fixture.Solution.FindProject(x => x.Name == "CsShared")

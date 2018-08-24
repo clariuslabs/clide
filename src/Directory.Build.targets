@@ -39,7 +39,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(IncludeIntegrationTests)' == 'true'">
-    <PackageReference Include="xunit.vsix" Version="$(XunitVsixVersion)" />
+    <PackageReference Include="VsixTesting.Xunit" Version="$(VsixTestingXunitVersion)" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(IncludeTests)' == 'true' or '$(IncludeIntegrationTests)' == 'true'">

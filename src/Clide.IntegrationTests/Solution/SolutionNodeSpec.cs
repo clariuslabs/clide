@@ -37,7 +37,7 @@ namespace Clide.Solution
                 solution.Close(false);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_closing_and_no_solution_open_then_succeeds()
         {
             if (solution.IsOpen)
@@ -46,7 +46,7 @@ namespace Clide.Solution
             solution.Close();
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_creating_solution_then_is_open_returns_true()
         {
             solution.Create(new FileInfo(Path.Combine(Environment.GetEnvironmentVariable("VisualStudioVersion"), "foo.sln")).FullName);
@@ -54,7 +54,7 @@ namespace Clide.Solution
             Assert.True(solution.IsOpen);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_solution_then_can_save_as_different_name()
         {
             var dir = new DirectoryInfo(Path.Combine(".", Environment.GetEnvironmentVariable("VisualStudioVersion"))).FullName;
@@ -67,13 +67,13 @@ namespace Clide.Solution
             Assert.True(File.Exists(Path.Combine(dir, "bar.sln")));
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_creating_solution_with_invalid_name_then_throws()
         {
             Assert.Throws<ArgumentException>(() => solution.Create("foo"));
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_solution_is_opened_then_is_open_returns_true()
         {
             solution.Open(Constants.BlankSolution);
@@ -81,7 +81,7 @@ namespace Clide.Solution
             Assert.True(solution.IsOpen);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_getting_parent_then_returns_null()
         {
             Assert.Null(solution.Parent);

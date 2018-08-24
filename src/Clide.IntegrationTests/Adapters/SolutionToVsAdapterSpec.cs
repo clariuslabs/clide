@@ -16,7 +16,7 @@ namespace Clide.Adapters
             adapters = GlobalServiceLocator.Instance.GetExport<IAdapterService>();
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_solution_then_succeeds()
         {
             var from = fixture.Solution;
@@ -26,7 +26,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_project_then_succeeds()
         {
             var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary");
@@ -36,7 +36,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_item_then_succeeds()
         {
             var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
@@ -47,7 +47,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_folder_then_succeeds()
         {
             var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
@@ -58,7 +58,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_solution_folder_then_succeeds()
         {
             var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
@@ -69,7 +69,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_references_then_succeeds()
         {
             var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
@@ -80,7 +80,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_reference_then_succeeds()
         {
             var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
@@ -91,7 +91,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_solution_item_then_succeeds()
         {
             var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
