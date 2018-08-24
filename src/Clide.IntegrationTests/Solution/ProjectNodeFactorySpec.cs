@@ -4,7 +4,6 @@ namespace Clide.Solution.Project
 {
     [Trait("LongRunning", "true")]
     [Collection("OpenCopySolution")]
-    [VsTestSettings(Version = "2013-")]
     public class ProjectNodeFactorySharedSpec : NodeFactorySpec<ProjectNodeFactory>
     {
         [InlineData("Shared\\CppShared", "")]
@@ -45,7 +44,7 @@ namespace Clide.Solution.Project
         [InlineData("Native\\CppLibrary\\References\\System")]
         [InlineData("Native\\VbLibrary\\References")]
         [InlineData("Native\\VbLibrary\\References\\System")]
-        [VsTheory(Version = "2015-")]
+        [VsTheory]
         public void when_2015_item_is_not_supported_then_factory_returns_false_and_create_returns_null(string relativePath)
         {
             when_item_is_not_supported_then_factory_returns_false_and_create_returns_null(relativePath);
