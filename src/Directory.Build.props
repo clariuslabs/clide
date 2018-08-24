@@ -56,7 +56,7 @@
     <XunitVsixVersion>0.4.0-alpha.*</XunitVsixVersion>
     <XVSSDKVersion>0.4.0-alpha.*</XVSSDKVersion>
     <XVSSDKBuildToolsVersion Condition="'$(CI)' != 'true'">0.4.0-alpha.*</XVSSDKBuildToolsVersion>
-    <XVSSDKBuildToolsVersion Condition="'$(CI)' == 'true'">0.4.0-alpha.0</XVSSDKBuildToolsVersion>
+    <XVSSDKBuildToolsVersion Condition="'$(CI)' == 'true'">0.4.0-alpha.4</XVSSDKBuildToolsVersion>
 
     <VSSDKBuildToolsVersion>15.7.109</VSSDKBuildToolsVersion>
 

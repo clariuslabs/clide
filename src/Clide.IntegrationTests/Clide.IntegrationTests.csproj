@@ -32,5 +32,23 @@
     <ProjectReference Include="..\Clide.Extensibility\Clide.Extensibility.csproj" />
     <ProjectReference Include="..\Clide.Interfaces\Clide.Interfaces.csproj" />
     <ProjectReference Include="..\Clide\Clide.csproj" />
+    <ProjectReference Include="..\Clide.Vsix\Clide.Vsix.csproj" ReferenceOutputAssembly="false" CopyVsix="true" />
   </ItemGroup>
+  <Target Name="PrepareVsixProjectReferences"
+          BeforeTargets="ResolveProjectReferences"
+          DependsOnTargets="PrepareProjectReferences">
+    <MSBuild
+        Projects="@(_MSBuildProjectReferenceExistent)"
+        Targets="CreateVsixContainer;VSIXContainerProjectOutputGroup"
+        BuildInParallel="$(BuildInParallel)"
+        Properties="%(_MSBuildProjectReferenceExistent.SetConfiguration); %(_MSBuildProjectReferenceExistent.SetPlatform); %(_MSBuildProjectReferenceExistent.SetTargetFramework); CreateVsixContainer=true"
+        Condition="'%(_MSBuildProjectReferenceExistent.CopyVsix)' == 'true'"
+        ContinueOnError="!$(BuildingProject)"
+        RemoveProperties="%(_MSBuildProjectReferenceExistent.GlobalPropertiesToRemove)">
+      <Output TaskParameter="TargetOutputs" ItemName="_ProjectReferenceVsixOutputs" />
+    </MSBuild>
+    <ItemGroup>
+      <None Include="@(_ProjectReferenceVsixOutputs)" Condition="Exists('%(Identity)')" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+  </Target>  
 </Project>
