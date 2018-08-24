@@ -17,7 +17,7 @@ namespace Clide
             this.output = output;
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_switching_contexts_then_succeeds()
         {
             var manager = GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<JoinableTaskContext>().Factory;

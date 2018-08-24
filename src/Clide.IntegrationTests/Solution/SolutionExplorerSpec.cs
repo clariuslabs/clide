@@ -7,7 +7,7 @@ namespace Clide.Solution.Explorer
     [Trait("Feature", "Solution Traversal")]
     public class SolutionExplorerSpec
     {
-        [VsixFact]
+        [VsFact]
         public void when_getting_solution_explorer_then_succeeds()
         {
             var solutionExplorer = GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<ISolutionExplorer>();
@@ -15,7 +15,7 @@ namespace Clide.Solution.Explorer
             Assert.NotNull(solutionExplorer);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_closing_solution_explorer_then_is_visible_returns_false()
         {
             var solutionExplorer = GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<ISolutionExplorer>();
@@ -25,7 +25,7 @@ namespace Clide.Solution.Explorer
             Assert.False(solutionExplorer.IsVisible);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_closing_solution_explorer_then_is_visible_returns_true()
         {
             var solutionExplorer = GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<ISolutionExplorer>();
@@ -35,7 +35,7 @@ namespace Clide.Solution.Explorer
             Assert.True(solutionExplorer.IsVisible);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_getting_solution_node_then_returns_non_null()
         {
             var solutionExplorer = GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<ISolutionExplorer>();

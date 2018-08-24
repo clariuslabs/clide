@@ -19,7 +19,7 @@ namespace Clide
             adapters = GlobalServiceLocator.Instance.GetExport<IAdapterService>();
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_solution_to_vssolution_then_succeeds()
         {
             var from = GlobalServices.GetService<DTE>().Solution;
@@ -29,7 +29,7 @@ namespace Clide
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_project_to_vsproject_then_succeeds()
         {
             var from = GlobalServices.GetService<DTE>().Solution.AllProjects().First(x => x.Name == "CsLibrary");
@@ -39,7 +39,7 @@ namespace Clide
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_project_to_vshierarchy_then_succeeds()
         {
             var from = GlobalServices.GetService<DTE>().Solution.AllProjects().First(x => x.Name == "CsLibrary");
@@ -49,7 +49,7 @@ namespace Clide
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_project_to_hierarchyitem_then_succeeds()
         {
             var from = GlobalServices.GetService<DTE>().Solution.AllProjects().First(x => x.Name == "CsLibrary");
@@ -60,7 +60,7 @@ namespace Clide
         }
 
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_projectitem_to_hierarchyitem_then_succeeds()
         {
             var project = fixture.Solution.FindProject(x => x.Name == "CsLibrary").As<Project>();

@@ -15,7 +15,7 @@ namespace Clide.Solution
             this.fixture = fixture;
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_finding_native_c_project_then_succeeds()
         {
             var folder = fixture.Solution.Nodes.FirstOrDefault(n => n.Text == "Native") as ISolutionFolderNode;

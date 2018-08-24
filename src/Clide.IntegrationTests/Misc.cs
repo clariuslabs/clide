@@ -24,7 +24,7 @@ namespace Clide
             this.output = output;
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_getting_non_existent_service_then_returns_null()
         {
             var components = GlobalServices.GetService<SComponentModel, IComponentModel>();
@@ -33,7 +33,7 @@ namespace Clide
             Assert.Empty(formattable);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_reopening_solution_then_vssolution_is_same()
         {
             var dte = GlobalServices.GetService<DTE>();
@@ -56,7 +56,7 @@ namespace Clide
             Assert.True(ComUtilities.IsSameComObject(solution1 as IVsHierarchy, solution2 as IVsHierarchy));
         }
 
-        [VsixFact(RunOnUIThread = true)]
+        [VsFact(UIThread = true)]
         public void when_reopenening_solution_then_hierarchy_item_is_same()
         {
             var dte = GlobalServices.GetService<DTE>();
@@ -89,7 +89,7 @@ namespace Clide
         [Import(ContractNames.Interop.IVsBooleanSymbolExpressionEvaluator)]
         IVsBooleanSymbolExpressionEvaluator expressionEvaluator;
 
-        [VsixFact(RunOnUIThread = true)]
+        [VsFact(UIThread = true)]
         public void when_requesting_project_capabilities_then_succeeds()
         {
             var dte = GlobalServices.GetService<DTE>();

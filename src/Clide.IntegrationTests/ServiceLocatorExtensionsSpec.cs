@@ -13,7 +13,7 @@ namespace Clide
     [Trait("Feature", "Service Locator")]
     public class ServiceLocatorSpec
     {
-        [VsixFact]
+        [VsFact]
         public void when_requesting_locator_for_package_guid_then_loads_package()
         {
             var shell = GlobalServices.GetService<SVsShell, IVsShell>();
@@ -34,7 +34,7 @@ namespace Clide
     [Collection("SingleProject")]
     public class ServiceLocatorExtensionsSpec
     {
-        [VsixFact]
+        [VsFact]
         public void when_requesting_locator_from_service_provider_then_succeeds()
         {
             IServiceProvider services = GlobalServices.Instance;
@@ -43,7 +43,7 @@ namespace Clide
             Assert.NotNull(locator);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_requesting_locator_from_dte_then_succeeds()
         {
             var services = GlobalServices.GetService<DTE>();
@@ -52,7 +52,7 @@ namespace Clide
             Assert.NotNull(locator);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_requesting_locator_from_dte_project_then_succeeds()
         {
             var dte = GlobalServices.GetService<DTE>();
@@ -65,7 +65,7 @@ namespace Clide
             Assert.NotNull(locator);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_requesting_locator_from_hierarchy_then_succeeds()
         {
             var dte = GlobalServices.GetService<DTE>();
@@ -82,7 +82,7 @@ namespace Clide
             Assert.NotNull(locator);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_requesting_locator_from_vsproject_then_succeeds()
         {
             var dte = GlobalServices.GetService<DTE>();
@@ -102,7 +102,7 @@ namespace Clide
             Assert.NotNull(locator);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_getting_vs_service_from_locator_from_service_provider_then_succeeds()
         {
             IServiceProvider services = GlobalServices.Instance;
@@ -111,7 +111,7 @@ namespace Clide
             Assert.NotNull(locator.GetService(typeof(SVsShell)));
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_getting_vs_service_from_locator_from_dte_then_succeeds()
         {
             var services = GlobalServices.GetService<DTE>();
@@ -120,7 +120,7 @@ namespace Clide
             Assert.NotNull(locator.GetService(typeof(SVsShell)));
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_getting_vs_service_from_locator_from_dte_project_then_succeeds()
         {
             var dte = GlobalServices.GetService<DTE>();
@@ -133,7 +133,7 @@ namespace Clide
             Assert.NotNull(locator.GetService(typeof(SVsShell)));
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_getting_vs_service_from_locator_from_hierarchy_then_succeeds()
         {
             var dte = GlobalServices.GetService<DTE>();
@@ -149,7 +149,7 @@ namespace Clide
             Assert.NotNull(locator.GetService(typeof(SVsShell)));
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_getting_vs_service_from_locator_from_vsproject_then_succeeds()
         {
             var dte = GlobalServices.GetService<DTE>();
@@ -169,7 +169,7 @@ namespace Clide
             Assert.NotNull(locator.GetService(typeof(SVsShell)));
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_getting_vs_export_from_locator_from_service_provider_then_succeeds()
         {
             IServiceProvider services = GlobalServices.Instance;
@@ -178,7 +178,7 @@ namespace Clide
             Assert.NotNull(locator.GetExport<SVsServiceProvider>());
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_getting_vs_export_from_locator_from_dte_then_succeeds()
         {
             var services = GlobalServices.GetService<DTE>();
@@ -187,7 +187,7 @@ namespace Clide
             Assert.NotNull(locator.GetExport<SVsServiceProvider>());
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_getting_vs_export_from_locator_from_dte_project_then_succeeds()
         {
             var dte = GlobalServices.GetService<DTE>();
@@ -200,7 +200,7 @@ namespace Clide
             Assert.NotNull(locator.GetExport<SVsServiceProvider>());
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_getting_vs_export_from_locator_from_hierarchy_then_succeeds()
         {
             var dte = GlobalServices.GetService<DTE>();
@@ -217,7 +217,7 @@ namespace Clide
             Assert.NotNull(locator.GetExport<SVsServiceProvider>());
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_getting_vs_export_from_locator_from_vsproject_then_succeeds()
         {
             var dte = GlobalServices.GetService<DTE>();
@@ -236,7 +236,7 @@ namespace Clide
             Assert.NotNull(locator.GetExport<SVsServiceProvider>());
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_getting_vs_exports_from_locator_from_service_provider_then_succeeds()
         {
             IServiceProvider services = GlobalServices.Instance;
@@ -245,7 +245,7 @@ namespace Clide
             Assert.True(locator.GetExports<IWpfTextViewCreationListener>().Any());
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_getting_vs_exports_from_locator_from_dte_then_succeeds()
         {
             var services = GlobalServices.GetService<DTE>();
@@ -254,7 +254,7 @@ namespace Clide
             Assert.True(locator.GetExports<IWpfTextViewCreationListener>().Any());
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_getting_vs_exports_from_locator_from_dte_project_then_succeeds()
         {
             var dte = GlobalServices.GetService<DTE>();
@@ -267,7 +267,7 @@ namespace Clide
             Assert.True(locator.GetExports<IWpfTextViewCreationListener>().Any());
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_getting_vs_exports_from_locator_from_hierarchy_then_succeeds()
         {
             var dte = GlobalServices.GetService<DTE>();
@@ -284,7 +284,7 @@ namespace Clide
             Assert.True(locator.GetExports<IWpfTextViewCreationListener>().Any());
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_getting_vs_exports_from_locator_from_vsproject_then_succeeds()
         {
             var dte = GlobalServices.GetService<DTE>();

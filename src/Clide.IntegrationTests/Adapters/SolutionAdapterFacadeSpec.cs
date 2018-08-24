@@ -16,7 +16,7 @@ namespace Clide.Adapters
 
         #region IVsHierarchyItem
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_solution_as_vs_hierarchy_item_then_succeeds()
         {
             var from = fixture.Solution;
@@ -26,7 +26,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_project__as_vs_hierarchy_item_then_succeeds()
         {
             var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary");
@@ -36,7 +36,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_item_as_vs_hierarchy_item_then_succeeds()
         {
             var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
@@ -47,7 +47,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_folder_as_vs_hierarchy_item_then_succeeds()
         {
             var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
@@ -58,7 +58,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_solution_folder_as_vs_hierarchy_item_then_succeeds()
         {
             var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
@@ -69,7 +69,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_references_as_vs_hierarchy_item_then_succeeds()
         {
             var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
@@ -80,7 +80,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_reference_as_vs_hierarchy_item_then_succeeds()
         {
             var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
@@ -91,7 +91,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_solution_item_as_vs_hierarchy_item_then_succeeds()
         {
             var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
@@ -106,7 +106,7 @@ namespace Clide.Adapters
 
         #region IVsHierarchy
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_solution_as_vs_hierarchy_then_succeeds()
         {
             var from = fixture.Solution;
@@ -116,7 +116,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_project__as_vs_hierarchy_then_succeeds()
         {
             var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary");
@@ -126,7 +126,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_item_as_vs_hierarchy_then_succeeds()
         {
             var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
@@ -137,7 +137,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_folder_as_vs_hierarchy_then_succeeds()
         {
             var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
@@ -148,7 +148,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_solution_folder_as_vs_hierarchy_then_succeeds()
         {
             var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
@@ -159,7 +159,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_references_as_vs_hierarchy_then_succeeds()
         {
             var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
@@ -170,7 +170,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_reference_as_vs_hierarchy_then_succeeds()
         {
             var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
@@ -181,7 +181,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_solution_item_as_vs_hierarchy_then_succeeds()
         {
             var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
@@ -196,7 +196,7 @@ namespace Clide.Adapters
 
         #region IVs*
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_solution_as_vs_solution_then_succeeds()
         {
             var from = fixture.Solution;
@@ -206,7 +206,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_project__as_vs_project_then_succeeds()
         {
             var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary");
@@ -221,7 +221,7 @@ namespace Clide.Adapters
 
         #region VSLang
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_project__as_vslang_then_succeeds()
         {
             var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary");
@@ -231,7 +231,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_item_as_vslang_then_succeeds()
         {
             var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
@@ -242,7 +242,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_reference_as_vslang_then_succeeds()
         {
             var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
@@ -254,7 +254,7 @@ namespace Clide.Adapters
             Assert.NotNull(to);
         }
 
-        [VsixFact]
+        [VsFact]
         public void when_adapting_references_as_vslang_then_succeeds()
         {
             var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
