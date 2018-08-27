@@ -1,11 +1,11 @@
 namespace Clide
 {
-	/// <summary>
-	/// Exposes the <see cref="As{T}"/> method that allows any 
-	/// object to be adapted to any other type (provided there 
-	/// is a compatible adapter registered in the system).
-	/// </summary>
-	public interface IAdaptable<TSource> : IFluentInterface
+    /// <summary>
+    /// Exposes the <see cref="As{T}"/> method that allows any 
+    /// object to be adapted to any other type (provided there 
+    /// is a compatible adapter registered in the system).
+    /// </summary>
+    public interface IAdaptable<TSource> : IFluentInterface
         where TSource : class
     {
         /// <summary>

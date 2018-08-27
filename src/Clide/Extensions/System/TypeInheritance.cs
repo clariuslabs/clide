@@ -26,68 +26,68 @@ using Clide;
 [EditorBrowsable(EditorBrowsableState.Never)]
 internal class TypeInheritance : IEquatable<TypeInheritance>
 {
-	/// <summary>
-	/// Initializes a new instance of the <see cref="TypeInheritance"/> class for the given 
-	/// type and distance from the type root.
-	/// </summary>
-	public TypeInheritance(Type type, int distance)
-	{
-		Guard.NotNull(nameof (type), type);
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TypeInheritance"/> class for the given 
+    /// type and distance from the type root.
+    /// </summary>
+    public TypeInheritance(Type type, int distance)
+    {
+        Guard.NotNull(nameof(type), type);
 
-		Distance = distance;
-		Inheritance = new List<TypeInheritance>();
-		Type = type;
-	}
+        Distance = distance;
+        Inheritance = new List<TypeInheritance>();
+        Type = type;
+    }
 
-	/// <summary>
-	/// Gets the distance from the current type inheritance to the root that was used 
-	/// to build the hierarchy.
-	/// </summary>
-	public int Distance { get; }
+    /// <summary>
+    /// Gets the distance from the current type inheritance to the root that was used 
+    /// to build the hierarchy.
+    /// </summary>
+    public int Distance { get; }
 
-	/// <summary>
-	/// Gets the type that owns the <see cref="Inheritance"/>.
-	/// </summary>
-	public Type Type { get; }
+    /// <summary>
+    /// Gets the type that owns the <see cref="Inheritance"/>.
+    /// </summary>
+    public Type Type { get; }
 
-	/// <summary>
-	/// Gets the inherited types from <see cref="Type"/>.
-	/// </summary>
-	public List<TypeInheritance> Inheritance { get; }
+    /// <summary>
+    /// Gets the inherited types from <see cref="Type"/>.
+    /// </summary>
+    public List<TypeInheritance> Inheritance { get; }
 
-	#region Equality
+    #region Equality
 
-	/// <summary>
-	/// Compares the current instance with the value provided.
-	/// </summary>
-	public bool Equals (TypeInheritance other) => TypeInheritance.Equals (this, other);
+    /// <summary>
+    /// Compares the current instance with the value provided.
+    /// </summary>
+    public bool Equals(TypeInheritance other) => TypeInheritance.Equals(this, other);
 
-	/// <summary>
-	/// Compares the current instance with the value provided.
-	/// </summary>
-	public override bool Equals (object obj) => TypeInheritance.Equals (this, obj as TypeInheritance);
+    /// <summary>
+    /// Compares the current instance with the value provided.
+    /// </summary>
+    public override bool Equals(object obj) => TypeInheritance.Equals(this, obj as TypeInheritance);
 
-	/// <summary>
-	/// Compares two instances for equality.
-	/// </summary>
-	public static bool Equals(TypeInheritance obj1, TypeInheritance obj2)
-	{
-		if (Object.Equals(null, obj1) ||
-			Object.Equals(null, obj2) ||
-			obj1.GetType() != obj2.GetType())
-			return false;
+    /// <summary>
+    /// Compares two instances for equality.
+    /// </summary>
+    public static bool Equals(TypeInheritance obj1, TypeInheritance obj2)
+    {
+        if (Object.Equals(null, obj1) ||
+            Object.Equals(null, obj2) ||
+            obj1.GetType() != obj2.GetType())
+            return false;
 
-		if (Object.ReferenceEquals(obj1, obj2)) return true;
+        if (Object.ReferenceEquals(obj1, obj2)) return true;
 
-		return obj1.Type == obj2.Type &&
-			obj1.Distance == obj2.Distance;
-	}
+        return obj1.Type == obj2.Type &&
+            obj1.Distance == obj2.Distance;
+    }
 
-	/// <summary>
-	/// Returns a hash code for this instance.
-	/// </summary>
-	public override int GetHashCode () => Type.GetHashCode () ^ Distance.GetHashCode ();
+    /// <summary>
+    /// Returns a hash code for this instance.
+    /// </summary>
+    public override int GetHashCode() => Type.GetHashCode() ^ Distance.GetHashCode();
 
-	#endregion
+    #endregion
 }
 #pragma warning restore 0436

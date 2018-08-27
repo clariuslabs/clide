@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net46</TargetFramework>
     <IncludeVSSDK>true</IncludeVSSDK>
+    <IncludeAnalyzers>true</IncludeAnalyzers>
 
     <PackageId>Clide.Interfaces</PackageId>
     <IsPackable>false</IsPackable>

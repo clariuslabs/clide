@@ -1,110 +1,122 @@
-﻿namespace Clide
+﻿using EnvDTE;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Threading;
+using System;
+using System.ComponentModel.Composition;
+using System.Threading.Tasks;
+
+namespace Clide
 {
-	using EnvDTE;
-	using Merq;
-	using Microsoft.VisualStudio;
-	using Microsoft.VisualStudio.Shell.Interop;
-	using System;
-	using System.Collections.Generic;
-	using System.ComponentModel.Composition;
 
-	[Export(typeof(IDevEnv))]
-	[PartCreationPolicy(CreationPolicy.Shared)]
-	internal class DevEnvImpl : IDevEnv
-	{
-		readonly Lazy<IServiceLocator> serviceLocator;
-		readonly Lazy<IStatusBar> status;
-		readonly Lazy<IDialogWindowFactory> dialogFactory;
-		readonly Lazy<IMessageBoxService> messageBox;
-		readonly Lazy<bool> isElevated;
-		readonly Lazy<IErrorsManager> errorsManager;
-		readonly Lazy<IOutputWindowManager> outputWindow;
+    [Export(typeof(IDevEnv))]
+    [PartCreationPolicy(CreationPolicy.Shared)]
+    internal class DevEnvImpl : IDevEnv
+    {
+        readonly JoinableTaskFactory jtf;
 
-		[ImportingConstructor]
-		public DevEnvImpl(
-			Lazy<IServiceLocator> serviceLocator,
-			Lazy<IDialogWindowFactory> dialogFactory,
-			Lazy<IAsyncManager> asyncManager,
-			Lazy<IMessageBoxService> messageBox,
-			Lazy<IErrorsManager> errorsManager,
-			Lazy<IOutputWindowManager> outputWindow,
-			Lazy<IStatusBar> status)
-		{
-			this.serviceLocator = serviceLocator;
-			this.dialogFactory = dialogFactory;
-			this.messageBox = messageBox;
-			this.status = status;
-			this.errorsManager = errorsManager;
-			this.outputWindow = outputWindow;
+        readonly Lazy<IServiceLocator> serviceLocator;
+        readonly Lazy<IStatusBar> status;
+        readonly Lazy<IDialogWindowFactory> dialogFactory;
+        readonly Lazy<IMessageBoxService> messageBox;
+        readonly JoinableLazy<bool> isElevated;
+        readonly Lazy<IErrorsManager> errorsManager;
+        readonly Lazy<IOutputWindowManager> outputWindow;
 
-			TracingExtensions.ErrorsManager = this.errorsManager.Value;
+        [ImportingConstructor]
+        public DevEnvImpl(
+            Lazy<IServiceLocator> serviceLocator,
+            Lazy<IDialogWindowFactory> dialogFactory,
+            Lazy<IMessageBoxService> messageBox,
+            Lazy<IErrorsManager> errorsManager,
+            Lazy<IOutputWindowManager> outputWindow,
+            Lazy<IStatusBar> status, 
+            JoinableTaskContext context)
+        {
+            jtf = context.Factory;
+            this.serviceLocator = serviceLocator;
+            this.dialogFactory = dialogFactory;
+            this.messageBox = messageBox;
+            this.status = status;
+            this.errorsManager = errorsManager;
+            this.outputWindow = outputWindow;
 
-			isElevated = new Lazy<bool>(() =>
-			{
-				var shell = this.ServiceLocator.TryGetService<SVsShell, IVsShell3>();
-				if (shell == null)
-					return false;
+            TracingExtensions.ErrorsManager = this.errorsManager.Value;
 
-				bool elevated;
-				shell.IsRunningElevated(out elevated);
-				return elevated;
-			});
-		}
+            isElevated = JoinableLazy.Create(() =>
+            {
+                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                var shell = ServiceLocator.TryGetService<SVsShell, IVsShell3>();
+                if (shell == null)
+                    return false;
 
-		public bool IsElevated => isElevated.Value;
+                shell.IsRunningElevated(out var elevated);
+                return elevated;
+            }, jtf, true);
+        }
 
-		public IDialogWindowFactory DialogWindowFactory => dialogFactory.Value;
+        public bool IsElevated => jtf.Run(async () => await isElevated.GetValueAsync());
 
-		public IErrorsManager Errors => errorsManager.Value;
+        public IDialogWindowFactory DialogWindowFactory => dialogFactory.Value;
 
-		public IMessageBoxService MessageBoxService => messageBox.Value;
+        public IErrorsManager Errors => errorsManager.Value;
 
-		public IOutputWindowManager OutputWindow => outputWindow.Value;
+        public IMessageBoxService MessageBoxService => messageBox.Value;
 
-		public IServiceLocator ServiceLocator => serviceLocator.Value;
+        public IOutputWindowManager OutputWindow => outputWindow.Value;
 
-		public IStatusBar StatusBar => status.Value;
+        public IServiceLocator ServiceLocator => serviceLocator.Value;
 
-		public void Exit(bool saveAll = true)
-		{
-			var dte = ServiceLocator.GetService<DTE>();
+        public IStatusBar StatusBar => status.Value;
 
-			if (saveAll)
-				dte.ExecuteCommand("File.SaveAll");
+        public void Exit(bool saveAll = true)
+        {
+            jtf.Run(async () => 
+            {
+                await jtf.SwitchToMainThreadAsync();
+                var dte = ServiceLocator.GetService<DTE>();
 
-			// Just to be clean on exit, wait for pending builds to cancel.
-			// VS will exit anyway if we don't, but this is safer.
-			while (dte.Solution.SolutionBuild.BuildState == vsBuildState.vsBuildStateInProgress)
-			{
-				// Sometimes when in the middle of some long-running build, the cancel command 
-				// may not kick in immediately. We re-issue it after a bit.
-				dte.ExecuteCommand("Build.Cancel");
-				System.Threading.Thread.Sleep(100);
-			}
+                if (saveAll)
+                    dte.ExecuteCommand("File.SaveAll");
 
-			dte.Quit();
-		}
+                // Just to be clean on exit, wait for pending builds to cancel.
+                // VS will exit anyway if we don't, but this is safer.
+                while (dte.Solution.SolutionBuild.BuildState == vsBuildState.vsBuildStateInProgress)
+                {
+                    // Sometimes when in the middle of some long-running build, the cancel command 
+                    // may not kick in immediately. We re-issue it after a bit.
+                    dte.ExecuteCommand("Build.Cancel");
+                    await Task.Delay(100);
+                }
 
-		public bool Restart(bool saveAll = true)
-		{
-			var dte = ServiceLocator.GetService<DTE>();
+                dte.Quit();
+            });
+        }
 
-			if (saveAll)
-				dte.ExecuteCommand("File.SaveAll");
+        public bool Restart(bool saveAll = true)
+        {
+            return jtf.Run(async () => 
+            {
+                await jtf.SwitchToMainThreadAsync();
+                var dte = ServiceLocator.GetService<DTE>();
 
-			// Just to be clean on exit, wait for pending builds to cancel.
-			while (dte.Solution.SolutionBuild.BuildState == vsBuildState.vsBuildStateInProgress)
-			{
-				// Sometimes when in the middle of some long-running build, the cancel command 
-				// may not kick in immediately. We re-issue it after a bit.
-				dte.ExecuteCommand("Build.Cancel");
-				System.Threading.Thread.Sleep(100);
-			}
+                if (saveAll)
+                    dte.ExecuteCommand("File.SaveAll");
 
-			var shell = ServiceLocator.GetService<SVsShell, IVsShell4>();
-			var result = shell.Restart((uint)__VSRESTARTTYPE.RESTART_Normal);
+                // Just to be clean on exit, wait for pending builds to cancel.
+                while (dte.Solution.SolutionBuild.BuildState == vsBuildState.vsBuildStateInProgress)
+                {
+                    // Sometimes when in the middle of some long-running build, the cancel command 
+                    // may not kick in immediately. We re-issue it after a bit.
+                    dte.ExecuteCommand("Build.Cancel");
+                    await Task.Delay(100);
+                }
 
-			return ErrorHandler.Succeeded(result);
-		}
-	}
+                var shell = ServiceLocator.GetService<SVsShell, IVsShell4>();
+                var result = shell.Restart((uint)__VSRESTARTTYPE.RESTART_Normal);
+
+                return ErrorHandler.Succeeded(result);
+            });
+        }
+    }
 }

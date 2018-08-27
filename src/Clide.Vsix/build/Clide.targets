@@ -1,20 +1,14 @@
-﻿<Project InitialTargets="_SetClideVsixPath" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project InitialTargets="_SetClideVsixPath" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Target Name="_SetClideVsixPath">
     <PropertyGroup>
-      <ClideVsixPath>@(ClideVsix -> '%(FullPath)')</ClideVsixPath>
+      <ClideVsixPath>@(ClideVsix -&gt; '%(FullPath)')</ClideVsixPath>
     </PropertyGroup>
   </Target>
-
   <Target Name="ClideVsix" Returns="$(ClideVsixPath)" />
-
-  <Target Name="_ExcludeClideFromVsix"
-          DependsOnTargets="GetVsixSourceItems"
-          BeforeTargets="RemoveVSSDKAssemblies">
+  <Target Name="_ExcludeClideFromVsix" DependsOnTargets="GetVsixSourceItems" BeforeTargets="RemoveVSSDKAssemblies">
     <ItemGroup>
-      <SuppressPackaging Include="@(VSIXSourceItem)"
-                         Condition=" $([MSBuild]::ValueOrDefault('%(Filename)', '').StartsWith('Clide')) " />
+      <SuppressPackaging Include="@(VSIXSourceItem)" Condition=" $([MSBuild]::ValueOrDefault('%(Filename)', '').StartsWith('Clide')) " />
     </ItemGroup>
   </Target>
-
 </Project>

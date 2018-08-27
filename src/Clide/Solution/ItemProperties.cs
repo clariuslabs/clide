@@ -11,95 +11,111 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Clide
 {
-	internal class ItemProperties : DynamicObject
-	{
-		static readonly ITracer tracer = Tracer.Get<ItemProperties>();
+    internal class ItemProperties : DynamicObject
+    {
+        static readonly ITracer tracer = Tracer.Get<ItemProperties>();
 
-		IVsHierarchyItem node;
-		ProjectItem item;
-		IVsBuildPropertyStorage msBuild;
+        IVsHierarchyItem node;
+        ProjectItem item;
+        IVsBuildPropertyStorage msBuild;
 
-		public ItemProperties (ItemNode item)
-		{
-			this.item = item.HierarchyNode.GetExtenderObject () as ProjectItem;
-			node = item.HierarchyNode;
-			msBuild = item.HierarchyNode.GetRoot ().HierarchyIdentity.Hierarchy as IVsBuildPropertyStorage;
-		}
+        public ItemProperties(ItemNode item)
+        {
+            this.item = item.HierarchyNode.GetExtenderObject() as ProjectItem;
+            node = item.HierarchyNode;
+            msBuild = item.HierarchyNode.GetRoot().HierarchyIdentity.Hierarchy as IVsBuildPropertyStorage;
+        }
 
-		public override IEnumerable<string> GetDynamicMemberNames () => GetPropertyNames ();
+        public override IEnumerable<string> GetDynamicMemberNames() => GetPropertyNames();
 
-		public override bool TrySetMember (SetMemberBinder binder, object value) => SetValue (binder.Name, value);
+        public override bool TrySetMember(SetMemberBinder binder, object value) => SetValue(binder.Name, value);
 
-		public override bool TryGetMember (GetMemberBinder binder, out object result)
-		{
-			result = GetValue (binder.Name);
-			return true;
-		}
+        public override bool TryGetMember(GetMemberBinder binder, out object result)
+        {
+            result = GetValue(binder.Name);
+            return true;
+        }
 
-		public object GetValue (string name)
-		{
-			var value = default(string);
+        public object GetValue(string name)
+        {
+            var value = default(string);
 
-			if (item != null) {
-				Property property;
-				try {
-					property = item.Properties.Item (name);
-				} catch (ArgumentException) {
-					property = null;
-				}
+            if (item != null)
+            {
+                Property property;
+                try
+                {
+                    property = item.Properties.Item(name);
+                }
+                catch (ArgumentException)
+                {
+                    property = null;
+                }
 
-				if (property != null)
-					return property.Value;
-			}
+                if (property != null)
+                    return property.Value;
+            }
 
-			if (msBuild != null)
-				msBuild.GetItemAttribute (node.HierarchyIdentity.ItemID, name, out value);
+            if (msBuild != null)
+                msBuild.GetItemAttribute(node.HierarchyIdentity.ItemID, name, out value);
 
-			return value;
-		}
+            return value;
+        }
 
-		public bool SetValue (string name, object value)
-		{
-			if (value == null)
-				throw new ArgumentException (Strings.ItemProperties.InvalidNullValue(name), "value");
+        public bool SetValue(string name, object value)
+        {
+            if (value == null)
+                throw new ArgumentException(Strings.ItemProperties.InvalidNullValue(name), "value");
 
-			if (item != null) {
-				Property property;
-				try {
-					property = this.item.Properties.Item (name);
-				} catch (ArgumentException) {
-					property = null;
-				}
+            if (item != null)
+            {
+                Property property;
+                try
+                {
+                    property = item.Properties.Item(name);
+                }
+                catch (ArgumentException)
+                {
+                    property = null;
+                }
 
-				if (property != null) {
-					try {
-						property.Value = value;
-						return true;
-					} catch {
-						return false;
-					}
-				}
-			}
+                if (property != null)
+                {
+                    try
+                    {
+                        property.Value = value;
+                        return true;
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                }
+            }
 
-			// Fallback to MSBuild item properties.
-			if (msBuild != null) {
-				return ErrorHandler.Succeeded (
-					this.msBuild.SetItemAttribute (node.HierarchyIdentity.ItemID, name, value.ToString ()));
-			}
+            // Fallback to MSBuild item properties.
+            if (msBuild != null)
+            {
+                return ErrorHandler.Succeeded(
+                    msBuild.SetItemAttribute(node.HierarchyIdentity.ItemID, name, value.ToString()));
+            }
 
-			return false;
-		}
+            return false;
+        }
 
-		IEnumerable<string> GetPropertyNames ()
-		{
-			try {
-				return ((ProjectItem)node.GetExtenderObject())
-					.Properties
-					.Cast<Property> ()
-					.Select (prop => prop.Name);
-			} catch {
-				return Enumerable.Empty<string> ();
-			}
-		}
-	}
+        IEnumerable<string> GetPropertyNames()
+        {
+            try
+            {
+                return ((ProjectItem)node.GetExtenderObject())
+                    .Properties
+                    .Cast<Property>()
+                    .Select(prop => prop.Name);
+            }
+            catch
+            {
+                return Enumerable.Empty<string>();
+            }
+        }
+    }
 }

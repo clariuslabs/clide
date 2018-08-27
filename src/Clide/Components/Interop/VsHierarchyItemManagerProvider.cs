@@ -8,25 +8,22 @@ using IAsyncServiceProvider = Microsoft.VisualStudio.Shell.IAsyncServiceProvider
 namespace Clide.Components.Interop
 {
     [PartCreationPolicy(CreationPolicy.Shared)]
-	internal class VsHierarchyItemManagerProvider
-	{
-        readonly JoinableTaskContext context;
-		readonly AsyncLazy<IVsHierarchyItemManager> hierarchyManager;
+    internal class VsHierarchyItemManagerProvider
+    {
+        readonly JoinableLazy<IVsHierarchyItemManager> hierarchyManager;
 
-		[ImportingConstructor]
-		public VsHierarchyItemManagerProvider ([Import (typeof (SAsyncServiceProvider))] IAsyncServiceProvider services, JoinableTaskContext context)
-		{
-            this.context = context;
-			hierarchyManager = new AsyncLazy<IVsHierarchyItemManager> (async () => {
-                await context.Factory.SwitchToMainThreadAsync();
-
+        [ImportingConstructor]
+        public VsHierarchyItemManagerProvider([Import(typeof(SAsyncServiceProvider))] IAsyncServiceProvider services, JoinableTaskContext context)
+        {
+            hierarchyManager = new JoinableLazy<IVsHierarchyItemManager>(async () =>
+            {
                 var componentModel = await services.GetServiceAsync(typeof(SComponentModel)) as IComponentModel;
 
-                return componentModel.GetService<IVsHierarchyItemManager>();
-            }, context.Factory);
-		}
+                return componentModel?.GetService<IVsHierarchyItemManager>();
+            }, context?.Factory, executeOnMainThread: true);
+        }
 
-		[Export(ContractNames.Interop.IVsHierarchyItemManager)]
-		public IVsHierarchyItemManager HierarchyManager => context.Factory.Run (async () => await hierarchyManager.GetValueAsync ());
+        [Export(ContractNames.Interop.IVsHierarchyItemManager)]
+        public IVsHierarchyItemManager HierarchyManager => hierarchyManager.GetValue();
     }
 }

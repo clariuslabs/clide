@@ -1,6 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
+    <LangVersion>latest</LangVersion>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <RootNamespace>Clide</RootNamespace>
@@ -43,22 +44,24 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Package Versions">
-    <MerqVersion>1.0.0-rc</MerqVersion>
-    <MerqAsyncVersion>1.1.17-rc</MerqAsyncVersion>
-    <MerqVisualStudioVersion>$(MerqAsyncVersion)</MerqVisualStudioVersion>
+    <MerqVersion>1.1.1</MerqVersion>
+    <MerqVisualStudioVersion>1.1.79</MerqVisualStudioVersion>
     <RxVersion>3.0.0</RxVersion>
     <FluentInterfaceVersion>2.0.3</FluentInterfaceVersion>
     <StringResourcesVersion>3.1.10</StringResourcesVersion>
     <TracerVersion>2.0.8</TracerVersion>
     <NuGetizerVersion>0.2.2</NuGetizerVersion>
     <XunitVersion>2.3.1</XunitVersion>
-    
-    <XunitVsixVersion>0.4.0-alpha.*</XunitVsixVersion>
-    <XVSSDKVersion>0.3.0-alpha.*</XVSSDKVersion>
-    <XVSSDKBuildToolsVersion Condition="'$(CI)' != 'true'">0.3.0-alpha.*</XVSSDKBuildToolsVersion>
-    <XVSSDKBuildToolsVersion Condition="'$(CI)' == 'true'">0.3.0-alpha.17</XVSSDKBuildToolsVersion>
 
-    <VSSDKBuildToolsVersion>15.7.107</VSSDKBuildToolsVersion>
+    <XunitVsixVersion>0.4.0-alpha.*</XunitVsixVersion>
+    <XVSSDKVersion>0.4.0-alpha.*</XVSSDKVersion>
+    <XVSSDKBuildToolsVersion Condition="'$(CI)' != 'true'">0.4.0-alpha.*</XVSSDKBuildToolsVersion>
+    <XVSSDKBuildToolsVersion Condition="'$(CI)' == 'true'">0.4.0-alpha.0</XVSSDKBuildToolsVersion>
+
+    <VSSDKBuildToolsVersion>15.7.109</VSSDKBuildToolsVersion>
+
+    <VSSDKAnalyzersVersion>15.8.33</VSSDKAnalyzersVersion>
+    <VSThreadingAnalyzersVersion>15.8.132</VSThreadingAnalyzersVersion>
   </PropertyGroup>
 
   <Target Name="GetCI" Returns="$(CI)">

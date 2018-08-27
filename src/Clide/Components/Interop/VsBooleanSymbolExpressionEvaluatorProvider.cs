@@ -1,39 +1,33 @@
 ﻿using System;
 using System.ComponentModel.Composition;
-using Merq;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Threading;
 
 namespace Clide.Components.Interop
 {
-	[PartCreationPolicy(CreationPolicy.Shared)]
-	internal class VsBooleanSymbolExpressionEvaluatorProvider
-	{
-		static Guid BooleanSymbolExpressionEvaluatorClsid = new Guid("5DADF1EE-BCBE-46CE-BADF-271992C112A3");
-		Lazy<IVsBooleanSymbolExpressionEvaluator> expressionEvaluator;
+    [PartCreationPolicy(CreationPolicy.Shared)]
+    internal class VsBooleanSymbolExpressionEvaluatorProvider
+    {
+        internal static Guid BooleanSymbolExpressionEvaluatorClsid = new Guid("5DADF1EE-BCBE-46CE-BADF-271992C112A3");
 
-		[ImportingConstructor]
-		public VsBooleanSymbolExpressionEvaluatorProvider([Import(typeof(SVsServiceProvider))] IServiceProvider services, IAsyncManager async)
-		{
-			expressionEvaluator = new Lazy<IVsBooleanSymbolExpressionEvaluator>(() => async.Run(async () =>
-			{
-				await async.SwitchToMainThread();
+        readonly JoinableLazy<IVsBooleanSymbolExpressionEvaluator> expressionEvaluator;
 
-				var registry = services.GetService<SLocalRegistry, ILocalRegistry>();
+        [ImportingConstructor]
+        public VsBooleanSymbolExpressionEvaluatorProvider([Import(typeof(SVsServiceProvider))] IServiceProvider services, JoinableTaskContext context)
+        {
+            expressionEvaluator = new JoinableLazy<IVsBooleanSymbolExpressionEvaluator>(() =>
+            {
+                var registry = services.GetService<SLocalRegistry>() as ILocalRegistry;
+                // dev14+ should provide the evaluator using the BooleanSymbolExpressionEvaluator clsid
+                var value = registry?.CreateInstance(BooleanSymbolExpressionEvaluatorClsid) as IVsBooleanSymbolExpressionEvaluator;
 
-				// dev14+ should provide the evaluator using the BooleanSymbolExpressionEvaluator clsid
-				var value = registry.CreateInstance(BooleanSymbolExpressionEvaluatorClsid) as IVsBooleanSymbolExpressionEvaluator;
-				if (value == null)
-				{
-					// Previous versions of VS provides the service using the VsProjectCapabilityExpressionMatcher interface
-					value = registry.CreateInstance(typeof(VsProjectCapabilityExpressionMatcher).GUID) as IVsBooleanSymbolExpressionEvaluator;
-				}
+                // Previous versions of VS provides the service using the VsProjectCapabilityExpressionMatcher interface
+                return value ?? registry?.CreateInstance(typeof(VsProjectCapabilityExpressionMatcher).GUID) as IVsBooleanSymbolExpressionEvaluator;
+            }, context?.Factory, executeOnMainThread: true);
+        }
 
-				return value;
-			}));
-		}
-
-		[Export(ContractNames.Interop.IVsBooleanSymbolExpressionEvaluator)]
-		public IVsBooleanSymbolExpressionEvaluator ExpressionEvaluator => expressionEvaluator.Value;
-	}
+        [Export(ContractNames.Interop.IVsBooleanSymbolExpressionEvaluator)]
+        public IVsBooleanSymbolExpressionEvaluator ExpressionEvaluator => expressionEvaluator.GetValue();
+    }
 }

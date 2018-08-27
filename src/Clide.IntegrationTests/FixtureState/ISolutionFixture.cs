@@ -2,8 +2,8 @@
 
 namespace Clide
 {
-	public interface ISolutionFixture : IDisposable
-	{
-		ISolutionNode Solution { get; }
-	}
+    public interface ISolutionFixture : IDisposable
+    {
+        ISolutionNode Solution { get; }
+    }
 }

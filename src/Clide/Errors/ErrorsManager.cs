@@ -1,63 +1,63 @@
-﻿namespace Clide
+﻿using Microsoft.VisualStudio.Shell;
+using System;
+using System.ComponentModel.Composition;
+namespace Clide
 {
-	using Microsoft.VisualStudio.Shell;
-	using System;
-	using System.ComponentModel.Composition;
 
-	[Export(typeof(IErrorsManager))]
-	[PartCreationPolicy(CreationPolicy.Shared)]
-	class ErrorsManager : IErrorsManager
-	{
-		readonly IServiceProvider serviceProvider;
-		readonly ErrorListProvider errorListProvider;
+    [Export(typeof(IErrorsManager))]
+    [PartCreationPolicy(CreationPolicy.Shared)]
+    class ErrorsManager : IErrorsManager
+    {
+        readonly IServiceProvider serviceProvider;
+        readonly ErrorListProvider errorListProvider;
 
-		[ImportingConstructor]
-		public ErrorsManager([Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider)
-		{
-			this.serviceProvider = serviceProvider;
-			this.errorListProvider = new ErrorListProvider(this.serviceProvider);
-		}
+        [ImportingConstructor]
+        public ErrorsManager([Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider)
+        {
+            this.serviceProvider = serviceProvider;
+            errorListProvider = new ErrorListProvider(this.serviceProvider);
+        }
 
-		public IErrorItem AddError(string text, Action<IErrorItem> handler)
-		{
-			return Add(text, handler, false);
-		}
+        public IErrorItem AddError(string text, Action<IErrorItem> handler)
+        {
+            return Add(text, handler, false);
+        }
 
-		public IErrorItem AddWarning(string text, Action<IErrorItem> handler)
-		{
-			return Add(text, handler, true);
-		}
+        public IErrorItem AddWarning(string text, Action<IErrorItem> handler)
+        {
+            return Add(text, handler, true);
+        }
 
-		public void ClearErrors()
-		{
-			this.errorListProvider.Tasks.Clear();
-		}
+        public void ClearErrors()
+        {
+            errorListProvider.Tasks.Clear();
+        }
 
-		public void ShowErrors()
-		{
-			this.errorListProvider.Show();
-		}
+        public void ShowErrors()
+        {
+            errorListProvider.Show();
+        }
 
-		private IErrorItem Add(string text, Action<IErrorItem> handler, bool isWarning)
-		{
-			var errorTask = new ErrorTask();
+        private IErrorItem Add(string text, Action<IErrorItem> handler, bool isWarning)
+        {
+            var errorTask = new ErrorTask();
 
-			errorTask.Category = TaskCategory.Misc;
-			errorTask.ErrorCategory = isWarning ? TaskErrorCategory.Warning : TaskErrorCategory.Error;
-			errorTask.Text = text;
-			errorTask.Document = " ";
+            errorTask.Category = TaskCategory.Misc;
+            errorTask.ErrorCategory = isWarning ? TaskErrorCategory.Warning : TaskErrorCategory.Error;
+            errorTask.Text = text;
+            errorTask.Document = " ";
 
-			var errorItem = new ErrorItem(this.errorListProvider, errorTask);
+            var errorItem = new ErrorItem(errorListProvider, errorTask);
 
-			errorTask.Navigate += (sender, e) =>
-			{
-				if (handler != null)
-					handler(errorItem);
-			};
+            errorTask.Navigate += (sender, e) =>
+            {
+                if (handler != null)
+                    handler(errorItem);
+            };
 
-			this.errorListProvider.Tasks.Add(errorTask);
+            errorListProvider.Tasks.Add(errorTask);
 
-			return errorItem;
-		}
-	}
+            return errorItem;
+        }
+    }
 }

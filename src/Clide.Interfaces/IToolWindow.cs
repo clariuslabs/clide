@@ -1,10 +1,10 @@
 ﻿namespace Clide
 {
-	/// <summary>
-	/// Common interface for tool windows.
-	/// </summary>
-	public interface IToolWindow : IFluentInterface
-	{
+    /// <summary>
+    /// Common interface for tool windows.
+    /// </summary>
+    public interface IToolWindow : IFluentInterface
+    {
         /// <summary>
         /// Whether the tool window is currently visible.
         /// </summary>
@@ -19,5 +19,5 @@
         /// Closes the tool window.
         /// </summary>
 		void Close();
-	}
+    }
 }

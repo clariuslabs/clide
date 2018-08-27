@@ -7,74 +7,74 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Clide.Adapters
 {
-	[Adapter]
-	class DteToVsAdapter :
-		IAdapter<Solution, IVsSolution>,
-		IAdapter<Project, IVsProject>,
-		IAdapter<Project, IVsHierarchy>,
-		IAdapter<Project, IVsHierarchyItem>,
-		IAdapter<ProjectItem, IVsHierarchyItem>
-	{
-		IServiceProvider serviceProvider;
-		IVsHierarchyItemManager hierarchyManager;
+    [Adapter]
+    class DteToVsAdapter :
+        IAdapter<Solution, IVsSolution>,
+        IAdapter<Project, IVsProject>,
+        IAdapter<Project, IVsHierarchy>,
+        IAdapter<Project, IVsHierarchyItem>,
+        IAdapter<ProjectItem, IVsHierarchyItem>
+    {
+        IServiceProvider serviceProvider;
+        IVsHierarchyItemManager hierarchyManager;
 
-		[ImportingConstructor]
-		public DteToVsAdapter (
-			[Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider,
-			[Import(ContractNames.Interop.IVsHierarchyItemManager)] IVsHierarchyItemManager hierarchyManager)
-		{
-			this.serviceProvider = serviceProvider;
-			this.hierarchyManager = hierarchyManager;
-		}
+        [ImportingConstructor]
+        public DteToVsAdapter(
+            [Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider,
+            [Import(ContractNames.Interop.IVsHierarchyItemManager)] IVsHierarchyItemManager hierarchyManager)
+        {
+            this.serviceProvider = serviceProvider;
+            this.hierarchyManager = hierarchyManager;
+        }
 
-		IVsSolution IAdapter<Solution, IVsSolution>.Adapt (Solution from) => serviceProvider.GetService<SVsSolution, IVsSolution> ();
+        IVsSolution IAdapter<Solution, IVsSolution>.Adapt(Solution from) => serviceProvider.GetService<SVsSolution, IVsSolution>();
 
-		IVsProject IAdapter<Project, IVsProject>.Adapt (Project from)
-		{
-			IVsHierarchy project;
+        IVsProject IAdapter<Project, IVsProject>.Adapt(Project from)
+        {
+            IVsHierarchy project;
 
-			if (!ErrorHandler.Succeeded (serviceProvider
-				.GetService<SVsSolution, IVsSolution> ()
-				.GetProjectOfUniqueName (from.GetUniqueNameOrFullName(), out project)))
-				return null;
+            if (!ErrorHandler.Succeeded(serviceProvider
+                .GetService<SVsSolution, IVsSolution>()
+                .GetProjectOfUniqueName(from.GetUniqueNameOrFullName(), out project)))
+                return null;
 
-			return project as IVsProject;
-		}
+            return project as IVsProject;
+        }
 
-		IVsHierarchy IAdapter<Project, IVsHierarchy>.Adapt (Project from) =>
-			((IAdapter<Project, IVsProject>)this).Adapt (from) as IVsHierarchy;
+        IVsHierarchy IAdapter<Project, IVsHierarchy>.Adapt(Project from) =>
+            ((IAdapter<Project, IVsProject>)this).Adapt(from) as IVsHierarchy;
 
-		IVsHierarchyItem IAdapter<Project, IVsHierarchyItem>.Adapt (Project from)
-		{
-			IVsHierarchy project;
+        IVsHierarchyItem IAdapter<Project, IVsHierarchyItem>.Adapt(Project from)
+        {
+            IVsHierarchy project;
 
-			if (!ErrorHandler.Succeeded (this.serviceProvider
-				.GetService<SVsSolution, IVsSolution> ()
-				.GetProjectOfUniqueName (from.GetUniqueNameOrFullName(), out project)))
-				return null;
+            if (!ErrorHandler.Succeeded(serviceProvider
+                .GetService<SVsSolution, IVsSolution>()
+                .GetProjectOfUniqueName(from.GetUniqueNameOrFullName(), out project)))
+                return null;
 
-			return hierarchyManager.GetHierarchyItem (project, VSConstants.VSITEMID_ROOT);
-		}
+            return hierarchyManager.GetHierarchyItem(project, VSConstants.VSITEMID_ROOT);
+        }
 
-		IVsHierarchyItem IAdapter<ProjectItem, IVsHierarchyItem>.Adapt (ProjectItem from)
-		{
-			IVsHierarchy project;
+        IVsHierarchyItem IAdapter<ProjectItem, IVsHierarchyItem>.Adapt(ProjectItem from)
+        {
+            IVsHierarchy project;
 
-			if (!ErrorHandler.Succeeded (this.serviceProvider
-				.GetService<SVsSolution, IVsSolution> ()
-				.GetProjectOfUniqueName (from.ContainingProject.GetUniqueNameOrFullName(), out project)))
-				return null;
+            if (!ErrorHandler.Succeeded(serviceProvider
+                .GetService<SVsSolution, IVsSolution>()
+                .GetProjectOfUniqueName(from.ContainingProject.GetUniqueNameOrFullName(), out project)))
+                return null;
 
-			var fileName = from.FileNames[0];
-			var found = 0;
-			uint itemId = 0;
+            var fileName = from.FileNames[0];
+            var found = 0;
+            uint itemId = 0;
 
-			if (!ErrorHandler.Succeeded (((IVsProject)project).IsDocumentInProject (
-				fileName, out found, new VSDOCUMENTPRIORITY[1], out itemId)) ||
-				found == 0 || itemId == 0)
-				return null;
+            if (!ErrorHandler.Succeeded(((IVsProject)project).IsDocumentInProject(
+                fileName, out found, new VSDOCUMENTPRIORITY[1], out itemId)) ||
+                found == 0 || itemId == 0)
+                return null;
 
-			return hierarchyManager.GetHierarchyItem (project, itemId);
-		}
-	}
+            return hierarchyManager.GetHierarchyItem(project, itemId);
+        }
+    }
 }

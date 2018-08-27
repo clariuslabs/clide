@@ -6,30 +6,30 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Clide
 {
-	[Export (ContractNames.FallbackNodeFactory, typeof (ICustomSolutionExplorerNodeFactory))]
-	public class SolutionItemNodeFactory : ICustomSolutionExplorerNodeFactory
+    [Export(ContractNames.FallbackNodeFactory, typeof(ICustomSolutionExplorerNodeFactory))]
+    public class SolutionItemNodeFactory : ICustomSolutionExplorerNodeFactory
     {
-		Lazy<ISolutionExplorerNodeFactory> childNodeFactory;
-		IAdapterService adapter;
-		Lazy<IVsUIHierarchyWindow> solutionExplorer;
+        Lazy<ISolutionExplorerNodeFactory> childNodeFactory;
+        IAdapterService adapter;
+        Lazy<IVsUIHierarchyWindow> solutionExplorer;
 
-		[ImportingConstructor]
-		public SolutionItemNodeFactory (
-			Lazy<ISolutionExplorerNodeFactory> childNodeFactory, 
-			IAdapterService adapter,
-			[Import (ContractNames.Interop.SolutionExplorerWindow)] Lazy<IVsUIHierarchyWindow> solutionExplorer)
-		{
+        [ImportingConstructor]
+        public SolutionItemNodeFactory(
+            Lazy<ISolutionExplorerNodeFactory> childNodeFactory,
+            IAdapterService adapter,
+            [Import(ContractNames.Interop.SolutionExplorerWindow)] Lazy<IVsUIHierarchyWindow> solutionExplorer)
+        {
             this.childNodeFactory = childNodeFactory;
             this.adapter = adapter;
-			this.solutionExplorer = solutionExplorer;
+            this.solutionExplorer = solutionExplorer;
         }
 
         public virtual bool Supports(IVsHierarchyItem hierarchy)
         {
             if (hierarchy.Parent == null)
                 return false;
-			
-			var ext = hierarchy.GetExtenderObject();
+
+            var ext = hierarchy.GetExtenderObject();
             var item = ext as ProjectItem;
             var project = hierarchy.Parent.GetExtenderObject() as Project;
 
@@ -39,7 +39,7 @@ namespace Clide
                 project.Object is EnvDTE80.SolutionFolder;
         }
 
-		public virtual ISolutionExplorerNode CreateNode (IVsHierarchyItem item) => Supports (item) ?
-			new SolutionItemNode (item, childNodeFactory.Value, adapter, solutionExplorer) : null;
-	}
+        public virtual ISolutionExplorerNode CreateNode(IVsHierarchyItem item) => Supports(item) ?
+            new SolutionItemNode(item, childNodeFactory.Value, adapter, solutionExplorer) : null;
+    }
 }

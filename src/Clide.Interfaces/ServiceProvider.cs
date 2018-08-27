@@ -21,7 +21,7 @@ namespace Clide
 
         class DteServiceProvider : IServiceProvider
         {
-			static Lazy<IServiceProvider> globalProvider = new Lazy<IServiceProvider>(() => GetGlobalProvider());
+            static Lazy<IServiceProvider> globalProvider = new Lazy<IServiceProvider>(() => GetGlobalProvider());
 
             public object GetService(Type serviceType)
             {
@@ -31,10 +31,16 @@ namespace Clide
             static IServiceProvider GetGlobalProvider()
             {
                 var dte = Package.GetGlobalService(typeof(EnvDTE.DTE));
-				if (dte == null) {
+                if (dte == null)
+                {
                     try
                     {
-                        dte = ThreadHelper.Generic.Invoke(() => Package.GetGlobalService(typeof(EnvDTE.DTE)));
+                        dte = ThreadHelper.JoinableTaskFactory.Run(async () =>
+                        {
+                            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                            return Package.GetGlobalService(typeof(EnvDTE.DTE));
+                        });
                         if (dte == null)
                             dte = RunningObjects.GetDTE(TimeSpan.FromMilliseconds(500));
                     }
@@ -42,22 +48,22 @@ namespace Clide
                     {
                         dte = RunningObjects.GetDTE(TimeSpan.FromMilliseconds(500));
                     }
-				}
+                }
 
                 var ole = dte as Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
-				if (ole == null)
-					return new NullServiceProvider();
+                if (ole == null)
+                    return new NullServiceProvider();
 
                 return new OleServiceProvider(ole);
             }
 
-			class NullServiceProvider : IServiceProvider
-			{
-				public object GetService (Type serviceType)
-				{
-					return null;
-				}
-			}
+            class NullServiceProvider : IServiceProvider
+            {
+                public object GetService(Type serviceType)
+                {
+                    return null;
+                }
+            }
         }
 
         class VsServiceProvider : IServiceProvider

@@ -1,6 +1,6 @@
-﻿namespace Clide
+﻿using System.Collections.Generic;
+namespace Clide
 {
-    using System.Collections.Generic;
 
     /// <summary>
     /// Project configuration information

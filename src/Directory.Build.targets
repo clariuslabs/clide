@@ -3,7 +3,6 @@
   <!-- Common Packages -->
   <ItemGroup>
     <PackageReference Include="Merq" Version="$(MerqVersion)" />
-    <PackageReference Include="Merq.Async" Version="$(MerqAsyncVersion)" />
     <PackageReference Include="System.Reactive.Interfaces" Version="$(RxVersion)" />
     <PackageReference Include="IFluentInterface" Version="$(FluentInterfaceVersion)" />
     <PackageReference Include="netfx-System.StringResources" Version="$(StringResourcesVersion)" />
@@ -26,6 +25,11 @@
     <PackageReference Include="System.Reactive.Linq" Version="$(RxVersion)" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(IncludeAnalyzers)' == 'true'">
+    <PackageReference Include="Microsoft.VisualStudio.SDK.Analyzers" Version="$(VSSDKAnalyzersVersion)" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="$(VSThreadingAnalyzersVersion)" />
+  </ItemGroup>
+
   <ItemGroup Condition="'$(IncludeTests)' == 'true' or '$(IncludeIntegrationTests)' == 'true'">
     <PackageReference Include="System.Reactive.Linq" Version="$(RxVersion)" />
     <PackageReference Include="xunit" Version="$(XunitVersion)" />
@@ -34,7 +38,7 @@
     <PackageReference Include="Moq" Version="4.5.13" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(IncludeIntegrationTests)' == 'true' and '$(XunitVsix)' == ''">
+  <ItemGroup Condition="'$(IncludeIntegrationTests)' == 'true'">
     <PackageReference Include="xunit.vsix" Version="$(XunitVsixVersion)" />
   </ItemGroup>
 
