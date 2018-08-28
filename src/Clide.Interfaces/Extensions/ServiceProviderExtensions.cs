@@ -119,41 +119,37 @@ public static partial class ServiceProviderExtensions
         return new Guid(guid.Value);
     }
 
+    static Guid GetPackageGuidOrThrow<TPackage>() where TPackage : IVsPackage
+    {
+        var guidString = typeof(TPackage)
+               .GetCustomAttributes(true)
+               .OfType<GuidAttribute>()
+               .Select(g => g.Value)
+               .FirstOrDefault();
+
+        if (guidString == null)
+            throw new ArgumentException(Strings.IServiceProviderExtensions.MissingGuidAttribute(typeof(TPackage)));
+
+        return new Guid(guidString);
+    }
+
     /// <summary>
     /// Retrieves an existing loaded package or loads it 
     /// automatically if needed.
     /// </summary>
     /// <typeparam name="TPackage">The type of the package to load.</typeparam>
     /// <returns>The fully loaded and initialized package.</returns>
-    public static TPackage GetLoadedPackage<TPackage>(this IServiceProvider serviceProvider)
-    {
-        var jtf = GetJTF(serviceProvider);
+    public static TPackage GetLoadedPackage<TPackage>(this IServiceProvider serviceProvider) where TPackage : IVsPackage =>
+        (TPackage)serviceProvider.GetLoadedPackage(GetPackageGuidOrThrow<TPackage>());
 
-        return jtf.Run(async () =>
-        {
-            await jtf.SwitchToMainThreadAsync();
-
-            var guidString = typeof(TPackage)
-                .GetCustomAttributes(true)
-                .OfType<GuidAttribute>()
-                .Select(g => g.Value)
-                .FirstOrDefault();
-
-            if (guidString == null)
-                throw new ArgumentException(Strings.IServiceProviderExtensions.MissingGuidAttribute(typeof(TPackage)));
-
-            var guid = new Guid(guidString);
-            var vsPackage = default(IVsPackage);
-
-            var vsShell = serviceProvider.GetService<SVsShell, IVsShell>();
-            vsShell.IsPackageLoaded(ref guid, out vsPackage);
-
-            if (vsPackage == null)
-                ErrorHandler.ThrowOnFailure(vsShell.LoadPackage(ref guid, out vsPackage));
-
-            return (TPackage)vsPackage;
-        });
-    }
+    /// <summary>
+    /// Retrieves an existing loaded package or loads it 
+    /// automatically if needed.
+    /// </summary>
+    /// <typeparam name="TPackage">The type of the package to load.</typeparam>
+    /// <returns>The fully loaded and initialized package.</returns>
+    public async static System.Threading.Tasks.Task<TPackage> GetLoadedPackageAsync<TPackage>(this IServiceProvider serviceProvider) where TPackage : IVsPackage =>
+        (TPackage)await serviceProvider.GetLoadedPackageAsync(GetPackageGuidOrThrow<TPackage>());
 
     /// <summary>
     /// Retrieves an existing loaded package or loads it 
@@ -176,6 +172,30 @@ public static partial class ServiceProviderExtensions
 
             return (IServiceProvider)vsPackage;
         });
+    }
+
+    /// <summary>
+    /// Retrieves an existing loaded package or loads it 
+    /// automatically if needed.
+    /// </summary>
+    /// <returns>The fully loaded and initialized package.</returns>
+    public async static System.Threading.Tasks.Task<IServiceProvider> GetLoadedPackageAsync(this IServiceProvider serviceProvider, Guid packageId)
+    {
+        var jtf = GetJTF(serviceProvider);
+
+        await jtf.SwitchToMainThreadAsync();
+
+        var vsShell = serviceProvider.GetService<SVsShell, IVsShell>();
+        vsShell.IsPackageLoaded(ref packageId, out var vsPackage);
+
+        if (vsPackage == null)
+        {
+            await (vsShell as IVsShell7)?.LoadPackageAsync(ref packageId);
+
+            vsShell.IsPackageLoaded(ref packageId, out vsPackage);
+        }
+
+        return (IServiceProvider)vsPackage;
     }
 
     static JoinableTaskFactory GetJTF(IServiceProvider serviceProvider) =>
