@@ -7,5 +7,7 @@ namespace Clide
         string Context { get; }
 
         Guid ContextGuid { get; }
+
+        double Order { get; }
     }
 }

@@ -17,7 +17,10 @@ namespace Clide
         /// Specifies the context when the component should be started.
         /// The value can be a Guid string which it will be automatically parsed into <see cref="StartableAttribute.ContextGuid"/>
         /// </param>
-        public StartableAttribute(string context)
+        /// <param name="order">
+        /// Specifies the order value for the startable component
+        /// </param>
+        public StartableAttribute(string context, double order = 1000)
             : base(typeof(IStartable))
         {
             Context = context;
@@ -36,5 +39,10 @@ namespace Clide
         /// Gets the context as a Guid if it could be parsed
         /// </summary>
         public Guid ContextGuid { get; }
+
+        /// <summary>
+        /// Gets the order value for the startable component
+        /// </summary>
+        public double Order { get; }
     }
 }
