@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
@@ -112,6 +113,41 @@ namespace Clide
             Assert.True(cts.IsCancellationRequested);
             secondComponent.Verify(x => x.StartAsync(), Times.Never);
         }
+
+        [Fact]
+        public async Task when_starting_components_with_order_then_components_are_started_honoring_the_provided_order()
+        {
+            var components = new List<string>();
+
+            var foo = new Mock<IStartable>();
+            foo.Setup(x => x.StartAsync()).Callback(() => components.Add("foo")).Returns(Task.CompletedTask);
+
+            var bar = new Mock<IStartable>();
+            bar.Setup(x => x.StartAsync()).Callback(() => components.Add("bar")).Returns(Task.CompletedTask);
+
+            var service = new StartableService(
+                new[]
+                {
+                        new Lazy<IStartable, IStartableMetadata>
+                        (
+                            () => foo.Object,
+                            Mock.Of<IStartableMetadata>(x => x.Context == "order" && x.Order == 100)
+                        ),
+                        new Lazy<IStartable, IStartableMetadata>
+                        (
+                            () => bar.Object,
+                            Mock.Of<IStartableMetadata>(x => x.Context == "order" && x.Order == 1)
+                        )
+                });
+
+            await service.StartComponentsAsync("order");
+
+            // Bar should be started before Foo
+            Assert.Equal(2, components.Count);
+            Assert.Equal("bar", components[0]);
+            Assert.Equal("foo", components[1]);
+        }
+
 
         class CancellationComponent : IStartable
         {

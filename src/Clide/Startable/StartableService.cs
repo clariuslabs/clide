@@ -32,7 +32,7 @@ namespace Clide
                     string.Equals(x.Metadata.Context, context, StringComparison.OrdinalIgnoreCase) ||
                     (contextGuid != Guid.Empty && x.Metadata.ContextGuid == contextGuid));
 
-            foreach (var component in componentsToBeStarted)
+            foreach (var component in componentsToBeStarted.OrderBy(x => x.Metadata.Order))
             {
                 if (cancellationToken.IsCancellationRequested)
                     return;
