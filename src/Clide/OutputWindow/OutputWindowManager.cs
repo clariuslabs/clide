@@ -23,7 +23,7 @@ namespace Clide
 
         ConcurrentDictionary<Guid, TextWriter> writerCache = new ConcurrentDictionary<Guid, TextWriter>();
 
-        readonly Lazy<IVsOutputWindow> vsOutputWindow;
+        readonly JoinableLazy<IVsOutputWindow> vsOutputWindow;
         readonly Lazy<IEventStream> eventStream;
         readonly JoinableTaskFactory jtf;
 
@@ -35,7 +35,7 @@ namespace Clide
         /// <param name="uiThread">The UI thread.</param>
         [ImportingConstructor]
         public OutputWindowManager(
-            [Import(ContractNames.Interop.VsOutputWindow)] Lazy<IVsOutputWindow> vsOutputWindow,
+            JoinableLazy<IVsOutputWindow> vsOutputWindow,
             Lazy<IEventStream> eventStream,
             JoinableTaskContext context)
         {
@@ -100,12 +100,12 @@ namespace Clide
                 jtf.Run(async () =>
                 {
                     await jtf.SwitchToMainThreadAsync();
-                    if (!ErrorHandler.Succeeded(vsOutputWindow.Value.GetPane(ref id, out pane)))
+                    if (!ErrorHandler.Succeeded(vsOutputWindow.GetValue().GetPane(ref id, out pane)))
                     {
                         tracer.Verbose(Strings.OutputWindowManager.CreatingPane(title));
 
-                        ErrorHandler.ThrowOnFailure(vsOutputWindow.Value.CreatePane(ref id, title, 1, 1));
-                        ErrorHandler.ThrowOnFailure(vsOutputWindow.Value.GetPane(ref id, out pane));
+                        ErrorHandler.ThrowOnFailure(vsOutputWindow.GetValue().CreatePane(ref id, title, 1, 1));
+                        ErrorHandler.ThrowOnFailure(vsOutputWindow.GetValue().GetPane(ref id, out pane));
                     }
                 });
             }, Strings.OutputWindowManager.FailedToCreatePane(title));

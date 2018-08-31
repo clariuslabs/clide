@@ -14,7 +14,7 @@ namespace Clide
         Lazy<ISolutionExplorerNodeFactory> nodeFactory;
         IAdapterService adapter;
         IVsSolutionSelection selection;
-        Lazy<IVsUIHierarchyWindow> solutionExplorer;
+        JoinableLazy<IVsUIHierarchyWindow> solutionExplorer;
 
         [ImportingConstructor]
         public SolutionNodeFactory(
@@ -22,7 +22,7 @@ namespace Clide
             Lazy<ISolutionExplorerNodeFactory> nodeFactory,
             IAdapterService adapter,
             IVsSolutionSelection selection,
-            [Import(ContractNames.Interop.SolutionExplorerWindow)] Lazy<IVsUIHierarchyWindow> solutionExplorer)
+            JoinableLazy<IVsUIHierarchyWindow> solutionExplorer)
         {
             this.services = services;
             this.nodeFactory = nodeFactory;

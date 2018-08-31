@@ -24,7 +24,7 @@ namespace Clide
             IVsHierarchyItem hierarchyNode,
             ISolutionExplorerNodeFactory nodeFactory,
             IAdapterService adapter,
-            Lazy<IVsUIHierarchyWindow> solutionExplorer)
+            JoinableLazy<IVsUIHierarchyWindow> solutionExplorer)
             : base(kind, hierarchyNode, nodeFactory, adapter, solutionExplorer)
         {
             this.nodeFactory = nodeFactory;

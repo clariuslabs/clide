@@ -10,10 +10,25 @@ namespace Clide.Components.Interop
     internal class VsServicesExports
     {
         JoinableTaskFactory jtf;
+
+        [Export(ContractNames.Interop.VsSolution)]
+        [Export(typeof(JoinableLazy<IVsSolution>))]
         JoinableLazy<IVsSolution> vsSolution;
+
+        [Export(ContractNames.Interop.VsStatusBar)]
+        [Export(typeof(JoinableLazy<IVsStatusbar>))]
         JoinableLazy<IVsStatusbar> vsStatusBar;
+
+        [Export(ContractNames.Interop.VsOutputWindow)]
+        [Export(typeof(JoinableLazy<IVsOutputWindow>))]
         JoinableLazy<IVsOutputWindow> outputWindow;
+
+        [Export(ContractNames.Interop.IVsShell)]
+        [Export(typeof(JoinableLazy<IVsShell>))]
         JoinableLazy<IVsShell> vsShell;
+
+        [Export(ContractNames.Interop.IVsUIShell)]
+        [Export(typeof(JoinableLazy<IVsUIShell>))]
         JoinableLazy<IVsUIShell> vsUIShell;
 
         [ImportingConstructor]
@@ -30,18 +45,18 @@ namespace Clide.Components.Interop
         }
 
         [Export(ContractNames.Interop.VsSolution)]
-        IVsSolution VsSolution => jtf.Run(async () => await vsSolution.GetValueAsync());
+        IVsSolution VsSolution => vsSolution.GetValue();
 
         [Export(ContractNames.Interop.VsStatusBar)]
-        IVsStatusbar VsStatusBar => jtf.Run(async () => await vsStatusBar.GetValueAsync());
+        IVsStatusbar VsStatusBar => vsStatusBar.GetValue();
 
         [Export(ContractNames.Interop.VsOutputWindow)]
-        IVsOutputWindow VsOutputWindow => jtf.Run(async () => await outputWindow.GetValueAsync());
+        IVsOutputWindow VsOutputWindow => outputWindow.GetValue();
 
         [Export(ContractNames.Interop.IVsShell)]
-        IVsShell VsShell => jtf.Run(async () => await vsShell.GetValueAsync());
+        IVsShell VsShell => vsShell.GetValue();
 
         [Export(ContractNames.Interop.IVsUIShell)]
-        IVsUIShell VsUIShell => jtf.Run(async () => await vsUIShell.GetValueAsync());
+        IVsUIShell VsUIShell => vsUIShell.GetValue();
     }
 }

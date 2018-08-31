@@ -21,7 +21,7 @@ namespace Clide
         public FolderNode(IVsHierarchyItem hierarchyNode,
             ISolutionExplorerNodeFactory nodeFactory,
             IAdapterService adapter,
-            Lazy<IVsUIHierarchyWindow> solutionExplorer)
+            JoinableLazy<IVsUIHierarchyWindow> solutionExplorer)
             : base(SolutionNodeKind.Folder, hierarchyNode, nodeFactory, adapter, solutionExplorer)
         {
         }

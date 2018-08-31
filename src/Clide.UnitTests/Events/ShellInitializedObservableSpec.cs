@@ -6,6 +6,7 @@ using Moq;
 using Xunit;
 using System.Reactive.Linq;
 using System.Threading;
+using Microsoft.VisualStudio.Threading;
 
 namespace Clide.Events
 {
@@ -17,7 +18,9 @@ namespace Clide.Events
         public void when_subscribing_to_initialized_shell_then_receives_event_and_completes()
         {
             object zombie = false;
-            var observable = new ShellInitializedObservable(new Lazy<IVsShell>(() => Mock.Of<IVsShell>(shell => shell.GetProperty(ZombieProperty, out zombie) == VSConstants.S_OK)));
+#pragma warning disable VSSDK005 // Avoid instantiating JoinableTaskContext
+            var observable = new ShellInitializedObservable(new JoinableLazy<IVsShell>(() => Mock.Of<IVsShell>(shell => shell.GetProperty(ZombieProperty, out zombie) == VSConstants.S_OK), taskFactory: new JoinableTaskContext().Factory));
+#pragma warning restore VSSDK005 // Avoid instantiating JoinableTaskContext
 
             var completed = false;
             ShellInitialized data = null;
@@ -42,7 +45,9 @@ namespace Clide.Events
             shell.Setup(x => x.AdviseShellPropertyChanges(Capture.With(capture), out cookie))
                 .Returns(VSConstants.S_OK);
 
-            var observable = new ShellInitializedObservable(new Lazy<IVsShell>(() => shell.Object));
+#pragma warning disable VSSDK005 // Avoid instantiating JoinableTaskContext
+            var observable = new ShellInitializedObservable(new JoinableLazy<IVsShell>(() => shell.Object, taskFactory: new JoinableTaskContext().Factory));
+#pragma warning restore VSSDK005 // Avoid instantiating JoinableTaskContext
 
             // Callback should have been provided at this point.
             Assert.NotNull(callback);

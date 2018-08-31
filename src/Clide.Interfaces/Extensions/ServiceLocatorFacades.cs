@@ -63,12 +63,8 @@ public static class ServiceLocatorFacades
     /// </summary>
     /// <exception cref="ArgumentNullException">The <paramref name="solution"/> parameter was null.</exception>
     /// <exception cref="InvalidOperationException">The required <see cref="IComponentModel"/> service was not found.</exception>
-    public static IServiceLocator GetServiceLocator(this Solution solution)
-    {
-        Guard.NotNull(nameof(solution), solution);
-
-        return solution.DTE.GetServiceLocator();
-    }
+    public static IServiceLocator GetServiceLocator(this Solution solution) =>
+        solution.DTE.GetServiceLocator();
 
 
     /// <summary>
@@ -80,15 +76,7 @@ public static class ServiceLocatorFacades
     {
         Guard.NotNull(nameof(project), project);
 
-        var components = new OleServiceProvider(project.DTE).GetService<SComponentModel, IComponentModel>();
-        try
-        {
-            return components.GetService<IServiceLocatorProvider>().GetServiceLocator(project);
-        }
-        catch (ImportCardinalityMismatchException ex)
-        {
-            throw new MissingDependencyException(Strings.ServiceLocator.MissingDependency(typeof(IServiceLocatorProvider)), ex);
-        }
+        return project.DTE.GetServiceLocator();
     }
 
     /// <summary>
