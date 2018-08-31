@@ -11,6 +11,8 @@ namespace Clide.Components.Interop
     {
         internal static Guid BooleanSymbolExpressionEvaluatorClsid = new Guid("5DADF1EE-BCBE-46CE-BADF-271992C112A3");
 
+        [Export(ContractNames.Interop.IVsBooleanSymbolExpressionEvaluator)]
+        [Export(typeof(JoinableLazy<IVsBooleanSymbolExpressionEvaluator>))]
         readonly JoinableLazy<IVsBooleanSymbolExpressionEvaluator> expressionEvaluator;
 
         [ImportingConstructor]

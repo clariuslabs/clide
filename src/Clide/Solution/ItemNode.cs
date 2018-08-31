@@ -23,7 +23,7 @@ namespace Clide
             IVsHierarchyItem hierarchyNode,
             ISolutionExplorerNodeFactory nodeFactory,
             IAdapterService adapter,
-            Lazy<IVsUIHierarchyWindow> solutionExplorer)
+            JoinableLazy<IVsUIHierarchyWindow> solutionExplorer)
             : base(SolutionNodeKind.Item, hierarchyNode, nodeFactory, adapter, solutionExplorer)
         {
             properties = new Lazy<ItemProperties>(() => new ItemProperties(this));

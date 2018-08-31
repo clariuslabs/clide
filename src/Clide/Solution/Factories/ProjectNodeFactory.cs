@@ -3,18 +3,19 @@ using System.ComponentModel.Composition;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Threading;
 
 namespace Clide
 {
     [Export(ContractNames.FallbackNodeFactory, typeof(ICustomSolutionExplorerNodeFactory))]
     public class ProjectNodeFactory : ICustomSolutionExplorerNodeFactory
     {
-        Lazy<IVsSolution> solution;
+        JoinableLazy<IVsSolution> solution;
         IVsHierarchyItemManager hierarchyManager;
         Lazy<ISolutionExplorerNodeFactory> childNodeFactory;
         IAdapterService adapter;
-        Lazy<IVsUIHierarchyWindow> solutionExplorer;
-        Lazy<IVsBooleanSymbolExpressionEvaluator> expressionEvaluator;
+        JoinableLazy<IVsUIHierarchyWindow> solutionExplorer;
+        JoinableLazy<IVsBooleanSymbolExpressionEvaluator> expressionEvaluator;
 
         [ImportingConstructor]
         public ProjectNodeFactory(
@@ -22,10 +23,11 @@ namespace Clide
             IVsHierarchyItemManager hierarchyManager,
             Lazy<ISolutionExplorerNodeFactory> childNodeFactory,
             IAdapterService adapter,
-            [Import(ContractNames.Interop.SolutionExplorerWindow)] Lazy<IVsUIHierarchyWindow> solutionExplorer,
-            [Import(Clide.ContractNames.Interop.IVsBooleanSymbolExpressionEvaluator)] Lazy<IVsBooleanSymbolExpressionEvaluator> expressionEvaluator)
+            JoinableLazy<IVsUIHierarchyWindow> solutionExplorer,
+            JoinableTaskContext jtc,
+            [Import(Clide.ContractNames.Interop.IVsBooleanSymbolExpressionEvaluator)] JoinableLazy<IVsBooleanSymbolExpressionEvaluator> expressionEvaluator)
         {
-            solution = new Lazy<IVsSolution>(() => services.GetService<SVsSolution, IVsSolution>());
+            solution = new JoinableLazy<IVsSolution>(() => services.GetService<SVsSolution, IVsSolution>(), jtc.Factory, true);
             this.hierarchyManager = hierarchyManager;
             this.childNodeFactory = childNodeFactory;
             this.adapter = adapter;
@@ -52,7 +54,7 @@ namespace Clide
                     // For the solution root item itself, the GUID will be empty.
                     guid != Guid.Empty)
                 {
-                    if (ErrorHandler.Succeeded(((IVsSolution4)solution.Value).EnsureProjectIsLoaded(ref guid, (uint)__VSBSLFLAGS.VSBSLFLAGS_None)))
+                    if (ErrorHandler.Succeeded(((IVsSolution4)solution.GetValue()).EnsureProjectIsLoaded(ref guid, (uint)__VSBSLFLAGS.VSBSLFLAGS_None)))
                         actualItem = hierarchyManager.GetHierarchyItem(item.GetActualHierarchy(), item.GetActualItemId());
                 }
             }

@@ -8,40 +8,40 @@ namespace Clide
     [PartCreationPolicy(CreationPolicy.Shared)]
     class StatusBar : IStatusBar
     {
-        readonly Lazy<IVsStatusbar> vsStatusBar;
+        readonly JoinableLazy<IVsStatusbar> vsStatusBar;
 
         [ImportingConstructor]
-        public StatusBar([Import(ContractNames.Interop.VsStatusBar)] Lazy<IVsStatusbar> vsStatusBar)
+        public StatusBar(JoinableLazy<IVsStatusbar> vsStatusBar)
         {
             this.vsStatusBar = vsStatusBar;
         }
 
-        public void Clear() => vsStatusBar.Value.Clear();
+        public void Clear() => vsStatusBar.GetValue().Clear();
 
         public void ShowMessage(string message)
         {
             int frozen;
 
-            vsStatusBar.Value.IsFrozen(out frozen);
+            vsStatusBar.GetValue().IsFrozen(out frozen);
 
             if (frozen == 0)
-                vsStatusBar.Value.SetText(message);
+                vsStatusBar.GetValue().SetText(message);
         }
 
         public void ShowProgress(string message, int complete, int total)
         {
             int frozen;
 
-            vsStatusBar.Value.IsFrozen(out frozen);
+            vsStatusBar.GetValue().IsFrozen(out frozen);
 
             if (frozen == 0)
             {
                 uint cookie = 0;
 
                 if (complete != total)
-                    vsStatusBar.Value.Progress(ref cookie, 1, message, (uint)complete, (uint)total);
+                    vsStatusBar.GetValue().Progress(ref cookie, 1, message, (uint)complete, (uint)total);
                 else
-                    vsStatusBar.Value.Progress(ref cookie, 0, string.Empty, (uint)complete, (uint)total);
+                    vsStatusBar.GetValue().Progress(ref cookie, 0, string.Empty, (uint)complete, (uint)total);
             }
         }
     }

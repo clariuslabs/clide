@@ -21,7 +21,7 @@ namespace Clide
         ISolutionExplorerNodeFactory nodeFactory;
         IAdapterService adapter;
 
-        Lazy<IVsUIHierarchyWindow> solutionExplorer;
+        JoinableLazy<IVsUIHierarchyWindow> solutionExplorer;
         Lazy<ISolutionExplorerNode> parent;
         Lazy<string> name;
         Lazy<bool> isHidden;
@@ -42,7 +42,7 @@ namespace Clide
             IVsHierarchyItem hierarchyItem,
             ISolutionExplorerNodeFactory nodeFactory,
             IAdapterService adapter,
-            Lazy<IVsUIHierarchyWindow> solutionExplorer)
+            JoinableLazy<IVsUIHierarchyWindow> solutionExplorer)
         {
             Guard.NotNull(nameof(hierarchyItem), hierarchyItem);
             Guard.NotNull(nameof(nodeFactory), nodeFactory);
@@ -132,7 +132,7 @@ namespace Clide
             get
             {
                 uint state;
-                ErrorHandler.ThrowOnFailure(solutionExplorer.Value.GetItemState(
+                ErrorHandler.ThrowOnFailure(solutionExplorer.GetValue().GetItemState(
                     hierarchy as IVsUIHierarchy, itemId, (uint)__VSHIERARCHYITEMSTATE.HIS_Selected, out state));
 
                 return state == (uint)__VSHIERARCHYITEMSTATE.HIS_Selected;
@@ -151,7 +151,7 @@ namespace Clide
                     return true;
 
                 uint state;
-                ErrorHandler.ThrowOnFailure(solutionExplorer.Value.GetItemState(
+                ErrorHandler.ThrowOnFailure(solutionExplorer.GetValue().GetItemState(
                     hierarchy as IVsUIHierarchy, itemId, (uint)__VSHIERARCHYITEMSTATE.HIS_Expanded, out state));
 
                 return state == (uint)__VSHIERARCHYITEMSTATE.HIS_Expanded;
@@ -190,7 +190,7 @@ namespace Clide
                 child.Collapse();
             }
 
-            ErrorHandler.ThrowOnFailure(solutionExplorer.Value.ExpandItem(
+            ErrorHandler.ThrowOnFailure(solutionExplorer.GetValue().ExpandItem(
                 hierarchy as IVsUIHierarchy, itemId, EXPANDFLAGS.EXPF_CollapseFolder));
         }
 
@@ -200,14 +200,14 @@ namespace Clide
         /// <param name="recursively">if set to <c>true</c>, expands recursively</param>
         public virtual void Expand(bool recursively = false)
         {
-            ErrorHandler.ThrowOnFailure(solutionExplorer.Value.ExpandItem(
+            ErrorHandler.ThrowOnFailure(solutionExplorer.GetValue().ExpandItem(
                 hierarchy as IVsUIHierarchy, itemId, EXPANDFLAGS.EXPF_ExpandParentsToShowItem));
 
             var flags = EXPANDFLAGS.EXPF_ExpandFolder;
             if (recursively)
                 flags |= EXPANDFLAGS.EXPF_ExpandFolderRecursively;
 
-            ErrorHandler.ThrowOnFailure(solutionExplorer.Value.ExpandItem(
+            ErrorHandler.ThrowOnFailure(solutionExplorer.GetValue().ExpandItem(
                 hierarchy as IVsUIHierarchy, itemId, flags));
         }
 
@@ -220,7 +220,7 @@ namespace Clide
         {
             var flags = allowMultiple ? EXPANDFLAGS.EXPF_AddSelectItem : EXPANDFLAGS.EXPF_SelectItem;
 
-            var hr = solutionExplorer.Value.ExpandItem(hierarchy as IVsUIHierarchy, itemId, flags);
+            var hr = solutionExplorer.GetValue().ExpandItem(hierarchy as IVsUIHierarchy, itemId, flags);
 
             if (!ErrorHandler.Succeeded(hr))
             {

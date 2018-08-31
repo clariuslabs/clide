@@ -13,15 +13,15 @@ namespace Clide
         IAdapter<Project, IProjectNode>,
         IAdapter<ProjectItem, IItemNode>
     {
-        readonly Lazy<IVsSolution> vsSolution;
+        readonly JoinableLazy<IVsSolution> vsSolution;
         readonly Lazy<ISolutionExplorerNodeFactory> nodeFactory;
-        readonly Lazy<IVsHierarchyItemManager> hierarchyItemManager;
+        readonly JoinableLazy<IVsHierarchyItemManager> hierarchyItemManager;
 
         [ImportingConstructor]
         public DteToSolutionAdapter(
-            [Import(ContractNames.Interop.VsSolution)] Lazy<IVsSolution> vsSolution,
+            JoinableLazy<IVsSolution> vsSolution,
             Lazy<ISolutionExplorerNodeFactory> nodeFactory,
-            [Import(ContractNames.Interop.IVsHierarchyItemManager)] Lazy<IVsHierarchyItemManager> hierarchyItemManager)
+            JoinableLazy<IVsHierarchyItemManager> hierarchyItemManager)
         {
             this.vsSolution = vsSolution;
             this.nodeFactory = nodeFactory;
@@ -32,8 +32,8 @@ namespace Clide
             nodeFactory
                 .Value
                 .CreateNode(
-                    hierarchyItemManager.Value.GetHierarchyItem(
-                        vsSolution.Value as IVsHierarchy, VSConstants.VSITEMID_ROOT)) as ISolutionNode;
+                    hierarchyItemManager.GetValue().GetHierarchyItem(
+                        vsSolution.GetValue() as IVsHierarchy, VSConstants.VSITEMID_ROOT)) as ISolutionNode;
 
         public IProjectNode Adapt(Project from)
         {
@@ -52,12 +52,12 @@ namespace Clide
 
             IVsHierarchy project;
 
-            if (!ErrorHandler.Succeeded(vsSolution.Value
+            if (!ErrorHandler.Succeeded(vsSolution.GetValue()
                 .GetProjectOfUniqueName(uniqueName, out project)))
                 return null;
 
             return nodeFactory.Value
-                .CreateNode(hierarchyItemManager.Value.GetHierarchyItem(project, VSConstants.VSITEMID_ROOT))
+                .CreateNode(hierarchyItemManager.GetValue().GetHierarchyItem(project, VSConstants.VSITEMID_ROOT))
                 as IProjectNode;
         }
 
@@ -65,7 +65,7 @@ namespace Clide
         {
             IVsHierarchy project;
 
-            if (!ErrorHandler.Succeeded(vsSolution.Value
+            if (!ErrorHandler.Succeeded(vsSolution.GetValue()
                 .GetProjectOfUniqueName(from.ContainingProject.UniqueName, out project)))
                 return null;
 
@@ -79,7 +79,7 @@ namespace Clide
                 return null;
 
             return nodeFactory.Value
-                .CreateNode(hierarchyItemManager.Value.GetHierarchyItem(project, itemId))
+                .CreateNode(hierarchyItemManager.GetValue().GetHierarchyItem(project, itemId))
                 as IItemNode;
         }
     }

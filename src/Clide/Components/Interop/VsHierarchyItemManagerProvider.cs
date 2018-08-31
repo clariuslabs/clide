@@ -10,6 +10,8 @@ namespace Clide.Components.Interop
     [PartCreationPolicy(CreationPolicy.Shared)]
     internal class VsHierarchyItemManagerProvider
     {
+        [Export(ContractNames.Interop.IVsHierarchyItemManager)]
+        [Export(typeof(JoinableLazy<IVsHierarchyItemManager>))]
         readonly JoinableLazy<IVsHierarchyItemManager> hierarchyManager;
 
         [ImportingConstructor]

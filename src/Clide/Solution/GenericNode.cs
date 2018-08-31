@@ -21,7 +21,7 @@ namespace Clide
         public GenericNode(IVsHierarchyItem hierarchyNode,
             ISolutionExplorerNodeFactory nodeFactory,
             IAdapterService adapter,
-            Lazy<IVsUIHierarchyWindow> solutionExplorer)
+            JoinableLazy<IVsUIHierarchyWindow> solutionExplorer)
             : base(SolutionNodeKind.Generic, hierarchyNode, nodeFactory, adapter, solutionExplorer)
         {
         }

@@ -15,17 +15,17 @@ namespace Clide.Adapters
         IAdapter<ProjectNode, Project>,
         IAdapter<Project, IProjectNode>
     {
-        readonly Lazy<IVsSolution> vsSolution;
+        readonly JoinableLazy<IVsSolution> vsSolution;
         readonly Lazy<ISolutionExplorerNodeFactory> nodeFactory;
         readonly Lazy<ISolutionExplorer> solutionExplorer;
-        readonly Lazy<IVsHierarchyItemManager> hierarchyItemManager;
+        readonly JoinableLazy<IVsHierarchyItemManager> hierarchyItemManager;
 
         [ImportingConstructor]
         public MsBuildAdapter(
-            [Import(ContractNames.Interop.VsSolution)] Lazy<IVsSolution> vsSolution,
+            JoinableLazy<IVsSolution> vsSolution,
             Lazy<ISolutionExplorerNodeFactory> nodeFactory,
             Lazy<ISolutionExplorer> solutionExplorer,
-            [Import(ContractNames.Interop.IVsHierarchyItemManager)] Lazy<IVsHierarchyItemManager> hierarchyItemManager)
+            JoinableLazy<IVsHierarchyItemManager> hierarchyItemManager)
         {
             this.vsSolution = vsSolution;
             this.nodeFactory = nodeFactory;
@@ -53,9 +53,9 @@ namespace Clide.Adapters
             var guid = Guid.Empty;
             IVsHierarchy hierarchy;
             if (!String.IsNullOrEmpty(id) && Guid.TryParse(id, out guid) &&
-                ErrorHandler.Succeeded(vsSolution.Value.GetProjectOfGuid(ref guid, out hierarchy)))
+                ErrorHandler.Succeeded(vsSolution.GetValue().GetProjectOfGuid(ref guid, out hierarchy)))
             {
-                return (IProjectNode)nodeFactory.Value.CreateNode(hierarchyItemManager.Value.GetHierarchyItem(hierarchy, VSConstants.VSITEMID_ROOT));
+                return (IProjectNode)nodeFactory.Value.CreateNode(hierarchyItemManager.GetValue().GetHierarchyItem(hierarchy, VSConstants.VSITEMID_ROOT));
             }
 
             // Slow way next

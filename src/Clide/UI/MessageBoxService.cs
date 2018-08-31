@@ -19,7 +19,7 @@ namespace Clide
     {
         static readonly ITracer tracer = Tracer.Get<MessageBoxService>();
 
-        readonly Lazy<IVsUIShell> uiShell;
+        readonly JoinableLazy<IVsUIShell> uiShell;
         readonly JoinableTaskFactory jtf;
 
 
@@ -28,7 +28,7 @@ namespace Clide
         /// </summary>
         [ImportingConstructor]
         public MessageBoxService(
-            [Import(ContractNames.Interop.IVsUIShell)] Lazy<IVsUIShell> uiShell,
+            JoinableLazy<IVsUIShell> uiShell,
             JoinableTaskContext context)
         {
             this.uiShell = uiShell;
@@ -44,7 +44,7 @@ namespace Clide
             return jtf.Run(async () =>
             {
                 await jtf.SwitchToMainThreadAsync();
-                return uiShell.Value.ShowMessageBox(message, title, button, icon, defaultResult);
+                return uiShell.GetValue().ShowMessageBox(message, title, button, icon, defaultResult);
             });  
         }
 
@@ -57,7 +57,7 @@ namespace Clide
             return jtf.Run(async () =>
             {
                 await jtf.SwitchToMainThreadAsync();
-                return uiShell.Value.Prompt(message, title, button, icon, defaultResult);
+                return uiShell.GetValue().Prompt(message, title, button, icon, defaultResult);
             });
         }
     }

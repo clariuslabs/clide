@@ -5,6 +5,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Threading;
 using Xunit;
 
 namespace Clide.Solution
@@ -25,7 +26,9 @@ namespace Clide.Solution
             var solutionExplorer = components.DefaultExportProvider.GetExport<IVsUIHierarchyWindow>(ContractNames.Interop.SolutionExplorerWindow);
             var item = manager.GetHierarchyItem(GlobalServices.GetService<SVsSolution, IVsHierarchy>(), (uint)VSConstants.VSITEMID.Root);
 
-            solution = new SolutionNode(GlobalServices.Instance, item, factory, adapter, selection, solutionExplorer);
+#pragma warning disable VSSDK005 // Avoid instantiating JoinableTaskContext
+            solution = new SolutionNode(GlobalServices.Instance, item, factory, adapter, selection, JoinableLazy.Create(() => solutionExplorer.Value, taskFactory: new JoinableTaskContext().Factory));
+#pragma warning restore VSSDK005 // Avoid instantiating JoinableTaskContext
         }
 
         public void Dispose()

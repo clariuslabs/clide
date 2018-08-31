@@ -37,7 +37,7 @@ namespace Clide
             ISolutionExplorerNodeFactory nodeFactory,
             IAdapterService adapter,
             IVsSolutionSelection selection,
-            Lazy<IVsUIHierarchyWindow> solutionExplorer)
+            JoinableLazy<IVsUIHierarchyWindow> solutionExplorer)
             : base(SolutionNodeKind.Solution, hierarchyNode, nodeFactory, adapter, solutionExplorer)
         {
             this.nodeFactory = nodeFactory;

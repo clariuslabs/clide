@@ -24,8 +24,8 @@ namespace Clide
             IVsHierarchyItem hierarchyNode,
             ISolutionExplorerNodeFactory nodeFactory,
             IAdapterService adapter,
-            Lazy<IVsUIHierarchyWindow> solutionExplorer,
-            Lazy<IVsBooleanSymbolExpressionEvaluator> expressionEvaluator)
+            JoinableLazy<IVsUIHierarchyWindow> solutionExplorer,
+            JoinableLazy<IVsBooleanSymbolExpressionEvaluator> expressionEvaluator)
             : base(SolutionNodeKind.Project, hierarchyNode, nodeFactory, adapter, solutionExplorer)
         {
             properties = new Lazy<GlobalProjectProperties>(() => new GlobalProjectProperties(this));
@@ -33,7 +33,7 @@ namespace Clide
             Configuration = new ProjectConfiguration(new Lazy<EnvDTE.Project>(() => As<EnvDTE.Project>()));
         }
 
-        Lazy<IVsBooleanSymbolExpressionEvaluator> ExpressionEvaluator { get; }
+        JoinableLazy<IVsBooleanSymbolExpressionEvaluator> ExpressionEvaluator { get; }
 
         public IProjectConfiguration Configuration { get; }
 
@@ -139,7 +139,7 @@ namespace Clide
                     .GetProperty<string>((int)__VSHPROPID5.VSHPROPID_ProjectCapabilities);
 
                 if (!string.IsNullOrEmpty(projectCapabilities))
-                    return ExpressionEvaluator.Value.EvaluateExpression(capabilities, projectCapabilities);
+                    return ExpressionEvaluator.GetValue().EvaluateExpression(capabilities, projectCapabilities);
             }
 
             return false;

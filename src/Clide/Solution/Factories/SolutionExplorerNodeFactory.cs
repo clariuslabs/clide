@@ -19,14 +19,14 @@ namespace Clide
         List<ICustomSolutionExplorerNodeFactory> customFactories;
         List<ICustomSolutionExplorerNodeFactory> defaultFactories;
         IAdapterService adapter;
-        Lazy<IVsUIHierarchyWindow> solutionExplorer;
+        JoinableLazy<IVsUIHierarchyWindow> solutionExplorer;
 
         [ImportingConstructor]
         public SolutionExplorerNodeFactory(
             [ImportMany(ContractNames.FallbackNodeFactory)] IEnumerable<ICustomSolutionExplorerNodeFactory> defaultFactories,
             [ImportMany] IEnumerable<ICustomSolutionExplorerNodeFactory> customFactories,
             IAdapterService adapter,
-            [Import(ContractNames.Interop.SolutionExplorerWindow)] Lazy<IVsUIHierarchyWindow> solutionExplorer)
+            JoinableLazy<IVsUIHierarchyWindow> solutionExplorer)
         {
             this.defaultFactories = defaultFactories.ToList();
             this.customFactories = customFactories.ToList();

@@ -22,7 +22,7 @@ namespace Clide
             IVsHierarchyItem hierarchyNode,
             ISolutionExplorerNodeFactory nodeFactory,
             IAdapterService adapter,
-            Lazy<IVsUIHierarchyWindow> solutionExplorer)
+            JoinableLazy<IVsUIHierarchyWindow> solutionExplorer)
             : base(SolutionNodeKind.SolutionFolder, hierarchyNode, nodeFactory, adapter, solutionExplorer)
         {
             SolutionFolder = new Lazy<SolutionFolder>(

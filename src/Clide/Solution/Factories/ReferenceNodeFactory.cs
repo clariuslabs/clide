@@ -10,13 +10,13 @@ namespace Clide
     {
         Lazy<ISolutionExplorerNodeFactory> childNodeFactory;
         IAdapterService adapter;
-        Lazy<IVsUIHierarchyWindow> solutionExplorer;
+        JoinableLazy<IVsUIHierarchyWindow> solutionExplorer;
 
         [ImportingConstructor]
         public ReferenceNodeFactory(
             Lazy<ISolutionExplorerNodeFactory> childNodeFactory,
             IAdapterService adapter,
-            [Import(ContractNames.Interop.SolutionExplorerWindow)] Lazy<IVsUIHierarchyWindow> solutionExplorer)
+            JoinableLazy<IVsUIHierarchyWindow> solutionExplorer)
         {
             this.childNodeFactory = childNodeFactory;
             this.adapter = adapter;

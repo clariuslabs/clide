@@ -17,12 +17,12 @@ namespace Clide
     [PartCreationPolicy(CreationPolicy.Shared)]
     class DialogWindowFactory : IDialogWindowFactory
     {
-        readonly Lazy<IVsUIShell> uiShell;
+        readonly JoinableLazy<IVsUIShell> uiShell;
         readonly JoinableTaskFactory jtf;
 
         [ImportingConstructor]
         public DialogWindowFactory(
-            [Import(ContractNames.Interop.IVsUIShell)] Lazy<IVsUIShell> uiShell,
+            JoinableLazy<IVsUIShell> uiShell,
             JoinableTaskContext context)
         {
             this.uiShell = uiShell;
@@ -47,7 +47,7 @@ namespace Clide
                 jtf.Run(async () =>
                 {
                     await jtf.SwitchToMainThreadAsync();
-                    ErrorHandler.ThrowOnFailure(uiShell.Value.GetDialogOwnerHwnd(out var owner));
+                    ErrorHandler.ThrowOnFailure(uiShell.GetValue().GetDialogOwnerHwnd(out var owner));
                     new WindowInteropHelper(dialogWindow).Owner = owner;
                     dialogWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
                     dialogWindow.ShowInTaskbar = false;

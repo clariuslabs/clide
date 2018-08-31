@@ -4,23 +4,29 @@ using System.ComponentModel.Composition;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Threading;
 
 namespace Clide.Components.Interop
 {
     class VsUIHierarchyWindowProvider
     {
         IServiceProvider serviceProvider;
-        Lazy<IVsUIHierarchyWindow> solutionExplorer;
+
+        [Export(ContractNames.Interop.SolutionExplorerWindow)]
+        [Export(typeof(JoinableLazy<IVsUIHierarchyWindow>))]
+        JoinableLazy<IVsUIHierarchyWindow> solutionExplorer;
 
         [ImportingConstructor]
-        public VsUIHierarchyWindowProvider([Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider)
+        public VsUIHierarchyWindowProvider(
+            [Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider,
+            JoinableTaskContext jtc)
         {
             this.serviceProvider = serviceProvider;
-            solutionExplorer = new Lazy<IVsUIHierarchyWindow>(() => GetHierarchyWindow(EnvDTE.Constants.vsWindowKindSolutionExplorer));
+            solutionExplorer = new JoinableLazy<IVsUIHierarchyWindow>(() => GetHierarchyWindow(EnvDTE.Constants.vsWindowKindSolutionExplorer), jtc.Factory, true);
         }
 
         [Export(ContractNames.Interop.SolutionExplorerWindow)]
-        public IVsUIHierarchyWindow SolutionExplorer { get { return solutionExplorer.Value; } }
+        public IVsUIHierarchyWindow SolutionExplorer => solutionExplorer.GetValue();
 
 
         IVsUIHierarchyWindow GetHierarchyWindow(string windowKind)
