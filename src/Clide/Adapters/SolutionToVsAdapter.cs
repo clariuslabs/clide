@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Flavor;
 using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Clide
@@ -19,8 +20,26 @@ namespace Clide
 
         IVsProject IAdapter<ProjectNode, IVsProject>.Adapt(ProjectNode from) => from.HierarchyNode.GetActualHierarchy() as IVsProject;
 
-        IVsBuildPropertyStorage IAdapter<ProjectNode, IVsBuildPropertyStorage>.Adapt(ProjectNode from) => 
-            from.InnerHierarchyNode?.GetActualHierarchy() as IVsBuildPropertyStorage ?? 
-                from.HierarchyNode.GetActualHierarchy() as IVsBuildPropertyStorage;
+        IVsBuildPropertyStorage IAdapter<ProjectNode, IVsBuildPropertyStorage>.Adapt(ProjectNode from)
+        {
+            var result = from.InnerHierarchyNode?.GetActualHierarchy() as IVsBuildPropertyStorage;
+            if (result == null)
+            {
+                var hierarchy = from.HierarchyNode.GetActualHierarchy();
+
+                result = hierarchy as IVsBuildPropertyStorage;
+                if (result == null && hierarchy is FlavoredProjectBase)
+                {
+                    var innerVsHierarchyField = hierarchy
+                        .GetType()
+                        .GetField("_innerVsHierarchy", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+
+                    if (innerVsHierarchyField != null)
+                        result = innerVsHierarchyField.GetValue(hierarchy) as IVsBuildPropertyStorage;
+                }
+            }
+
+            return result;
+        }
     }
 }
