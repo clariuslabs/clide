@@ -19,7 +19,7 @@ namespace Clide
         {
             msBuildProject = project.As<Project>();
             dteProject = project.As<EnvDTE.Project>();
-            vsBuild = project.AsVsHierarchy() as IVsBuildPropertyStorage;
+            vsBuild = project.AsVsBuildPropertyStorage();
             accessor = new DynamicPropertyAccessor(this);
         }
 

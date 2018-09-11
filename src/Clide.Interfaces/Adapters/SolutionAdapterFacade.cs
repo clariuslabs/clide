@@ -149,6 +149,12 @@ public static partial class Adapters
     /// <returns>The <see cref="IVsProject"/> or <see langword="null"/> if conversion is not possible.</returns>
     public static IVsProject AsVsProject(this IProjectNode project) => project.As<IVsProject>();
 
+    /// <summary>
+    /// Adapts a <see cref="IProjectNode"/> to an <see cref="IVsBuildPropertyStorage"/>.
+    /// </summary>
+    /// <returns>The <see cref="IVsBuildPropertyStorage"/> or <see langword="null"/> if conversion is not possible.</returns>
+    public static IVsBuildPropertyStorage AsVsBuildPropertyStorage(this IProjectNode project) => project.As<IVsBuildPropertyStorage>();
+
     #endregion
 
     #region VSLang

@@ -24,7 +24,7 @@ namespace Clide
             this.project = project;
             msBuildProject = project.AsMsBuildProject();
             dteProject = project.As<EnvDTE.Project>();
-            vsBuild = project.AsVsHierarchy() as IVsBuildPropertyStorage;
+            vsBuild = project.AsVsBuildPropertyStorage();
 
             if (msBuildProject == null || vsBuild == null)
                 tracer.Warn(Strings.UserProjectProperties.NonMsBuildProject(project.Text));

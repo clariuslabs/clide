@@ -17,11 +17,11 @@ namespace Clide
     [DebuggerDisplay("{Name} ({Kind})")]
     public abstract class SolutionExplorerNode : ISolutionExplorerNode
     {
-        IVsHierarchyItem hierarchyItem;
-        ISolutionExplorerNodeFactory nodeFactory;
-        IAdapterService adapter;
+        protected IVsHierarchyItem hierarchyItem;
+        protected ISolutionExplorerNodeFactory nodeFactory;
+        protected IAdapterService adapter;
 
-        JoinableLazy<IVsUIHierarchyWindow> solutionExplorer;
+        protected JoinableLazy<IVsUIHierarchyWindow> solutionExplorer;
         Lazy<ISolutionExplorerNode> parent;
         Lazy<string> name;
         Lazy<bool> isHidden;
