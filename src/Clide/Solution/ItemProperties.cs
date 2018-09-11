@@ -23,7 +23,7 @@ namespace Clide
         {
             this.item = item.HierarchyNode.GetExtenderObject() as ProjectItem;
             node = item.HierarchyNode;
-            msBuild = item.HierarchyNode.GetRoot().HierarchyIdentity.Hierarchy as IVsBuildPropertyStorage;
+            msBuild = item.OwningProject.AsVsBuildPropertyStorage();
         }
 
         public override IEnumerable<string> GetDynamicMemberNames() => GetPropertyNames();

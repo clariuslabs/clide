@@ -11,6 +11,8 @@
     <IsProductComponent>true</IsProductComponent>
     <BypassVsixValidation Condition="'$(CI)' == 'true'">true</BypassVsixValidation>
 
+    <CreateVsixContainer>true</CreateVsixContainer>
+    
     <Experimental>true</Experimental>
     <Experimental Condition="'$(CI)' == 'true'">false</Experimental>
     <SystemComponent>false</SystemComponent>
