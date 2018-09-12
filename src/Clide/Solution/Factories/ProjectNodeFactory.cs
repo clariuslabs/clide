@@ -2,6 +2,7 @@
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Flavor;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Threading;
 
@@ -59,7 +60,8 @@ namespace Clide
                 }
             }
 
-            if (!(actualItem.GetActualHierarchy() is IVsProject))
+            var hierarchy = actualItem.GetActualHierarchy();
+            if (!(actualItem.GetActualHierarchy() is IVsProject) && !(hierarchy is FlavoredProjectBase))
                 return false;
 
             // Finally, solution folders look like projects, but they are not.
