@@ -38,5 +38,10 @@ namespace Clide
         /// </returns>
         /// <exception cref="System.NotImplementedException"></exception>
         public override T As<T>() => Adapter.Adapt(this).As<T>();
+
+        public IProjectNode SourceProject =>
+            this.AsReference()
+                ?.SourceProject
+                ?.AsProjectNode();
     }
 }
