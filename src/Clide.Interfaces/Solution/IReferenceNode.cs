@@ -5,5 +5,9 @@
     /// </summary>
     public interface IReferenceNode : IProjectItemNode
     {
+        /// <summary>
+        /// Gets the referenced project when the instance is a project reference
+        /// </summary>
+        IProjectNode SourceProject { get; }
     }
 }
