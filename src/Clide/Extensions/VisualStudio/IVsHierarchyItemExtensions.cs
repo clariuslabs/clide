@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Flavor;
 using Microsoft.VisualStudio.Shell.Interop;
 using Ole = Microsoft.VisualStudio.OLE.Interop;
 
@@ -19,6 +20,26 @@ namespace Clide
             return item.HierarchyIdentity.IsNestedItem ?
                 item.HierarchyIdentity.NestedHierarchy :
                 item.HierarchyIdentity.Hierarchy;
+        }
+
+        /// <summary>
+        /// Gets the inner hierarchy of the flavored proejct
+        /// when the actual hierarchy of the item is an instance of <see cref="FlavoredProjectBase"/>
+        /// </summary>
+        public static bool TryGetInnerHierarchy(this IVsHierarchyItem item, out IVsHierarchy innerHierarchy)
+        {
+            innerHierarchy = null;
+
+            var hierarchy = item.GetActualHierarchy();
+            if (hierarchy is FlavoredProjectBase)
+            {
+                innerHierarchy = hierarchy
+                     .GetType()
+                     .GetField("_innerVsHierarchy", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)?
+                     .GetValue(hierarchy) as IVsHierarchy;
+            }
+
+            return innerHierarchy != null;
         }
 
         /// <summary>

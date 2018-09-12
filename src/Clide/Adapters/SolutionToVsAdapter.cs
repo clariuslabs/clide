@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Flavor;
 using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Clide
@@ -18,26 +17,19 @@ namespace Clide
 
         IVsSolution IAdapter<SolutionNode, IVsSolution>.Adapt(SolutionNode from) => from.HierarchyNode.GetServiceProvider().GetService<SVsSolution, IVsSolution>();
 
-        IVsProject IAdapter<ProjectNode, IVsProject>.Adapt(ProjectNode from) => from.HierarchyNode.GetActualHierarchy() as IVsProject;
+        IVsProject IAdapter<ProjectNode, IVsProject>.Adapt(ProjectNode from) => GetVsService<IVsProject>(from);
 
-        IVsBuildPropertyStorage IAdapter<ProjectNode, IVsBuildPropertyStorage>.Adapt(ProjectNode from)
+        IVsBuildPropertyStorage IAdapter<ProjectNode, IVsBuildPropertyStorage>.Adapt(ProjectNode from) => GetVsService<IVsBuildPropertyStorage>(from);
+
+        T GetVsService<T>(ProjectNode from) where T : class
         {
-            var result = from.InnerHierarchyNode?.GetActualHierarchy() as IVsBuildPropertyStorage;
+            var result = from.InnerHierarchyNode?.GetActualHierarchy() as T;
+
             if (result == null)
-            {
-                var hierarchy = from.HierarchyNode.GetActualHierarchy();
+                result = from.HierarchyNode.GetActualHierarchy() as T;
 
-                result = hierarchy as IVsBuildPropertyStorage;
-                if (result == null && hierarchy is FlavoredProjectBase)
-                {
-                    var innerVsHierarchyField = hierarchy
-                        .GetType()
-                        .GetField("_innerVsHierarchy", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
-
-                    if (innerVsHierarchyField != null)
-                        result = innerVsHierarchyField.GetValue(hierarchy) as IVsBuildPropertyStorage;
-                }
-            }
+            if (result == null && from.HierarchyNode.TryGetInnerHierarchy(out var innerHierarchy))
+                result = innerHierarchy as T;
 
             return result;
         }
