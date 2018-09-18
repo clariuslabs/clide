@@ -43,5 +43,8 @@ namespace Clide
             this.AsReference()
                 ?.SourceProject
                 ?.AsProjectNode();
+
+        private string path;
+        public string Path => path ?? (path = this.AsReference()?.Path);
     }
 }
