@@ -9,5 +9,7 @@
         /// Gets the referenced project when the instance is a project reference
         /// </summary>
         IProjectNode SourceProject { get; }
+
+        string Path { get; }
     }
 }
