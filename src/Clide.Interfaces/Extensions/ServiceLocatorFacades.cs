@@ -90,7 +90,8 @@ public static class ServiceLocatorFacades
 
         IServiceProvider services;
         Ole.IServiceProvider site;
-        if (ErrorHandler.Failed(hierarchy.GetSite(out site)))
+        // Still when succeedeed, site might be null
+        if (ErrorHandler.Failed(hierarchy.GetSite(out site)) || site == null)
             services = Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider;
         else
             services = new OleServiceProvider(site);
@@ -117,7 +118,7 @@ public static class ServiceLocatorFacades
 
         IServiceProvider serviceProvider;
         Ole.IServiceProvider site;
-        if (ErrorHandler.Failed(((IVsHierarchy)project).GetSite(out site)))
+        if (ErrorHandler.Failed(((IVsHierarchy)project).GetSite(out site)) || site == null)
             serviceProvider = Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider;
         else
             serviceProvider = new OleServiceProvider(site);

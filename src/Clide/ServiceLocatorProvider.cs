@@ -59,7 +59,7 @@ namespace Clide
 
             IServiceProvider services;
             Ole.IServiceProvider site;
-            if (ErrorHandler.Failed(hierarchy.GetSite(out site)))
+            if (ErrorHandler.Failed(hierarchy.GetSite(out site)) || site == null)
                 services = Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider;
             else
                 services = new OleServiceProvider(site);
