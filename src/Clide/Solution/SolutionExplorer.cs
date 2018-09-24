@@ -18,6 +18,7 @@ namespace Clide
         IServiceProvider services;
         IVsHierarchyItemManager hierarchy;
         ISolutionExplorerNodeFactory factory;
+        JoinableLazy<ISolutionNode> solution;
 
         [ImportingConstructor]
         public SolutionExplorer(
@@ -37,18 +38,15 @@ namespace Clide
             this.hierarchy = hierarchy;
             this.factory = factory;
             toolWindow = new Lazy<VsToolWindow>(() => new VsToolWindow(services, StandardToolWindows.ProjectExplorer));
-        }
 
-        public ISolutionNode Solution
-        {
-            get
-            {
-                return factory.CreateNode(
+            solution = new JoinableLazy<ISolutionNode>(() =>
+                factory.CreateNode(
                     hierarchy.GetHierarchyItem(
                         services.GetService<SVsSolution, IVsSolution>() as IVsHierarchy, (uint)VSConstants.VSITEMID.Root))
-                    as ISolutionNode;
-            }
+                    as ISolutionNode, executeOnMainThread: true);
         }
+
+        public ISolutionNode Solution => solution.GetValue();
 
         public bool IsVisible => toolWindow.Value.IsVisible;
 
