@@ -60,7 +60,12 @@ namespace Clide
             {
                 var selected = selection.GetActiveHierarchy();
                 if (selected == null)
-                    return null;
+                {
+                    var selectedItems = selection.GetSelection();
+
+                    if (selectedItems.Count() == 1)
+                        selected = selectedItems.First();
+                }
 
                 return nodeFactory.CreateNode(selected) as IProjectNode;
             }
