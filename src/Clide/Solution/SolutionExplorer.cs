@@ -7,6 +7,7 @@ using Clide.Interop;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Threading;
 
 namespace Clide
 {
@@ -28,7 +29,8 @@ namespace Clide
             // have the PartCreationPolicy.Shared attribute and is newed up in whatever context 
             // you're requesting it from.
             [Import(ContractNames.Interop.IVsHierarchyItemManager)] IVsHierarchyItemManager hierarchy,
-            ISolutionExplorerNodeFactory factory)
+            ISolutionExplorerNodeFactory factory,
+            JoinableTaskContext jtc)
         {
             Guard.NotNull(nameof(services), services);
             Guard.NotNull(nameof(hierarchy), hierarchy);
@@ -43,7 +45,7 @@ namespace Clide
                 factory.CreateNode(
                     hierarchy.GetHierarchyItem(
                         services.GetService<SVsSolution, IVsSolution>() as IVsHierarchy, (uint)VSConstants.VSITEMID.Root))
-                    as ISolutionNode, executeOnMainThread: true);
+                    as ISolutionNode, jtc.Factory, executeOnMainThread: true);
         }
 
         public ISolutionNode Solution => solution.GetValue();
