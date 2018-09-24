@@ -25,7 +25,7 @@ namespace Clide
         Lazy<ISolutionExplorerNode> parent;
         Lazy<string> name;
         Lazy<bool> isHidden;
-        Lazy<ISolutionNode> solutionNode;
+        JoinableLazy<ISolutionNode> solutionNode;
 
         IVsHierarchy hierarchy;
         uint itemId;
@@ -64,7 +64,7 @@ namespace Clide
                 new Lazy<bool>(() => getHiddenProperty() || parent.Value.IsHidden) :
                 new Lazy<bool>(() => getHiddenProperty());
 
-            solutionNode = new Lazy<ISolutionNode>(() => this.nodeFactory.CreateNode(this.hierarchyItem.GetTopMost()) as ISolutionNode);
+            solutionNode = new JoinableLazy<ISolutionNode>(() => this.nodeFactory.CreateNode(this.hierarchyItem.GetTopMost()) as ISolutionNode, true);
 
             if (hierarchyItem.HierarchyIdentity.IsNestedItem)
             {
@@ -96,7 +96,7 @@ namespace Clide
         /// <summary>
         /// Gets the owning solution.
         /// </summary>
-        public virtual ISolutionNode OwningSolution => solutionNode.Value;
+        public virtual ISolutionNode OwningSolution => solutionNode.GetValue();
 
         /// <summary>
         /// Gets the node display name, as returned by the <see cref="VsHierarchyPropID.Name"/> property.
