@@ -6,14 +6,19 @@ using System.Collections.Specialized;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.VisualStudio.Threading;
+
 namespace Clide
 {
 
     public class FakeSolutionExplorer : ISolutionExplorer
     {
-        public ISolutionNode Solution { get; set; }
+        public Awaitable<ISolutionNode> Solution { get; set; }
 
-        public IEnumerable<ISolutionExplorerNode> SelectedNodes { get { return Solution.SelectedNodes; } }
+#pragma warning disable VSSDK005 // Avoid instantiating JoinableTaskContext
+        public IEnumerable<ISolutionExplorerNode> SelectedNodes { get { return new JoinableTaskContext().Factory.Run(async () => (await Solution).SelectedNodes); } }
+#pragma warning restore VSSDK005 // Avoid instantiating JoinableTaskContext
 
         public bool IsVisible { get; set; }
 
