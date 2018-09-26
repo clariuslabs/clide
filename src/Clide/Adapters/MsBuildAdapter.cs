@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Threading;
 using System;
 using System.ComponentModel.Composition;
 using System.IO;
@@ -19,18 +20,21 @@ namespace Clide.Adapters
         readonly Lazy<ISolutionExplorerNodeFactory> nodeFactory;
         readonly Lazy<ISolutionExplorer> solutionExplorer;
         readonly JoinableLazy<IVsHierarchyItemManager> hierarchyItemManager;
+        readonly JoinableTaskFactory asyncManager;
 
         [ImportingConstructor]
         public MsBuildAdapter(
             JoinableLazy<IVsSolution> vsSolution,
             Lazy<ISolutionExplorerNodeFactory> nodeFactory,
             Lazy<ISolutionExplorer> solutionExplorer,
-            JoinableLazy<IVsHierarchyItemManager> hierarchyItemManager)
+            JoinableLazy<IVsHierarchyItemManager> hierarchyItemManager,
+            JoinableTaskContext jtc)
         {
             this.vsSolution = vsSolution;
             this.nodeFactory = nodeFactory;
             this.solutionExplorer = solutionExplorer;
             this.hierarchyItemManager = hierarchyItemManager;
+            this.asyncManager = jtc.Factory;
         }
 
         public Project Adapt(EnvDTE.Project from) =>
@@ -59,7 +63,9 @@ namespace Clide.Adapters
             }
 
             // Slow way next
-            return solutionExplorer.Value.Solution.FindProject(x => x.PhysicalPath.Equals(from.FullPath, StringComparison.OrdinalIgnoreCase));
+            return asyncManager.Run(async () =>
+                (await solutionExplorer.Value.Solution)
+                    .FindProject(x => x.PhysicalPath.Equals(from.FullPath, StringComparison.OrdinalIgnoreCase)));
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Clide
         /// Gets the current solution, which might be an 
         /// empty one if no solution is open.
         /// </summary>
-		ISolutionNode Solution { get; }
+		Awaitable<ISolutionNode> Solution { get; }
 
         /// <summary>
         /// Gets the currently selected nodes in the solution explorer tree, 

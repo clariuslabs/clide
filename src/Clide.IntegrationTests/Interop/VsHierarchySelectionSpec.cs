@@ -27,7 +27,7 @@ namespace Clide.Interop
         }
 
         [VsixFact]
-        public void when_retrieving_active_hierarchy_then_succeeds()
+        public async System.Threading.Tasks.Task when_retrieving_active_hierarchy_then_succeeds()
         {
             var library = fixture.Solution.FindProject(x => x.Text == "CsLibrary");
             Assert.NotNull(library);
@@ -36,11 +36,11 @@ namespace Clide.Interop
 
             library = fixture.Solution.FindProject(x => x.Text == "CsLibrary");
 
-            Assert.Equal(library, explorer.Solution.ActiveProject);
+            Assert.Equal(library, (await explorer.Solution).ActiveProject);
         }
 
         [VsixFact]
-        public void when_selection_is_item_then_active_hierarchy_is_owning_project()
+        public async System.Threading.Tasks.Task when_selection_is_item_then_active_hierarchy_is_owning_project()
         {
             var library = fixture.Solution.FindProject(x => x.Text == "CsLibrary");
             Assert.NotNull(library);
@@ -48,7 +48,7 @@ namespace Clide.Interop
             var item = library.Nodes.OfType<IItemNode>().FirstOrDefault();
             item.Select();
 
-            var active = explorer.Solution.ActiveProject;
+            var active = (await explorer.Solution).ActiveProject;
             Assert.Equal(library, active);
 
             var selected = selection.GetSelection().FirstOrDefault();
@@ -59,7 +59,7 @@ namespace Clide.Interop
         }
 
         [VsixFact]
-        public void when_selection_is_multiple_items_of_same_hierarchy_then_active_hierarchy_is_owning_project()
+        public async System.Threading.Tasks.Task when_selection_is_multiple_items_of_same_hierarchy_then_active_hierarchy_is_owning_project()
         {
             var library = fixture.Solution.FindProject(x => x.Text == "CsLibrary");
             Assert.NotNull(library);
@@ -71,13 +71,13 @@ namespace Clide.Interop
             var selected = selection.GetSelection().ToList();
             Assert.Equal(2, selected.Count);
 
-            var active = explorer.Solution.ActiveProject;
+            var active = (await explorer.Solution).ActiveProject;
 
             Assert.Equal(library, active);
         }
 
         [VsixFact]
-        public void when_selection_is_multiple_projects_then_active_hierarchy_is_null()
+        public async System.Threading.Tasks.Task when_selection_is_multiple_projects_then_active_hierarchy_is_null()
         {
             fixture.Solution.FindProject(x => x.Text == "CsLibrary").Select(false);
             fixture.Solution.FindProject(x => x.Text == "VbLibrary").Select(true);
@@ -85,13 +85,13 @@ namespace Clide.Interop
             var selected = selection.GetSelection().ToList();
             Assert.Equal(2, selected.Count);
 
-            var active = explorer.Solution.ActiveProject;
+            var active = (await explorer.Solution).ActiveProject;
 
             Assert.Null(active);
         }
 
         [VsixFact]
-        public void when_selection_contains_multiple_items_from_different_hierarchies_then_active_hierarchy_is_null()
+        public async System.Threading.Tasks.Task when_selection_contains_multiple_items_from_different_hierarchies_then_active_hierarchy_is_null()
         {
             fixture.Solution.FindProject(x => x.Text == "CsLibrary").Nodes.OfType<IItemNode>().First().Select(false);
             fixture.Solution.FindProject(x => x.Text == "VbLibrary").Nodes.OfType<IItemNode>().First().Select(true);
@@ -99,7 +99,7 @@ namespace Clide.Interop
             var selected = selection.GetSelection().ToList();
             Assert.Equal(2, selected.Count);
 
-            var active = explorer.Solution.ActiveProject;
+            var active = (await explorer.Solution).ActiveProject;
 
             Assert.Null(active);
         }

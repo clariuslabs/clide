@@ -33,6 +33,11 @@ namespace Clide
         }
 
         /// <summary>
+        /// Gets a value indicating whether the value factory has been invoked
+        /// </summary>
+        public bool IsValueCreated => asyncLazy.IsValueCreated;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="JoinableLazy{T}"/> class. 
         /// A default TaskFactory will be used to execute the lazy initialization. 
         /// The default value is <see cref="ThreadHelper.JoinableTaskFactory"/>, however it can be overriden 

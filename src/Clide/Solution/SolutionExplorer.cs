@@ -19,7 +19,7 @@ namespace Clide
         IServiceProvider services;
         IVsHierarchyItemManager hierarchy;
         ISolutionExplorerNodeFactory factory;
-        JoinableLazy<ISolutionNode> solution;
+        JoinableTaskFactory asyncManager;
 
         [ImportingConstructor]
         public SolutionExplorer(
@@ -39,16 +39,19 @@ namespace Clide
             this.services = services;
             this.hierarchy = hierarchy;
             this.factory = factory;
+            this.asyncManager = jtc.Factory;
             toolWindow = new Lazy<VsToolWindow>(() => new VsToolWindow(services, StandardToolWindows.ProjectExplorer));
-
-            solution = new JoinableLazy<ISolutionNode>(() =>
-                factory.CreateNode(
-                    hierarchy.GetHierarchyItem(
-                        services.GetService<SVsSolution, IVsSolution>() as IVsHierarchy, (uint)VSConstants.VSITEMID.Root))
-                    as ISolutionNode, jtc.Factory, executeOnMainThread: true);
         }
 
-        public ISolutionNode Solution => solution.GetValue();
+        public Awaitable<ISolutionNode> Solution => Awaitable.Create(async () =>
+        {
+            await asyncManager.SwitchToMainThreadAsync();
+
+            return factory.CreateNode(
+                hierarchy.GetHierarchyItem(
+                    services.GetService<SVsSolution, IVsSolution>() as IVsHierarchy, (uint)VSConstants.VSITEMID.Root))
+                as ISolutionNode;
+        });
 
         public bool IsVisible => toolWindow.Value.IsVisible;
 
@@ -62,16 +65,14 @@ namespace Clide
             toolWindow.Value.Close();
         }
 
-        public IEnumerable<ISolutionExplorerNode> SelectedNodes
-        {
-            get
+        public IEnumerable<ISolutionExplorerNode> SelectedNodes =>
+            asyncManager.Run(async () =>
             {
-                var solution = Solution;
+                var solution = await Solution;
                 if (solution == null)
                     return Enumerable.Empty<ISolutionExplorerNode>();
 
                 return solution.SelectedNodes;
-            }
-        }
+            });
     }
 }

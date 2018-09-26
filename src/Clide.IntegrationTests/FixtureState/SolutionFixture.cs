@@ -14,7 +14,7 @@ namespace Clide
         // We cache this since it's sometimes changed by VS or a running test
         static string baseDirectory = Directory.GetCurrentDirectory();
 
-        Lazy<ISolutionNode> solution;
+        JoinableLazy<ISolutionNode> solution;
         string tempDir;
         string solutionFile;
 
@@ -52,7 +52,7 @@ namespace Clide
                 solutionFile = Path.Combine(tempDir, Path.GetFileName(solutionFile));
             }
 
-            solution = new Lazy<ISolutionNode>(() =>
+            solution = new JoinableLazy<ISolutionNode>(async () =>
             {
                 try
                 {
@@ -77,7 +77,7 @@ namespace Clide
                             .EnsureSolutionIsLoaded((uint)(__VSBSLFLAGS.VSBSLFLAGS_LoadAllPendingProjects | __VSBSLFLAGS.VSBSLFLAGS_LoadBuildDependencies));
                     }
 
-                    return GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<ISolutionExplorer>().Solution;
+                    return await GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<ISolutionExplorer>().Solution;
                 }
                 catch (Exception ex)
                 {
@@ -88,7 +88,7 @@ namespace Clide
             // If the collection is being created inside the VS process, 
             // instantiate the value right now to cause the solution to open.
             if (GlobalServices.GetService<DTE>() != null)
-                Assert.NotNull(solution.Value);
+                Assert.NotNull(solution.GetValue());
         }
 
         void Try(Action action)
@@ -100,7 +100,7 @@ namespace Clide
             catch { }
         }
 
-        public ISolutionNode Solution => solution.Value;
+        public ISolutionNode Solution => solution.GetValue();
 
         public void Dispose()
         {
