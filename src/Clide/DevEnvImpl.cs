@@ -1,10 +1,10 @@
-﻿using EnvDTE;
+﻿using System;
+using System.ComponentModel.Composition;
+using EnvDTE;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Threading;
-using System;
-using System.ComponentModel.Composition;
-using System.Threading.Tasks;
 
 namespace Clide
 {
@@ -22,6 +22,7 @@ namespace Clide
         readonly JoinableLazy<bool> isElevated;
         readonly Lazy<IErrorsManager> errorsManager;
         readonly Lazy<IOutputWindowManager> outputWindow;
+        readonly JoinableLazy<DevEnvInfo> devEnvInfo;
 
         [ImportingConstructor]
         public DevEnvImpl(
@@ -31,6 +32,7 @@ namespace Clide
             Lazy<IErrorsManager> errorsManager,
             Lazy<IOutputWindowManager> outputWindow,
             Lazy<IStatusBar> status, 
+            JoinableLazy<DevEnvInfo> devEnvInfo,
             JoinableTaskContext context)
         {
             jtf = context.Factory;
@@ -40,22 +42,25 @@ namespace Clide
             this.status = status;
             this.errorsManager = errorsManager;
             this.outputWindow = outputWindow;
+            this.devEnvInfo = devEnvInfo;
 
             TracingExtensions.ErrorsManager = this.errorsManager.Value;
 
             isElevated = JoinableLazy.Create(() =>
             {
-                Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                ThreadHelper.ThrowIfNotOnUIThread();
                 var shell = ServiceLocator.TryGetService<SVsShell, IVsShell3>();
                 if (shell == null)
                     return false;
 
                 shell.IsRunningElevated(out var elevated);
                 return elevated;
-            }, jtf, true);
+            }, jtf, executeOnMainThread: true);
         }
 
-        public bool IsElevated => jtf.Run(async () => await isElevated.GetValueAsync());
+        public bool IsElevated => isElevated.GetValue();
+
+        public DevEnvInfo Info => devEnvInfo.GetValue();
 
         public IDialogWindowFactory DialogWindowFactory => dialogFactory.Value;
 
@@ -86,7 +91,7 @@ namespace Clide
                     // Sometimes when in the middle of some long-running build, the cancel command 
                     // may not kick in immediately. We re-issue it after a bit.
                     dte.ExecuteCommand("Build.Cancel");
-                    await Task.Delay(100);
+                    await System.Threading.Tasks.Task.Delay(100);
                 }
 
                 dte.Quit();
@@ -109,7 +114,7 @@ namespace Clide
                     // Sometimes when in the middle of some long-running build, the cancel command 
                     // may not kick in immediately. We re-issue it after a bit.
                     dte.ExecuteCommand("Build.Cancel");
-                    await Task.Delay(100);
+                    await System.Threading.Tasks.Task.Delay(100);
                 }
 
                 var shell = ServiceLocator.GetService<SVsShell, IVsShell4>();
