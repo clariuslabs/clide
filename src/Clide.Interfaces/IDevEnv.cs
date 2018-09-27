@@ -9,6 +9,11 @@
         bool IsElevated { get; }
 
         /// <summary>
+        /// Gets environmental information about the current instance of Visual Studio 
+        /// </summary>
+        DevEnvInfo Info { get; }
+
+        /// <summary>
         /// Gets the dialog window factory.
         /// </summary>
         IDialogWindowFactory DialogWindowFactory { get; }
