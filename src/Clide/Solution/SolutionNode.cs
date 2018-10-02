@@ -44,7 +44,10 @@ namespace Clide
             dteSolution = new Lazy<Solution2>(() => (Solution2)services.GetService<DTE>().Solution);
             this.selection = selection;
             solution = (IVsSolution2)hierarchyNode.HierarchyIdentity.Hierarchy;
+            Configuration = new SolutionConfiguration(new Lazy<Solution>(() => this.AsSolution()));
         }
+
+        public ISolutionConfiguration Configuration { get; }
 
         /// <summary>
         /// Gets the currently active project (if single), which can be the selected project, or
