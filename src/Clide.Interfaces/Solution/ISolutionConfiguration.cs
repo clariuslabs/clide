@@ -14,7 +14,7 @@ namespace Clide
         /// <summary>
         /// Changes the platform in the current active solution configuration
         /// </summary>
-        /// <param name="platform">The new platform name to be selcted</param>
+        /// <param name="platform">The new platform name to be selected</param>
         /// <returns></returns>
         Task ChangePlatformAsync(string platform);
     }
