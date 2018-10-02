@@ -34,5 +34,15 @@ namespace Clide
         /// Gets all the target platform names.
         /// </summary>
         IEnumerable<string> Platforms { get; }
+
+        /// <summary>
+        /// Gets true if the project is marked to be deployed in the current active configuration
+        /// </summary>
+        Awaitable<bool> IsDeployEnabled { get; }
+
+        /// <summary>
+        /// Gets true if the project is marked to be built in the current active configuration
+        /// </summary>
+        Awaitable<bool> IsBuildEnabled { get; }
     }
 }

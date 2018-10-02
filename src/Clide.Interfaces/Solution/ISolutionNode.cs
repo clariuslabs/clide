@@ -62,5 +62,10 @@ namespace Clide
         /// Creates a solution folder under the solution root.
         /// </summary>
 		ISolutionFolderNode CreateSolutionFolder(string name);
+
+        /// <summary>
+        /// Gets the active solution configuration
+        /// </summary>
+        ISolutionConfiguration Configuration { get; }
     }
 }
