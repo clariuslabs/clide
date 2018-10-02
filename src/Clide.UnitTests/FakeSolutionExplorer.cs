@@ -45,6 +45,7 @@ namespace Clide
         public virtual bool IsOpen { get; set; }
         public virtual string PhysicalPath { get; set; }
         public virtual IEnumerable<ISolutionExplorerNode> SelectedNodes { get; set; }
+        public ISolutionConfiguration Configuration { get; set; }
 
         public virtual void Close(bool saveFirst = true)
         {
