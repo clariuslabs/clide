@@ -1,4 +1,5 @@
 ﻿using EnvDTE;
+using Microsoft.VisualStudio.Shell;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -46,5 +47,52 @@ namespace Clide
                     .Select(s => s.Replace(" ", "").Trim());
             }
         }
+
+        public Awaitable<bool> IsDeployEnabled => Awaitable.Create(async () =>
+        {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+            var solution = project.Value.DTE.Solution;
+
+            if (solution.SolutionBuild.ActiveConfiguration != null)
+            {
+                var projectPath = project.Value.FullName;
+
+                foreach (EnvDTE.SolutionContext context in solution.SolutionBuild.ActiveConfiguration.SolutionContexts)
+                {
+                    string projectName = context.ProjectName;
+                    if (projectPath.EndsWith(projectName))
+                    {
+                        return context.ShouldDeploy;
+                    }
+                }
+            }
+            return false;
+        });
+
+        public Awaitable<bool> IsBuildEnabled => Awaitable.Create(async () =>
+        {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+            var solution = project.Value.DTE.Solution;
+
+            if (solution.SolutionBuild.ActiveConfiguration != null)
+            {
+                var projectPath = project.Value.FullName;
+
+                foreach (EnvDTE.SolutionContext context in solution.SolutionBuild.ActiveConfiguration.SolutionContexts)
+                {
+                    string projectName = context.ProjectName;
+                    if (projectPath.EndsWith(projectName))
+                    {
+                        return context.ShouldBuild;
+                    }
+                }
+            }
+            return false;
+        });
+
+
+
     }
 }
