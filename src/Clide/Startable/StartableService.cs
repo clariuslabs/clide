@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
@@ -12,6 +13,9 @@ namespace Clide
     class StartableService : IStartableService
     {
         readonly IEnumerable<Lazy<IStartable, IStartableMetadata>> components;
+        readonly ConcurrentDictionary<IStartableMetadata, StartableContextParseResult> contextByMetadata =
+            new ConcurrentDictionary<IStartableMetadata, StartableContextParseResult>();
+
 
         [ImportingConstructor]
         public StartableService([ImportMany] IEnumerable<Lazy<IStartable, IStartableMetadata>> components)
@@ -28,9 +32,20 @@ namespace Clide
                 contextGuid = Guid.Empty;
 
             var componentsToBeStarted = components
-                .Where(x =>
-                    string.Equals(x.Metadata.Context, context, StringComparison.OrdinalIgnoreCase) ||
-                    (contextGuid != Guid.Empty && x.Metadata.ContextGuid == contextGuid));
+                .Where(component =>
+                {
+                    // Evaluate and cache the result of parsing the startable context
+                    var metadataContext = contextByMetadata.GetOrAdd(
+                        component.Metadata,
+                        metadata => new StartableContextParseResult(metadata.Context));
+
+                    // Use context guids
+                    if (contextGuid != Guid.Empty)
+                        return metadataContext.Guids.Any(x => x == contextGuid);
+
+                    // Use context strings
+                    return metadataContext.Values.Any(x => string.Equals(x, context, StringComparison.OrdinalIgnoreCase));
+                });
 
             foreach (var component in componentsToBeStarted.OrderBy(x => x.Metadata.Order))
             {
@@ -39,6 +54,25 @@ namespace Clide
 
                 await component.Value.StartAsync();
             }
+        }
+
+        class StartableContextParseResult
+        {
+            public StartableContextParseResult(string context)
+            {
+                Values = context.Split("|".ToCharArray(), StringSplitOptions.RemoveEmptyEntries) ?? Enumerable.Empty<string>();
+
+                var guids = new List<Guid>();
+                foreach (var value in Values)
+                    if (Guid.TryParse(value, out var guid))
+                        guids.Add(guid);
+
+                Guids = guids;
+            }
+
+            public IEnumerable<string> Values { get; }
+
+            public IEnumerable<Guid> Guids { get; }
         }
     }
 }
