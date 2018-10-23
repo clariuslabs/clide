@@ -7,7 +7,7 @@ namespace Clide
     /// Provides the metadata attriute to export a component that needs to be started
     /// </summary>
     [MetadataAttribute]
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class StartableAttribute : ExportAttribute
     {
         /// <summary>
