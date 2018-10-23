@@ -4,7 +4,7 @@ using System.ComponentModel.Composition;
 namespace Clide
 {
     /// <summary>
-    /// Provides the metadata attriute to export a component that needs to be started
+    /// Provides the metadata attribute to export a component that needs to be started
     /// </summary>
     [MetadataAttribute]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
@@ -24,21 +24,13 @@ namespace Clide
             : base(typeof(IStartable))
         {
             Context = context;
-
-            Guid guid;
-            if (Guid.TryParse(context, out guid))
-                ContextGuid = guid;
         }
 
         /// <summary>
         /// Gets the context when the component should be started
+        /// The string can also contains multiple values separated by '|'
         /// </summary>
         public string Context { get; }
-
-        /// <summary>
-        /// Gets the context as a Guid if it could be parsed
-        /// </summary>
-        public Guid ContextGuid { get; }
 
         /// <summary>
         /// Gets the order value for the startable component

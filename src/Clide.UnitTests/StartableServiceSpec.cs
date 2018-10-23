@@ -70,12 +70,12 @@ namespace Clide
                         new Lazy<IStartable, IStartableMetadata>
                         (
                             () => foo.Object,
-                            Mock.Of<IStartableMetadata>(x => x.ContextGuid == contextGuid)
+                            Mock.Of<IStartableMetadata>(x => x.Context == contextGuid.ToString())
                         ),
                         new Lazy<IStartable, IStartableMetadata>
                         (
                             () => bar.Object,
-                            Mock.Of<IStartableMetadata>(x => x.ContextGuid == Guid.NewGuid())
+                            Mock.Of<IStartableMetadata>(x => x.Context == Guid.NewGuid().ToString())
                         )
                 });
 
@@ -148,6 +148,30 @@ namespace Clide
             Assert.Equal("foo", components[1]);
         }
 
+
+        [Fact]
+        public async Task when_starting_component_with_multiple_contexts_then_component_is_started()
+        {
+            var context1 = Guid.NewGuid();
+            var context2 = "OnSolutionLoad";
+
+            var foo = new Mock<IStartable>();
+
+            var service = new StartableService(
+                new[]
+                {
+                        new Lazy<IStartable, IStartableMetadata>
+                        (
+                            () => foo.Object,
+                            Mock.Of<IStartableMetadata>(x => x.Context == context1.ToString() + "|" + context2)
+                        )
+                });
+
+            await service.StartComponentsAsync(context1.ToString().ToLowerInvariant());
+            await service.StartComponentsAsync(context2);
+
+            foo.Verify(x => x.StartAsync(), Times.Exactly(2));
+        }
 
         class CancellationComponent : IStartable
         {
