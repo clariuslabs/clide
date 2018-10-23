@@ -18,6 +18,3 @@ How do I get it?
 Install from [https://nuget.org/packages/Clide](https://nuget.org/packages/Clide "Clide NuGet Package")
 
 > Install-Package Clide
-
-
-
