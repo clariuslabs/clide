@@ -41,7 +41,7 @@ namespace Clide
         {
             get
             {
-                var project = HierarchyNode.GetActualHierarchy() as IVsProject;
+                var project = OwningProject.AsVsProject();
                 string filePath;
                 if (project != null && ErrorHandler.Succeeded(project.GetMkDocument(HierarchyNode.GetActualItemId(), out filePath)) &&
                     File.Exists(filePath))
