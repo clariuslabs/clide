@@ -3,6 +3,7 @@ using System.ComponentModel.Composition;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Threading;
 
 namespace Clide
 {
@@ -15,6 +16,7 @@ namespace Clide
 		IAdapterService adapter;
 		Lazy<IVsUIHierarchyWindow> solutionExplorer;
 		Lazy<IVsBooleanSymbolExpressionEvaluator> expressionEvaluator;
+        JoinableTaskFactory asyncManager;
 
 		[ImportingConstructor]
 		public ProjectNodeFactory (
@@ -23,7 +25,8 @@ namespace Clide
 			Lazy<ISolutionExplorerNodeFactory> childNodeFactory,
 			IAdapterService adapter,
 			[Import (ContractNames.Interop.SolutionExplorerWindow)] Lazy<IVsUIHierarchyWindow> solutionExplorer,
-			[Import(Clide.ContractNames.Interop.IVsBooleanSymbolExpressionEvaluator)] Lazy<IVsBooleanSymbolExpressionEvaluator> expressionEvaluator)
+			[Import(Clide.ContractNames.Interop.IVsBooleanSymbolExpressionEvaluator)] Lazy<IVsBooleanSymbolExpressionEvaluator> expressionEvaluator,
+            JoinableTaskContext jtc)
 		{
 			solution = new Lazy<IVsSolution> (() => services.GetService<SVsSolution, IVsSolution> ());
 			this.hierarchyManager = hierarchyManager;
@@ -31,6 +34,7 @@ namespace Clide
 			this.adapter = adapter;
 			this.solutionExplorer = solutionExplorer;
 			this.expressionEvaluator = expressionEvaluator;
+            this.asyncManager = jtc.Factory;
 		}
 
 		public virtual bool Supports (IVsHierarchyItem item) => Supports (item, out item);
@@ -46,14 +50,24 @@ namespace Clide
 
 			// We need the hierarchy fully loaded if it's not yet.
 			if (!item.GetProperty<bool> (__VSPROPID4.VSPROPID_IsSolutionFullyLoaded)) {
-				Guid guid;
-				if (ErrorHandler.Succeeded (item.GetActualHierarchy ().GetGuidProperty ((uint)VSConstants.VSITEMID.Root, (int)__VSHPROPID.VSHPROPID_ProjectIDGuid, out guid)) &&
-					// For the solution root item itself, the GUID will be empty.
-					guid != Guid.Empty) {
-					if (ErrorHandler.Succeeded (((IVsSolution4)solution.Value).EnsureProjectIsLoaded (ref guid, (uint)__VSBSLFLAGS.VSBSLFLAGS_None)))
-						actualItem = hierarchyManager.GetHierarchyItem (item.GetActualHierarchy (), item.GetActualItemId ());
-				}
-			}
+
+                // EnsureProjectIsLoaded MUST be executed in the UI/Main thread
+                // Otherwise (if the Supports method is being invoked from a worker thread) duplicate keys might be generated
+                actualItem = asyncManager.Run(async () =>
+                {
+                    await asyncManager.SwitchToMainThreadAsync();
+
+				    Guid guid;
+				    if (ErrorHandler.Succeeded (item.GetActualHierarchy ().GetGuidProperty ((uint)VSConstants.VSITEMID.Root, (int)__VSHPROPID.VSHPROPID_ProjectIDGuid, out guid)) &&
+					    // For the solution root item itself, the GUID will be empty.
+					    guid != Guid.Empty) {
+					    if (ErrorHandler.Succeeded (((IVsSolution4)solution.Value).EnsureProjectIsLoaded (ref guid, (uint)__VSBSLFLAGS.VSBSLFLAGS_None)))
+						    return hierarchyManager.GetHierarchyItem (item.GetActualHierarchy (), item.GetActualItemId ());
+				    }
+
+                    return item;
+                });
+            }
 
 			if (!(actualItem.GetActualHierarchy () is IVsProject))
 				return false;
