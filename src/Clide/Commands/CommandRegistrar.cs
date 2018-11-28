@@ -6,6 +6,7 @@ using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Linq;
 using Clide.Properties;
+using Microsoft.VisualStudio.Shell;
 
 namespace Clide.Commands
 {
@@ -58,11 +59,17 @@ namespace Clide.Commands
 
             List<Lazy<ICommandExtension, ICommandMetadata>> commands;
             if (commandsByPackage.Value.TryGetValue(packageGuid, out commands))
+            {
                 foreach (var command in commands)
+                {
                     menuCommandService.AddCommand(
                         new VsCommandExtensionAdapter(
                             new CommandID(new Guid(command.Metadata.GroupId), command.Metadata.CommandId),
-                            command.Value));
+                            command.Value,
+                            Guid.TryParse(command.Metadata.VisibilityContextGuid, out var uiContextGuid) ? 
+                                new UIContextWrapper(UIContext.FromUIContextGuid(uiContextGuid)) : null));
+                }
+            }
         }
     }
 }
