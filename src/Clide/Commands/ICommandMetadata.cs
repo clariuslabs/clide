@@ -21,5 +21,10 @@ namespace Clide.Commands
         /// Gets the command id
         /// </summary>
         int CommandId { get; }
+
+        /// <summary>
+        /// Gets the UI Context Guid that should be active when the command is executed
+        /// </summary>
+        string VisibilityContextGuid { get; }
     }
 }
