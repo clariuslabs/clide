@@ -39,7 +39,7 @@
 
       <!-- Adjust branch name to CI provided value if available -->
       <GitBranch Condition="'$(SYSTEM_PULLREQUEST_TARGETBRANCH)' != ''">$(SYSTEM_PULLREQUEST_TARGETBRANCH)</GitBranch>
-      <GitBranch Condition="'$(SYSTEM_PULLREQUEST_TARGETBRANCH)' == '' and '$(BUILD_SOURCEBRANCHNAME)' != ''">$(BUILD_SOURCEBRANCHNAME)</GitBranch>
+      <GitBranch Condition="'$(SYSTEM_PULLREQUEST_TARGETBRANCH)' == '' and '$(BUILD_SOURCEBRANCH)' != ''">$(BUILD_SOURCEBRANCH.Replace("refs/heads/", ""))</GitBranch>
       <GitBranch Condition="'$(APPVEYOR_REPO_BRANCH)' != ''">$(APPVEYOR_REPO_BRANCH)</GitBranch>
 
       <!-- NOTE: build metadata does not affect version matching, so even if you work from a different branch+commit that gets 
@@ -53,6 +53,9 @@
 
       <!-- We'll use GitFlow and ship publicly from master, meaning we don't need branch metadata from there -->
       <GitSemVerDashLabel Condition="'$(GitSemVerDashLabel)' == '' and '$(_GitBranch)' == 'dev'">-$(_GitBranch)</GitSemVerDashLabel>
+      <!-- Feature/user branches always get the label -->
+      <GitSemVerDashLabel Condition="'$(GitSemVerDashLabel)' == '' and '$(_IndexOfBranchSlash)' != '0'">-$(GitBranch.Replace("/", "-"))</GitSemVerDashLabel>
+
       <SemVerMetadata Condition="'$(GitSemVerDashLabel)' != '-$(_GitBranch)' and '$(_GitBranch)' == 'dev'">$(_GitBranch).</SemVerMetadata>
       <SemVerMetadata>$(SemVerMetadata)sha.$(GitCommit)</SemVerMetadata>
 
