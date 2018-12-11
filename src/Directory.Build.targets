@@ -19,6 +19,7 @@
 
   <ItemGroup Condition="'$(IncludeVSSDK)' == 'true'">
     <PackageReference Include="Xamarin.VSSDK" Version="$(XVSSDKVersion)" />
+    <PackageReference Include="VSSDK.TemplateWizardInterface" Version="12.0.4" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(IncludeRx)' == 'true'">
