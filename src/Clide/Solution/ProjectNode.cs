@@ -50,12 +50,14 @@ namespace Clide
         /// </summary>
         public virtual void Save()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             ErrorHandler.ThrowOnFailure(HierarchyNode
                 .GetServiceProvider()
                 .GetService<SVsSolution, IVsSolution>()
                 .SaveSolutionElement(
                     (uint)__VSSLNSAVEOPTIONS.SLNSAVEOPT_ForceSave,
-                    HierarchyNode.HierarchyIdentity.Hierarchy,
+                    innerHierarchyItem != null ? innerHierarchyItem.GetActualHierarchy() : HierarchyNode.GetActualHierarchy(),
                     0));
         }
 
