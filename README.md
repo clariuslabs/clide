@@ -1,4 +1,4 @@
-<img align="center" src="https://raw.github.com/clariuslabs/clide/master/icon/64.png" /> Clide
+![Icon](https://raw.github.com/clariuslabs/clide/master/icon/64.png) Clide
 ==============
 
 [![Build status](https://devdiv.visualstudio.com/_apis/public/build/definitions/0bdbc590-a062-4c3f-b0f6-9383f67865ee/9319/badge)](http://build.devdiv.io/9319 "CI builds at AppVeyor") 
