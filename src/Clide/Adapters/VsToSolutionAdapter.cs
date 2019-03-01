@@ -28,16 +28,18 @@ namespace Clide
         }
 
         public IProjectNode Adapt(IVsHierarchy from) =>
-            nodeFactory
-                .Value
-                .CreateNode(GetHierarchyItem(from))
-                as IProjectNode;
+            from is FlavoredProject && from.TryGetInnerHierarchy(out var innerHierarchy) ?
+                Adapt(new FlavoredProject(from, innerHierarchy)) :
+                nodeFactory
+                    .Value
+                    .CreateNode(GetHierarchyItem(from))
+                    as IProjectNode;
 
         public IProjectNode Adapt(FlavoredProject from) =>
             (nodeFactory
                 .Value
-                .CreateNode(GetHierarchyItem(from.Hierarchy))
-                as ProjectNode).WithInnerHierarchy(GetHierarchyItem(from.InnerHierarchy));
+                .CreateNode(GetHierarchyItem(from.InnerHierarchy))
+                as ProjectNode).WithFlavorHierarchy(from.Hierarchy);
 
         IVsHierarchyItem GetHierarchyItem(IVsHierarchy hierarchy) =>
             asyncManager.Run(async () =>
