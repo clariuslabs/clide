@@ -23,26 +23,6 @@ namespace Clide
         }
 
         /// <summary>
-        /// Gets the inner hierarchy of the flavored proejct
-        /// when the actual hierarchy of the item is an instance of <see cref="FlavoredProjectBase"/>
-        /// </summary>
-        public static bool TryGetInnerHierarchy(this IVsHierarchyItem item, out IVsHierarchy innerHierarchy)
-        {
-            innerHierarchy = null;
-
-            var hierarchy = item.GetActualHierarchy();
-            if (hierarchy is FlavoredProjectBase)
-            {
-                innerHierarchy = hierarchy
-                     .GetType()
-                     .GetField("_innerVsHierarchy", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)?
-                     .GetValue(hierarchy) as IVsHierarchy;
-            }
-
-            return innerHierarchy != null;
-        }
-
-        /// <summary>
         /// Gets the actual item id, which is the nested id if the item is nested.
         /// </summary>
         public static uint GetActualItemId(this IVsHierarchyItem item)

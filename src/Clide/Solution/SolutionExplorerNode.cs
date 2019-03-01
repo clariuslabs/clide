@@ -84,6 +84,11 @@ namespace Clide
         protected internal IVsHierarchyItem HierarchyNode => hierarchyItem;
 
         /// <summary>
+        /// Gets the hierarchy represented by this node
+        /// </summary>
+        protected internal virtual IVsHierarchy Hierarchy => hierarchy;
+
+        /// <summary>
         /// Gets the adapter service used to construct this node.
         /// </summary>
         protected IAdapterService Adapter => adapter;
