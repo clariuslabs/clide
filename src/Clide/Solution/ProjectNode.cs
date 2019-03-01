@@ -13,7 +13,7 @@ namespace Clide
     public class ProjectNode : SolutionExplorerNode, IProjectNode
     {
         Lazy<GlobalProjectProperties> properties;
-        IVsHierarchyItem innerHierarchyItem;
+        IVsHierarchy flavorHierarchy;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectNode"/> class.
@@ -27,19 +27,19 @@ namespace Clide
             IAdapterService adapter,
             JoinableLazy<IVsUIHierarchyWindow> solutionExplorer,
             JoinableLazy<IVsBooleanSymbolExpressionEvaluator> expressionEvaluator,
-            IVsHierarchyItem innerHierarchyNode = null)
+            IVsHierarchy flavorHierarchy = null)
             : base(SolutionNodeKind.Project, hierarchyNode, nodeFactory, adapter, solutionExplorer)
         {
-            this.innerHierarchyItem = innerHierarchyNode;
+            this.flavorHierarchy = flavorHierarchy;
             properties = new Lazy<GlobalProjectProperties>(() => new GlobalProjectProperties(this));
             ExpressionEvaluator = expressionEvaluator;
             Configuration = new ProjectConfiguration(new Lazy<EnvDTE.Project>(() => As<EnvDTE.Project>()));
         }
 
-        public IProjectNode WithInnerHierarchy(IVsHierarchyItem innerHierarchyItem) =>
-            new ProjectNode(hierarchyItem, nodeFactory, adapter, solutionExplorer, ExpressionEvaluator, innerHierarchyItem);
+        public IProjectNode WithFlavorHierarchy(IVsHierarchy flavorHierarchy) =>
+            new ProjectNode(hierarchyItem, nodeFactory, adapter, solutionExplorer, ExpressionEvaluator, flavorHierarchy);
 
-        public IVsHierarchyItem InnerHierarchyNode => innerHierarchyItem;
+        protected internal override IVsHierarchy Hierarchy => flavorHierarchy ?? base.Hierarchy;
 
         JoinableLazy<IVsBooleanSymbolExpressionEvaluator> ExpressionEvaluator { get; }
 
@@ -57,7 +57,7 @@ namespace Clide
                 .GetService<SVsSolution, IVsSolution>()
                 .SaveSolutionElement(
                     (uint)__VSSLNSAVEOPTIONS.SLNSAVEOPT_ForceSave,
-                    innerHierarchyItem != null ? innerHierarchyItem.GetActualHierarchy() : HierarchyNode.GetActualHierarchy(),
+                    base.Hierarchy /* do not use the flavor hierarchy */,
                     0));
         }
 

@@ -13,7 +13,7 @@ namespace Clide
     {
         IVsHierarchyItem IAdapter<SolutionExplorerNode, IVsHierarchyItem>.Adapt(SolutionExplorerNode from) => from?.HierarchyNode;
 
-        IVsHierarchy IAdapter<SolutionExplorerNode, IVsHierarchy>.Adapt(SolutionExplorerNode from) => from?.HierarchyNode.GetActualHierarchy();
+        IVsHierarchy IAdapter<SolutionExplorerNode, IVsHierarchy>.Adapt(SolutionExplorerNode from) => from?.Hierarchy;
 
         IVsSolution IAdapter<SolutionNode, IVsSolution>.Adapt(SolutionNode from) => from.HierarchyNode.GetServiceProvider().GetService<SVsSolution, IVsSolution>();
 
@@ -23,13 +23,10 @@ namespace Clide
 
         T GetVsService<T>(ProjectNode from) where T : class
         {
-            var result = from.InnerHierarchyNode?.GetActualHierarchy() as T;
+            var result = from.Hierarchy as T;
 
             if (result == null)
                 result = from.HierarchyNode.GetActualHierarchy() as T;
-
-            if (result == null && from.HierarchyNode.TryGetInnerHierarchy(out var innerHierarchy))
-                result = innerHierarchy as T;
 
             return result;
         }
