@@ -20,6 +20,11 @@ namespace Clide
         public string ChannelTitle { get; internal set; }
 
         /// <summary>
+        /// Gets the Visual Studio channel suffix
+        /// </summary>
+        public string ChannelSuffix { get; internal set; }
+
+        /// <summary>
         /// Gets the Visual Studio edition
         /// </summary>
         public string Edition { get; internal set; }

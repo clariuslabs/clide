@@ -41,6 +41,7 @@ namespace Clide
             {
                 ChannelId = vsAppId.GetProperty<string>(VSAPropID.VSAPROPID_ChannelId),
                 ChannelTitle = vsAppId.GetProperty<string>(VSAPropID.VSAPROPID_ChannelTitle),
+                ChannelSuffix = vsAppId.GetProperty<string>(VSAPropID.VSAPROPID_ChannelSuffix),
                 Edition = vsAppId.GetProperty<string>(VSAPropID.VSAPROPID_SKUName),
                 InstallationID = vsAppId.GetProperty<string>(VSAPropID.VSAPROPID_IsolationInstallationId),
                 InstallationName = vsAppId.GetProperty<string>(VSAPropID.VSAPROPID_IsolationInstallationName),
