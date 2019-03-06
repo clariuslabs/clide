@@ -35,6 +35,7 @@ namespace Microsoft.VisualStudio.Shell
         VSAPROPID_ChannelId = -8638,
         VSAPROPID_ProductDisplayVersion = -8641,
         VSAPROPID_ChannelTitle = -8643,
+        VSAPROPID_ChannelSuffix = -8644,
         VSAPROPID_SKUName = -8648,
     }
 
