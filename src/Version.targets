@@ -52,7 +52,7 @@
       <_GitBranch Condition="'$(_IndexOfBranchSlash)' == '0'">$(GitBranch)</_GitBranch>
 
       <!-- We'll use GitFlow and ship publicly from master, meaning we don't need branch metadata from there -->
-      <GitSemVerDashLabel Condition="'$(GitSemVerDashLabel)' == '' and '$(_GitBranch)' != 'master'">-$(_GitBranch)</GitSemVerDashLabel>
+      <GitSemVerDashLabel Condition="'$(GitSemVerDashLabel)' == '' and '$(_GitBranch)' != 'master' and '$(_GitBranch.StartsWith(v))' != 'true'">-$(_GitBranch)</GitSemVerDashLabel>
       <SemVerMetadata Condition="'$(GitSemVerDashLabel)' != '-$(_GitBranch)' and '$(_GitBranch)' != 'master'">$(_GitBranch).</SemVerMetadata>
       <SemVerMetadata>$(SemVerMetadata)sha.$(GitCommit)</SemVerMetadata>
 
