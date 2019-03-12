@@ -143,10 +143,10 @@ namespace Clide
 
         public bool Supports(string capabilities)
         {
-            if (!string.IsNullOrEmpty(capabilities))
-            {
-                string projectCapabilities = HierarchyNode
-                    .GetProperty<string>((int)__VSHPROPID5.VSHPROPID_ProjectCapabilities);
+            if (!string.IsNullOrEmpty(capabilities) && 
+                ErrorHandler.Succeeded(Hierarchy.GetProperty(VSConstants.VSITEMID_ROOT, (int)__VSHPROPID5.VSHPROPID_ProjectCapabilities, out var projectCapabilitiesObject)))
+            {  
+                var projectCapabilities = projectCapabilitiesObject as string;
 
                 if (!string.IsNullOrEmpty(projectCapabilities))
                     return ExpressionEvaluator.GetValue().EvaluateExpression(capabilities, projectCapabilities);
