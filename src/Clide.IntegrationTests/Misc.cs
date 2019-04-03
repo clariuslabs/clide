@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using EnvDTE;
 using EnvDTE80;
-using Merq;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;

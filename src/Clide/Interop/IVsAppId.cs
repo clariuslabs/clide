@@ -3,11 +3,6 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.VisualStudio.Shell
 {
-    [Guid("1EAA526A-0898-11d3-B868-00C04F79F802"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    internal interface SVsAppId
-    {
-    }
-
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown), Guid("1EAA526A-0898-11d3-B868-00C04F79F802")]
     internal interface IVsAppId
     {

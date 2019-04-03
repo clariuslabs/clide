@@ -27,7 +27,7 @@ namespace Clide
 
         DevEnvInfo GetDevEnvInfo(IServiceLocator serviceLocator)
         {
-            var vsAppId = serviceLocator.TryGetService<SVsAppId, IVsAppId>();
+            var vsAppId = serviceLocator.TryGetService<IVsAppId>();
 
             if (vsAppId == null)
                 return null;
