@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Flavor;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Threading;
 using System;
@@ -28,7 +29,7 @@ namespace Clide
         }
 
         public IProjectNode Adapt(IVsHierarchy from) =>
-            from is FlavoredProject && from.TryGetInnerHierarchy(out var innerHierarchy) ?
+            from is FlavoredProjectBase && from.TryGetInnerHierarchy(out var innerHierarchy) ?
                 Adapt(new FlavoredProject(from, innerHierarchy)) :
                 nodeFactory
                     .Value
