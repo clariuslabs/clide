@@ -64,7 +64,8 @@ namespace Clide
                 new Lazy<bool>(() => getHiddenProperty() || parent.Value.IsHidden) :
                 new Lazy<bool>(() => getHiddenProperty());
 
-            solutionNode = new JoinableLazy<ISolutionNode>(() => this.nodeFactory.CreateNode(this.hierarchyItem.GetTopMost()) as ISolutionNode, true);
+            solutionNode = new JoinableLazy<ISolutionNode>(async () =>
+                await ServiceLocator.Global.GetExport<ISolutionExplorer>().Solution);
 
             if (hierarchyItem.HierarchyIdentity.IsNestedItem)
             {
