@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Linq;
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -25,14 +26,17 @@ namespace Clide
 
         public virtual bool Supports(IVsHierarchyItem item)
         {
-            // TODO: why wouldn't something like this work? 
-            // 
-            //	 ((VSProject)((Project)hierarchyNode.GetExtenderObject ()).Object).References);
-
-            // \o/: heuristics, no extender object and "References" display name :S
-            var extObj = item.GetExtenderObject();
-            // TODO: see if we get the VSProject from VSLangProj and compare to the References property there.
-            return extObj == null && item.Text == "References";
+            // For performance reasons we're first checking if the
+            // extender object is null which it's expected for
+            // the ReferencesNode.
+            //
+            // Then we check for the 1033 localized Text string or finally
+            // the first child to be a VSLangProj.Reference
+            return item.GetExtenderObject() == null &&
+                (
+                    item.Text == "References" ||
+                    item.Children.FirstOrDefault()?.GetExtenderObject() is VSLangProj.Reference
+                );
         }
 
         public virtual ISolutionExplorerNode CreateNode(IVsHierarchyItem item) => Supports(item) ?
