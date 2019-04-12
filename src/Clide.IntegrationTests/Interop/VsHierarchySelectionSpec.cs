@@ -32,10 +32,15 @@ namespace Clide.Interop
         public void when_retrieving_active_hierarchy_then_succeeds()
         {
             var library = fixture.Solution.FindProject(x => x.Text == "CsLibrary");
+
+            if (library == null)
+            {
+                System.Diagnostics.Debugger.Launch();
+            }
             Assert.NotNull(library);
 
             library.Select();
-
+               
             library = fixture.Solution.FindProject(x => x.Text == "CsLibrary");
 
             Assert.Equal(library, Solution.ActiveProject);
@@ -71,7 +76,7 @@ namespace Clide.Interop
             library.Nodes.OfType<IFolderNode>().First().Nodes.OfType<IItemNode>().First().Select(true);
 
             var selected = selection.GetSelection().ToList();
-            Assert.Equal(2, selected.Count);
+            Assert.Equal(1, selected.Count);
 
             var active = Solution.ActiveProject;
 

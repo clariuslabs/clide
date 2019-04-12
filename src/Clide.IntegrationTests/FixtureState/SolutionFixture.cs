@@ -14,9 +14,9 @@ namespace Clide
         // We cache this since it's sometimes changed by VS or a running test
         static string baseDirectory = Directory.GetCurrentDirectory();
 
-        JoinableLazy<ISolutionNode> solution;
         string tempDir;
         string solutionFile;
+        bool closeSolutionOnDispose;
 
         public SolutionFixture(string solutionFile, bool useCopy = false)
         {
@@ -52,43 +52,7 @@ namespace Clide
                 solutionFile = Path.Combine(tempDir, Path.GetFileName(solutionFile));
             }
 
-            solution = new JoinableLazy<ISolutionNode>(async () =>
-            {
-                try
-                {
-                    var dte = GlobalServices.GetService<DTE>();
-                    if (!dte.Solution.IsOpen || !dte.Solution.FullName.Equals(this.solutionFile, StringComparison.OrdinalIgnoreCase))
-                    {
-                        // Ensure no .suo is loaded, since that would dirty the state across runs.
-                        var suoFile = Path.ChangeExtension(this.solutionFile, ".suo");
-                        if (File.Exists(suoFile))
-                            Try(() => File.Delete(suoFile));
-
-                        var sdfFile = Path.ChangeExtension(this.solutionFile, ".sdf");
-                        if (File.Exists(sdfFile))
-                            Try(() => File.Delete(sdfFile));
-
-                        var vsDir = Path.Combine(Path.GetDirectoryName(this.solutionFile), ".vs");
-                        if (Directory.Exists(vsDir))
-                            Try(() => Directory.Delete(vsDir, true));
-
-                        dte.Solution.Open(this.solutionFile);
-                        GlobalServices.GetService<SVsSolution, IVsSolution4>()
-                            .EnsureSolutionIsLoaded((uint)(__VSBSLFLAGS.VSBSLFLAGS_LoadAllPendingProjects | __VSBSLFLAGS.VSBSLFLAGS_LoadBuildDependencies));
-                    }
-
-                    return await GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<ISolutionExplorer>().Solution;
-                }
-                catch (Exception ex)
-                {
-                    throw new ArgumentException("Failed to open and access solution: " + solutionFile, ex);
-                }
-            });
-
-            // If the collection is being created inside the VS process, 
-            // instantiate the value right now to cause the solution to open.
-            if (GlobalServices.GetService<DTE>() != null)
-                Assert.NotNull(solution.GetValue());
+            EnsureSolutionIsLoaded();
         }
 
         void Try(Action action)
@@ -100,12 +64,49 @@ namespace Clide
             catch { }
         }
 
-        public ISolutionNode Solution => solution.GetValue();
+        public ISolutionNode Solution =>
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                EnsureSolutionIsLoaded();
+
+                return await GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<ISolutionExplorer>().Solution;
+            });
+
+        public void EnsureSolutionIsLoaded()
+        {
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                var dte = GlobalServices.GetService<DTE>();
+                if (!dte.Solution.IsOpen || !dte.Solution.FullName.Equals(this.solutionFile, StringComparison.OrdinalIgnoreCase))
+                {
+                    // Ensure no .suo is loaded, since that would dirty the state across runs.
+                    var suoFile = Path.ChangeExtension(this.solutionFile, ".suo");
+                    if (File.Exists(suoFile))
+                        Try(() => File.Delete(suoFile));
+
+                    var sdfFile = Path.ChangeExtension(this.solutionFile, ".sdf");
+                    if (File.Exists(sdfFile))
+                        Try(() => File.Delete(sdfFile));
+
+                    var vsDir = Path.Combine(Path.GetDirectoryName(this.solutionFile), ".vs");
+                    if (Directory.Exists(vsDir))
+                        Try(() => Directory.Delete(vsDir, true));
+
+                    dte.Solution.Open(this.solutionFile);
+                    ErrorHandler.ThrowOnFailure(GlobalServices.GetService<SVsSolution, IVsSolution4>()
+                        .EnsureSolutionIsLoaded((uint)(__VSBSLFLAGS.VSBSLFLAGS_LoadAllPendingProjects | __VSBSLFLAGS.VSBSLFLAGS_LoadBuildDependencies)));
+
+                    closeSolutionOnDispose = true;
+                }
+            });
+        }
 
         public void Dispose()
         {
             // Only close the solution if the solution was opened at all.
-            if (solution.IsValueCreated)
+            if (closeSolutionOnDispose)
             {
                 var dte = GlobalServices.GetService<DTE>();
                 if (dte != null)
@@ -143,36 +144,6 @@ namespace Clide
                     var tempPath = Path.Combine(destDirName, subdir.Name);
                     DirectoryCopy(subdir.FullName, tempPath, copySubDirs);
                 }
-            }
-        }
-
-        class SolutionLoadEvents : IVsSolutionLoadEvents
-        {
-            Action onLoadComplete;
-
-            public SolutionLoadEvents(Action onLoadComplete)
-            {
-                this.onLoadComplete = onLoadComplete;
-            }
-
-            public int OnAfterBackgroundSolutionLoadComplete()
-            {
-                onLoadComplete();
-                return VSConstants.S_OK;
-            }
-
-            public int OnAfterLoadProjectBatch(bool fIsBackgroundIdleBatch) => VSConstants.S_OK;
-
-            public int OnBeforeBackgroundSolutionLoadBegins() => VSConstants.S_OK;
-
-            public int OnBeforeLoadProjectBatch(bool fIsBackgroundIdleBatch) => VSConstants.S_OK;
-
-            public int OnBeforeOpenSolution(string pszSolutionFilename) => VSConstants.S_OK;
-
-            public int OnQueryBackgroundLoadProjectBatch(out bool pfShouldDelayLoadToNextIdle)
-            {
-                pfShouldDelayLoadToNextIdle = false;
-                return VSConstants.S_OK;
             }
         }
     }

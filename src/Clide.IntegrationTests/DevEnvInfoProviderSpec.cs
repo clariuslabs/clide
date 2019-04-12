@@ -12,8 +12,13 @@ namespace Clide
 
             Assert.NotNull(info);
             Assert.NotEmpty(info.ChannelId);
-            Assert.NotEmpty(info.ChannelSuffix);
-            Assert.NotEmpty(info.ChannelTitle);
+
+            if (info.Version.Major >= 16)
+            {
+                // These are only available in dev16+
+                Assert.NotEmpty(info.ChannelSuffix);
+                Assert.NotEmpty(info.ChannelTitle);
+            }
         }
     }
 }
