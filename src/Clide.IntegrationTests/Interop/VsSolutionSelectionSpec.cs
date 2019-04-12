@@ -23,6 +23,8 @@ namespace Clide.Interop
             fixture.Solution.Select(false);
         }
 
+        ISolutionNode Solution => ThreadHelper.JoinableTaskFactory.Run(async () => await explorer.Solution);
+
         [VsFact]
         public void when_retrieving_active_hierarchy_then_succeeds()
         {
@@ -31,7 +33,7 @@ namespace Clide.Interop
 
             library.Select();
 
-            Assert.Equal(library, explorer.Solution.GetValue().ActiveProject);
+            Assert.Equal(library, Solution.ActiveProject);
         }
 
         [VsFact]
@@ -45,7 +47,7 @@ namespace Clide.Interop
 
             item.Select();
 
-            var active = explorer.Solution.GetValue().ActiveProject;
+            var active = Solution.ActiveProject;
             Assert.Equal(library, active);
 
             var selected = selection.GetSelection().FirstOrDefault();
@@ -66,7 +68,7 @@ namespace Clide.Interop
             var selected = selection.GetSelection().ToList();
             Assert.Equal(2, selected.Count);
 
-            var active = explorer.Solution.GetValue().ActiveProject;
+            var active = Solution.ActiveProject;
 
             Assert.Equal(library, active);
         }
@@ -80,7 +82,7 @@ namespace Clide.Interop
             var selected = selection.GetSelection().ToList();
             Assert.Equal(2, selected.Count);
 
-            var active = explorer.Solution.GetValue().ActiveProject;
+            var active = Solution.ActiveProject;
 
             Assert.Null(active);
         }
@@ -94,7 +96,7 @@ namespace Clide.Interop
             var selected = selection.GetSelection().ToList();
             Assert.Equal(2, selected.Count);
 
-            var active = explorer.Solution.GetValue().ActiveProject;
+            var active = Solution.ActiveProject;
 
             Assert.Null(active);
         }

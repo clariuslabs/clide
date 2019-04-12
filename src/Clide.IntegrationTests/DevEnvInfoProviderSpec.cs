@@ -5,7 +5,7 @@ namespace Clide
 {
     public class DevEnvInfoProviderSpec
     {
-        [VsixFact]
+        [VsFact]
         public void when_getting_device_info_then_can_get_app_id()
         {
             var info = GlobalServices.GetService<SComponentModel, IComponentModel>().GetService<DevEnvInfo>();
