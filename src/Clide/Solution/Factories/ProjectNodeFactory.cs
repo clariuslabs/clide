@@ -16,6 +16,7 @@ namespace Clide
         Lazy<ISolutionExplorerNodeFactory> childNodeFactory;
         IAdapterService adapter;
         JoinableLazy<IVsUIHierarchyWindow> solutionExplorer;
+        JoinableLazy<IVsSolution> vsSolution;
         JoinableLazy<IVsBooleanSymbolExpressionEvaluator> expressionEvaluator;
         JoinableTaskFactory asyncManager;
 
@@ -27,6 +28,7 @@ namespace Clide
             IAdapterService adapter,
             JoinableLazy<IVsUIHierarchyWindow> solutionExplorer,
             JoinableTaskContext jtc,
+            JoinableLazy<IVsSolution> vsSolution,
             [Import(Clide.ContractNames.Interop.IVsBooleanSymbolExpressionEvaluator)] JoinableLazy<IVsBooleanSymbolExpressionEvaluator> expressionEvaluator)
         {
             solution = new JoinableLazy<IVsSolution>(() => services.GetService<SVsSolution, IVsSolution>(), jtc.Factory, true);
@@ -34,6 +36,7 @@ namespace Clide
             this.childNodeFactory = childNodeFactory;
             this.adapter = adapter;
             this.solutionExplorer = solutionExplorer;
+            this.vsSolution = vsSolution;
             this.expressionEvaluator = expressionEvaluator;
             this.asyncManager = jtc.Factory;
         }
@@ -50,7 +53,7 @@ namespace Clide
                 return false;
 
             // We need the hierarchy fully loaded if it's not yet.
-            if (!item.GetProperty<bool>(__VSPROPID4.VSPROPID_IsSolutionFullyLoaded))
+            if (!vsSolution.GetValue().GetProperty<bool>(__VSPROPID4.VSPROPID_IsSolutionFullyLoaded))
             {
                 // EnsureProjectIsLoaded MUST be executed in the UI/Main thread
                 // Otherwise (if the Supports method is being invoked from a worker thread) duplicate keys might be generated
