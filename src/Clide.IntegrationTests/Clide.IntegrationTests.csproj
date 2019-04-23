@@ -5,8 +5,7 @@
     <IncludeIntegrationTests>true</IncludeIntegrationTests>
     <EnableDefaultItems>false</EnableDefaultItems>
     <AddSyntheticProjectReferencesForSolutionDependencies>false</AddSyntheticProjectReferencesForSolutionDependencies>
-    <TimeoutSeconds>120</TimeoutSeconds>
-    <RecycleOnFailure>true</RecycleOnFailure>
+    <GenerateAssemblyVsixAttribute>false</GenerateAssemblyVsixAttribute>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <CodeAnalysisRuleSet>Clide.IntegrationTests.ruleset</CodeAnalysisRuleSet>
@@ -32,5 +31,11 @@
     <ProjectReference Include="..\Clide.Extensibility\Clide.Extensibility.csproj" />
     <ProjectReference Include="..\Clide.Interfaces\Clide.Interfaces.csproj" />
     <ProjectReference Include="..\Clide\Clide.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>VisualStudioVersion</_Parameter1>
+      <_Parameter2>$(VisualStudioVersion)</_Parameter2>
+    </AssemblyAttribute>
   </ItemGroup>
 </Project>
