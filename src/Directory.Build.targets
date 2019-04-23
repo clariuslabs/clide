@@ -40,6 +40,8 @@
 
   <ItemGroup Condition="'$(IncludeIntegrationTests)' == 'true'">
     <PackageReference Include="xunit.vsix" Version="$(XunitVsixVersion)" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitVsixVersion)" />
+    <PackageReference Include="MSBuilder.ThisAssembly.Metadata" Version="0.1.4" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(IncludeTests)' == 'true' or '$(IncludeIntegrationTests)' == 'true'">
