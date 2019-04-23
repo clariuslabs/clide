@@ -65,7 +65,9 @@ namespace Clide.Interop
             Assert.NotNull(library);
             library.Select(false);
 
-            library.Nodes.OfType<IItemNode>().First().Select(false);
+            library.Expand(true);
+
+            library.Nodes.OfType<IItemNode>().First().Select();
             library.Nodes.OfType<IFolderNode>().First().Nodes.OfType<IItemNode>().First().Select(true);
 
             var selected = selection.GetSelection().ToList();
