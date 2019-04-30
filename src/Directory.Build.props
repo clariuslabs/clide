@@ -28,6 +28,8 @@
     <!-- We never want to import the SDK Pack targets, since they conflict with nugetizer -->
     <NuGetBuildTasksPackTargets>NO-SDK-TARGETS</NuGetBuildTasksPackTargets>
 
+    <!-- We don't multitarget, so opt-out of this. -->
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>    
     <!-- We never emit runtime-specific assemblies, so opt-out of this. -->
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
