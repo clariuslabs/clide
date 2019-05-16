@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Clide
 {
@@ -12,5 +13,10 @@ namespace Clide
         /// Creates the node for the given hierarchy item.
         /// </summary>
         ISolutionExplorerNode CreateNode(IVsHierarchyItem item);
+
+        /// <summary>
+        /// Creates the node for the given hierarchy
+        /// </summary>
+        ISolutionExplorerNode CreateNode(IVsHierarchy hierarchy, uint itemId);
     }
 }
