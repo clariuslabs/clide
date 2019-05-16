@@ -8,6 +8,7 @@ using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.Internal.VisualStudio.PlatformUI;
 
 namespace Clide
 {
@@ -172,10 +173,28 @@ namespace Clide
         /// <summary>
         /// Gets the child nodes.
         /// </summary>
-        public virtual IEnumerable<ISolutionExplorerNode> Nodes => hierarchyItem.Children
-            .Select(node => CreateNode(node))
-            // Skip null nodes which is what the factory may return if the hierarchy node is unsupported.
-            .Where(n => n != null);
+        public virtual IEnumerable<ISolutionExplorerNode> Nodes
+        {
+            get
+            {
+                var actualHierarchy = hierarchyItem.GetActualHierarchy();
+
+                var childItemId = HierarchyUtilities.GetFirstChild(
+                    actualHierarchy,
+                    hierarchyItem.GetActualItemId(),
+                    true);
+
+                while (childItemId != VSConstants.VSITEMID_NIL)
+                {
+                    var node = nodeFactory.CreateNode(actualHierarchy, childItemId);
+
+                    if (node != null)
+                        yield return node;
+
+                    childItemId = HierarchyUtilities.GetNextSibling(actualHierarchy, childItemId, true);
+                }
+            }
+        }
 
         /// <summary>
         /// Tries to smart-cast this node to the give type.

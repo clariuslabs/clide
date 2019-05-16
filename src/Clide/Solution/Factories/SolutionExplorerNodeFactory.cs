@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Threading;
 
 namespace Clide
 {
@@ -20,19 +21,27 @@ namespace Clide
         List<ICustomSolutionExplorerNodeFactory> defaultFactories;
         IAdapterService adapter;
         JoinableLazy<IVsUIHierarchyWindow> solutionExplorer;
+        JoinableLazy<IVsHierarchyItemManager> hierarchyManager;
+        JoinableTaskFactory asyncManager;
 
         [ImportingConstructor]
         public SolutionExplorerNodeFactory(
             [ImportMany(ContractNames.FallbackNodeFactory)] IEnumerable<ICustomSolutionExplorerNodeFactory> defaultFactories,
             [ImportMany] IEnumerable<ICustomSolutionExplorerNodeFactory> customFactories,
             IAdapterService adapter,
-            JoinableLazy<IVsUIHierarchyWindow> solutionExplorer)
+            JoinableTaskContext jtc,
+            JoinableLazy<IVsUIHierarchyWindow> solutionExplorer,
+            JoinableLazy<IVsHierarchyItemManager> hierarchyManager)
         {
             this.defaultFactories = defaultFactories.ToList();
             this.customFactories = customFactories.ToList();
             this.adapter = adapter;
             this.solutionExplorer = solutionExplorer;
+            this.hierarchyManager = hierarchyManager;
+            this.asyncManager = jtc.Factory;
         }
+
+        IVsHierarchyItemManager HierarchyManager => hierarchyManager.GetValue();
 
         public ISolutionExplorerNode CreateNode(IVsHierarchyItem item)
         {
@@ -44,5 +53,25 @@ namespace Clide
 
             return factory == null ? new GenericNode(item, this, adapter, solutionExplorer) : factory.CreateNode(item);
         }
+
+        public ISolutionExplorerNode CreateNode(IVsHierarchy hierarchy, uint itemId) =>
+            CreateNode(asyncManager.Run(async () =>
+            {
+                // TryGetHierarchyItem won't trigger the creation of the HierachyItem
+                // It just tries to get the item from the already generated items
+                // So there is no need to switch to the Main thread yet
+                if (!HierarchyManager.TryGetHierarchyItem(hierarchy, itemId, out var hierarchyItem))
+                {
+                    // If the item was not created yet we MUST switch to the Main thread
+                    // to avoid generating duplicate items
+                    await asyncManager.SwitchToMainThreadAsync();
+
+                    // GetHierarchyItem might might trigger the creation of the item so it
+                    // MUST be executed in the main thread
+                    hierarchyItem = HierarchyManager.GetHierarchyItem(hierarchy, itemId);
+                }
+
+                return hierarchyItem;
+            }));
     }
 }
