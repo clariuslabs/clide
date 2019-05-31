@@ -1,10 +1,7 @@
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Flavor;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Threading;
 using System;
 using System.ComponentModel.Composition;
+using Microsoft.VisualStudio.Shell.Flavor;
+using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Clide
 {
@@ -14,18 +11,11 @@ namespace Clide
         IAdapter<FlavoredProject, IProjectNode>
     {
         readonly Lazy<ISolutionExplorerNodeFactory> nodeFactory;
-        readonly JoinableLazy<IVsHierarchyItemManager> hierarchyItemManager;
-        readonly JoinableTaskFactory asyncManager;
 
         [ImportingConstructor]
-        public VsToSolutionAdapter(
-            JoinableTaskContext jtc,
-            Lazy<ISolutionExplorerNodeFactory> nodeFactory,
-            JoinableLazy<IVsHierarchyItemManager> hierarchyItemManager)
+        public VsToSolutionAdapter(Lazy<ISolutionExplorerNodeFactory> nodeFactory)
         {
-            asyncManager = jtc.Factory;
             this.nodeFactory = nodeFactory;
-            this.hierarchyItemManager = hierarchyItemManager;
         }
 
         public IProjectNode Adapt(IVsHierarchy from) =>
@@ -33,21 +23,13 @@ namespace Clide
                 Adapt(new FlavoredProject(from, innerHierarchy)) :
                 nodeFactory
                     .Value
-                    .CreateNode(GetHierarchyItem(from))
+                    .CreateNode(from)
                     as IProjectNode;
 
         public IProjectNode Adapt(FlavoredProject from) =>
             (nodeFactory
                 .Value
-                .CreateNode(GetHierarchyItem(from.InnerHierarchy))
+                .CreateNode(from.InnerHierarchy)
                 as ProjectNode).WithFlavorHierarchy(from.Hierarchy);
-
-        IVsHierarchyItem GetHierarchyItem(IVsHierarchy hierarchy) =>
-            asyncManager.Run(async () =>
-            {
-                await asyncManager.SwitchToMainThreadAsync();
-
-                return (await hierarchyItemManager.GetValueAsync()).GetHierarchyItem(hierarchy, VSConstants.VSITEMID_ROOT);
-            });
     }
 }
