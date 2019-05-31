@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Threading;
@@ -54,7 +55,7 @@ namespace Clide
             return factory == null ? new GenericNode(item, this, adapter, solutionExplorer) : factory.CreateNode(item);
         }
 
-        public ISolutionExplorerNode CreateNode(IVsHierarchy hierarchy, uint itemId) =>
+        public ISolutionExplorerNode CreateNode(IVsHierarchy hierarchy, uint itemId = VSConstants.VSITEMID_ROOT) =>
             CreateNode(asyncManager.Run(async () =>
             {
                 // TryGetHierarchyItem won't trigger the creation of the HierachyItem
