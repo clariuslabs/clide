@@ -61,7 +61,8 @@ namespace Clide
                 foreach (EnvDTE.SolutionContext context in solution.SolutionBuild.ActiveConfiguration.SolutionContexts)
                 {
                     string projectName = context.ProjectName;
-                    if (projectPath.EndsWith(projectName))
+                    projectName = System.IO.Path.GetFullPath(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(solution.FullName), projectName));
+                    if (string.Equals(projectName, projectPath, StringComparison.InvariantCultureIgnoreCase))
                     {
                         return context.ShouldDeploy;
                     }
@@ -83,7 +84,8 @@ namespace Clide
                 foreach (EnvDTE.SolutionContext context in solution.SolutionBuild.ActiveConfiguration.SolutionContexts)
                 {
                     string projectName = context.ProjectName;
-                    if (projectPath.EndsWith(projectName))
+                    projectName = System.IO.Path.GetFullPath(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(solution.FullName), projectName));
+                    if (string.Equals(projectName, projectPath, StringComparison.InvariantCultureIgnoreCase))
                     {
                         return context.ShouldBuild;
                     }
