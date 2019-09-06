@@ -18,14 +18,17 @@ namespace Clide
     class DialogWindowFactory : IDialogWindowFactory
     {
         readonly JoinableLazy<IVsUIShell> uiShell;
+        readonly IEventStream eventStream;
         readonly JoinableTaskFactory jtf;
 
         [ImportingConstructor]
         public DialogWindowFactory(
             JoinableLazy<IVsUIShell> uiShell,
-            JoinableTaskContext context)
+            JoinableTaskContext context,
+            IEventStream eventStream)
         {
             this.uiShell = uiShell;
+            this.eventStream = eventStream;
             jtf = context.Factory;
         }
 
@@ -52,6 +55,8 @@ namespace Clide
                     dialogWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
                     dialogWindow.ShowInTaskbar = false;
                 });
+
+                eventStream.Push(new DialogCreated(dialog));
             }
 
             return dialog;
