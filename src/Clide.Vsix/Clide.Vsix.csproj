@@ -35,8 +35,8 @@
   <ItemGroup>
     <None Include="source.extension.vsixmanifest" />
     <PackageFile Include="build\*.*" Kind="Build" />
-    <PackageFile Include="MSBuilder.VsixInstaller" Version="1.0.4" Kind="Dependency" />
-    <BindingRedirect Include="Clide" From="3.0.0.0" To="99.9.9.9" />
+    <PackageFile Include="MSBuilder.VsixInstaller" Version="1.0.4" Kind="Dependency" Visible="false" />
+    <BindingRedirect Include="Clide" From="3.0.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -60,7 +60,7 @@
       <PackageFile Include="$(TargetVsixContainer)" Kind="Tools" />
     </ItemGroup>
   </Target>
-
+  
   <Target Name="IncludeSymbolsFromProjectReferences" BeforeTargets="GetVsixSourceItems">
     <!-- For any project references that are set to copy local ('Private' property != false), add the output groups for project references that are not set -->
     <ItemGroup>
@@ -90,5 +90,4 @@
       <TargetVsixContainer Condition="'$(PackageOutputPath)' == ''">$([System.IO.Path]::Combine('$(OutDir)', '$(TargetVsixContainerName)'))</TargetVsixContainer>
     </PropertyGroup>
   </Target>
-
 </Project>
