@@ -4,10 +4,10 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Merq;
+using Microsoft.Internal.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.ComponentModelHost;
+using Microsoft.VisualStudio.ProjectSystem;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Threading;
@@ -120,6 +120,7 @@ namespace Clide
                    new Mock<SVsShellMonitorSelection>()
                        .As<IVsMonitorSelection>().Object &&
                x.GetService(typeof(SVsShell)) == vsShell.Object &&
+               x.GetService(typeof(SVsFeatureFlags)) == Mock.Of<IVsFeatureFlags>() && 
                x.GetService(typeof(SVsUIShell)) ==
                    new Mock<SVsUIShell>()
                        .As<IVsUIShell>().Object
@@ -188,6 +189,13 @@ namespace Clide
 
         [Export]
         public ExportProvider Exports { get { return exports; } }
+    }
+
+    [PartCreationPolicy(CreationPolicy.Shared)]
+    public class CpsProvider
+    {
+        [Export]
+        public UnconfiguredProject UnconfiguredProject { get; } = Mock.Of<UnconfiguredProject>();
     }
 
     public class MockCommandBusProvider

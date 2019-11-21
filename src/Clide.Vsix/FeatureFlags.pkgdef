@@ -1,0 +1,5 @@
+﻿[$RootKey$\FeatureFlags\Xamarin\DisableDiagnosticsBinlog]
+"Title"="Disable automatic binlogs collection using /log switch (requires restart)"
+"Description"="Whenever Visual Studio is started with the /log switch, automatic binlog collection happens for Xamarin builds, unless disabled."
+"Value"=dword:00000000
+"PreviewPaneChannels"="*"
