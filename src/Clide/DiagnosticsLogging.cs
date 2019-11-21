@@ -5,6 +5,7 @@ using System.Linq;
 using EnvDTE;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Logging;
+using Microsoft.Internal.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Threading;
 
@@ -18,15 +19,9 @@ namespace Clide
         /// </summary>
         const string FileNameFormat = "{0}.{1}.{2}.binlog";
 
-        static readonly string LogsBaseDir = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "Xamarin", "Logs");
-
-        static readonly bool shouldLog = (Environment.GetCommandLineArgs() ?? Array.Empty<string>())
-            .Any(x => "/log".Equals(x, StringComparison.OrdinalIgnoreCase));
-
         readonly JoinableTaskFactory jtf;
-        readonly JoinableTask<string> vsVersion;
+        readonly JoinableTask initialize;
+        string logsDir;
 
         [ImportingConstructor]
         public DiagnosticsLogging(
@@ -34,26 +29,28 @@ namespace Clide
             [Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider)
         {
             jtf = jtc.Factory;
-            vsVersion = jtf.RunAsync(async () =>
+            initialize = jtf.RunAsync(async () =>
             {
                 await jtf.SwitchToMainThreadAsync();
-                return serviceProvider.GetService<DTE>().Version;
+
+                logsDir = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                    "Xamarin", "Logs", serviceProvider.GetService<DTE>().Version);
+
+                ShouldLog = !serviceProvider.GetService<SVsFeatureFlags, IVsFeatureFlags>().IsFeatureEnabled("Xamarin.DisableDiagnosticsBinlog", false) &&
+                    (Environment.GetCommandLineArgs() ?? Array.Empty<string>()).Any(x => "/log".Equals(x, StringComparison.OrdinalIgnoreCase));
             });
         }
 
-        public bool ShouldLog => shouldLog;
+        public bool ShouldLog { get; private set; }
 
         public ILogger CreateLogger(string projectPath)
         {
-            string version = default;
-            if (!vsVersion.IsCompleted)
-                version = jtf.Run(async () => await vsVersion);
-            else
-                version = vsVersion.Task.Result;
+            if (!initialize.IsCompleted)
+                jtf.Run(async () => await initialize);
 
             var logFile = Path.Combine(
-                LogsBaseDir,
-                version,
+                logsDir,
                 string.Format(
                     FileNameFormat,
                     DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"),

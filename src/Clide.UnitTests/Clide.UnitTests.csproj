@@ -5,6 +5,10 @@
     <IncludeVSSDK>true</IncludeVSSDK>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\Clide\Interop\IVsFeatureFlags.cs" Link="Interop\IVsFeatureFlags.cs" />
+    <Compile Include="..\Clide\Interop\SVsFeatureFlags.cs" Link="Interop\SVsFeatureFlags.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.CSharp" />
@@ -14,5 +18,8 @@
     <ProjectReference Include="..\Clide.Extensibility\Clide.Extensibility.csproj" />
     <ProjectReference Include="..\Clide.Interfaces\Clide.Interfaces.csproj" />
     <ProjectReference Include="..\Clide\Clide.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Interop\" />
   </ItemGroup>
 </Project>
