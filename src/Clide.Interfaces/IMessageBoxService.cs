@@ -1,7 +1,5 @@
-﻿using System.Windows;
-namespace Clide
+﻿namespace Clide
 {
-
     /// <summary>
     /// Provides a contract to show messages to the user.
     /// </summary>

@@ -7,6 +7,7 @@
     <PackageReference Include="IFluentInterface" Version="$(FluentInterfaceVersion)" />
     <PackageReference Include="netfx-System.StringResources" Version="$(StringResourcesVersion)" />
     <PackageReference Include="System.Diagnostics.Tracer" Version="$(TracerVersion)" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="$(VisualStudioThreadingVersion)" />
   </ItemGroup>
 
   <ItemGroup>

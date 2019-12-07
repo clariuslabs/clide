@@ -70,56 +70,20 @@ namespace Clide.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Node &apos;{0}&apos; is not an ancestor of &apos;{1}&apos;..
+        ///   Looks up a localized string similar to Specified package type &apos;{0}&apos; does not have the required [Guid] attribute..
         /// </summary>
-        internal static string ISolutionExplorerNodeExtensions_NotAncestor {
+        internal static string IServiceProviderExtensions_MissingGuidAttribute {
             get {
-                return ResourceManager.GetString("ISolutionExplorerNodeExtensions_NotAncestor", resourceCulture);
+                return ResourceManager.GetString("IServiceProviderExtensions_MissingGuidAttribute", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Object has already been initialized..
+        ///   Looks up a localized string similar to Required dependency &apos;{0}&apos; was not found..
         /// </summary>
-        internal static string Settings_AlreadyInitialized {
+        internal static string ServiceLocator_MissingDependency {
             get {
-                return ResourceManager.GetString("Settings_AlreadyInitialized", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to EndEdit invoked without corresponding BeginEdit..
-        /// </summary>
-        internal static string Settings_EndEditWithoutBeginEdit {
-            get {
-                return ResourceManager.GetString("Settings_EndEditWithoutBeginEdit", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to EndInit invoked without corresponding BeginInit..
-        /// </summary>
-        internal static string Settings_EndInitWithoutBeginInit {
-            get {
-                return ResourceManager.GetString("Settings_EndInitWithoutBeginInit", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Failed to restore original state when editing was cancelled..
-        /// </summary>
-        internal static string Settings_FailedToRestore {
-            get {
-                return ResourceManager.GetString("Settings_FailedToRestore", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Settings successfully saved..
-        /// </summary>
-        internal static string Settings_TraceSaved {
-            get {
-                return ResourceManager.GetString("Settings_TraceSaved", resourceCulture);
+                return ResourceManager.GetString("ServiceLocator_MissingDependency", resourceCulture);
             }
         }
     }
