@@ -63,6 +63,7 @@
   <Target Name="Package">
     <MakeDir Directories="$(Out)" Condition="!Exists('$(Out)')" />
     <MSBuild Projects="src\Clide.Vsix\Clide.Vsix.csproj" Targets="Pack" Properties="$(CommonBuildProperties)" />
+    <MSBuild Projects="src\Clide.Vsix\Clide.Vsix.csproj" Targets="Pack" Properties="$(CommonBuildProperties);PackageId=Clide.Windows" />
   </Target>
 
   <Target Name="BeforePush" BeforeTargets="Push">

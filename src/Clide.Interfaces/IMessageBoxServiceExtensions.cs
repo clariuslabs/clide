@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-namespace Clide
+﻿namespace Clide
 {
 
     /// <summary>
@@ -12,7 +11,7 @@ namespace Clide
         /// </summary>
         public static void ShowInformation(this IMessageBoxService service, string message)
         {
-            service.Show(message, icon: System.Windows.MessageBoxImage.Information);
+            service.Show(message, icon: MessageBoxImage.Information);
         }
 
         /// <summary>
@@ -20,7 +19,7 @@ namespace Clide
         /// </summary>
         public static void ShowWarning(this IMessageBoxService service, string message)
         {
-            service.Show(message, icon: System.Windows.MessageBoxImage.Warning);
+            service.Show(message, icon: MessageBoxImage.Warning);
         }
     }
 }

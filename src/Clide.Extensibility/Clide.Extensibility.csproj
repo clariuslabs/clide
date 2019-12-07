@@ -15,6 +15,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\Clide.Interfaces\Clide.Interfaces.csproj" />
+    <ProjectReference Include="..\Clide.Windows\Clide.Windows.csproj" />
   </ItemGroup>
   
 </Project>

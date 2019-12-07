@@ -18,10 +18,10 @@
     <SystemComponent>false</SystemComponent>
     <SystemComponent Condition="'$(CI)' == 'true'">true</SystemComponent>
 
-    <PackageId>Clide</PackageId>
+    <PackageId Condition="'$(PackageId)' == ''" >Clide</PackageId>
+    <Description>Clide</Description>
     <Authors>kzu, Daniel Cazzulino</Authors>
     <Owners>clariuslabs, kzu</Owners>
-    <Description>Clide</Description>
     <Copyright>Copyright 2012 Clarius Labs</Copyright>
 
     <InferPackageContents>false</InferPackageContents>
@@ -53,6 +53,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Clide.Interfaces\Clide.Interfaces.csproj" />
+    <ProjectReference Include="..\Clide.Windows\Clide.Windows.csproj" />
     <ProjectReference Include="..\Clide\Clide.csproj" Pack="false" />
     <ProjectReference Include="..\Clide.Extensibility\Clide.Extensibility.csproj" Pack="false" />
   </ItemGroup>
@@ -92,4 +93,11 @@
       <TargetVsixContainer Condition="'$(PackageOutputPath)' == ''">$([System.IO.Path]::Combine('$(OutDir)', '$(TargetVsixContainerName)'))</TargetVsixContainer>
     </PropertyGroup>
   </Target>
+
+  <Target Name="AddWindowsPackageContents" BeforeTargets="GetPackageContents" Condition="'$(PackageId)' == 'Clide.Windows'">
+    <ItemGroup>
+      <PackageFile Include="$(MSBuildProjectDirectory)\$(OutputPath)\Clide.Windows.*" Kind="Lib" />
+    </ItemGroup>
+  </Target>
+
 </Project>

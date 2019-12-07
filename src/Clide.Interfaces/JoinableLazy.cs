@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Threading;
 
 namespace Clide
@@ -27,7 +26,11 @@ namespace Clide
             //We need to do this since accesing ThreadHelper from outside devenv.exe process will throw
             try
             {
-                defaultTaskFactory = ThreadHelper.JoinableTaskFactory;
+                // HACK for windows
+                defaultTaskFactory = Type
+                    .GetType("Microsoft.VisualStudio.Shell.ThreadHelper, Microsoft.VisualStudio.Shell")
+                    ?.GetProperty("JoinableTaskFactory", System.Reflection.BindingFlags.Static)
+                    ?.GetValue(null) as JoinableTaskFactory;
             }
             catch { }
         }

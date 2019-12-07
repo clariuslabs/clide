@@ -2,21 +2,24 @@
 
   <PropertyGroup>
     <TargetFramework>net46</TargetFramework>
-    <IncludeAnalyzers>true</IncludeAnalyzers>
-
-    <PackageId>Clide.Interfaces</PackageId>
-    <IsPackable>false</IsPackable>
+    <IncludeVSSDK>true</IncludeVSSDK>
     <IncludePack>true</IncludePack>
-    <InferPackageContents>false</InferPackageContents>
-
+    <IncludeAnalyzers>true</IncludeAnalyzers>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <InferPackageContents>false</InferPackageContents>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Clide.Interfaces\Clide.Interfaces.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
 
@@ -34,11 +37,5 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-
-  <Target Name="AddPackageContents" BeforeTargets="GetPackageContents">
-    <ItemGroup>
-      <PackageFile Include="$(MSBuildProjectDirectory)\$(OutputPath)\Clide.Interfaces.*" Kind="Lib" />
-    </ItemGroup>
-  </Target>
-
+  
 </Project>

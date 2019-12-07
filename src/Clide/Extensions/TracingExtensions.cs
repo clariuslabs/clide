@@ -21,8 +21,8 @@ namespace Clide
                 ServiceProvider.Global.GetService<SVsUIShell, IVsUIShell>().GetMainWindow(),
                 string.Format(format, args),
                 "Visual Studio",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Error);
         };
 
         /// <summary>
