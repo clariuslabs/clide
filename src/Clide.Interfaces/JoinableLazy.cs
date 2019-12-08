@@ -28,8 +28,8 @@ namespace Clide
             {
                 // HACK for windows
                 defaultTaskFactory = Type
-                    .GetType("Microsoft.VisualStudio.Shell.ThreadHelper, Microsoft.VisualStudio.Shell")
-                    ?.GetProperty("JoinableTaskFactory", System.Reflection.BindingFlags.Static)
+                    .GetType("Microsoft.VisualStudio.Shell.ThreadHelper, Microsoft.VisualStudio.Shell.15.0")
+                    ?.GetProperty("JoinableTaskFactory", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public)
                     ?.GetValue(null) as JoinableTaskFactory;
             }
             catch { }
