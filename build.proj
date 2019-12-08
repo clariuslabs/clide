@@ -1,15 +1,17 @@
-<Project DefaultTargets="Build" TreatAsLocalProperty="Configuration" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="build\corebuild.props" />
+<Project Sdk="Microsoft.Build.NoTargets/1.0.88" TreatAsLocalProperty="Configuration">
   <Import Project="src\Directory.Build.props" />
 
   <PropertyGroup>
+    <TargetFramework>netstandard1.0</TargetFramework>
+    <PackageTargetFallback>net11;net20;net35;net40;net403;net45;net451;net452;net46;net461;net462;net47;net471;netcore;netcore45;netcore451;netcore50;netcoreapp;netcoreapp1.0;netcoreapp2.0;win8;win81;win10;sl4;sl5;wp;wp7;wp75;wp8;wp81;wpa81;uap;uap10;netstandard1.0;netstandard1.1;netstandard1.2;netstandard1.3;netstandard1.4;netstandard1.5;netstandard1.6;netstandard2.0;netcoreapp1.0;netcoreapp2.0;monoandroid;monotouch;monomac;xamarinios;xamarinmac;xamarinpsthree;xamarinpsfour;xamarinpsvita;xamarinwatchos;xamarintvos;xamarinxboxthreesixty;xamarinxboxone</PackageTargetFallback>
+
     <Configuration Condition="'$(Configuration)' == '' and '$(CI)' == 'true'">Release</Configuration>
     <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
 
     <Out Condition=" '$(Out)' == '' ">$(PackageOutputPath)</Out>
     <Out Condition=" '$(Out)' == '' ">$(MSBuildThisFileDirectory)out</Out>
 
-    <CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration);PackageOutputPath=$(Out)</CommonBuildProperties>
+    <CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration);PackageOutputPath=$(Out);PackOnBuild=true</CommonBuildProperties>
     <CommonBuildProperties Condition="'$(Configuration)' == 'Release' and '$(DeployExtension)' == ''">$(CommonBuildProperties);DeployExtension=false</CommonBuildProperties>
 
     <Dev Condition="'$(Dev)' == ''">$(VisualStudioVersion)</Dev>
@@ -49,21 +51,11 @@
   <!-- Configures the project in preparation for Build. Includes running Restore. -->
   <Target Name="Configure" DependsOnTargets="Restore" />
 
-  <Target Name="EnsureLocalPackageSource" BeforeTargets="Restore">
-    <MakeDir Directories="$(TEMP)\packages" Condition="!Exists('$(TEMP)\packages')" />
-  </Target>
-
   <!-- Targets can be documented, and /t:Help will render the help -->
-  <Target Name="Build">
+  <Target Name="OnBuild" AfterTargets="Build">
     <MSBuild Projects="src\Clide.Vsix\Clide.Vsix.csproj" Targets="Version" Properties="$(CommonBuildProperties);GitInfoReportImportance=high" />
     <MakeDir Directories="$(Out)" Condition="!Exists('$(Out)')" />
     <MSBuild Projects="@(Solution)" Properties="$(CommonBuildProperties);Dev=%(Dev.Identity)" />
-  </Target>
-
-  <Target Name="Package">
-    <MakeDir Directories="$(Out)" Condition="!Exists('$(Out)')" />
-    <MSBuild Projects="src\Clide.Vsix\Clide.Vsix.csproj" Targets="Pack" Properties="$(CommonBuildProperties)" />
-    <MSBuild Projects="src\Clide.Vsix\Clide.Vsix.csproj" Targets="Pack" Properties="$(CommonBuildProperties);PackageId=Clide.Windows" />
   </Target>
 
   <Target Name="BeforePush" BeforeTargets="Push">
@@ -80,6 +72,8 @@
     <MSBuild Projects="%(Solution.FullPath)" Targets="Restore" Properties="$(CommonBuildProperties);RestoreOnly=true" />
   </Target>
 
+  <Target Name="Package" />
+
   <Target Name="Test">
     <MSBuild Projects="src\Clide.UnitTests\Clide.UnitTests.csproj" BuildInParallel="false" Targets="GetTargetPath" Properties="$(CommonBuildProperties)">
       <Output TaskParameter="TargetOutputs" ItemName="TestAssembly" />
@@ -92,5 +86,4 @@
     <!-- TODO: build + deploy to exp, run VS -->
   </Target>
 
-  <Import Project="build\corebuild.targets" />
 </Project>
