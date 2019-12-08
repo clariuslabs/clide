@@ -6,7 +6,10 @@
     <IncludePack>true</IncludePack>
     <IncludeAnalyzers>true</IncludeAnalyzers>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <InferPackageContents>false</InferPackageContents>
+
+    <PackageId>Clide.Windows</PackageId>
+    <Description>Clide.Windows</Description>
+    <IncludeFrameworkReferencesInPackage>false</IncludeFrameworkReferencesInPackage>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,12 +18,12 @@
 
   <ItemGroup>
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
 
   <ItemGroup>
