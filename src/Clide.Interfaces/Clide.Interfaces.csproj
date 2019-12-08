@@ -4,8 +4,8 @@
     <TargetFramework>net46</TargetFramework>
     <IncludeAnalyzers>true</IncludeAnalyzers>
 
-    <PackageId>Clide.Interfaces</PackageId>
-    <IsPackable>false</IsPackable>
+    <PackageId>Clide</PackageId>
+    <Description>Clide</Description>
     <IncludePack>true</IncludePack>
     <InferPackageContents>false</InferPackageContents>
 
@@ -14,10 +14,10 @@
 
   <ItemGroup>
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="WindowsBase" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
 
   <ItemGroup>

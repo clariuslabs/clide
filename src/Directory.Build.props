@@ -25,13 +25,14 @@
     <NoWarn>$(NoWarn);0436;NU1604</NoWarn>
     <WarningsAsErrors>NU1603</WarningsAsErrors>
 
-    <!-- We never want to import the SDK Pack targets, since they conflict with nugetizer -->
-    <NuGetBuildTasksPackTargets>NO-SDK-TARGETS</NuGetBuildTasksPackTargets>
-
     <!-- We don't multitarget, so opt-out of this. -->
-		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>    
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <!-- We never emit runtime-specific assemblies, so opt-out of this. -->
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+
+    <Authors>kzu, Daniel Cazzulino</Authors>
+    <Owners>clariuslabs, kzu</Owners>
+    <Copyright>Copyright 2012 Clarius Labs</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(CI)' == ''">
@@ -52,11 +53,11 @@
     <FluentInterfaceVersion>2.0.3</FluentInterfaceVersion>
     <StringResourcesVersion>3.1.10</StringResourcesVersion>
     <TracerVersion>2.0.8</TracerVersion>
-    <NuGetizerVersion>0.2.2</NuGetizerVersion>
+    <NuGetizerVersion>0.2.5-dev.10</NuGetizerVersion>
     <XunitVersion>2.3.1</XunitVersion>
 
-	<VisualStudioThreadingVersion>15.8.132</VisualStudioThreadingVersion>
-	
+    <VisualStudioThreadingVersion>15.8.132</VisualStudioThreadingVersion>
+
     <XunitVsixVersion>0.4.0-alpha.*</XunitVsixVersion>
     <XVSSDKVersion Condition="'$(CI)' != 'true'">0.4.0-alpha.*</XVSSDKVersion>
     <XVSSDKVersion Condition="'$(CI)' == 'true'">0.4.0-alpha.9</XVSSDKVersion>

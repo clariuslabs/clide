@@ -2,12 +2,12 @@
 
   <!-- Common Packages -->
   <ItemGroup>
-    <PackageReference Include="Merq" Version="$(MerqVersion)" />
-    <PackageReference Include="System.Reactive.Interfaces" Version="$(RxVersion)" />
-    <PackageReference Include="IFluentInterface" Version="$(FluentInterfaceVersion)" />
-    <PackageReference Include="netfx-System.StringResources" Version="$(StringResourcesVersion)" />
-    <PackageReference Include="System.Diagnostics.Tracer" Version="$(TracerVersion)" />
-    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="$(VisualStudioThreadingVersion)" />
+    <PackageReference Include="Merq" Version="$(MerqVersion)" Pack="false" />
+    <PackageReference Include="System.Reactive.Interfaces" Version="$(RxVersion)" Pack="false" />
+    <PackageReference Include="IFluentInterface" Version="$(FluentInterfaceVersion)" Pack="false" />
+    <PackageReference Include="netfx-System.StringResources" Version="$(StringResourcesVersion)" Pack="false" />
+    <PackageReference Include="System.Diagnostics.Tracer" Version="$(TracerVersion)" Pack="false" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="$(VisualStudioThreadingVersion)" Pack="false" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,11 +15,11 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(IncludePack)' == 'true'">
-    <PackageReference Include="NuGet.Build.Packaging" Version="$(NuGetizerVersion)" />
+    <PackageReference Include="NuGet.Build.Packaging" Version="$(NuGetizerVersion)" Pack="false" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(IncludeVSSDK)' == 'true'">
-    <PackageReference Include="Xamarin.VSSDK" Version="$(XVSSDKVersion)" />
+    <PackageReference Include="Xamarin.VSSDK" Version="$(XVSSDKVersion)" Pack="false" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(IncludeRx)' == 'true'">
@@ -27,8 +27,8 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(IncludeAnalyzers)' == 'true'">
-    <PackageReference Include="Microsoft.VisualStudio.SDK.Analyzers" Version="$(VSSDKAnalyzersVersion)" />
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="$(VSThreadingAnalyzersVersion)" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK.Analyzers" Version="$(VSSDKAnalyzersVersion)" Pack="false" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="$(VSThreadingAnalyzersVersion)" Pack="false" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(IncludeTests)' == 'true' or '$(IncludeIntegrationTests)' == 'true'">

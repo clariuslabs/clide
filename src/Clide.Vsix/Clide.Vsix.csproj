@@ -1,9 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" InitialTargets="FixupVsixDependencies">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net46</TargetFramework>
 
     <IncludeAnalyzers>true</IncludeAnalyzers>
-    <IncludePack>true</IncludePack>
     <IncludeVSSDK>true</IncludeVSSDK>
     <TargetVsixContainerName>Clide.vsix</TargetVsixContainerName>
 
@@ -17,14 +16,6 @@
     <Experimental Condition="'$(CI)' == 'true'">false</Experimental>
     <SystemComponent>false</SystemComponent>
     <SystemComponent Condition="'$(CI)' == 'true'">true</SystemComponent>
-
-    <PackageId Condition="'$(PackageId)' == ''" >Clide</PackageId>
-    <Description>Clide</Description>
-    <Authors>kzu, Daniel Cazzulino</Authors>
-    <Owners>clariuslabs, kzu</Owners>
-    <Copyright>Copyright 2012 Clarius Labs</Copyright>
-
-    <InferPackageContents>false</InferPackageContents>
   </PropertyGroup>
 
   <!-- Dynamic manifest info -->
@@ -37,12 +28,10 @@
     <PackageFile Include="build\*.*" Kind="Build" />
     <None Remove="FeatureFlags.pkgdef" />
     <Content Include="FeatureFlags.pkgdef" IncludeInVSIX="true" CopyToOutputDirectory="PreserveNewest" />
-    <PackageFile Include="MSBuilder.VsixInstaller" Version="1.0.4" Kind="Dependency" Visible="false" />
     <BindingRedirect Include="Clide" From="3.0.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MSBuilder.VsixInstaller" Version="1.0.4" />
     <PackageReference Include="Xamarin.VSSDK.BuildTools" Version="$(XVSSDKBuildToolsVersion)" />
   </ItemGroup>
 
@@ -55,27 +44,15 @@
     <ProjectReference Include="..\Clide.Interfaces\Clide.Interfaces.csproj" />
     <ProjectReference Include="..\Clide.Windows\Clide.Windows.csproj" />
     <ProjectReference Include="..\Clide\Clide.csproj" Pack="false" />
-    <ProjectReference Include="..\Clide.Extensibility\Clide.Extensibility.csproj" Pack="false" />
+    <ProjectReference Include="..\Clide.Extensibility\Clide.Extensibility.csproj" />
   </ItemGroup>
 
-  <Target Name="AddPackageContents" BeforeTargets="GetPackageContents" DependsOnTargets="AppendVsixVersionToTargetVsixContainer">
-    <ItemGroup>
-      <PackageFile Include="$(TargetVsixContainer)" Kind="Tools" />
-    </ItemGroup>
-  </Target>
-  
   <Target Name="IncludeSymbolsFromProjectReferences" BeforeTargets="GetVsixSourceItems">
     <!-- For any project references that are set to copy local ('Private' property != false), add the output groups for project references that are not set -->
     <ItemGroup>
       <ProjectReferenceWithConfiguration Condition="'%(ProjectReferenceWithConfiguration.Private)' != 'false' and '%(ProjectReferenceWithConfiguration.IncludeOutputGroupsInVSIX)' == ''">
         <IncludeOutputGroupsInVSIX>$(DefaultIncludeOutputGroupsInVSIX)</IncludeOutputGroupsInVSIX>
       </ProjectReferenceWithConfiguration>
-    </ItemGroup>
-  </Target>
-
-  <Target Name="FixupVsixDependencies">
-    <ItemGroup>
-      <VsixDependency Remove="@(VsixDependency)" />
     </ItemGroup>
   </Target>
 
@@ -92,12 +69,6 @@
       <TargetVsixContainer Condition="'$(PackageOutputPath)' != ''">$([System.IO.Path]::Combine('$(PackageOutputPath)', '$(TargetVsixContainerName)'))</TargetVsixContainer>      
       <TargetVsixContainer Condition="'$(PackageOutputPath)' == ''">$([System.IO.Path]::Combine('$(OutDir)', '$(TargetVsixContainerName)'))</TargetVsixContainer>
     </PropertyGroup>
-  </Target>
-
-  <Target Name="AddWindowsPackageContents" BeforeTargets="GetPackageContents" Condition="'$(PackageId)' == 'Clide.Windows'">
-    <ItemGroup>
-      <PackageFile Include="$(MSBuildProjectDirectory)\$(OutputPath)\Clide.Windows.*" Kind="Lib" />
-    </ItemGroup>
   </Target>
 
 </Project>
