@@ -3,9 +3,9 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 
 [assembly: ProvideCodeBase]
-[assembly: ProvideCodeBase(AssemblyName = "Clide.Core")]
-[assembly: ProvideCodeBase(AssemblyName = "Clide.Extensibility")]
 [assembly: ProvideCodeBase(AssemblyName = "Clide.Interfaces")]
+[assembly: ProvideCodeBase(AssemblyName = "Clide.Windows")]
+[assembly: ProvideCodeBase(AssemblyName = "Clide.Core.Windows")]
 
 namespace Clide
 {

@@ -29,7 +29,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Clide.Interfaces\Clide.Interfaces.csproj" />
-    <ProjectReference Include="..\Clide\Clide.csproj" />
+    <ProjectReference Include="..\Clide.Core.Windows\Clide.Core.Windows.csproj" />
   </ItemGroup>
   <ItemGroup>
     <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
