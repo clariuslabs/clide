@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 
-namespace Clide
+namespace Clide.Sdk
 {
     /// <summary>
     /// Decorates a component that implements <see cref="IAdapter{TFrom, TTo}"/> 

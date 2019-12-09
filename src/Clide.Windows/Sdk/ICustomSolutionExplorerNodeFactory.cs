@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.Shell;
 
-namespace Clide
+namespace Clide.Sdk
 {
     /// <summary>
     /// Creates solution nodes from hierarchy items.

@@ -5,6 +5,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Clide.Sdk;
 using FromTo = System.Tuple<System.Type, System.Type>;
 
 namespace Clide

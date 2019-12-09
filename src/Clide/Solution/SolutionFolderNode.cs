@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Clide.Sdk;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;

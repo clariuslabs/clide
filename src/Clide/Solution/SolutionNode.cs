@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Clide.Interop;
 using Clide.Properties;
+using Clide.Sdk;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio;
