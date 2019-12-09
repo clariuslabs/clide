@@ -45,10 +45,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Clide\Clide.csproj" />
     <ProjectReference Include="..\Clide.Interfaces\Clide.Interfaces.csproj" />
     <ProjectReference Include="..\Clide.Mac\Clide.Mac.csproj" />
     <ProjectReference Include="..\Clide.Windows\Clide.Windows.csproj" />
+    <ProjectReference Include="..\Clide.Core.Windows\Clide.Core.Windows.csproj" />
+    <ProjectReference Include="..\Clide.Core.Mac\Clide.Core.Mac.csproj" />
   </ItemGroup>
 
   <Target Name="IncludeSymbolsFromProjectReferences" BeforeTargets="GetVsixSourceItems">
