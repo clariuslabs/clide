@@ -42,7 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageFile Include="..\Clide.Vsix\bin\$(Configuration)\*.vsix" PackagePath="tools\%(Filename)%(Extension)" />
+    <PackageFile Include="$(PackageOutputPath)\*.vsix" PackagePath="tools\%(Filename)%(Extension)" />
     <PackageFile Include="build\*.*" Kind="Build" />
   </ItemGroup>
 

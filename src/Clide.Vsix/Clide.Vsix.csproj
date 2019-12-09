@@ -28,7 +28,7 @@
     <PackageFile Include="build\*.*" Kind="Build" />
     <EmbeddedResource Include="Clide.addin.xml" />
     <None Remove="Clide.addin.xml" />
-    <None Remove="Clide.addins" />
+    <None Remove="Clide.addins" />  
     <None Remove="FeatureFlags.pkgdef" />
     <Content Include="Clide.addins" IncludeInVSIX="true" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="FeatureFlags.pkgdef" IncludeInVSIX="true" CopyToOutputDirectory="PreserveNewest" />
@@ -72,7 +72,6 @@
     <PropertyGroup>
       <TargetVsixContainerName>$([System.IO.Path]::ChangeExtension('$(TargetVsixContainerName)', '$(VsixVersion).vsix'))</TargetVsixContainerName>
       <TargetVsixContainer Condition="'$(PackageOutputPath)' != ''">$([System.IO.Path]::Combine('$(PackageOutputPath)', '$(TargetVsixContainerName)'))</TargetVsixContainer>      
-      <TargetVsixContainer Condition="'$(PackageOutputPath)' == ''">$([System.IO.Path]::Combine('$(OutDir)', '$(TargetVsixContainerName)'))</TargetVsixContainer>
     </PropertyGroup>
   </Target>
 
