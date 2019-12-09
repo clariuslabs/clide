@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace Clide
+namespace Clide.Sdk
 {
     /// <summary>
     /// Creates solution nodes for hierarchy item, based on the registered and 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Build.Evaluation;
+﻿using Clide.Sdk;
+using Microsoft.Build.Evaluation;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;

@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Clide.Interfaces\Clide.Interfaces.csproj" />
-    <ProjectReference Include="..\Clide.Extensibility\Clide.Extensibility.csproj" />
     <ProjectReference Include="..\Clide.Windows\Clide.Windows.csproj" />
   </ItemGroup>
 

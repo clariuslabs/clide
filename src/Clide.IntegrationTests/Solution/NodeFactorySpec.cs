@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Clide.Sdk;
 using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;

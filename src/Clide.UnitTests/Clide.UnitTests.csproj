@@ -15,7 +15,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Clide.Extensibility\Clide.Extensibility.csproj" />
     <ProjectReference Include="..\Clide.Interfaces\Clide.Interfaces.csproj" />
     <ProjectReference Include="..\Clide\Clide.csproj" />
   </ItemGroup>

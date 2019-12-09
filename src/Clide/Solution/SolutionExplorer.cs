@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Design;
 using System.Linq;
 using Clide.Interop;
+using Clide.Sdk;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;

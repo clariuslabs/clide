@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel.Composition;
 using Clide.Interop;
+using Clide.Sdk;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 

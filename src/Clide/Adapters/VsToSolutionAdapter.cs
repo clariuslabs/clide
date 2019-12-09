@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.Composition;
+using Clide.Sdk;
 using Microsoft.VisualStudio.Shell.Flavor;
 using Microsoft.VisualStudio.Shell.Interop;
 

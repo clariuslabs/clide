@@ -1,4 +1,4 @@
-namespace Clide
+namespace Clide.Sdk
 {
     /// <summary>
     /// Marker interface for all static adapters.

@@ -1,4 +1,5 @@
-﻿using EnvDTE;
+﻿using Clide.Sdk;
+using EnvDTE;
 using VSLangProj;
 
 namespace Clide.Adapters

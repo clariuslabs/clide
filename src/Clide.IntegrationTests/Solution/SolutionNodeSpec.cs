@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Clide.Interop;
+using Clide.Sdk;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;

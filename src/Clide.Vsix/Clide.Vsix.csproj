@@ -47,7 +47,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Clide\Clide.csproj" />
     <ProjectReference Include="..\Clide.Interfaces\Clide.Interfaces.csproj" />
-    <ProjectReference Include="..\Clide.Extensibility\Clide.Extensibility.csproj" />
     <ProjectReference Include="..\Clide.Mac\Clide.Mac.csproj" />
     <ProjectReference Include="..\Clide.Windows\Clide.Windows.csproj" />
   </ItemGroup>

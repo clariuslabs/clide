@@ -1,4 +1,5 @@
 ﻿using Clide.Properties;
+using Clide.Sdk;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using System;
