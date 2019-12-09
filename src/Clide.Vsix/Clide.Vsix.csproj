@@ -26,11 +26,15 @@
   <ItemGroup>
     <None Include="source.extension.vsixmanifest" />
     <PackageFile Include="build\*.*" Kind="Build" />
+    <EmbeddedResource Include="Clide.addin.xml" />
+    <None Remove="Clide.addin.xml" />
+    <None Remove="Clide.addins" />
     <None Remove="FeatureFlags.pkgdef" />
+    <Content Include="Clide.addins" IncludeInVSIX="true" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="FeatureFlags.pkgdef" IncludeInVSIX="true" CopyToOutputDirectory="PreserveNewest" />
     <BindingRedirect Include="Clide" From="3.0.0.0" />
   </ItemGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="Xamarin.VSSDK.BuildTools" Version="$(XVSSDKBuildToolsVersion)" />
   </ItemGroup>
@@ -41,10 +45,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Clide\Clide.csproj" />
     <ProjectReference Include="..\Clide.Interfaces\Clide.Interfaces.csproj" />
-    <ProjectReference Include="..\Clide.Windows\Clide.Windows.csproj" />
-    <ProjectReference Include="..\Clide\Clide.csproj" Pack="false" />
     <ProjectReference Include="..\Clide.Extensibility\Clide.Extensibility.csproj" />
+    <ProjectReference Include="..\Clide.Mac\Clide.Mac.csproj" />
+    <ProjectReference Include="..\Clide.Windows\Clide.Windows.csproj" />
   </ItemGroup>
 
   <Target Name="IncludeSymbolsFromProjectReferences" BeforeTargets="GetVsixSourceItems">

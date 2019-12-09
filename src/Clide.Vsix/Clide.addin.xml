@@ -1,0 +1,4 @@
+﻿<ExtensionModel>
+  <Import assembly="Clide.Interfaces.dll" />
+  <Import assembly="Clide.Mac.dll" />
+</ExtensionModel>
