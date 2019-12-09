@@ -6,4 +6,5 @@
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "We use lower-case BDD style naming for tests")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1024:Test methods cannot have overloads", Justification = "We re-declare the methods in the derived class to annotate with inline data/theory.")]
-
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "VSTHRD200:Use \"Async\" suffix for async methods", Justification = "For unit tests, no public API.")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "VSTHRD012:Provide JoinableTaskFactory where allowed", Justification = "For unit tests, no public API.")]
