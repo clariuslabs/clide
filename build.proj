@@ -11,7 +11,7 @@
     <Out Condition=" '$(Out)' == '' ">$(PackageOutputPath)</Out>
     <Out Condition=" '$(Out)' == '' ">$(MSBuildThisFileDirectory)out</Out>
 
-    <CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration);PackageOutputPath=$(Out);PackOnBuild=true</CommonBuildProperties>
+    <CommonBuildProperties>WarningLevel=0;NoWarn=1591;RunCodeAnalysis=false;Configuration=$(Configuration);PackageOutputPath=$(Out)</CommonBuildProperties>
     <CommonBuildProperties Condition="'$(Configuration)' == 'Release' and '$(DeployExtension)' == ''">$(CommonBuildProperties);DeployExtension=false</CommonBuildProperties>
 
     <Dev Condition="'$(Dev)' == ''">$(VisualStudioVersion)</Dev>
@@ -72,7 +72,10 @@
     <MSBuild Projects="%(Solution.FullPath)" Targets="Restore" Properties="$(CommonBuildProperties);RestoreOnly=true" />
   </Target>
 
-  <Target Name="Package" />
+  <Target Name="Package">
+    <MSBuild Projects="src\Clide.Mac\Clide.Mac.csproj" Targets="Pack" Properties="$(CommonBuildProperties);BuildProjectReferences=false" />
+    <MSBuild Projects="src\Clide.Windows\Clide.Windows.csproj" Targets="Pack" Properties="$(CommonBuildProperties);BuildProjectReferences=false" />
+  </Target>
 
   <Target Name="Test">
     <MSBuild Projects="src\Clide.UnitTests\Clide.UnitTests.csproj" BuildInParallel="false" Targets="GetTargetPath" Properties="$(CommonBuildProperties)">
