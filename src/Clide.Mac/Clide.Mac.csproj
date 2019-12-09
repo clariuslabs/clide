@@ -14,4 +14,9 @@
     <ProjectReference Include="..\Clide.Interfaces\Clide.Interfaces.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageFile Include="..\Clide.Vsix\bin\$(Configuration)\*.vsix" PackagePath="tools\%(Filename)%(Extension)" />
+    <PackageFile Include="build\*.*" Kind="Build" />
+  </ItemGroup>
+
 </Project>
