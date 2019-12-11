@@ -13,7 +13,7 @@
     <Prerequisite Id="Microsoft.VisualStudio.Component.Merq" Version="[1.1,)" DisplayName="Common Xamarin internal tools" />
   </Prerequisites>
   <Assets>
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Clide" Path="Clide.Core.dll" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Clide.Core.Windows" Path="Clide.Core.Windows.dll" />
     <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
     <Asset Type="Microsoft.VisualStudio.VsPackage" Path="BindingRedirects.pkgdef" />
     <Asset Type="Microsoft.VisualStudio.VsPackage" Path="FeatureFlags.pkgdef" />
