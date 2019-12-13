@@ -56,7 +56,7 @@
     <NuGetizerVersion>0.2.5-dev.10</NuGetizerVersion>
     <XunitVersion>2.3.1</XunitVersion>
 
-    <VisualStudioThreadingVersion>15.8.132</VisualStudioThreadingVersion>
+    <VisualStudioThreadingVersion>15.8.145</VisualStudioThreadingVersion>
 
     <XunitVsixVersion>0.4.0-alpha.*</XunitVsixVersion>
     <XVSSDKVersion Condition="'$(CI)' != 'true'">0.4.0-alpha.*</XVSSDKVersion>
@@ -67,7 +67,7 @@
     <VSSDKBuildToolsVersion>15.8.3252</VSSDKBuildToolsVersion>
 
     <VSSDKAnalyzersVersion>15.8.33</VSSDKAnalyzersVersion>
-    <VSThreadingAnalyzersVersion>15.8.132</VSThreadingAnalyzersVersion>
+    <VSThreadingAnalyzersVersion>15.8.145</VSThreadingAnalyzersVersion>
   </PropertyGroup>
 
   <Target Name="GetCI" Returns="$(CI)">
