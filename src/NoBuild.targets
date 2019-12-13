@@ -1,0 +1,4 @@
+<Project>
+    <Target Name="Build" />
+    <Target Name="CoreBuild" />
+</Project>

@@ -4,6 +4,7 @@
     <TargetFramework>net472</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <IsPackable>false</IsPackable>
+    <TargetOS>Unix</TargetOS>
   </PropertyGroup>
 
   <ItemGroup>

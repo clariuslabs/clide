@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <TargetOS>Unix</TargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MonoDevelop.Addins" Version="0.4.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Clide.Interfaces\Clide.Interfaces.csproj" />
+    <ProjectReference Include="..\Clide.Mac\Clide.Mac.csproj" />
+    <ProjectReference Include="..\Clide.Core.Mac\Clide.Core.Mac.csproj" />
+  </ItemGroup>
+
+</Project>

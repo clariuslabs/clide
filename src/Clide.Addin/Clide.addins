@@ -1,6 +1,5 @@
 ﻿<Addins>
   <Exclude>Clide.Core.dll</Exclude>
-  <Exclude>Clide.Extensibility.dll</Exclude>
   <Exclude>Clide.Interfaces.dll</Exclude>
   <Exclude>Clide.Windows.dll</Exclude>
 </Addins>
