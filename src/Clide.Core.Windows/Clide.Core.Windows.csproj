@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <IncludeVSSDK>true</IncludeVSSDK>
     <IncludeRx>true</IncludeRx>
     <IncludeAnalyzers>true</IncludeAnalyzers>
