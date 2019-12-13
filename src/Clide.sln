@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\build.proj = ..\build.proj
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
+		NoBuild.targets = NoBuild.targets
 		NuGet.Config = NuGet.Config
 		..\tfs.yml = ..\tfs.yml
 		Version.targets = Version.targets
@@ -30,7 +31,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clide.Windows", "Clide.Wind
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clide.Mac", "Clide.Mac\Clide.Mac.csproj", "{B97A6D3F-7DCA-4A50-8C88-D81180D87114}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clide.Core.Mac", "Clide.Core.Mac\Clide.Core.Mac.csproj", "{195B2320-E7D2-4D25-A270-06024B0AB293}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clide.Core.Mac", "Clide.Core.Mac\Clide.Core.Mac.csproj", "{195B2320-E7D2-4D25-A270-06024B0AB293}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clide.Addin", "Clide.Addin\Clide.Addin.csproj", "{5596C6B2-57B4-4710-869A-1B70D311AD20}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -70,6 +73,10 @@ Global
 		{195B2320-E7D2-4D25-A270-06024B0AB293}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{195B2320-E7D2-4D25-A270-06024B0AB293}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{195B2320-E7D2-4D25-A270-06024B0AB293}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5596C6B2-57B4-4710-869A-1B70D311AD20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5596C6B2-57B4-4710-869A-1B70D311AD20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5596C6B2-57B4-4710-869A-1B70D311AD20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5596C6B2-57B4-4710-869A-1B70D311AD20}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

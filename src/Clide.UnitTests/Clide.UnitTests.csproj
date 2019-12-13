@@ -3,6 +3,7 @@
     <TargetFramework>net472</TargetFramework>
     <IncludeTests>true</IncludeTests>
     <IncludeVSSDK>true</IncludeVSSDK>
+    <TargetOS>Windows_NT</TargetOS>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\Clide.Core.Windows\Interop\IVsFeatureFlags.cs" Link="Interop\IVsFeatureFlags.cs" />

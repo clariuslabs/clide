@@ -5,6 +5,7 @@
     <IncludeIntegrationTests>true</IncludeIntegrationTests>
     <EnableDefaultItems>false</EnableDefaultItems>
     <AddSyntheticProjectReferencesForSolutionDependencies>false</AddSyntheticProjectReferencesForSolutionDependencies>
+    <TargetOS>Windows_NT</TargetOS>
     <GenerateAssemblyVsixAttribute>false</GenerateAssemblyVsixAttribute>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

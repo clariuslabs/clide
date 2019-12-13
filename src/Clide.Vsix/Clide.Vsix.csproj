@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
+    <TargetOS>Windows_NT</TargetOS>
 
     <IncludeAnalyzers>true</IncludeAnalyzers>
     <IncludeVSSDK>true</IncludeVSSDK>
@@ -26,30 +27,20 @@
   <ItemGroup>
     <None Include="source.extension.vsixmanifest" />
     <PackageFile Include="build\*.*" Kind="Build" />
-    <EmbeddedResource Include="Clide.addin.xml" />
-    <None Remove="Clide.addin.xml" />
-    <None Remove="Clide.addins" />  
     <None Remove="FeatureFlags.pkgdef" />
-    <Content Include="Clide.addins" IncludeInVSIX="true" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="FeatureFlags.pkgdef" IncludeInVSIX="true" CopyToOutputDirectory="PreserveNewest" />
     <BindingRedirect Include="Clide" From="3.0.0.0" />
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="Xamarin.VSSDK.BuildTools" Version="$(XVSSDKBuildToolsVersion)" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(CI)' == 'true'">
-    <!-- Always build with latest VSSDK in CI -->
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="$(VSSDKBuildToolsVersion)" />
+    <ProjectReference Include="..\Clide.Interfaces\Clide.Interfaces.csproj" />
+    <ProjectReference Include="..\Clide.Windows\Clide.Windows.csproj" />
+    <ProjectReference Include="..\Clide.Core.Windows\Clide.Core.Windows.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Clide.Interfaces\Clide.Interfaces.csproj" />
-    <ProjectReference Include="..\Clide.Mac\Clide.Mac.csproj" />
-    <ProjectReference Include="..\Clide.Windows\Clide.Windows.csproj" />
-    <ProjectReference Include="..\Clide.Core.Windows\Clide.Core.Windows.csproj" />
-    <ProjectReference Include="..\Clide.Core.Mac\Clide.Core.Mac.csproj" />
+    <PackageReference Include="Xamarin.VSSDK.BuildTools" Version="$(XVSSDKBuildToolsVersion)" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="$(VSSDKBuildToolsVersion)" />
   </ItemGroup>
 
   <Target Name="IncludeSymbolsFromProjectReferences" BeforeTargets="GetVsixSourceItems">

@@ -64,7 +64,7 @@
     <XVSSDKBuildToolsVersion Condition="'$(CI)' != 'true'">0.4.0-alpha.*</XVSSDKBuildToolsVersion>
     <XVSSDKBuildToolsVersion Condition="'$(CI)' == 'true'">0.4.0-alpha.9</XVSSDKBuildToolsVersion>
 
-    <VSSDKBuildToolsVersion>15.8.3252</VSSDKBuildToolsVersion>
+    <VSSDKBuildToolsVersion>15.9.3039</VSSDKBuildToolsVersion>
 
     <VSSDKAnalyzersVersion>15.8.33</VSSDKAnalyzersVersion>
     <VSThreadingAnalyzersVersion>15.8.145</VSThreadingAnalyzersVersion>

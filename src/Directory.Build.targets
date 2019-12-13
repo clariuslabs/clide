@@ -26,7 +26,7 @@
     <PackageReference Include="System.Reactive.Linq" Version="$(RxVersion)" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(IncludeAnalyzers)' == 'true'">
+  <ItemGroup Condition="'$(IncludeAnalyzers)' == 'true' And '$(TargetOS)' == '$(OS)'">
     <PackageReference Include="Microsoft.VisualStudio.SDK.Analyzers" Version="$(VSSDKAnalyzersVersion)" Pack="false" />
     <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="$(VSThreadingAnalyzersVersion)" Pack="false" />
   </ItemGroup>
@@ -52,8 +52,9 @@
   </PropertyGroup>
 
   <Import Project="Version.targets" />
-
-  <Target Name="LocalPublish" Condition="'$(CI)' != 'true'" AfterTargets="Pack">
+  <Import Project="NoBuild.targets" Condition="'$(NoBuild)' == 'true' Or ('$(TargetOS)' != '' And '$(TargetOS)' != '$(OS)')"/>
+  
+  <Target Name="LocalPublish" Condition="!$(CI)" AfterTargets="Pack">
     <Exec Command='rd "$(NuGetPackageRoot)$(PackageId.ToLowerInvariant())" /q /s' Condition="Exists('$(NuGetPackageRoot)$(PackageId.ToLowerInvariant())')" />
 
     <ItemGroup>
