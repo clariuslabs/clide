@@ -70,6 +70,15 @@ namespace Clide.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Required dependency &apos;{0}&apos; was not found..
+        /// </summary>
+        internal static string IServiceServiceExtensions_MissingDependency {
+            get {
+                return ResourceManager.GetString("IServiceServiceExtensions_MissingDependency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Node &apos;{0}&apos; is not an ancestor of &apos;{1}&apos;..
         /// </summary>
         internal static string ISolutionExplorerNodeExtensions_NotAncestor {
