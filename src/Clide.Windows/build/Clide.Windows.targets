@@ -6,9 +6,4 @@
     </PropertyGroup>
   </Target>
   <Target Name="ClideVsix" Returns="$(ClideVsixPath)" />
-  <Target Name="_ExcludeClideFromVsix" DependsOnTargets="GetVsixSourceItems" BeforeTargets="RemoveVSSDKAssemblies">
-    <ItemGroup>
-      <SuppressPackaging Include="@(VSIXSourceItem)" Condition=" $([MSBuild]::ValueOrDefault('%(Filename)', '').StartsWith('Clide')) " />
-    </ItemGroup>
-  </Target>
 </Project>

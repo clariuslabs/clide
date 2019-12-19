@@ -3,5 +3,6 @@
   <ItemGroup>
     <ClideVsix Include="$(MSBuildThisFileDirectory)..\tools\*.vsix" />
     <Vsix Include="@(ClideVsix)" />
+    <SuppressFromVsix Include="Clide.Windows.dll" />
   </ItemGroup>
 </Project>
