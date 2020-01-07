@@ -52,7 +52,7 @@ namespace Clide
                     await jtf.SwitchToMainThreadAsync();
                     ErrorHandler.ThrowOnFailure(uiShell.GetValue().GetDialogOwnerHwnd(out var owner));
                     new WindowInteropHelper(dialogWindow).Owner = owner;
-                    dialogWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                    dialogWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                     dialogWindow.ShowInTaskbar = false;
                 });
 
