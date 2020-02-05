@@ -321,7 +321,8 @@ namespace Clide
                 node1.GetType() != node2.GetType())
                 return false;
 
-            if (Object.ReferenceEquals(node1, node2)) return true;
+            if (Object.ReferenceEquals(node1, node2))
+                return true;
 
             return node1.hierarchyItem.HierarchyIdentity.Equals(node2.hierarchyItem.HierarchyIdentity);
         }

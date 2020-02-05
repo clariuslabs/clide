@@ -9,10 +9,10 @@ using Xunit;
 
 #if DEBUG
 // Limit run to current VS version
-[assembly: Vsix(ThisAssembly.Metadata.VisualStudioVersion, 
-    MinimumVisualStudioVersion = ThisAssembly.Metadata.VisualStudioVersion, 
+[assembly: Vsix(ThisAssembly.Metadata.VisualStudioVersion,
+    MinimumVisualStudioVersion = ThisAssembly.Metadata.VisualStudioVersion,
     MaximumVisualStudioVersion = ThisAssembly.Metadata.VisualStudioVersion,
-    TimeoutSeconds = 120, 
+    TimeoutSeconds = 120,
     // No need to recycle on local dev runs
     RecycleOnFailure = false)]
 #else

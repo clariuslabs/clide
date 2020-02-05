@@ -25,7 +25,8 @@ namespace Clide.Events
             var completed = false;
             ShellInitialized data = null;
 
-            using (observable.Subscribe(e => data = e, () => completed = true)) { }
+            using (observable.Subscribe(e => data = e, () => completed = true))
+            { }
 
             Assert.True(completed);
             Assert.NotNull(data);

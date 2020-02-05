@@ -31,7 +31,7 @@ namespace Clide
             Lazy<IMessageBoxService> messageBox,
             Lazy<IErrorsManager> errorsManager,
             Lazy<IOutputWindowManager> outputWindow,
-            Lazy<IStatusBar> status, 
+            Lazy<IStatusBar> status,
             JoinableLazy<DevEnvInfo> devEnvInfo,
             JoinableTaskContext context)
         {
@@ -76,7 +76,7 @@ namespace Clide
 
         public void Exit(bool saveAll = true)
         {
-            jtf.Run(async () => 
+            jtf.Run(async () =>
             {
                 await jtf.SwitchToMainThreadAsync();
                 var dte = ServiceLocator.GetService<DTE>();
@@ -100,7 +100,7 @@ namespace Clide
 
         public bool Restart(bool saveAll = true)
         {
-            return jtf.Run(async () => 
+            return jtf.Run(async () =>
             {
                 await jtf.SwitchToMainThreadAsync();
                 var dte = ServiceLocator.GetService<DTE>();

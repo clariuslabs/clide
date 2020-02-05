@@ -66,7 +66,7 @@ namespace Clide.Commands
                         new VsCommandExtensionAdapter(
                             new CommandID(new Guid(command.Metadata.GroupId), command.Metadata.CommandId),
                             command.Value,
-                            Guid.TryParse(command.Metadata.VisibilityContextGuid, out var uiContextGuid) ? 
+                            Guid.TryParse(command.Metadata.VisibilityContextGuid, out var uiContextGuid) ?
                                 new UIContextWrapper(UIContext.FromUIContextGuid(uiContextGuid)) : null));
                 }
             }

@@ -11,7 +11,8 @@ namespace Clide.Adapters
     [Adapter]
     class SolutionNodeToDte : IAdapter<SolutionNode, EnvDTE.Solution>
     {
-        public EnvDTE.Solution Adapt(SolutionNode from) {
+        public EnvDTE.Solution Adapt(SolutionNode from)
+        {
             return ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();

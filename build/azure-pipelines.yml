@@ -22,6 +22,8 @@ variables:
   value: Release
 - name: PROVISIONATOR_CHANNEL
   value: dev/kzu
+- name: DotNetVersion
+  value: 3.1.x
 
 resources:
   repositories:
@@ -40,6 +42,12 @@ stages:
     - checkout: self
       clean: true
       submodules: recursive
+    - task: UseDotNet@2
+      inputs:
+        version: $(DotNetVersion)
+        performMultiLevelLookup: true
+    - script: 'dotnet tool update -g dotnet-format && dotnet format -w $(Build.SourcesDirectory) --dry-run --check -v:diag'
+      displayName: Check .editorconfig compliance
     - template: dump-environment.yml@templates
 
     - task: MSBuild@1
