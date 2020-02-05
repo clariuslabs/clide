@@ -8,6 +8,7 @@
     <PackageReference Include="netfx-System.StringResources" Version="$(StringResourcesVersion)" Pack="false" />
     <PackageReference Include="System.Diagnostics.Tracer" Version="$(TracerVersion)" Pack="false" />
     <PackageReference Include="Microsoft.VisualStudio.Threading" Version="$(VisualStudioThreadingVersion)" Pack="false" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net472" Version="1.0.0" PrivateAssets="all" Pack="false" />
   </ItemGroup>
 
   <ItemGroup>
