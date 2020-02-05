@@ -30,21 +30,69 @@
     <!-- We never emit runtime-specific assemblies, so opt-out of this. -->
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 
+  </PropertyGroup>
+
+  <PropertyGroup Label="CI" Condition="'$(CI)' == ''">
+    <CI>false</CI>
+    <CI Condition="'$(TF_BUILD)' == 'true'">true</CI>
+  </PropertyGroup>
+
+  <PropertyGroup Label="CI" Condition="'$(PR)' == ''">
+    <PR>false</PR>
+    <PR Condition="'$(SYSTEM_PULLREQUEST_PULLREQUESTNUMBER)' != ''">true</PR>
+  </PropertyGroup>
+
+  <PropertyGroup Label="AssemblyInfo">
+    <Company>Clarius</Company>
+    <Product>Clide</Product>
+    <Copyright>Copyright © $(Company) $([System.DateTime]::UtcNow.Year)</Copyright>
+  </PropertyGroup>
+
+  <PropertyGroup Label="NuGet Info">
     <Authors>kzu, Daniel Cazzulino</Authors>
     <Owners>clariuslabs, kzu</Owners>
     <Copyright>Copyright 2012 Clarius Labs</Copyright>
+
+    <RepositoryUrl>https://github.com/clariuslabs/clide</RepositoryUrl>
+    <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+
+    <PackageOutputPath Condition="'$(PackageOutputPath)' == ''">$(MSBuildThisFileDirectory)../pack</PackageOutputPath>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(CI)' == ''">
-    <CI Condition="'$(TEAMCITY_VERSION)' != '' or 
-                   '$(APPVEYOR)' != '' or 
-                   '$(BuildRunner)' == 'MyGet' or 
-                   '$(JENKINS_HOME)' != '' or 
-                   '$(TF_BUILD)' == 'true' or
-                   '$(IsVSTSBuild)' == 'true' or
-                   '$(TRAVIS)' == 'true'">true</CI>
-    <CI Condition="'$(CI)' == ''">false</CI>
+  <PropertyGroup Label="NuGet Pack" Condition="$(CI)">
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
+
+  <PropertyGroup Label="GitInfo">
+    <GitSkipCache>$(CI)</GitSkipCache>
+    <GitIgnoreBranchVersion>true</GitIgnoreBranchVersion>
+    <GitIgnoreTagVersion>true</GitIgnoreTagVersion>
+
+    <GitBranch Condition="'$(SYSTEM_PULLREQUEST_SOURCEBRANCH)' != ''">$(SYSTEM_PULLREQUEST_SOURCEBRANCH)</GitBranch>
+    <GitBranch Condition="'$(SYSTEM_PULLREQUEST_TARGETBRANCH)' == '' and '$(BUILD_SOURCEBRANCH)' != ''">$(BUILD_SOURCEBRANCH)</GitBranch>
+    <GitBranch Condition="$(GitBranch.StartsWith('refs/heads'))">$(GitBranch.Substring(11))</GitBranch>
+    <!-- Simply rel/d16.6 => d16.6 -->
+    <GitBranch Condition="$(GitBranch.StartsWith('rel/'))">$(GitBranch.Substring(4))</GitBranch>
+    <GitBranch>$(GitBranch.Replace('/', '-'))</GitBranch>
+
+    <RelBranchExpr>^d\d\d([\.-]\d+)?$</RelBranchExpr>
+    <IsReleaseBranchExpr>$(RelBranchExpr)|hotfix</IsReleaseBranchExpr>
+    <IsReleaseBranch>$([System.Text.RegularExpressions.Regex]::IsMatch($(GitBranch), $(IsReleaseBranchExpr)))</IsReleaseBranch>
+  </PropertyGroup>
+
+  <PropertyGroup Label="CI" Condition="'$(BUILD_SOURCEVERSION)' != ''">
+    <GitSha>$(BUILD_SOURCEVERSION)</GitSha>
+    <GitCommit>$(GitSha.Substring(0, 9))</GitCommit>
+  </PropertyGroup>
+
+  <PropertyGroup Label="CI" Condition="'$(SYSTEM_PULLREQUEST_SOURCECOMMITID)' != ''">
+    <GitSha>$(SYSTEM_PULLREQUEST_SOURCECOMMITID)</GitSha>
+    <GitCommit>$(GitSha.Substring(0, 9))</GitCommit>
+  </PropertyGroup>
+
+  <!-- This target is replaced by GitInfo when restored. Allows targets to rely on it before restore. -->
+  <Target Name="GitVersion" />
 
   <PropertyGroup Label="Package Versions">
     <MerqVersion>1.1.1</MerqVersion>
@@ -69,9 +117,5 @@
     <VSSDKAnalyzersVersion>15.8.33</VSSDKAnalyzersVersion>
     <VSThreadingAnalyzersVersion>15.8.145</VSThreadingAnalyzersVersion>
   </PropertyGroup>
-
-  <Target Name="GetCI" Returns="$(CI)">
-    <Message Importance="high" Text="CI=$(CI)" />
-  </Target>
 
 </Project>
