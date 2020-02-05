@@ -53,7 +53,7 @@
   </PropertyGroup>
 
   <Target Name="Test"
-          Condition="'$(IncludeTests)' == 'true' or '$(IncludeIntegrationTests)' == 'true'"
+          Condition="'$(TargetOS)' == '$(OS)' and ('$(IncludeTests)' == 'true' or '$(IncludeIntegrationTests)' == 'true')"
           DependsOnTargets="GetTargetPath">
     <PropertyGroup>
       <TestResultsDir Condition="'$(TestResultsDir)' == ''">$(OutputPath)</TestResultsDir>
