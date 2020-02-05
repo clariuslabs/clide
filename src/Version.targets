@@ -28,7 +28,7 @@
 
   <!-- '$(ExcludeRestorePackageImports)' == 'true' when invoking /t:Restore -->
   <Target Name="SetVersion"
-          BeforeTargets="GetAssemblyVersion;GetPackageVersion"
+          BeforeTargets="PrepareForBuild;GetAssemblyVersion;GetPackageVersion;Pack"
           DependsOnTargets="GitVersion"
           Condition="'$(ExcludeRestorePackageImports)' != 'true' and '$(GitInfoImported)' == 'true'">
     <PropertyGroup>
