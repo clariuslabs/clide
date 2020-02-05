@@ -41,7 +41,7 @@
     <ProjectReference Include="..\Clide.Core.Windows\Clide.Core.Windows.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetOS)' == '$(OS)'">
     <PackageReference Include="Xamarin.VSSDK.BuildTools" Version="$(XVSSDKBuildToolsVersion)" />
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="$(VSSDKBuildToolsVersion)" />
   </ItemGroup>

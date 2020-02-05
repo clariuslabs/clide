@@ -9,8 +9,8 @@
     <ImportNuGetBuildTasksPackTargetsFromSdk>false</ImportNuGetBuildTasksPackTargetsFromSdk>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="MonoDevelop.Addins" Version="0.4.7" />
+  <ItemGroup Condition="'$(TargetOS)' == '$(OS)'">
+    <PackageReference Include="MonoDevelop.Addins" Version="0.4.7" Condition="'$(TargetOS)' == '$(OS)'"/>
   </ItemGroup>
 
   <ItemGroup>
