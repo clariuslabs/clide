@@ -3,37 +3,38 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29428.178
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clide.Interfaces", "Clide.Interfaces\Clide.Interfaces.csproj", "{130DA87A-D189-4404-BC7B-F8F5106578B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clide.Interfaces", "src\Clide.Interfaces\Clide.Interfaces.csproj", "{130DA87A-D189-4404-BC7B-F8F5106578B6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AEF4AC01-945D-4614-A7FD-9CD0B9A7AFB6}"
 	ProjectSection(SolutionItems) = preProject
-		..\build.proj = ..\build.proj
-		Directory.Build.props = Directory.Build.props
-		Directory.Build.targets = Directory.Build.targets
-		NoBuild.targets = NoBuild.targets
+		.editorconfig = .editorconfig
+		build\azure-pipelines.yml = build\azure-pipelines.yml
+		src\Directory.Build.props = src\Directory.Build.props
+		src\Directory.Build.targets = src\Directory.Build.targets
+		Directory.Solution.targets = Directory.Solution.targets
+		src\NoBuild.targets = src\NoBuild.targets
 		NuGet.Config = NuGet.Config
-		..\tfs.yml = ..\tfs.yml
-		Version.targets = Version.targets
+		src\Version.targets = src\Version.targets
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clide.Core.Windows", "Clide.Core.Windows\Clide.Core.Windows.csproj", "{A956DDCE-B365-4077-83A9-044D3CBF2D9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clide.Core.Windows", "src\Clide.Core.Windows\Clide.Core.Windows.csproj", "{A956DDCE-B365-4077-83A9-044D3CBF2D9F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clide.Vsix", "Clide.Vsix\Clide.Vsix.csproj", "{351A900E-C0AC-4042-9E09-98C0F068969F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clide.Vsix", "src\Clide.Vsix\Clide.Vsix.csproj", "{351A900E-C0AC-4042-9E09-98C0F068969F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clide.UnitTests", "Clide.UnitTests\Clide.UnitTests.csproj", "{EDC55F3D-F0C0-4698-8943-D408A735B23D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clide.UnitTests", "src\Clide.UnitTests\Clide.UnitTests.csproj", "{EDC55F3D-F0C0-4698-8943-D408A735B23D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clide.IntegrationTests", "Clide.IntegrationTests\Clide.IntegrationTests.csproj", "{FB94976B-D207-4858-A669-25FA2C03CC67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clide.IntegrationTests", "src\Clide.IntegrationTests\Clide.IntegrationTests.csproj", "{FB94976B-D207-4858-A669-25FA2C03CC67}"
 	ProjectSection(ProjectDependencies) = postProject
 		{351A900E-C0AC-4042-9E09-98C0F068969F} = {351A900E-C0AC-4042-9E09-98C0F068969F}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clide.Windows", "Clide.Windows\Clide.Windows.csproj", "{269F8B9D-FE83-4951-8EE8-B27B6FF00661}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clide.Windows", "src\Clide.Windows\Clide.Windows.csproj", "{269F8B9D-FE83-4951-8EE8-B27B6FF00661}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clide.Mac", "Clide.Mac\Clide.Mac.csproj", "{B97A6D3F-7DCA-4A50-8C88-D81180D87114}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clide.Mac", "src\Clide.Mac\Clide.Mac.csproj", "{B97A6D3F-7DCA-4A50-8C88-D81180D87114}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clide.Core.Mac", "Clide.Core.Mac\Clide.Core.Mac.csproj", "{195B2320-E7D2-4D25-A270-06024B0AB293}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clide.Core.Mac", "src\Clide.Core.Mac\Clide.Core.Mac.csproj", "{195B2320-E7D2-4D25-A270-06024B0AB293}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clide.Addin", "Clide.Addin\Clide.Addin.csproj", "{5596C6B2-57B4-4710-869A-1B70D311AD20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clide.Addin", "src\Clide.Addin\Clide.Addin.csproj", "{5596C6B2-57B4-4710-869A-1B70D311AD20}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

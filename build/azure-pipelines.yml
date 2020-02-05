@@ -1,0 +1,145 @@
+name: clide
+
+trigger:
+  batch: false
+  branches:
+    include:
+    - master
+    - dev/*
+    - feature/*
+    - rel/*
+    exclude:
+    - v*
+  paths:
+    exclude:
+    - docs
+    - icon
+
+variables:
+- group: Xamarin Release
+- group: Xamarin-Secrets
+- name: Configuration
+  value: Release
+- name: PROVISIONATOR_CHANNEL
+  value: dev/kzu
+
+resources:
+  repositories:
+  - repository: templates
+    type: github
+    name: xamarin/yaml-templates
+    ref: refs/heads/master
+    endpoint: xamarin
+
+stages:
+- stage: Windows
+  jobs:
+  - job: Build
+    pool: VSEng-MicroBuildVS2019
+    steps:
+    - checkout: self
+      clean: true
+      submodules: recursive
+    - template: dump-environment.yml@templates
+
+    - task: MSBuild@1
+      displayName: Build
+      inputs:
+        solution: Clide.sln
+        msbuildArguments: '-r -bl:$(Build.ArtifactStagingDirectory)/logs/winbuild.binlog'
+
+    - task: VSTest@2
+      displayName: 'Test'
+      timeoutInMinutes: 5
+      inputs:
+        testAssemblyVer2: |
+          **\*Tests*.dll
+          !**\*TestAdapter.dll
+          !**\obj\**
+        codeCoverageEnabled: true
+        runInParallel: false
+        rerunFailedTests: true
+        rerunMaxAttempts: 5
+    
+    - task: PublishBuildArtifacts@1
+      displayName: 'Logs'
+      condition: always()
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/logs'
+        ArtifactName: logs
+    
+    - task: PublishBuildArtifacts@1
+      displayName: 'Artifacts'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/artifacts'
+        ArtifactName: artifacts
+
+- stage: Mac
+  dependsOn: []
+  jobs:
+  - job: Build
+    pool: Hosted Mac Internal
+    steps:
+    - checkout: self
+      clean: true
+      submodules: recursive
+    - template: dump-environment.yml@templates
+
+    - task: xamops.azdevex.provisionator-task.provisionator@2
+      displayName: Provision Dependencies
+      inputs:
+        provisionator_uri: $(Provisionator.Uri)
+        github_token: $(Github.Token)
+        provisioning_script: build/provision-mac.csx
+        provisioning_extra_args: -vv
+
+    - task: MSBuild@1
+      displayName: Restore
+      inputs:
+        solution: build.proj
+        msbuildArguments: '-r -t:version -bl:$(Build.ArtifactStagingDirectory)/logs/macrestore.binlog'
+    
+    - task: MSBuild@1
+      displayName: Build
+      inputs:
+        solution: build.proj
+        msbuildArguments: '-bl:$(Build.ArtifactStagingDirectory)/logs/macbuild.binlog'
+    
+    - pwsh: New-Item -ItemType Directory -Force -Path $(TestResultsDirectory)
+      displayName: Create test results dir
+    
+    - task: MSBuild@1
+      displayName: Test
+      inputs:
+        solution: build.proj
+        msbuildArguments: '-t:test'
+    
+    - task: PublishTestResults@1
+      displayName: 'Publish Tests'
+      inputs:
+        testRunner: XUnit
+        testResultsFiles: '$(TestResultsDirectory)*.xml'
+    
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Logs'
+      condition: always()
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/logs'
+        ArtifactName: logs
+    
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifacts'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/artifacts'
+        ArtifactName: artifacts
+    
+- stage: Deploy
+  dependsOn:
+  - Windows
+  - Mac
+  jobs:
+  - job: Deploy
+    pool: Hosted
+    steps:
+    - checkout: none
+    - script: echo "Done!"
