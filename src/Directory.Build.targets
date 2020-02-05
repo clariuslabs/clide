@@ -34,6 +34,7 @@
   <ItemGroup Condition="'$(IncludeTests)' == 'true' or '$(IncludeIntegrationTests)' == 'true'">
     <PackageReference Include="System.Reactive.Linq" Version="$(RxVersion)" />
     <PackageReference Include="xunit" Version="$(XunitVersion)" />
+    <PackageReference Include="xunit.runner.msbuild" Version="$(XunitVersion)" />
     <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitVersion)" />
     <PackageReference Include="Merq" Version="$(MerqVersion)" />
     <PackageReference Include="Moq" Version="4.5.13" />
@@ -41,7 +42,6 @@
 
   <ItemGroup Condition="'$(IncludeIntegrationTests)' == 'true'">
     <PackageReference Include="xunit.vsix" Version="$(XunitVsixVersion)" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitVsixVersion)" />
     <PackageReference Include="MSBuilder.ThisAssembly.Metadata" Version="0.1.4" />
   </ItemGroup>
 
@@ -51,9 +51,23 @@
     <NoWarn>$(NoWarn);0649</NoWarn>
   </PropertyGroup>
 
+  <Target Name="Test"
+          Condition="'$(IncludeTests)' == 'true' or '$(IncludeIntegrationTests)' == 'true'"
+          DependsOnTargets="GetTargetPath">
+    <PropertyGroup>
+      <TestResultsDir Condition="'$(TestResultsDir)' == ''">$(OutputPath)</TestResultsDir>
+    </PropertyGroup>
+    <MakeDir Directories="$(TestResultsDir.TrimEnd('/').TrimEnd('\'))" Condition="!Exists($(TestResultsDir.TrimEnd('/').TrimEnd('\')))" />
+    <xunit Assemblies="@(TargetPathWithTargetPlatformMoniker)" Xml="@(TargetPathWithTargetPlatformMoniker->'$(TestResultsDir)%(Filename).xml')" />
+  </Target>
+
   <Import Project="Version.targets" />
   <Import Project="NoBuild.targets" Condition="'$(NoBuild)' == 'true' Or ('$(TargetOS)' != '' And '$(TargetOS)' != '$(OS)')"/>
-  
+
+  <Target Name="_EnsurePackageOutputPath" BeforeTargets="PrepareForBuild" Condition="'$(PackageOutputPath)' != '' and !Exists('$(PackageOutputPath)')">
+    <MakeDir Directories="$(PackageOutputPath)" />
+  </Target>
+
   <Target Name="LocalPublish" Condition="!$(CI)" AfterTargets="Pack">
     <Exec Command='rd "$(NuGetPackageRoot)$(PackageId.ToLowerInvariant())" /q /s' Condition="Exists('$(NuGetPackageRoot)$(PackageId.ToLowerInvariant())')" />
 
