@@ -1,0 +1,5 @@
+<Project>
+    <Target Name="Provision" AfterTargets="Restore">
+        <Message Importance="high" Text="Provisioning dev machine..." />
+    </Target>
+</Project>
