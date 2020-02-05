@@ -77,7 +77,8 @@ internal class TypeInheritance : IEquatable<TypeInheritance>
             obj1.GetType() != obj2.GetType())
             return false;
 
-        if (Object.ReferenceEquals(obj1, obj2)) return true;
+        if (Object.ReferenceEquals(obj1, obj2))
+            return true;
 
         return obj1.Type == obj2.Type &&
             obj1.Distance == obj2.Distance;

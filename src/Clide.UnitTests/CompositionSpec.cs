@@ -120,7 +120,7 @@ namespace Clide
                    new Mock<SVsShellMonitorSelection>()
                        .As<IVsMonitorSelection>().Object &&
                x.GetService(typeof(SVsShell)) == vsShell.Object &&
-               x.GetService(typeof(SVsFeatureFlags)) == Mock.Of<IVsFeatureFlags>() && 
+               x.GetService(typeof(SVsFeatureFlags)) == Mock.Of<IVsFeatureFlags>() &&
                x.GetService(typeof(SVsUIShell)) ==
                    new Mock<SVsUIShell>()
                        .As<IVsUIShell>().Object

@@ -21,8 +21,8 @@ namespace Clide.Commands
         /// specific command identifier and implementation.
         /// </summary>
         public VsCommandExtensionAdapter(
-            CommandID id, 
-            ICommandExtension implementation, 
+            CommandID id,
+            ICommandExtension implementation,
             UIContextWrapper uiContext = null,
             bool triggerQueryStatus = false /* for testing purposes only */)
             : base(OnExecute, id)

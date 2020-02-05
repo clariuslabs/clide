@@ -75,7 +75,8 @@ namespace Clide
                 Object.Equals(null, obj2.OwningProject))
                 return false;
 
-            if (Object.ReferenceEquals(obj1, obj2)) return true;
+            if (Object.ReferenceEquals(obj1, obj2))
+                return true;
 
             return obj1.HierarchyNode.GetActualHierarchy() == obj2.HierarchyNode.GetActualHierarchy() &&
                 obj1.HierarchyNode.GetActualItemId() == obj2.HierarchyNode.GetActualItemId();

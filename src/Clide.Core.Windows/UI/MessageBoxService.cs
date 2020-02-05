@@ -45,7 +45,7 @@ namespace Clide
             {
                 await jtf.SwitchToMainThreadAsync();
                 return uiShell.GetValue().ShowMessageBox(message, title, button, icon, defaultResult);
-            });  
+            });
         }
 
         public MessageBoxResult Prompt(string message,

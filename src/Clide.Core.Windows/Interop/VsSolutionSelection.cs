@@ -34,7 +34,7 @@ namespace Clide.Interop
             return jtf.Run(async () =>
             {
                 await jtf.SwitchToMainThreadAsync();
-                if (ErrorHandler.Failed(hierarchyWindow.FindCommonSelectedHierarchy((uint)__VSCOMHIEROPTIONS.COMHIEROPT_RootHierarchyOnly, out var uiHier)) || 
+                if (ErrorHandler.Failed(hierarchyWindow.FindCommonSelectedHierarchy((uint)__VSCOMHIEROPTIONS.COMHIEROPT_RootHierarchyOnly, out var uiHier)) ||
                     uiHier == null)
                 {
                     return null;
