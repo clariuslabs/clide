@@ -1,8 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <TargetOS>Unix</TargetOS>
+
+    <CreatePackage>$(CI)</CreatePackage>
+    <IncludePack>false</IncludePack>
+    <ImportNuGetBuildTasksPackTargetsFromSdk>false</ImportNuGetBuildTasksPackTargetsFromSdk>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,5 +18,20 @@
     <ProjectReference Include="..\Clide.Mac\Clide.Mac.csproj" />
     <ProjectReference Include="..\Clide.Core.Mac\Clide.Core.Mac.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectCapability Include="Pack" />
+  </ItemGroup>
+
+  <Target Name="Pack" DependsOnTargets="_BeforePack;PackageAddin" />
+  <Target Name="_BeforePack" Condition="!$(CI)">
+    <PropertyGroup>
+      <CreatePackage>true</CreatePackage>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="_CopyAddinToPackageOutputPath" AfterTargets="PackageAddin" Condition="'$(PackageOutputPath)' != '' And '$(PackageFile)' != ''">
+    <Copy SourceFiles="$(PackageFile)" DestinationFolder="$(PackageOutputPath)" SkipUnchangedFiles="true" />
+  </Target>
 
 </Project>

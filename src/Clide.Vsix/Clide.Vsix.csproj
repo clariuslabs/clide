@@ -5,13 +5,16 @@
 
     <IncludeAnalyzers>true</IncludeAnalyzers>
     <IncludeVSSDK>true</IncludeVSSDK>
+    <IncludePack>false</IncludePack>
+    <ImportNuGetBuildTasksPackTargetsFromSdk>false</ImportNuGetBuildTasksPackTargetsFromSdk>
+
     <TargetVsixContainerName>Clide.vsix</TargetVsixContainerName>
 
     <!-- TODO: Should we set this to false on local builds? Would that confuse Willow? -->
     <IsProductComponent>true</IsProductComponent>
     <BypassVsixValidation Condition="'$(CI)' == 'true'">true</BypassVsixValidation>
 
-    <CreateVsixContainer>true</CreateVsixContainer>
+    <CreateVsixContainer>$(CI)</CreateVsixContainer>
     
     <Experimental>true</Experimental>
     <Experimental Condition="'$(CI)' == 'true'">false</Experimental>
@@ -43,6 +46,17 @@
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="$(VSSDKBuildToolsVersion)" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectCapability Include="Pack" />
+  </ItemGroup>
+
+  <Target Name="Pack" DependsOnTargets="_BeforePack;CreateVsixContainer" />
+  <Target Name="_BeforePack" Condition="!$(CI)">
+    <PropertyGroup>
+      <CreateVsixContainer>true</CreateVsixContainer>
+    </PropertyGroup>
+  </Target>
+
   <Target Name="IncludeSymbolsFromProjectReferences" BeforeTargets="GetVsixSourceItems">
     <!-- For any project references that are set to copy local ('Private' property != false), add the output groups for project references that are not set -->
     <ItemGroup>
@@ -62,7 +76,8 @@
   <Target Name="AppendVsixVersionToTargetVsixContainer" BeforeTargets="CreateVsixContainer" DependsOnTargets="GetVsixVersion">
     <PropertyGroup>
       <TargetVsixContainerName>$([System.IO.Path]::ChangeExtension('$(TargetVsixContainerName)', '$(VsixVersion).vsix'))</TargetVsixContainerName>
-      <TargetVsixContainer Condition="'$(PackageOutputPath)' != ''">$([System.IO.Path]::Combine('$(PackageOutputPath)', '$(TargetVsixContainerName)'))</TargetVsixContainer>      
+      <TargetVsixContainer Condition="'$(PackageOutputPath)' != ''">$([System.IO.Path]::Combine('$(PackageOutputPath)', '$(TargetVsixContainerName)'))</TargetVsixContainer>
+      <TargetVsixContainer Condition="'$(PackageOutputPath)' == ''">$([System.IO.Path]::Combine('$(OutDir)', '$(TargetVsixContainerName)'))</TargetVsixContainer>
     </PropertyGroup>
   </Target>
 

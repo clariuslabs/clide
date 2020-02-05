@@ -20,10 +20,10 @@ variables:
 - group: Xamarin-Secrets
 - name: Configuration
   value: Release
-- name: PROVISIONATOR_CHANNEL
-  value: dev/kzu
 - name: DotNetVersion
   value: 3.1.x
+- name: PackageOutputPath
+  value: $(Build.ArtifactStagingDirectory)/artifacts
 
 resources:
   repositories:
@@ -93,34 +93,17 @@ stages:
       submodules: recursive
     - template: dump-environment.yml@templates
 
-    - task: xamops.azdevex.provisionator-task.provisionator@2
-      displayName: Provision Dependencies
-      inputs:
-        provisionator_uri: $(Provisionator.Uri)
-        github_token: $(Github.Token)
-        provisioning_script: build/provision-mac.csx
-        provisioning_extra_args: -vv
-
-    - task: MSBuild@1
-      displayName: Restore
-      inputs:
-        solution: build.proj
-        msbuildArguments: '-r -t:version -bl:$(Build.ArtifactStagingDirectory)/logs/macrestore.binlog'
-    
     - task: MSBuild@1
       displayName: Build
       inputs:
-        solution: build.proj
-        msbuildArguments: '-bl:$(Build.ArtifactStagingDirectory)/logs/macbuild.binlog'
-    
-    - pwsh: New-Item -ItemType Directory -Force -Path $(TestResultsDirectory)
-      displayName: Create test results dir
+        solution: Clide.sln
+        msbuildArguments: '-r -bl:$(Build.ArtifactStagingDirectory)/logs/macbuild.binlog'
     
     - task: MSBuild@1
       displayName: Test
       inputs:
-        solution: build.proj
-        msbuildArguments: '-t:test'
+        solution: Clide.sln
+        msbuildArguments: '-t:test -p:TestResultsDir=$(Build.ArtifactStagingDirectory)/test-results/'
     
     - task: PublishTestResults@1
       displayName: 'Publish Tests'
