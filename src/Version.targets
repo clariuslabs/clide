@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <PropertyGroup>
-    <GitSkipCache>true</GitSkipCache>
-    <SkipReadGitCache>true</SkipReadGitCache>
-    <SkipWriteGitCache>true</SkipWriteGitCache>
-    <GitIgnoreTagVersion>true</GitIgnoreTagVersion>
-    <GitIgnoreBranchVersion>true</GitIgnoreBranchVersion>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.0.11" PrivateAssets="all" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <GenerateNuspecDependsOn>SetVersion;$(GenerateNuspecDependsOn)</GenerateNuspecDependsOn>
+    <GetPackageVersionDependsOn>SetVersion;$(GetPackageVersionDependsOn)</GetPackageVersionDependsOn>
+  </PropertyGroup>
 
   <Target Name="Version" DependsOnTargets="SetVersion;GitInfoReport">
     <Message Text="##vso[build.updatebuildnumber]$(PackageVersion)" Importance="high" Condition="'$(TF_BUILD)' == 'true'" />

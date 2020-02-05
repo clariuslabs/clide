@@ -23,7 +23,7 @@ variables:
 - name: DotNetVersion
   value: 3.1.x
 - name: PackageOutputPath
-  value: $(Build.ArtifactStagingDirectory)/artifacts
+  value: $(Build.ArtifactStagingDirectory)/package
 
 resources:
   repositories:
@@ -79,8 +79,8 @@ stages:
     - task: PublishBuildArtifacts@1
       displayName: 'Artifacts'
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/artifacts'
-        ArtifactName: artifacts
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/package'
+        ArtifactName: package
 
 - stage: Mac
   dependsOn: []
@@ -121,8 +121,8 @@ stages:
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifacts'
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/artifacts'
-        ArtifactName: artifacts
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/package'
+        ArtifactName: package
     
 - stage: Deploy
   dependsOn:
