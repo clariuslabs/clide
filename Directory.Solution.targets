@@ -1,5 +1,6 @@
 <Project>
-    <Target Name="Provision" AfterTargets="Restore">
-        <Message Importance="high" Text="Provisioning dev machine..." />
-    </Target>
+  <Import Project="src\Directory.Build.props"/>
+  <Target Name="Version" AfterTargets="Restore" Condition="$(CI)">
+    <MSBuild Projects="src\Clide.Interfaces\Clide.Interfaces.csproj" Targets="Version" Properties="FreshLoad=$([System.Guid]::NewGuid().ToString())" UnloadProjectsOnCompletion="true" />
+  </Target>
 </Project>
