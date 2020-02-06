@@ -148,6 +148,7 @@ stages:
     steps:
     - checkout: self
     - template: fix-source-version/v2.yml@templates
+    # This is only needed while we teach the build-tools tasks how to receive overriden variables.
     - script: git reset --hard $(GitHub.Commit)
       condition: ne(variables['$(GitHub.Commit)'], variables['Build.SourceVersion'])
 
@@ -169,5 +170,3 @@ stages:
         ArtifactsDirectory: '$(Build.ArtifactStagingDirectory)/package'
         Azure.ContainerName: 'xvs-clide'
         GitHub.Context: 'artifacts'
-        GitHub.FileStatuses: true
-        GitHub.FileStatusTypes: '.vsix;.mpack;'
