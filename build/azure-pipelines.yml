@@ -147,14 +147,6 @@ stages:
     pool: VSEng-MicroBuildVS2019
     steps:
     - checkout: self
-    - template: fix-source-version/v2.yml@templates
-    # This is only needed while we teach the build-tools tasks how to receive overriden variables.
-    - script: git reset --hard $(GitHub.Commit)
-      condition: ne(variables['$(GitHub.Commit)'], variables['Build.SourceVersion'])
-
-    - task: DownloadBuildArtifacts@0
-      inputs:
-        artifactName: package
 
     - task: UseDotNet@2
       inputs:
@@ -163,6 +155,16 @@ stages:
         performMultiLevelLookup: true
     - script: 'dotnet tool update -g --version 7.0.0-rc.2 PowerShell >nul || dotnet tool list -g'
       displayName: UsePowerShell
+
+    - template: fix-source-version/v2.yml@templates
+    # This is only needed while we teach the build-tools tasks how to receive overriden variables.
+    - script: git reset --hard $(GitHub.Commit)
+      displayName: Align checkout with GitHub.Commit
+      condition: ne(variables['$(GitHub.Commit)'], variables['Build.SourceVersion'])
+
+    - task: DownloadBuildArtifacts@0
+      inputs:
+        artifactName: package
 
     - template: dump-environment.yml@templates
     - template: upload-to-storage/win/v1.yml@templates
