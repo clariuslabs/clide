@@ -87,7 +87,7 @@ stages:
     - task: PublishBuildArtifacts@1
       displayName: 'Symbols'
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/artifacts'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/artifacts/win'
         ArtifactName: symbols
 
 - stage: Mac
@@ -135,8 +135,8 @@ stages:
     - task: PublishBuildArtifacts@1
       displayName: 'Symbols'
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/artifacts'
-        ArtifactName: symbols
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/artifacts/mac'
+        ArtifactName: symbols-mac
     
 - stage: Upload
   dependsOn:
