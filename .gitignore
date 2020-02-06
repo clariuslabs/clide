@@ -1,8 +1,9 @@
 .vs
 .nuget
-out
+artifacts
 bin
 obj
+out
 packages
 *.nuget.targets
 *.nuget.props

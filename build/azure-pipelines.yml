@@ -24,13 +24,15 @@ variables:
   value: 3.1.x
 - name: PackageOutputPath
   value: $(Build.ArtifactStagingDirectory)/package
+- name: System.Debug
+  value: true
 
 resources:
   repositories:
   - repository: templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/master
+    ref: refs/heads/dev/kzu/ghcommit
     endpoint: xamarin
 
 stages:
@@ -82,6 +84,12 @@ stages:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)/package'
         ArtifactName: package
 
+    - task: PublishBuildArtifacts@1
+      displayName: 'Symbols'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/artifacts'
+        ArtifactName: symbols
+
 - stage: Mac
   dependsOn: []
   jobs:
@@ -112,25 +120,51 @@ stages:
         testResultsFiles: '$(TestResultsDirectory)*.xml'
     
     - task: PublishBuildArtifacts@1
-      displayName: 'Publish Logs'
+      displayName: 'Logs'
       condition: always()
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)/logs'
         ArtifactName: logs
     
     - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifacts'
+      displayName: 'Artifacts'
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)/package'
         ArtifactName: package
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Symbols'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/artifacts'
+        ArtifactName: symbols
     
-- stage: Deploy
+- stage: Upload
   dependsOn:
   - Windows
   - Mac
   jobs:
-  - job: Deploy
-    pool: Hosted
+  - job: Upload
+    pool: VSEng-MicroBuildVS2019
     steps:
     - checkout: none
-    - script: echo "Done!"
+    - task: DownloadBuildArtifacts@0
+      inputs:
+        artifactName: package
+
+    - task: UseDotNet@2
+      inputs:
+        packageType: runtime
+        version: $(DotNetVersion)
+        performMultiLevelLookup: true
+    - script: 'dotnet tool update -g --version 7.0.0-rc.2 PowerShell >nul || dotnet tool list -g'
+      displayName: UsePowerShell
+
+    - template: fix-source-version/v2.yml@templates
+    - template: dump-environment.yml@templates
+    - template: upload-to-storage/win/v1.yml@templates
+      parameters:
+        ArtifactsDirectory: '$(Build.ArtifactStagingDirectory)/package'
+        Azure.ContainerName: 'xvs-clide'
+        GitHub.Context: 'artifacts'
+        GitHub.FileStatuses: true
+        GitHub.FileStatusTypes: '.vsix;.mpack;'

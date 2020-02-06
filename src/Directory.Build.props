@@ -30,6 +30,7 @@
     <!-- We never emit runtime-specific assemblies, so opt-out of this. -->
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 
+    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
   </PropertyGroup>
 
   <PropertyGroup Label="CI" Condition="'$(CI)' == ''">
@@ -93,6 +94,14 @@
 
   <!-- This target is replaced by GitInfo when restored. Allows targets to rely on it before restore. -->
   <Target Name="GitVersion" />
+
+  <PropertyGroup Label="Artifacts SDK">
+    <BaseArtifactsPath>$(BUILD_ARTIFACTSTAGINGDIRECTORY)</BaseArtifactsPath>
+    <BaseArtifactsPath Condition="'$(BaseArtifactsPath)' == ''">$(MSBuildThisFileDirectory)..</BaseArtifactsPath>
+    <BaseArtifactsPath>$([System.IO.Path]::GetFullPath($(BaseArtifactsPath.TrimEnd('/').TrimEnd('\'))/artifacts))</BaseArtifactsPath>
+    <ArtifactsPath>$(BaseArtifactsPath)</ArtifactsPath>
+    <DefaultArtifactsFileMatch>Clide*exe Clide*dll Clide*pdb</DefaultArtifactsFileMatch>
+  </PropertyGroup>
 
   <PropertyGroup Label="Package Versions">
     <MerqVersion>1.1.1</MerqVersion>

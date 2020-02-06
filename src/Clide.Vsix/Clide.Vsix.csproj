@@ -1,4 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Sdk Name="Microsoft.Build.Artifacts" Version="2.0.16" />
+
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <TargetOS>Windows_NT</TargetOS>
