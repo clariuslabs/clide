@@ -99,7 +99,8 @@
     <BaseArtifactsPath>$(BUILD_ARTIFACTSTAGINGDIRECTORY)</BaseArtifactsPath>
     <BaseArtifactsPath Condition="'$(BaseArtifactsPath)' == ''">$(MSBuildThisFileDirectory)..</BaseArtifactsPath>
     <BaseArtifactsPath>$([System.IO.Path]::GetFullPath($(BaseArtifactsPath.TrimEnd('/').TrimEnd('\'))/artifacts))</BaseArtifactsPath>
-    <ArtifactsPath>$(BaseArtifactsPath)</ArtifactsPath>
+    <ArtifactsPath Condition="'$(OS)' == 'Windows_NT'">$(BaseArtifactsPath)/win</ArtifactsPath>
+    <ArtifactsPath Condition="'$(OS)' != 'Windows_NT'">$(BaseArtifactsPath)/mac</ArtifactsPath>
     <DefaultArtifactsFileMatch>Clide*exe Clide*dll Clide*pdb</DefaultArtifactsFileMatch>
   </PropertyGroup>
 
