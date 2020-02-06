@@ -160,7 +160,7 @@ stages:
     # This is only needed while we teach the build-tools tasks how to receive overriden variables.
     - script: git reset --hard $(GitHub.Commit)
       displayName: Align checkout with GitHub.Commit
-      condition: ne(variables['$(GitHub.Commit)'], variables['Build.SourceVersion'])
+      condition: ne(variables['GitHub.Commit'], variables['Build.SourceVersion'])
 
     - task: DownloadBuildArtifacts@0
       inputs:
