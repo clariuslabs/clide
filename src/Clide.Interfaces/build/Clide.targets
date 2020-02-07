@@ -1,24 +1,43 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <Target Name="_UseExperimental" AfterTargets="ResolveAssemblyReferences" DependsOnTargets="ResolveAssemblyReferences" Condition="'$(VsInstallRoot)' != '' and '$(UseExperimental)' != 'false'">
+  <PropertyGroup Condition="'$(VsInstallRoot)' != ''">
+    <DevEnvIniFile>$(VsInstallRoot)\Common7\IDE\devenv.isolation.ini</DevEnvIniFile>
+    <DevEnvIni Condition="Exists($(DevEnvIniFile))">$([System.IO.File]::ReadAllText($(DevEnvIniFile)))</DevEnvIni>
+    <VsInstallationID>$([System.Text.RegularExpressions.Regex]::Match('$(DevEnvIni)', 'InstallationID=(\w+)').Groups[1].Value)</VsInstallationID>
+    <ClideExtensionPath>$(LOCALAPPDATA)\Microsoft\VisualStudio\$(VisualStudioVersion)_$(VsInstallationID)Exp\Extensions\ClariusLabs\Clide\42.42.42</ClideExtensionPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <UseExperimental Condition="'$(VsInstallRoot)' == '' Or !Exists('$(ClideExtensionPath)')">false</UseExperimental>
+  </PropertyGroup>
+
+  <Target Name="_UseExperimental" AfterTargets="ResolveAssemblyReferences" DependsOnTargets="ResolveAssemblyReferences;_CollectExperimentalReferences" Condition="'$(UseExperimental)' != 'false'">
     <PropertyGroup>
-      <DevEnvIniFile>$(VsInstallRoot)\Common7\IDE\devenv.isolation.ini</DevEnvIniFile>
-      <DevEnvIni Condition="Exists($(DevEnvIniFile))">$([System.IO.File]::ReadAllText($(DevEnvIniFile)))</DevEnvIni>
-      <VsInstallationID>$([System.Text.RegularExpressions.Regex]::Match('$(DevEnvIni)', 'InstallationID=(\w+)').Groups[1].Value)</VsInstallationID>
-      <ClideExperimental>$(LOCALAPPDATA)\Microsoft\VisualStudio\$(VisualStudioVersion)_$(VsInstallationID)Exp\Extensions\ClariusLabs\Clide\42.42.42</ClideExperimental>
+      <_ReplaceExperimentalReferences>false</_ReplaceExperimentalReferences>
+      <_ReplaceExperimentalReferences Condition="Exists('$(ClideExtensionPath)') And '@(_ClideExperimental)' != ''">true</_ReplaceExperimentalReferences>
     </PropertyGroup>
+    <Warning Condition="$(_ReplaceExperimentalReferences)" Code="CLIDE001"
+             Text="An experimental version of Clide was found at $(ClideExtensionPath). Replacing references with experimental ones. You can disable this behavior by setting UseExperimental=false." />
 
-    <Warning Condition="Exists('$(ClideExperimental)')" Code="CLIDE001" Text="An experimental version of Clide was found at $(ClideExperimental). Replacing references with experimental ones. You can disable this behavior by setting UseExperimental=false." />
-
-    <ItemGroup Condition="Exists('$(ClideExperimental)')">
-      <_ClideReference Include="@(ReferencePath -> WithMetadataValue('NuGetPackageId', '%(UseExperimental.Identity)'))" />
-      <_ClideExperimental Include="@(_ClideReference -> '$(ClideExperimental)\%(Filename)%(Extension)')" />
-      <ReferencePath Remove="@(_ClideReference -> Distinct())" />
-      <ReferencePath Include="@(_ClideExperimental -> Distinct())" />
+    <ItemGroup Condition="$(_ReplaceExperimentalReferences)">
+      <ReferencePath Remove="@(_ClideReference)" />
+      <ReferencePath Include="@(_ClideExperimental)" />
     </ItemGroup>
 
-    <Warning Condition="Exists('$(ClideExperimental)') and '@(_ClideExperimental)' != ''" Code="CLIDE001" Text="Replaced %(_ClideExperimental.Filename)%(_ClideExperimental.Extension) with experimental version." />
+    <Warning Condition="$(_ReplaceExperimentalReferences)" Code="CLIDE001" 
+             Text="Replaced %(_ClideExperimental.Filename)%(_ClideExperimental.Extension) with experimental version." />
+  </Target>
+
+  <Target Name="_CollectExperimentalReferences" Condition="'$(UseExperimental)' != 'false'" Inputs="@(UseExperimental)" Outputs="%(UseExperimental.Identity)">
+    <PropertyGroup>
+      <_UseExperimentalPackageId>%(UseExperimental.Identity)</_UseExperimentalPackageId>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_ClideReference Include="@(ReferencePath -> WithMetadataValue('NuGetPackageId', '$(_UseExperimentalPackageId)'))" />
+      <_ClideExperimental Include="@(_ClideReference -> '$(ClideExtensionPath)\%(Filename)%(Extension)')" />
+    </ItemGroup>
   </Target>
 
 </Project>
