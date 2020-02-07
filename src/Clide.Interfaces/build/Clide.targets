@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="_UseExperimental" AfterTargets="ResolveAssemblyReferences" DependsOnTargets="ResolveAssemblyReferences" Condition="'$(VsInstallRoot)' != '' and '$(UseExperimental)' != 'false'">
+    <PropertyGroup>
+      <DevEnvIniFile>$(VsInstallRoot)\Common7\IDE\devenv.isolation.ini</DevEnvIniFile>
+      <DevEnvIni Condition="Exists($(DevEnvIniFile))">$([System.IO.File]::ReadAllText($(DevEnvIniFile)))</DevEnvIni>
+      <VsInstallationID>$([System.Text.RegularExpressions.Regex]::Match('$(DevEnvIni)', 'InstallationID=(\w+)').Groups[1].Value)</VsInstallationID>
+      <ClideExperimental>$(LOCALAPPDATA)\Microsoft\VisualStudio\$(VisualStudioVersion)_$(VsInstallationID)Exp\Extensions\ClariusLabs\Clide\42.42.42</ClideExperimental>
+    </PropertyGroup>
+
+    <Warning Condition="Exists('$(ClideExperimental)')" Code="CLIDE001" Text="An experimental version of Clide was found at $(ClideExperimental). Replacing references with experimental ones. You can disable this behavior by setting UseExperimental=false." />
+
+    <ItemGroup Condition="Exists('$(ClideExperimental)')">
+      <_ClideReference Include="@(ReferencePath -> WithMetadataValue('NuGetPackageId', '%(UseExperimental.Identity)'))" />
+      <_ClideExperimental Include="@(_ClideReference -> '$(ClideExperimental)\%(Filename)%(Extension)')" />
+      <ReferencePath Remove="@(_ClideReference -> Distinct())" />
+      <ReferencePath Include="@(_ClideExperimental -> Distinct())" />
+    </ItemGroup>
+
+    <Warning Condition="Exists('$(ClideExperimental)') and '@(_ClideExperimental)' != ''" Code="CLIDE001" Text="Replaced %(_ClideExperimental.Filename)%(_ClideExperimental.Extension) with experimental version." />
+  </Target>
+
+</Project>
