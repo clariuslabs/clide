@@ -172,3 +172,13 @@ stages:
         ArtifactsDirectory: '$(Build.ArtifactStagingDirectory)/package'
         Azure.ContainerName: 'xvs-clide'
         GitHub.Context: 'artifacts'
+
+    - task: NuGetCommand@2
+      displayName: Push Packages
+      continueOnError: true
+      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['PushPackages'], 'true')))
+      inputs:
+        command: push
+        packagesToPush: $(Build.ArtifactStagingDirectory)/package/*.nupkg
+        nuGetFeedType: external
+        publishFeedCredentials: 'xamarin-impl public feed'
