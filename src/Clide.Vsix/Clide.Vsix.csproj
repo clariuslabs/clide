@@ -36,7 +36,7 @@
     <Content Include="FeatureFlags.pkgdef" IncludeInVSIX="true" CopyToOutputDirectory="PreserveNewest" />
     <BindingRedirect Include="Clide" From="3.0.0.0" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\Clide.Interfaces\Clide.Interfaces.csproj" />
     <ProjectReference Include="..\Clide.Windows\Clide.Windows.csproj" />
@@ -44,10 +44,10 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetOS)' == '$(OS)'">
-    <PackageReference Include="Xamarin.VSSDK.BuildTools" Version="$(XVSSDKBuildToolsVersion)" />
+    <PackageReference Include="Xamarin.VSSDK.BuildTools" Version="$(XVSSDKVersion)" />
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="$(VSSDKBuildToolsVersion)" />
   </ItemGroup>
-
+  
   <ItemGroup>
     <ProjectCapability Include="Pack" />
   </ItemGroup>
