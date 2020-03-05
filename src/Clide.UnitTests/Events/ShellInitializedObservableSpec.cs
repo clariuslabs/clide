@@ -4,7 +4,6 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using Moq;
 using Xunit;
-using System.Reactive.Linq;
 using System.Threading;
 using Microsoft.VisualStudio.Threading;
 
@@ -71,8 +70,8 @@ namespace Clide.Events
                 shell.Verify(x => x.UnadviseShellPropertyChanges(cookie));
 
                 // Subsequent subscription should get one and complete right away.
-
-                var ev = await observable;
+                ShellInitialized ev = default;
+                observable.Subscribe(e => ev = e);
 
                 Assert.Same(data, ev);
             }
