@@ -71,7 +71,7 @@
   <Target Name="GetVsixVersion" Returns="$(VsixVersion)" DependsOnTargets="SetVersion">
     <PropertyGroup>
       <VsixVersion Condition="'$(Configuration)' == 'Debug'">42.42.42</VsixVersion>
-      <VsixVersion Condition="'$(VsixVersion)' == ''">$(AssemblyVersion)</VsixVersion>
+      <VsixVersion Condition="'$(VsixVersion)' == ''">$(GitSemVerMajor).$(GitSemVerMinor).$(GitSemVerPatch)</VsixVersion>
     </PropertyGroup>
   </Target>
 
