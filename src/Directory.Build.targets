@@ -3,7 +3,6 @@
   <!-- Common Packages -->
   <ItemGroup>
     <PackageReference Include="Merq" Version="$(MerqVersion)" Pack="false" />
-    <PackageReference Include="System.Reactive.Interfaces" Version="$(RxVersion)" Pack="false" />
     <PackageReference Include="IFluentInterface" Version="$(FluentInterfaceVersion)" Pack="false" />
     <PackageReference Include="netfx-System.StringResources" Version="$(StringResourcesVersion)" Pack="false" />
     <PackageReference Include="System.Diagnostics.Tracer" Version="$(TracerVersion)" Pack="false" />
@@ -24,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(IncludeRx)' == 'true'">
-    <PackageReference Include="System.Reactive.Linq" Version="$(RxVersion)" />
+    <PackageReference Include="RxFree" Version="$(RxVersion)" Pack="false" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(IncludeAnalyzers)' == 'true' And '$(TargetOS)' == '$(OS)'">
@@ -33,7 +32,6 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(IncludeTests)' == 'true' or '$(IncludeIntegrationTests)' == 'true'">
-    <PackageReference Include="System.Reactive.Linq" Version="$(RxVersion)" />
     <PackageReference Include="xunit" Version="$(XunitVersion)" />
     <PackageReference Include="xunit.runner.msbuild" Version="$(XunitVersion)" />
     <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitVersion)" />
