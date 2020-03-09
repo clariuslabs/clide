@@ -28,6 +28,7 @@ namespace Clide.Solution.Folder
     [Collection("OpenSolution11")]
     public class FolderNodeFactorySpec : NodeFactorySpec<FolderNodeFactory>
     {
+        [InlineData("Native\\NsLibrary\\CsFolder")]
         [InlineData("Native\\CsLibrary\\CsFolder")]
         [InlineData("Native\\VbLibrary\\VbFolder")]
         [InlineData("Native\\FsLibrary\\FsFolder")]
@@ -69,6 +70,7 @@ namespace Clide.Solution.Folder
         [InlineData("Native\\VbLibrary\\Class1.vb")]
         [InlineData("Native\\FsLibrary\\Library1.fs")]
         [InlineData("PclLibrary\\Class1.cs")]
+        [InlineData("Native\\NsLibrary\\Dependencies")]
         [VsixTheory]
         public override void when_item_is_not_supported_then_factory_returns_false_and_create_returns_null(string relativePath)
         {

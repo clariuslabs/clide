@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29906.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppLibrary", "CppLibrary\CppLibrary.vcxproj", "{10A6EEA2-E168-466E-B99D-EA0A708A52A6}"
 EndProject
@@ -28,12 +28,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsLibrary", "FsLibrary\FsLibrary.fsproj", "{B7009850-92BD-4926-A2A6-1208F1DCD645}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NsLibrary", "NsLibrary\NsLibrary.csproj", "{DBB2287D-2B46-498A-9AAF-FEAD4911E8C6}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		VbShared\VbShared.projitems*{a1276d7b-fc4e-4f35-a888-c652c0101225}*SharedItemsImports = 13
 		CppShared\CppShared.vcxitems*{10a6eea2-e168-466e-b99d-ea0a708a52a6}*SharedItemsImports = 4
-		CsShared\CsShared.projitems*{8c57db33-72cf-4d3a-ad85-b8ec5d81df7e}*SharedItemsImports = 13
 		CppShared\CppShared.vcxitems*{45d41acc-2c3c-43d2-bc10-02aa73ffc7c7}*SharedItemsImports = 9
+		CsShared\CsShared.projitems*{8c57db33-72cf-4d3a-ad85-b8ec5d81df7e}*SharedItemsImports = 13
+		VbShared\VbShared.projitems*{a1276d7b-fc4e-4f35-a888-c652c0101225}*SharedItemsImports = 13
 		CsShared\CsShared.projitems*{f1db354d-8db4-476c-9308-08cdc0e411f7}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -123,6 +125,22 @@ Global
 		{B7009850-92BD-4926-A2A6-1208F1DCD645}.Release|x64.Build.0 = Release|Any CPU
 		{B7009850-92BD-4926-A2A6-1208F1DCD645}.Release|x86.ActiveCfg = Release|Any CPU
 		{B7009850-92BD-4926-A2A6-1208F1DCD645}.Release|x86.Build.0 = Release|Any CPU
+		{DBB2287D-2B46-498A-9AAF-FEAD4911E8C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBB2287D-2B46-498A-9AAF-FEAD4911E8C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBB2287D-2B46-498A-9AAF-FEAD4911E8C6}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{DBB2287D-2B46-498A-9AAF-FEAD4911E8C6}.Debug|ARM.Build.0 = Debug|Any CPU
+		{DBB2287D-2B46-498A-9AAF-FEAD4911E8C6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DBB2287D-2B46-498A-9AAF-FEAD4911E8C6}.Debug|x64.Build.0 = Debug|Any CPU
+		{DBB2287D-2B46-498A-9AAF-FEAD4911E8C6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DBB2287D-2B46-498A-9AAF-FEAD4911E8C6}.Debug|x86.Build.0 = Debug|Any CPU
+		{DBB2287D-2B46-498A-9AAF-FEAD4911E8C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBB2287D-2B46-498A-9AAF-FEAD4911E8C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBB2287D-2B46-498A-9AAF-FEAD4911E8C6}.Release|ARM.ActiveCfg = Release|Any CPU
+		{DBB2287D-2B46-498A-9AAF-FEAD4911E8C6}.Release|ARM.Build.0 = Release|Any CPU
+		{DBB2287D-2B46-498A-9AAF-FEAD4911E8C6}.Release|x64.ActiveCfg = Release|Any CPU
+		{DBB2287D-2B46-498A-9AAF-FEAD4911E8C6}.Release|x64.Build.0 = Release|Any CPU
+		{DBB2287D-2B46-498A-9AAF-FEAD4911E8C6}.Release|x86.ActiveCfg = Release|Any CPU
+		{DBB2287D-2B46-498A-9AAF-FEAD4911E8C6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -135,5 +153,9 @@ Global
 		{A1276D7B-FC4E-4F35-A888-C652C0101225} = {F0266F2B-25B1-45EA-B6D9-270E9B901875}
 		{45D41ACC-2C3C-43D2-BC10-02AA73FFC7C7} = {F0266F2B-25B1-45EA-B6D9-270E9B901875}
 		{B7009850-92BD-4926-A2A6-1208F1DCD645} = {D0381894-694F-4E02-8415-151561B84931}
+		{DBB2287D-2B46-498A-9AAF-FEAD4911E8C6} = {D0381894-694F-4E02-8415-151561B84931}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {871317EA-D4F7-4154-A9DB-62CADAE3678C}
 	EndGlobalSection
 EndGlobal

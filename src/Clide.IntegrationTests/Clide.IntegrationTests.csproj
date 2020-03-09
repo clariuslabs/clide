@@ -24,7 +24,7 @@
     <Compile Include="**\*.cs" Exclude="Content\**;bin\**;obj\**" />
     <None Include="Clide.IntegrationTests.ruleset" />
     <None Include="xunit.runner.json" />
-    <Content Include="Content\**\*.*">
+    <Content Include="Content\**\*.*" Exclude="Content\**\bin\**;Content\**\obj\**" >
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

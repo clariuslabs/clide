@@ -22,33 +22,39 @@ namespace Clide.Solution
             Assert.True(fixture.Solution.IsVisible);
         }
 
-        [VsixFact]
-        public void when_parent_node_is_collapsed_then_child_node_is_visible_false()
+        [InlineData("CsLibrary", "Class1.cs")]
+        [InlineData("NsLibrary", "Class1.cs")]
+        [VsixTheory]
+        public void when_parent_node_is_collapsed_then_child_node_is_visible_false(string projectName, string fileName)
         {
-            var file = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
-                .Nodes.OfType<IItemNode>().First(x => x.Name == "Class1.cs");
+            var file = fixture.Solution.FindProject(x => x.Name == projectName)
+                .Nodes.OfType<IItemNode>().First(x => x.Name == fileName);
 
             file.Parent.Expand();
             file.Parent.Collapse();
             Assert.False(file.IsVisible);
         }
 
-        [VsixFact]
-        public void when_parent_node_is_expanded_then_child_node_is_visible_true()
+        [InlineData("CsLibrary", "Class1.cs")]
+        [InlineData("NsLibrary", "Class1.cs")]
+        [VsixTheory]
+        public void when_parent_node_is_expanded_then_child_node_is_visible_true(string projectName, string fileName)
         {
-            var file = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
-                .Nodes.OfType<IItemNode>().First(x => x.Name == "Class1.cs");
+            var file = fixture.Solution.FindProject(x => x.Name == projectName)
+                .Nodes.OfType<IItemNode>().First(x => x.Name == fileName);
 
             file.Parent.Collapse();
             file.Parent.Expand();
             Assert.True(file.IsVisible);
         }
 
-        [VsixFact]
-        public void when_expanding_node_then_node_is_expanded()
+        [InlineData("CsLibrary", "Class1.cs")]
+        [InlineData("NsLibrary", "Class1.cs")]
+        [VsixTheory]
+        public void when_expanding_node_then_node_is_expanded(string projectName, string fileName)
         {
-            var file = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
-                .Nodes.OfType<IItemNode>().First(x => x.Name == "Class1.cs");
+            var file = fixture.Solution.FindProject(x => x.Name == projectName)
+                .Nodes.OfType<IItemNode>().First(x => x.Name == fileName);
 
             file.Parent.Collapse();
             Assert.False(file.Parent.IsExpanded);
@@ -56,21 +62,25 @@ namespace Clide.Solution
             Assert.True(file.Parent.IsExpanded);
         }
 
-        [VsixFact]
-        public void when_collapsing_node_then_node_is_not_expanded()
+        [InlineData("CsLibrary", "Class1.cs")]
+        [InlineData("NsLibrary", "Class1.cs")]
+        [VsixTheory]
+        public void when_collapsing_node_then_node_is_not_expanded(string projectName, string fileName)
         {
-            var file = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
-                .Nodes.OfType<IItemNode>().First(x => x.Name == "Class1.cs");
+            var file = fixture.Solution.FindProject(x => x.Name == projectName)
+                .Nodes.OfType<IItemNode>().First(x => x.Name == fileName);
 
             file.Parent.Collapse();
             Assert.False(file.Parent.IsExpanded);
         }
 
-        [VsixFact]
-        public void when_selecting_node_then_node_is_selected()
+        [InlineData("CsLibrary", "Class1.cs")]
+        [InlineData("NsLibrary", "Class1.cs")]
+        [VsixTheory]
+        public void when_selecting_node_then_node_is_selected(string projectName, string fileName)
         {
-            var file = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
-                .Nodes.OfType<IItemNode>().First(x => x.Name == "Class1.cs");
+            var file = fixture.Solution.FindProject(x => x.Name == projectName)
+                .Nodes.OfType<IItemNode>().First(x => x.Name == fileName);
 
             file.Parent.Expand();
             Assert.False(file.IsSelected);
