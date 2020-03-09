@@ -31,6 +31,7 @@ namespace Clide.Solution.Project
     public class ProjectNodeFactorySpec : NodeFactorySpec<ProjectNodeFactory>
     {
         [InlineData("Native\\CppLibrary")]
+        [InlineData("Native\\NsLibrary")]
         [InlineData("Native\\CsLibrary")]
         [InlineData("Native\\VbLibrary")]
         [InlineData("Native\\FsLibrary")]
@@ -55,6 +56,7 @@ namespace Clide.Solution.Project
         [InlineData("Native")]
         [InlineData("Native\\CppLibrary\\ReadMe.txt")]
         [InlineData("Native\\CppLibrary\\CppFolder")]
+        [InlineData("Native\\NsLibrary\\Class1.cs")]
         [InlineData("Native\\CsLibrary\\Class1.cs")]
         [InlineData("Native\\CsLibrary\\CsFolder")]
         [InlineData("Native\\VbLibrary\\Class1.vb")]

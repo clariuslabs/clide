@@ -30,6 +30,8 @@ namespace Clide.Solution.Item
     public class ItemNodeFactorySpec : NodeFactorySpec<ItemNodeFactory>
     {
         [InlineData("Native\\CppLibrary\\ReadMe.txt")]
+        [InlineData("Native\\NsLibrary\\Class1.cs")]
+        [InlineData("Native\\NsLibrary\\CsFolder\\CsTextInFolder.txt")]
         [InlineData("Native\\CsLibrary\\Class1.cs")]
         [InlineData("Native\\VbLibrary\\Class1.vb")]
         [InlineData("Native\\FsLibrary\\Library1.fs")]
