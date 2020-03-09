@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Sdk Name="Microsoft.Build.Artifacts" Version="2.0.16" />
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IncludeAnalyzers>true</IncludeAnalyzers>
+    <IncludeRx>true</IncludeRx>
+    <!-- This is needed to help nuget not get confused about this project *not* having its own 
+         package and Clide.Interfaces having a package id of 'Clide' which doesn't match its 
+         assembly/project name \o/ -->
+    <PackageId>Clide.Core.Interfaces</PackageId>
+    <IsPackable>false</IsPackable>
+    <IncludePack>true</IncludePack>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

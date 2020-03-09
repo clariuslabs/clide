@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Clide.Interfaces\Clide.Interfaces.csproj" />
     <ProjectReference Include="..\Clide.Mac\Clide.Mac.csproj" />
+    <ProjectReference Include="..\Clide.Core\Clide.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

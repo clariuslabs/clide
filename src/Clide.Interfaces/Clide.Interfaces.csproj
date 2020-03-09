@@ -20,9 +20,16 @@
   <ItemGroup>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="WindowsBase" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build" Version="$(MicrosoftBuildversion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Clide\Clide.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,6 +50,9 @@
   <Target Name="AddPackageContents" BeforeTargets="GetPackageContents">
     <ItemGroup>
       <PackageFile Include="$(MSBuildProjectDirectory)\$(OutputPath)\Clide.Interfaces.*" Kind="Lib" />
+      <PackageFile Include="$(MSBuildProjectDirectory)\$(OutputPath)\Clide.dll" Kind="Lib" />
+      <PackageFile Include="$(MSBuildProjectDirectory)\$(OutputPath)\Clide.xml" Kind="Lib" />
+      <PackageFile Include="$(MSBuildProjectDirectory)\$(OutputPath)\Clide.pdb" Kind="Lib" />
     </ItemGroup>
   </Target>
 

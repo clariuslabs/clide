@@ -4,7 +4,6 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <IncludeVSSDK>true</IncludeVSSDK>
-    <IncludeRx>true</IncludeRx>
     <IncludeAnalyzers>true</IncludeAnalyzers>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <IsPackable>false</IsPackable>
@@ -23,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Clide.Interfaces\Clide.Interfaces.csproj" />
     <ProjectReference Include="..\Clide.Windows\Clide.Windows.csproj" />
+    <ProjectReference Include="..\Clide.Core\Clide.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

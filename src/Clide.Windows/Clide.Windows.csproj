@@ -6,7 +6,6 @@
     <IncludeVSSDK>true</IncludeVSSDK>
     <IncludePack>true</IncludePack>
     <IncludeAnalyzers>true</IncludeAnalyzers>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <TargetOS>Windows_NT</TargetOS>
 
     <PackageId>Clide.Windows</PackageId>

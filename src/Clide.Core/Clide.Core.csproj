@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Sdk Name="Microsoft.Build.Artifacts" Version="2.0.16" />
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IncludePack>true</IncludePack>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Clide\Clide.csproj" />
+  </ItemGroup>
+
+</Project>
