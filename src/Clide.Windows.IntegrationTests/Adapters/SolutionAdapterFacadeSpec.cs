@@ -50,7 +50,7 @@ namespace Clide.Adapters
         [VsixFact]
         public void when_adapting_folder_as_vs_hierarchy_item_then_succeeds()
         {
-            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+            var from = fixture.Solution.Nodes.Traverse()
                 .OfType<IFolderNode>().First();
 
             var to = from.AsVsHierarchyItem();
@@ -61,7 +61,7 @@ namespace Clide.Adapters
         [VsixFact]
         public void when_adapting_solution_folder_as_vs_hierarchy_item_then_succeeds()
         {
-            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+            var from = fixture.Solution.Nodes.Traverse()
                 .OfType<ISolutionFolderNode>().First();
 
             var to = from.AsVsHierarchyItem();
@@ -72,7 +72,7 @@ namespace Clide.Adapters
         [VsixFact]
         public void when_adapting_references_as_vs_hierarchy_item_then_succeeds()
         {
-            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+            var from = fixture.Solution.Nodes.Traverse()
                 .OfType<IReferencesNode>().First();
 
             var to = from.AsVsHierarchyItem();
@@ -83,7 +83,7 @@ namespace Clide.Adapters
         [VsixFact]
         public void when_adapting_reference_as_vs_hierarchy_item_then_succeeds()
         {
-            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+            var from = fixture.Solution.Nodes.Traverse()
                 .OfType<IReferenceNode>().First();
 
             var to = from.AsVsHierarchyItem();
@@ -94,7 +94,7 @@ namespace Clide.Adapters
         [VsixFact]
         public void when_adapting_solution_item_as_vs_hierarchy_item_then_succeeds()
         {
-            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+            var from = fixture.Solution.Nodes.Traverse()
                 .OfType<ISolutionItemNode>().First();
 
             var to = from.AsVsHierarchyItem();
@@ -140,7 +140,7 @@ namespace Clide.Adapters
         [VsixFact]
         public void when_adapting_folder_as_vs_hierarchy_then_succeeds()
         {
-            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+            var from = fixture.Solution.Nodes.Traverse()
                 .OfType<IFolderNode>().First();
 
             var to = from.AsVsHierarchy();
@@ -151,7 +151,7 @@ namespace Clide.Adapters
         [VsixFact]
         public void when_adapting_solution_folder_as_vs_hierarchy_then_succeeds()
         {
-            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+            var from = fixture.Solution.Nodes.Traverse()
                 .OfType<ISolutionFolderNode>().First();
 
             var to = from.AsVsHierarchy();
@@ -162,7 +162,7 @@ namespace Clide.Adapters
         [VsixFact]
         public void when_adapting_references_as_vs_hierarchy_then_succeeds()
         {
-            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+            var from = fixture.Solution.Nodes.Traverse()
                 .OfType<IReferencesNode>().First();
 
             var to = from.AsVsHierarchy();
@@ -173,7 +173,7 @@ namespace Clide.Adapters
         [VsixFact]
         public void when_adapting_reference_as_vs_hierarchy_then_succeeds()
         {
-            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+            var from = fixture.Solution.Nodes.Traverse()
                 .OfType<IReferenceNode>().First();
 
             var to = from.AsVsHierarchy();
@@ -184,7 +184,7 @@ namespace Clide.Adapters
         [VsixFact]
         public void when_adapting_solution_item_as_vs_hierarchy_then_succeeds()
         {
-            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+            var from = fixture.Solution.Nodes.Traverse()
                 .OfType<ISolutionItemNode>().First();
 
             var to = from.AsVsHierarchy();
@@ -246,7 +246,7 @@ namespace Clide.Adapters
         public void when_adapting_reference_as_vslang_then_succeeds()
         {
             var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
-                .Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+                .Nodes.Traverse()
                 .OfType<IReferenceNode>().First();
 
             var to = from.AsReference();
@@ -258,7 +258,7 @@ namespace Clide.Adapters
         public void when_adapting_references_as_vslang_then_succeeds()
         {
             var from = fixture.Solution.FindProject(x => x.Name == "CsLibrary")
-                .Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+                .Nodes.Traverse()
                 .OfType<IReferenceNode>().First();
 
             var to = from.AsReference();

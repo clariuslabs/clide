@@ -50,7 +50,7 @@ namespace Clide.Adapters
         [VsixFact]
         public void when_adapting_folder_then_succeeds()
         {
-            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+            var from = fixture.Solution.Nodes.Traverse()
                 .OfType<IFolderNode>().First();
 
             var to = adapters.Adapt(from).As<IVsHierarchyItem>();
@@ -61,7 +61,7 @@ namespace Clide.Adapters
         [VsixFact]
         public void when_adapting_solution_folder_then_succeeds()
         {
-            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+            var from = fixture.Solution.Nodes.Traverse()
                 .OfType<ISolutionFolderNode>().First();
 
             var to = adapters.Adapt(from).As<IVsHierarchyItem>();
@@ -72,7 +72,7 @@ namespace Clide.Adapters
         [VsixFact]
         public void when_adapting_references_then_succeeds()
         {
-            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+            var from = fixture.Solution.Nodes.Traverse()
                 .OfType<IReferencesNode>().First();
 
             var to = adapters.Adapt(from).As<IVsHierarchyItem>();
@@ -83,7 +83,7 @@ namespace Clide.Adapters
         [VsixFact]
         public void when_adapting_reference_then_succeeds()
         {
-            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+            var from = fixture.Solution.Nodes.Traverse()
                 .OfType<IReferenceNode>().First();
 
             var to = adapters.Adapt(from).As<IVsHierarchyItem>();
@@ -94,7 +94,7 @@ namespace Clide.Adapters
         [VsixFact]
         public void when_adapting_solution_item_then_succeeds()
         {
-            var from = fixture.Solution.Nodes.Traverse(TraverseKind.DepthFirst, node => node.Nodes)
+            var from = fixture.Solution.Nodes.Traverse()
                 .OfType<ISolutionItemNode>().First();
 
             var to = adapters.Adapt(from).As<IVsHierarchyItem>();

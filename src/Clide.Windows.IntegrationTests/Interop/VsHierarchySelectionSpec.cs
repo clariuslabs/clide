@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Clide.Interop
 {
-    [Collection("OpenSolution11")]
+    [Collection("OpenSolution")]
     [Trait("Feature", "Interop")]
     [Trait("Class", "VsHierarchySelectionSpec")]
     public class VsHierarchySelectionSpec : IDisposable
@@ -14,7 +14,7 @@ namespace Clide.Interop
         ISolutionExplorer explorer;
         IVsHierarchySelection selection;
 
-        public VsHierarchySelectionSpec(OpenSolution11Fixture fixture)
+        public VsHierarchySelectionSpec(OpenSolutionFixture fixture)
         {
             this.fixture = fixture;
             selection = GlobalServices.Instance.GetServiceLocator().GetExport<IVsHierarchySelection>();
@@ -26,15 +26,23 @@ namespace Clide.Interop
             fixture.Dispose();
         }
 
-        [VsixFact]
-        public async System.Threading.Tasks.Task when_retrieving_active_hierarchy_then_succeeds()
+        [InlineData("CppLibrary")]
+        [InlineData("CsLibrary")]
+        [InlineData("NsLibrary")]
+        [InlineData("VbLibrary")]
+        [InlineData("CppShared")]
+        [InlineData("CsShared")]
+        [InlineData("VbShared")]
+        [InlineData("PclLibrary")]
+        [VsixTheory]
+        public async System.Threading.Tasks.Task when_retrieving_active_hierarchy_then_succeeds(string projectName)
         {
-            var library = fixture.Solution.FindProject(x => x.Text == "CsLibrary");
+            var library = fixture.Solution.FindProject(x => x.Name == projectName);
             Assert.NotNull(library);
 
             library.Select();
 
-            library = fixture.Solution.FindProject(x => x.Text == "CsLibrary");
+            library = fixture.Solution.FindProject(x => x.Name == projectName);
 
             Assert.Equal(library, (await explorer.Solution).ActiveProject);
         }
@@ -95,8 +103,9 @@ namespace Clide.Interop
         [VsixFact]
         public async System.Threading.Tasks.Task when_selection_contains_multiple_items_from_different_hierarchies_then_active_hierarchy_is_null()
         {
-            fixture.Solution.FindProject(x => x.Text == "CsLibrary").Nodes.OfType<IItemNode>().First().Select(false);
-            fixture.Solution.FindProject(x => x.Text == "VbLibrary").Nodes.OfType<IItemNode>().First().Select(true);
+            fixture.Solution.FindProject(x => x.Name == "CsLibrary").Nodes.OfType<IItemNode>().First().Select(false);
+            var item = fixture.Solution.FindProject(x => x.Name == "VbLibrary").Nodes.OfType<IItemNode>().First();
+            item.Select(true);
 
             var selected = selection.GetSelection().ToList();
             Assert.Equal(2, selected.Count);
@@ -109,8 +118,8 @@ namespace Clide.Interop
         [VsixFact]
         public void when_selecting_items_then_returns_items()
         {
-            fixture.Solution.FindProject(x => x.Text == "CsLibrary").Nodes.OfType<IItemNode>().First().Select(false);
-            fixture.Solution.FindProject(x => x.Text == "VbLibrary").Nodes.OfType<IItemNode>().First().Select(true);
+            fixture.Solution.FindProject(x => x.Name == "CsLibrary").Nodes.OfType<IItemNode>().First().Select(false);
+            fixture.Solution.FindProject(x => x.Name == "VbLibrary").Nodes.OfType<IItemNode>().First().Select(true);
 
             var selected = selection.GetSelection().ToList();
             Assert.Equal(2, selected.Count);

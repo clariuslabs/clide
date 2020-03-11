@@ -42,7 +42,7 @@ namespace Clide.Solution
         public void when_getting_logical_path_of_item_then_succeeds_for_shared_project()
         {
             var node = fixture.Solution.FindProject(x => x.Name == "CsShared")
-                .Nodes.Traverse(TraverseKind.DepthFirst, x => x.Nodes)
+                .Nodes.Traverse()
                 .OfType<IItemNode>().First(x => x.Text == "TextFile1.txt");
 
             Assert.NotNull(node);
