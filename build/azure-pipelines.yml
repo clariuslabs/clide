@@ -39,7 +39,7 @@ stages:
 - stage: Windows
   jobs:
   - job: Build
-    pool: VSEng-MicroBuildVS2019
+    pool: VSEng-Xamarin-Win-XMA
     steps:
     - checkout: self
       clean: true
@@ -51,6 +51,13 @@ stages:
     - script: 'dotnet tool update -g dotnet-format && dotnet format -w $(Build.SourcesDirectory) --dry-run --check -v:diag'
       displayName: Check .editorconfig compliance
     - template: dump-environment.yml@templates
+    - template: remove-visualstudio.yml@templates
+    - template: visualstudio.yml@templates
+      parameters:
+        channel: Dogfood
+        tier: Enterprise
+        dev: 16
+        workloads: 'ManagedDesktop, NativeDesktop, NetCrossPlat, VisualStudioExtension'
 
     - task: MSBuild@1
       displayName: Build
@@ -58,18 +65,17 @@ stages:
         solution: Clide.sln
         msbuildArguments: '-r -bl:$(Build.ArtifactStagingDirectory)/logs/winbuild.binlog'
 
-    - task: VSTest@2
-      displayName: 'Test'
-      timeoutInMinutes: 5
+    - task: MSBuild@1
+      displayName: Test
       inputs:
-        testAssemblyVer2: |
-          **\*Tests*.dll
-          !**\*TestAdapter.dll
-          !**\obj\**
-        codeCoverageEnabled: true
-        runInParallel: false
-        rerunFailedTests: true
-        rerunMaxAttempts: 5
+        solution: Clide.sln
+        msbuildArguments: '-t:test -p:TestResultsDir=$(Build.ArtifactStagingDirectory)/test-results/'
+    
+    - task: PublishTestResults@1
+      displayName: 'Publish Tests'
+      inputs:
+        testRunner: XUnit
+        testResultsFiles: '$(TestResultsDirectory)*.xml'
     
     - task: PublishBuildArtifacts@1
       displayName: 'Logs'
