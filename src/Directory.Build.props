@@ -107,7 +107,7 @@
   <PropertyGroup Label="Package Versions">
     <MerqVersion>1.1.1</MerqVersion>
     <MerqVisualStudioVersion>1.1.79</MerqVisualStudioVersion>
-    <RxVersion>1.0.0-rc.6</RxVersion>
+    <RxVersion>1.0.0-rc.9</RxVersion>
     <FluentInterfaceVersion>2.0.3</FluentInterfaceVersion>
     <StringResourcesVersion>3.1.10</StringResourcesVersion>
     <TracerVersion>2.0.8</TracerVersion>
