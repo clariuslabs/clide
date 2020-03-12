@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <TargetOS>Windows_NT</TargetOS>
+    <IncludeVSSDK>true</IncludeVSSDK>
+    <GeneratePkgDefFile>false</GeneratePkgDefFile>
+    <DeployExtension>true</DeployExtension>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetOS)' == '$(OS)'">
+    <PackageReference Include="Xamarin.VSSDK.BuildTools" Version="$(XVSSDKVersion)" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="$(VSSDKBuildToolsVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+		<PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK" Version="16.5.535-pre" />
+		<PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK.Tools" Version="16.5.535-pre" />
+  </ItemGroup>
+
+</Project>

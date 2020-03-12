@@ -45,6 +45,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Win", "Win", "{35E21F25-162
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{77E1EDE9-E48A-47F6-B8A8-753F85394886}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clide.Sample", "src\Clide.Sample\Clide.Sample.csproj", "{E9AB5A69-D3EB-4C62-8BBF-076727E9C480}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,10 @@ Global
 		{570CF1B2-4EAF-48A4-9216-75CD1C14BE0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{570CF1B2-4EAF-48A4-9216-75CD1C14BE0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{570CF1B2-4EAF-48A4-9216-75CD1C14BE0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9AB5A69-D3EB-4C62-8BBF-076727E9C480}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9AB5A69-D3EB-4C62-8BBF-076727E9C480}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9AB5A69-D3EB-4C62-8BBF-076727E9C480}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9AB5A69-D3EB-4C62-8BBF-076727E9C480}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
