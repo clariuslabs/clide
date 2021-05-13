@@ -113,17 +113,19 @@
     <TracerVersion>2.0.8</TracerVersion>
     <NuGetizerVersion>0.2.5-dev.10</NuGetizerVersion>
     <XunitVersion>2.3.1</XunitVersion>
-    <MicrosoftBuildversion>16.4.0</MicrosoftBuildversion>
-    <ProjectSystemVersion>15.8.243</ProjectSystemVersion>
+    <MicrosoftBuildversion>16.8.0</MicrosoftBuildversion>
 
-    <VisualStudioThreadingVersion>16.5.132</VisualStudioThreadingVersion>
+    <ProjectSystemVersion>17.0.77-pre-g62a6cb5699</ProjectSystemVersion>
+    <VisualStudioSDKVersion>17.0.0-preview-2-31226-057</VisualStudioSDKVersion>
+
+    <VisualStudioThreadingVersion>16.10.53-alpha</VisualStudioThreadingVersion>
 
     <XunitVsixVersion>0.4.0-alpha.20</XunitVsixVersion>
     <XVSSDKVersion>0.4.0-alpha.17</XVSSDKVersion>
 
     <VSSDKBuildToolsVersion>15.9.3039</VSSDKBuildToolsVersion>
-    <VSSDKAnalyzersVersion>16.3.14</VSSDKAnalyzersVersion>
-    <VSThreadingAnalyzersVersion>16.5.132</VSThreadingAnalyzersVersion>
+    <VSSDKAnalyzersVersion>16.9.2-alpha</VSSDKAnalyzersVersion>
+    <VSThreadingAnalyzersVersion>16.10.53-alpha</VSThreadingAnalyzersVersion>
   </PropertyGroup>
 
 

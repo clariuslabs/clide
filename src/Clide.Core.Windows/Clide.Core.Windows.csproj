@@ -28,6 +28,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Build" Version="$(MicrosoftBuildversion)" />
     <PackageReference Include="Microsoft.VisualStudio.ProjectSystem" Version="$(ProjectSystemVersion)" />
+		<PackageReference Include="Microsoft.VisualStudio.SDK" Version="$(VisualStudioSDKVersion)" />
+		<PackageReference Include="Microsoft.VisualStudio.Interop" Version="$(VisualStudioSDKVersion)" />
   </ItemGroup>
 
   <ItemGroup>
