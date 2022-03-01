@@ -79,6 +79,10 @@ namespace Clide
             if (!(actualItem.GetActualHierarchy() is IVsProject) && !(hierarchy is FlavoredProjectBase))
                 return false;
 
+            // The solution implements IVsProject2, make sure it isn't classified as a project.
+            if (hierarchy is IVsSolution)
+                return false;
+
             // Finally, solution folders look like projects, but they are not.
             // We need to filter them out too.
             var extenderObject = actualItem.GetExtenderObject();
